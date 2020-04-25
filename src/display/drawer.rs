@@ -3,31 +3,31 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-use std::sync::mpsc::{Receiver, Sender, TryRecvError};
+use std::sync::mpsc::{Receiver, Sender};
 
 use chrono::offset::Utc;
-use chrono::{DateTime, Duration};
+use chrono::Duration;
 use conrod_core::Ui;
 use glium::glutin::{ContextBuilder, EventsLoop, WindowBuilder};
 use glium::{texture, Surface};
 use image::{buffer::ConvertBuffer, RgbImage, RgbaImage};
 use plotters::prelude::*;
 use std::collections::VecDeque;
-use telemetry::{
-    self,
-    structures::MachineStateSnapshot,
-    structures::{DataSnapshot, StoppedMessage, TelemetryMessage},
-    TelemetryChannelType,
-};
+use telemetry::serial::core::ErrorKind;
+use telemetry::structures::{DataSnapshot, MachineStateSnapshot};
+use telemetry::{self, TelemetryChannelType};
 
+use crate::chip::Chip;
+use crate::physics::types::DataPressure;
+use crate::serial::poller::SerialPollerBuilder;
 use crate::APP_ARGS;
 
+use super::events::{DisplayEventsBuilder, DisplayEventsHandleOutcome};
 use super::fonts::Fonts;
-use super::support::{self, EventLoop};
+use super::support::GliumDisplayWinitWrapper;
 use super::widgets::{
     create_error_widget, create_no_data_widget, create_stopped_widget, create_widgets, Ids,
 };
-use crate::chip::Chip;
 
 const GRAPH_RENDER_SECONDS: usize = 40;
 const TELEMETRY_POINTS_PER_SECOND: usize = 10 * 100;
@@ -36,37 +36,22 @@ const FRAMERATE: u64 = 30;
 
 pub struct DisplayDrawerBuilder;
 
+pub struct DisplayDrawer {
+    renderer: conrod_glium::Renderer,
+    display: GliumDisplayWinitWrapper,
+    interface: Ui,
+    events_loop: EventsLoop,
+    fonts: Fonts,
+    chip: Chip,
+    ui_state: UIState,
+}
+
 #[derive(Debug, Clone)]
 enum UIState {
     Running,
     Stopped,
     WaitingData,
     Error(String),
-}
-
-pub struct DisplayDrawer {
-    renderer: conrod_glium::Renderer,
-    display: support::GliumDisplayWinitWrapper,
-    interface: conrod_core::Ui,
-    events_loop: EventsLoop,
-    event_loop: EventLoop,
-    fonts: Fonts,
-    chip: Chip, // TODO: should be moved once we move out all the telemetry fetching code out of this display package
-    ui_state: UIState,
-}
-
-enum HandleLoopOutcome {
-    Break,
-    Continue,
-}
-
-type DataPressure = VecDeque<(DateTime<Utc>, u16)>;
-
-#[derive(Debug, Default)]
-struct PolledTelemetry {
-    pub data_snapshots: Option<Vec<DataSnapshot>>,
-    pub machine_snapshot: Option<MachineStateSnapshot>,
-    pub stopped_message: Option<StoppedMessage>,
 }
 
 impl DisplayDrawerBuilder {
@@ -80,7 +65,7 @@ impl DisplayDrawerBuilder {
     ) -> DisplayDrawer {
         // Create display
         let display = glium::Display::new(window, context, &events_loop).unwrap();
-        let display = support::GliumDisplayWinitWrapper(display);
+        let display = GliumDisplayWinitWrapper(display);
 
         // Create renderer
         let renderer = conrod_glium::Renderer::new(&display.0).unwrap();
@@ -91,7 +76,6 @@ impl DisplayDrawerBuilder {
             display,
             interface,
             events_loop,
-            event_loop: EventLoop::new(),
             fonts,
             chip: Chip::new(),
             ui_state: UIState::WaitingData,
@@ -101,7 +85,9 @@ impl DisplayDrawerBuilder {
 
 impl DisplayDrawer {
     pub fn run(&mut self) {
-        // TODO: move more of this into the "serial" module
+        // Create handlers
+        let mut serial_poller = SerialPollerBuilder::new();
+        let mut events_handler = DisplayEventsBuilder::new();
 
         // Allow enough space to hold X seconds of points and 1 second of latency between clean-ups
         let mut data: DataPressure = VecDeque::with_capacity(GRAPH_NUMBER_OF_POINTS + 100);
@@ -118,12 +104,11 @@ impl DisplayDrawer {
 
         'main: loop {
             // Receive telemetry data (from the input serial from the motherboard)
-            let polled = self.poll_telemetry(&rx);
-
-            match polled {
+            match serial_poller.poll(&rx, &mut self.chip) {
                 Ok(polled) => {
                     if let Some(data_snapshots) = polled.data_snapshots {
                         self.ui_state = UIState::Running;
+
                         data_snapshots
                             .iter()
                             .for_each(|snapshot| self.add_pressure(&mut data, snapshot));
@@ -133,17 +118,16 @@ impl DisplayDrawer {
                         // or some more data without it
                         self.ui_state = UIState::Stopped;
                     }
+
                     if let Some(machine_snapshot) = polled.machine_snapshot {
                         last_machine_snapshot = machine_snapshot;
                     }
                 }
-                Err(error) => {
-                    use telemetry::serial::core::ErrorKind;
-                    match error.kind() {
-                        ErrorKind::NoDevice => self.ui_state = UIState::WaitingData,
-                        e => self.ui_state = UIState::Error(format!("{:?}", e)),
-                    }
-                }
+
+                Err(error) => match error.kind() {
+                    ErrorKind::NoDevice => self.ui_state = UIState::WaitingData,
+                    err => self.ui_state = UIState::Error(format!("{:?}", err)),
+                },
             }
 
             match self.ui_state {
@@ -155,13 +139,14 @@ impl DisplayDrawer {
             };
 
             // Handle incoming events
-            match self.step_loop_events() {
-                HandleLoopOutcome::Break => break 'main,
-                HandleLoopOutcome::Continue => {}
+            match events_handler.handle(&self.display, &mut self.interface, &mut self.events_loop) {
+                DisplayEventsHandleOutcome::Break => break 'main,
+                DisplayEventsHandleOutcome::Continue => {}
             }
 
             // Refresh the pressure data interface, if we have any data in the buffer
             let now = Utc::now();
+
             if (now - last_render) > Duration::milliseconds((1000 / FRAMERATE) as _) {
                 if !data.is_empty() {
                     let older = now - chrono::Duration::seconds(40);
@@ -171,13 +156,15 @@ impl DisplayDrawer {
                 }
 
                 last_render = now;
-                self.step_loop_refresh(&data, &last_machine_snapshot);
+
+                self.refresh(&data, &last_machine_snapshot);
             } else {
                 std::thread::sleep(std::time::Duration::from_millis(10));
             }
         }
     }
 
+    // TODO: refactor this
     fn render(
         &mut self,
         data_pressure: &DataPressure,
@@ -228,7 +215,6 @@ impl DisplayDrawer {
         image_map
     }
 
-    // TODO: refactor this
     #[allow(clippy::ptr_arg)]
     fn render_data(
         &mut self,
@@ -238,8 +224,8 @@ impl DisplayDrawer {
         machine_snapshot: &MachineStateSnapshot,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let ui = self.interface.set_widgets();
-
         let mut buffer = vec![0; (780 * 200 * 4) as usize];
+
         let root = BitMapBackend::with_buffer(&mut buffer, (780, 200)).into_drawing_area();
         root.fill(&BLACK).unwrap();
 
@@ -275,6 +261,7 @@ impl DisplayDrawer {
 
         drop(chart);
         drop(root);
+
         let rgba_image: RgbaImage = RgbImage::from_raw(780, 200, buffer).unwrap().convert();
         let image_dimensions = rgba_image.dimensions();
         let raw_image = glium::texture::RawImage2d::from_raw_rgba_reversed(
@@ -306,6 +293,7 @@ impl DisplayDrawer {
                     telemetry::gather_telemetry(&port, tx, None);
                 });
             }
+
             crate::Source::File(path) => {
                 std::thread::spawn(move || loop {
                     let file = std::fs::File::open(path).unwrap();
@@ -317,102 +305,8 @@ impl DisplayDrawer {
         rx
     }
 
-    // TODO: refactor, rename and relocate this
-    fn add_pressure(&self, data: &mut DataPressure, snapshot: &DataSnapshot) {
-        assert!(self.chip.boot_time.is_some());
-
-        let snapshot_time =
-            self.chip.boot_time.unwrap() + Duration::microseconds(snapshot.systick as i64);
-
-        let point = snapshot.pressure / 10;
-        data.push_front((snapshot_time, point));
-    }
-
-    // TODO: relocate this
-    fn poll_telemetry(
-        &mut self,
-        rx: &Receiver<TelemetryChannelType>,
-    ) -> Result<PolledTelemetry, telemetry::serial::core::Error> {
-        use telemetry::serial::core::{Error, ErrorKind};
-
-        let mut data_snapshots = Vec::new();
-        let mut machine_snapshot = None;
-        let mut stopped_message = None;
-        loop {
-            match rx.try_recv() {
-                Ok(message) => match message {
-                    Ok(message) => match message {
-                        TelemetryMessage::BootMessage(snapshot) => {
-                            self.chip.reset(snapshot.systick);
-                        }
-                        TelemetryMessage::DataSnapshot(snapshot) => {
-                            self.chip.update_tick(snapshot.systick);
-                            data_snapshots.push(snapshot);
-                        }
-                        TelemetryMessage::MachineStateSnapshot(snapshot) => {
-                            machine_snapshot = Some(snapshot);
-                        }
-                        TelemetryMessage::StoppedMessage(message) => {
-                            self.chip.update_tick(message.systick);
-                            stopped_message = Some(message);
-                        }
-                        _ => {}
-                    },
-                    Err(serial_error) => return Err(serial_error),
-                },
-                Err(TryRecvError::Empty) => {
-                    break;
-                }
-
-                Err(TryRecvError::Disconnected) => {
-                    return Err(Error::new(ErrorKind::NoDevice, "Device is disconnected"))
-                }
-            }
-        }
-
-        Ok(PolledTelemetry {
-            data_snapshots: if data_snapshots.is_empty() {
-                None
-            } else {
-                Some(data_snapshots)
-            },
-            machine_snapshot,
-            stopped_message,
-        })
-    }
-
-    // TODO: relocate this
-    fn step_loop_events(&mut self) -> HandleLoopOutcome {
-        for event in self.event_loop.next(&mut self.events_loop) {
-            // Use the `winit` backend feature to convert the winit event to a conrod one.
-            if let Some(event) = support::convert_event(event.clone(), &self.display) {
-                self.interface.handle_event(event);
-            }
-
-            // Break from the loop upon `Escape` or closed window.
-            if let glium::glutin::Event::WindowEvent { event, .. } = event.clone() {
-                match event {
-                    glium::glutin::WindowEvent::CloseRequested
-                    | glium::glutin::WindowEvent::KeyboardInput {
-                        input:
-                            glium::glutin::KeyboardInput {
-                                virtual_keycode: Some(glium::glutin::VirtualKeyCode::Escape),
-                                ..
-                            },
-                        ..
-                    } => {
-                        return HandleLoopOutcome::Break;
-                    }
-                    _ => (),
-                }
-            }
-        }
-
-        HandleLoopOutcome::Continue
-    }
-
     #[allow(clippy::ptr_arg)]
-    fn step_loop_refresh(&mut self, data: &DataPressure, snapshot: &MachineStateSnapshot) {
+    fn refresh(&mut self, data: &DataPressure, snapshot: &MachineStateSnapshot) {
         let image_map = self.render(data, &snapshot);
 
         if let Some(primitives) = self.interface.draw_if_changed() {
@@ -428,5 +322,16 @@ impl DisplayDrawer {
 
             target.finish().unwrap();
         }
+    }
+
+    fn add_pressure(&self, data: &mut DataPressure, snapshot: &DataSnapshot) {
+        assert!(self.chip.boot_time.is_some());
+
+        let snapshot_time =
+            self.chip.boot_time.unwrap() + Duration::microseconds(snapshot.systick as i64);
+
+        let point = snapshot.pressure / 10;
+
+        data.push_front((snapshot_time, point));
     }
 }
