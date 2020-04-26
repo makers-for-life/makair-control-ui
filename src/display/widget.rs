@@ -11,6 +11,7 @@ use conrod_core::{
 
 use crate::config::environment::{
     DISPLAY_WIDGET_SIZE_HEIGHT, DISPLAY_WIDGET_SIZE_SPACING, DISPLAY_WIDGET_SIZE_WIDTH,
+    GRAPH_DRAW_SPACING_FROM_BOTTOM,
 };
 
 use super::fonts::Fonts;
@@ -28,6 +29,15 @@ impl BackgroundWidgetConfig {
     }
 }
 
+pub struct BrandingWidgetConfig {
+    version_firmware: String,
+    version_control: String,
+    width: f64,
+    height: f64,
+    image: conrod_core::image::Id,
+    id: WidgetId,
+}
+
 pub struct TelemetryWidgetConfig<'a> {
     pub title: &'a str,
     pub value: String,
@@ -43,6 +53,26 @@ pub struct GraphWidgetConfig {
     height: f64,
     image: conrod_core::image::Id,
     id: WidgetId,
+}
+
+impl BrandingWidgetConfig {
+    pub fn new(
+        version_firmware: String,
+        version_control: String,
+        width: f64,
+        height: f64,
+        image: conrod_core::image::Id,
+        id: WidgetId,
+    ) -> BrandingWidgetConfig {
+        BrandingWidgetConfig {
+            version_firmware,
+            version_control,
+            width,
+            height,
+            image,
+            id,
+        }
+    }
 }
 
 impl GraphWidgetConfig {
@@ -92,9 +122,21 @@ impl NoDataWidgetConfig {
     }
 }
 
+pub struct InitializingWidgetConfig {
+    id: WidgetId,
+}
+
+impl InitializingWidgetConfig {
+    pub fn new(id: WidgetId) -> InitializingWidgetConfig {
+        InitializingWidgetConfig { id }
+    }
+}
+
 pub enum ControlWidgetType<'a> {
     Background(BackgroundWidgetConfig),
     Error(ErrorWidgetConfig),
+    Branding(BrandingWidgetConfig),
+    Initializing(InitializingWidgetConfig),
     Graph(GraphWidgetConfig),
     NoData(NoDataWidgetConfig),
     Stop(StopWidgetConfig),
@@ -115,6 +157,8 @@ impl<'a> ControlWidget<'a> {
         match widget_type {
             ControlWidgetType::Background(config) => self.background(config),
             ControlWidgetType::Error(config) => self.error(config),
+            ControlWidgetType::Branding(config) => self.branding(config),
+            ControlWidgetType::Initializing(config) => self.initializing(config),
             ControlWidgetType::Graph(config) => self.graph(config),
             ControlWidgetType::NoData(config) => self.no_data(config),
             ControlWidgetType::Stop(config) => self.stop(config),
@@ -130,17 +174,27 @@ impl<'a> ControlWidget<'a> {
         0 as _
     }
 
+    fn branding(&mut self, config: BrandingWidgetConfig) -> f64 {
+        widget::Image::new(config.image)
+            .w_h(config.width, config.height)
+            .top_left_with_margin(0.0) // TODO
+            .set(config.id, &mut self.ui);
+
+        // TODO
+        0 as _
+    }
+
     fn graph(&mut self, config: GraphWidgetConfig) -> f64 {
         widget::Image::new(config.image)
             .w_h(config.width, config.height)
-            .mid_top_with_margin(10.0)
+            .mid_bottom_with_margin(GRAPH_DRAW_SPACING_FROM_BOTTOM)
             .set(config.id, &mut self.ui);
 
         config.width
     }
 
     #[allow(clippy::too_many_arguments)]
-    fn create_rounded_rectangle(
+    fn create_bottom_left_rounded_rectangle(
         &mut self,
         width: f64,
         height: f64,
@@ -164,7 +218,7 @@ impl<'a> ControlWidget<'a> {
     }
 
     fn telemetry_widget(&mut self, config: TelemetryWidgetConfig) -> f64 {
-        self.create_rounded_rectangle(
+        self.create_bottom_left_rounded_rectangle(
             DISPLAY_WIDGET_SIZE_WIDTH,
             DISPLAY_WIDGET_SIZE_HEIGHT,
             2.5,
@@ -241,6 +295,21 @@ impl<'a> ControlWidget<'a> {
         text_style.font_size = Some(30);
 
         widget::Text::new("Device disconnected or no data received")
+            .color(color::WHITE)
+            .middle()
+            .with_style(text_style)
+            .set(config.id, &mut self.ui);
+        0 as _
+    }
+
+    fn initializing(&mut self, config: InitializingWidgetConfig) -> f64 {
+        let mut text_style = conrod_core::widget::primitive::text::Style::default();
+
+        text_style.font_id = Some(Some(self.fonts.bold));
+        text_style.color = Some(color::WHITE);
+        text_style.font_size = Some(30);
+
+        widget::Text::new("Initialization..")
             .color(color::WHITE)
             .middle()
             .with_style(text_style)
