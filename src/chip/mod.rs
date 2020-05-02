@@ -28,7 +28,6 @@ pub struct Chip {
     pub data_pressure: DataPressure,
     pub last_machine_snapshot: MachineStateSnapshot,
     pub ongoing_alarms: HashMap<AlarmCode, AlarmPriority>,
-    pub battery_level: Option<u8>,
     state: ChipState,
 }
 
@@ -40,7 +39,6 @@ impl Chip {
             data_pressure: VecDeque::with_capacity(GRAPH_NUMBER_OF_POINTS + 100),
             last_machine_snapshot: MachineStateSnapshot::default(),
             ongoing_alarms: HashMap::new(),
-            battery_level: None,
             state: ChipState::WaitingData,
         }
     }
@@ -68,7 +66,6 @@ impl Chip {
 
                 self.add_pressure(&snapshot);
 
-                self.battery_level = Some(snapshot.battery_level);
                 self.state = ChipState::Running;
             }
 
@@ -120,13 +117,16 @@ impl Chip {
         let snapshot_time =
             self.boot_time.unwrap() + Duration::microseconds(snapshot.systick as i64);
 
+        // Fetch last pressure value in order to reduce noise
+        let last_pressure = if let Some(last_pressure_inner) = self.data_pressure.get(0) {
+            last_pressure_inner.1
+        } else {
+            0
+        };
+
         // Points are stored as mmH20 (for more precision; though we do work in cmH20)
         self.data_pressure
-            .push_front((snapshot_time, snapshot.pressure));
-    }
-
-    pub fn get_battery_level(&self) -> Option<u8> {
-        self.battery_level
+            .push_front((snapshot_time, (snapshot.pressure + last_pressure) / 2));
     }
 
     pub fn get_state(&self) -> &ChipState {
