@@ -67,6 +67,7 @@ impl DisplayRendererBuilder {
 }
 
 impl DisplayRenderer {
+    #[allow(clippy::too_many_arguments)]
     pub fn render(
         &mut self,
         data_pressure: &DataPressure,

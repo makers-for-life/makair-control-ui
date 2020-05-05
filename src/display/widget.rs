@@ -113,6 +113,7 @@ impl<'a> BrandingWidgetConfig<'a> {
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 impl<'a> StatusWidgetConfig<'a> {
     pub fn new(
         container: WidgetId,
