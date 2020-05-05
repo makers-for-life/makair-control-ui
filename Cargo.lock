@@ -1774,7 +1774,7 @@ checksum = "f764005d11ee5f36500a149ace24e00e3da98b0158b3e2d53a7495660d3f4d60"
 [[package]]
 name = "telemetry"
 version = "1.0.0"
-source = "git+https://github.com/makers-for-life/makair-telemetry#0fef5b94f407de3821737ca394ecd8308da8b3c5"
+source = "git+https://github.com/makers-for-life/makair-telemetry?rev=3b4ee1656ec7b6703490ea55595f0b8b9d1850f2#3b4ee1656ec7b6703490ea55595f0b8b9d1850f2"
 dependencies = [
  "base64 0.12.0",
  "env_logger",
