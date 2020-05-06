@@ -206,3 +206,32 @@ impl Chip {
         vec_alarms
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::chip::Chip;
+    use crate::test_strategies::tests::TelemetryStrategies;
+    use proptest::collection;
+    use proptest::test_runner::TestRunner;
+
+    #[test]
+    fn test_chip_new_event() {
+        TestRunner::default()
+            .run(
+                &collection::vec(
+                    TelemetryStrategies::new().telemetry_message_strategy(),
+                    0..100,
+                ),
+                |msgs| {
+                    let mut chip = Chip::new();
+
+                    // With any sequence of TelemetryMessage, new_event() must not crash.
+                    for msg in msgs {
+                        chip.new_event(msg.to_owned());
+                    }
+                    Ok(())
+                },
+            )
+            .unwrap();
+    }
+}
