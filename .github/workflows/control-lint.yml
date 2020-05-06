@@ -18,7 +18,7 @@ jobs:
       - name: Install libs
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y libxcb-shape0 libxcb-shape0-dev libxcb-xfixes0 libxcb-xfixes0-dev
+          sudo apt-get install -y libxcb-shape0 libxcb-shape0-dev libxcb-xfixes0 libxcb-xfixes0-dev x11-utils
 
       - name: Lint
         uses: actions-rs/clippy-check@v1.0.5
@@ -40,4 +40,5 @@ jobs:
       - name: Run headless test
         uses: GabrielBB/xvfb-action@v1.0
         with:
+          run: xdpyinfo
           run: cargo test
