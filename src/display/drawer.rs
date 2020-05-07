@@ -9,7 +9,7 @@ use chrono::offset::Utc;
 use chrono::Duration;
 use conrod_core::Ui;
 use glium::glutin::{ContextBuilder, EventsLoop, WindowBuilder};
-use glium::Surface;
+use glium::{Display, Surface};
 use telemetry::{self, TelemetryChannelType};
 
 use crate::chip::{Chip, ChipState};
@@ -20,6 +20,7 @@ use super::fonts::Fonts;
 use super::renderer::{DisplayRenderer, DisplayRendererBuilder};
 use super::screen::Ids;
 use super::support::GliumDisplayWinitWrapper;
+use crate::config::environment::{DISPLAY_WINDOW_SIZE_HEIGHT, DISPLAY_WINDOW_SIZE_WIDTH};
 use crate::AppArgs;
 use crate::Mode::Test;
 
@@ -51,8 +52,24 @@ impl<'a> DisplayDrawerBuilder<'a> {
         fonts: Fonts,
     ) -> DisplayDrawer<'a> {
         // Create display
-        let display =
-            GliumDisplayWinitWrapper(glium::Display::new(window, context, &events_loop).unwrap());
+        let display = GliumDisplayWinitWrapper(if cfg!(test) {
+            Display::from_gl_window(
+                ContextBuilder::new()
+                    .with_shared_lists(
+                        &ContextBuilder::new()
+                            .build_headless(
+                                &events_loop,
+                                (DISPLAY_WINDOW_SIZE_WIDTH, DISPLAY_WINDOW_SIZE_HEIGHT).into(),
+                            )
+                            .unwrap(),
+                    )
+                    .build_windowed(window, &events_loop)
+                    .unwrap(),
+            )
+            .unwrap()
+        } else {
+            glium::Display::new(window, context, &events_loop).unwrap()
+        });
 
         // TODO: mark window as no cursor
 
