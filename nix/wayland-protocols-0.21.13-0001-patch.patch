@@ -1,0 +1,37 @@
+diff --git a/build.rs b/build.rs
+index cd68b4e..a303c56 100644
+--- a/build.rs
++++ b/build.rs
+@@ -38,7 +38,9 @@ static WLR_UNSTABLE_PROTOCOLS: &'static [(&'static str, &'static [&'static str])
+ ];
+ 
+ fn generate_protocol(name: &str, protocol_file: &Path, out_dir: &Path, client: bool, server: bool) {
+-    if var("CARGO_FEATURE_NATIVE_LIB").ok().is_some() {
++    // Patched to always generate C code.
++    // Building using buildRustCrate does not seem to re-export the correct env variables
++    if true {
+         generate_c_interfaces(&protocol_file, out_dir.join(&format!("{}_c_interfaces.rs", name)));
+ 
+         if client {
+@@ -79,7 +81,9 @@ fn main() {
+     let out_dir_str = var("OUT_DIR").unwrap();
+     let out_dir = Path::new(&out_dir_str);
+ 
+-    let client = var("CARGO_FEATURE_CLIENT").ok().is_some();
++    // Patched to always generate C code.
++    // Building using buildRustCrate does not seem to re-export the correct env variables
++    let client = true;
+     let server = var("CARGO_FEATURE_SERVER").ok().is_some();
+ 
+     for name in STABLE_PROTOCOLS {
+@@ -93,7 +97,9 @@ fn main() {
+         );
+     }
+ 
+-    if var("CARGO_FEATURE_UNSTABLE_PROTOCOLS").ok().is_some() {
++    // Patched to always generate C code.
++    // Building using buildRustCrate does not seem to re-export the correct env variables
++    if true {
+         for &(name, versions) in UNSTABLE_PROTOCOLS {
+             for version in versions {
+                 let file = format!(

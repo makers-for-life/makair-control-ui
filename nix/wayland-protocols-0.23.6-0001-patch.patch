@@ -1,0 +1,26 @@
+diff --git a/build.rs b/build.rs
+index c988ced..7e12b42 100644
+--- a/build.rs
++++ b/build.rs
+@@ -88,7 +88,9 @@ fn main() {
+     let out_dir_str = var("OUT_DIR").unwrap();
+     let out_dir = Path::new(&out_dir_str);
+ 
+-    let client = var("CARGO_FEATURE_CLIENT").ok().is_some();
++    // Patched to always generate client code.
++    // Building using buildRustCrate does not seem to re-export the correct env variables
++    let client = true;
+     let server = var("CARGO_FEATURE_SERVER").ok().is_some();
+ 
+     for &(name, dest_events) in STABLE_PROTOCOLS {
+@@ -115,7 +117,9 @@ fn main() {
+         );
+     }
+ 
+-    if var("CARGO_FEATURE_UNSTABLE_PROTOCOLS").ok().is_some() {
++    // Patched to always generate client code.
++    // Building using buildRustCrate does not seem to re-export the correct env variables
++    if true {
+         for &(name, versions) in UNSTABLE_PROTOCOLS {
+             for &(version, dest_events) in versions {
+                 let file = format!(

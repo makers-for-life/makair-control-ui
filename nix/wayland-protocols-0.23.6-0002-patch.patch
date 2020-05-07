@@ -1,0 +1,17 @@
+diff --git a/build.rs b/build.rs
+index c988ced..3b095da 100644
+--- a/build.rs
++++ b/build.rs
+@@ -81,9 +81,9 @@ fn generate_protocol(
+ }
+ 
+ fn main() {
+-    println!("cargo:rerun-if-changed-env=CARGO_FEATURE_CLIENT");
+-    println!("cargo:rerun-if-changed-env=CARGO_FEATURE_SERVER");
+-    println!("cargo:rerun-if-changed-env=CARGO_FEATURE_UNSTABLE_PROTOCOLS");
++    println!("cargo:rerun-if-env-changed=CARGO_FEATURE_CLIENT");
++    println!("cargo:rerun-if-env-changed=CARGO_FEATURE_SERVER");
++    println!("cargo:rerun-if-env-changed=CARGO_FEATURE_UNSTABLE_PROTOCOLS");
+ 
+     let out_dir_str = var("OUT_DIR").unwrap();
+     let out_dir = Path::new(&out_dir_str);
