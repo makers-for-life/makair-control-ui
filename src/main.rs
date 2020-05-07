@@ -151,7 +151,7 @@ mod tests {
             .run(
                 &collection::vec(
                     TelemetryStrategies::new().telemetry_message_strategy(),
-                    1..100,
+                    1..20,
                 ),
                 |msgs| {
                     test_counter.set(&test_counter.get() + 1);
