@@ -51,8 +51,11 @@ impl<'a> DisplayDrawerBuilder<'a> {
         interface: &'a mut Ui,
         fonts: Fonts,
     ) -> DisplayDrawer<'a> {
+        let is_ci = std::env::var("CI").is_ok();
+
         // Create display
-        let display = GliumDisplayWinitWrapper(if cfg!(test) {
+        let display = GliumDisplayWinitWrapper(if cfg!(test) && is_ci {
+            // Headless Context.
             Display::from_gl_window(
                 ContextBuilder::new()
                     .with_shared_lists(

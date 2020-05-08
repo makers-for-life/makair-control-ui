@@ -155,7 +155,11 @@ mod tests {
                 ),
                 |msgs| {
                     test_counter.set(&test_counter.get() + 1);
-                    dbg!(&test_counter.get(), &msgs.len());
+                    println!(
+                        "Test counter:{}, msg.len:{}",
+                        &test_counter.get(),
+                        &msgs.len()
+                    );
                     DisplayWindowBuilder::new(AppArgs {
                         log: "test".to_string(),
                         mode: super::Mode::Test(msgs),

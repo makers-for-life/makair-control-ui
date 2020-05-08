@@ -52,7 +52,7 @@ pub mod tests {
 
     prop_compose! {
         fn current_alarm_codes_strategy()(
-            current_alarm_codes in collection::vec(0u8.., 0..100),
+            current_alarm_codes in collection::vec(0u8.., 0..20),
         ) -> Vec<u8> { current_alarm_codes }
     }
 
