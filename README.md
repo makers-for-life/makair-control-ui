@@ -37,6 +37,8 @@ You may also play a pre-recorded file, by passing it as an input (this is handy 
 
 1. `./makair-control --input=../telemetry/records/few_cycles` (where `--input` is an UNIX file path)
 
+_Note that the Control UI relies on the MakAir Telemetry library, that is pulled from the [makair-telemetry](https://github.com/makers-for-life/makair-telemetry) repository.
+
 ## How To Build A Release? (Cross-Compile For ARM)
 
 To cross-compile a new release for an ARM target (using MUSL; statically-linked libraries), you can call the `release_binaries.sh` script:
