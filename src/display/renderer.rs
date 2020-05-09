@@ -389,7 +389,7 @@ impl DisplayRenderer {
             .line_style_2(&plotters::style::colors::BLACK)
             .y_labels(GRAPH_DRAW_LABEL_NUMBER_MAX)
             .y_label_style(
-                plotters::style::TextStyle::from(("sans-serif", 13).into_font())
+                plotters::style::TextStyle::from(("sans-serif", 15).into_font())
                     .color(&WHITE.mix(0.65)),
             )
             .y_label_formatter(&|y| {

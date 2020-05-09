@@ -329,7 +329,7 @@ impl<'a> Screen<'a> {
     }
 
     pub fn render_telemetry(&mut self, telemetry_data: ScreenDataTelemetry) {
-        let mut last_widget_position = 0.0;
+        let mut last_widget_position = TELEMETRY_WIDGET_SPACING_FROM_LEFT;
         let machine_snapshot = self.machine_snapshot.unwrap();
 
         let peak_config = TelemetryWidgetConfig {
