@@ -29,21 +29,22 @@ _Tested at Rust version: `rustc 1.43.0 (4fb7144ed 2020-04-20)`_
 
 To run the Control UI, please ensure that your device first has an open serial connection with the motherboard.
 
+_Note that the Control UI relies on the MakAir Telemetry library, which gets pulled from the [makair-telemetry](https://github.com/makers-for-life/makair-telemetry) repository._
+
 Take note of the serial port used as an input on your Control UI board, and call:
 
-1. `./makair-control --port=0` (where `--port` is your serial port ID, maybe /dev/ttyUSB0)
+1. Run: `./makair-control --port=0` (where `--port` is your serial port ID, maybe /dev/ttyUSB0)
 
-You may also play a pre-recorded file, by passing it as an input (this is handy while developing):
+You may also play a pre-recorded file, by passing it as an input (this is handy while developing; example records are available in the telemetry library repository):
 
-1. `./makair-control --input=../telemetry/records/few_cycles` (where `--input` is an UNIX file path)
-
-_Note that the Control UI relies on the MakAir Telemetry library, that is pulled from the [makair-telemetry](https://github.com/makers-for-life/makair-telemetry) repository._
+1. Pull the telemetry library (in the parent directory): `git pull https://github.com/makers-for-life/makair-telemetry.git`
+2. Run an example (from the Control UI directory): `./makair-control --input=../makair-telemetry/records/few_cycles` (where `--input` is an UNIX file path)
 
 ## How To Build A Release? (Cross-Compile For ARM)
 
 To cross-compile a new release for an ARM target (using MUSL; statically-linked libraries), you can call the `release_binaries.sh` script:
 
-1. `./scripts/release_binaries.sh --version=1.0.0`
+1. Run: `./scripts/release_binaries.sh --version=1.0.0`
 
 _Make sure to replace the `version` script argument with the current release version. This is used for file naming purposes only._
 
