@@ -1,5 +1,7 @@
 # MakAir Control UI
 
+![Normal Respiratory Cycle](./doc/screens/normal-cycle.gif)
+
 ## Versions
 
 | Version | Last Changelog | Ready? |
