@@ -141,6 +141,9 @@ mod tests {
     use proptest::collection;
     use proptest::test_runner::TestRunner;
     use std::cell::Cell;
+    use telemetry::structures::Phase::Inhalation;
+    use telemetry::structures::SubPhase::Inspiration;
+    use telemetry::structures::{DataSnapshot, TelemetryMessage};
 
     #[test]
     fn test_gui_with_telemetry_messages() {
@@ -160,16 +163,65 @@ mod tests {
                         &test_counter.get(),
                         &msgs.len()
                     );
-                    DisplayWindowBuilder::new(AppArgs {
-                        log: "test".to_string(),
-                        mode: super::Mode::Test(msgs),
-                        fullscreen: false,
-                    })
-                    .spawn();
+                    run_with_msgs(msgs);
 
                     Ok(())
                 },
             )
             .unwrap();
+    }
+
+    #[test]
+    fn specfic_failing_telemetry_messages() {
+        run_with_msgs(vec![
+            TelemetryMessage::DataSnapshot(DataSnapshot {
+                version: "".to_string(),
+                device_id: "0-0-0".to_string(),
+                systick: 1_000_000,
+                centile: 0,
+                pressure: 100,
+                phase: Inhalation,
+                subphase: Inspiration,
+                blower_valve_position: 0,
+                patient_valve_position: 0,
+                blower_rpm: 0,
+                battery_level: 0,
+            }),
+            TelemetryMessage::DataSnapshot(DataSnapshot {
+                version: "".to_string(),
+                device_id: "0-0-0".to_string(),
+                systick: 1_000_000,
+                centile: 0,
+                pressure: 0,
+                phase: Inhalation,
+                subphase: Inspiration,
+                blower_valve_position: 0,
+                patient_valve_position: 0,
+                blower_rpm: 0,
+                battery_level: 0,
+            }),
+            TelemetryMessage::DataSnapshot(DataSnapshot {
+                version: "".to_string(),
+                device_id: "0-0-0".to_string(),
+                systick: 1_000_000,
+                centile: 0,
+                pressure: 50,
+                phase: Inhalation,
+                subphase: Inspiration,
+                blower_valve_position: 0,
+                patient_valve_position: 0,
+                blower_rpm: 0,
+                battery_level: 0,
+            }),
+        ]);
+    }
+
+    fn run_with_msgs(msgs: Vec<TelemetryMessage>) {
+        DisplayWindowBuilder::new(AppArgs {
+            log: "test".to_string(),
+            mode: super::Mode::Test(msgs),
+            fullscreen: false,
+        })
+        .spawn();
     }
 }

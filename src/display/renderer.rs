@@ -7,6 +7,7 @@ use chrono::{DateTime, NaiveDateTime, Utc};
 use conrod_core::Ui;
 use glium::texture;
 use image::{buffer::ConvertBuffer, load_from_memory, RgbImage, RgbaImage};
+use itertools::Itertools;
 use plotters::prelude::*;
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
@@ -411,6 +412,7 @@ impl DisplayRenderer {
                         //     assert!(v.1 <= 500, format!("This assert! is here only to show the effectiveness of the GUI tests ({} > 500)", v.1));
                         //     v
                         // })
+                        .dedup_by(|a, b| a.0 == b.0) // A workaround to a bug in plotters lib.
                         .map(|x| (x.0, x.1 as i32)),
                     ShapeStyle::from(&plotters::style::RGBColor(0, 137, 255))
                         .filled()

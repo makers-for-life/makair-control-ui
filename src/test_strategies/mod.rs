@@ -77,7 +77,7 @@ pub mod tests {
         }
 
         pub fn systick_strategy(&self) -> impl Strategy<Value = u64> + '_ {
-            (-100i64..1000).prop_map(move |delta| {
+            (-1i64..20).prop_map(move |delta| {
                 let new_state = (self.current_systick.get() as i64 + delta) as u64;
                 self.current_systick.set(new_state);
                 new_state
