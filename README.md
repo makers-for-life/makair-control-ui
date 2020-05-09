@@ -49,6 +49,8 @@ To cross-compile a new release for an ARM target (using MUSL; statically-linked 
 
 _Make sure to replace the `version` script argument with the current release version. This is used for file naming purposes only._
 
+**⚠️ Important note: this is still a work in progress. We are near cross-compiling capabilities, though some work still needs to be done due to non-MUSL C-based dependencies.**
+
 ## Optional Features
 
 The Control UI behavior can be tuned at compile time, by enabling some optional features while building the binary:
