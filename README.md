@@ -10,6 +10,7 @@
 | ------- | -------------- | ------ |
 | V1.1.x | Operational initial release | ✅
 | V1.2.x | Crashes fixed + smoother graph + implemented medical staff feedbacks | ✅
+| V1.3.x | Improve text readability, by increasing font sizes | ✅
 
 ## How To Build?
 
