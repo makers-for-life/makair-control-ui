@@ -1,6 +1,8 @@
 # MakAir Control UI
 
-![Normal Respiratory Cycle](./doc/screens/normal-cycle.gif)
+<p align="center">
+  <img alt="Normal Respiratory Cycle" src="./doc/screens/normal-cycle.gif">
+</p>
 
 ## Versions
 
