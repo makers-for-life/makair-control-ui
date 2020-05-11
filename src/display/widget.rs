@@ -332,7 +332,7 @@ impl<'a> ControlWidget<'a> {
 
         text_style.font_id = Some(Some(self.fonts.bold));
         text_style.color = Some(color::WHITE);
-        text_style.font_size = Some(11);
+        text_style.font_size = Some(12);
 
         widget::text::Text::new("ALARMS")
             .with_style(text_style)
@@ -354,7 +354,7 @@ impl<'a> ControlWidget<'a> {
         } else {
             widget::text::Text::new("There are no active alarms.")
                 .color(Color::Rgba(1.0, 1.0, 1.0, 0.5))
-                .font_size(11)
+                .font_size(12)
                 .right_from(config.title, 42.0)
                 .set(config.empty, &mut self.ui);
         }
@@ -442,7 +442,7 @@ impl<'a> ControlWidget<'a> {
 
         text_style.font_id = Some(Some(self.fonts.bold));
         text_style.color = Some(color::WHITE);
-        text_style.font_size = Some(11);
+        text_style.font_size = Some(13);
 
         widget::text::Text::new(&format!("{}", alarm_code.code()))
             .with_style(text_style)
@@ -476,8 +476,8 @@ impl<'a> ControlWidget<'a> {
 
         widget::text::Text::new(&code.description())
             .color(color::WHITE)
-            .font_size(10)
-            .top_left_with_margins_on(config.alarm_messages_containers[index], 4.0, 10.0)
+            .font_size(11)
+            .top_left_with_margins_on(config.alarm_messages_containers[index], 5.0, 10.0)
             .set(config.alarm_messages[index], &mut self.ui);
     }
 
@@ -544,7 +544,7 @@ impl<'a> ControlWidget<'a> {
 
         unit_text_style.font_id = Some(Some(self.fonts.bold));
         unit_text_style.color = Some(color::WHITE);
-        unit_text_style.font_size = Some(10);
+        unit_text_style.font_size = Some(11);
 
         if is_unit_stopped {
             unit_box_style.color =
@@ -577,7 +577,7 @@ impl<'a> ControlWidget<'a> {
 
         power_text_style.font_id = Some(Some(self.fonts.bold));
         power_text_style.color = Some(color::WHITE);
-        power_text_style.font_size = Some(10);
+        power_text_style.font_size = Some(11);
 
         if is_battery_powered {
             power_box_style.color = Some(Color::Rgba(208.0 / 255.0, 92.0 / 255.0, 0.0, 1.0));
@@ -716,8 +716,8 @@ impl<'a> ControlWidget<'a> {
         // Create title text
         widget::Text::new(config.title)
             .color(color::WHITE)
-            .top_left_with_margins_on(config.ids.1, 10.0, TELEMETRY_WIDGET_PADDING_LEFT)
-            .font_size(11)
+            .top_left_with_margins_on(config.ids.1, 8.0, TELEMETRY_WIDGET_PADDING_LEFT)
+            .font_size(13)
             .set(config.ids.2, &mut self.ui);
 
         // Initiate text style for measured value
@@ -725,7 +725,7 @@ impl<'a> ControlWidget<'a> {
 
         value_text_style.font_id = Some(Some(self.fonts.bold));
         value_text_style.color = Some(color::WHITE);
-        value_text_style.font_size = Some(17);
+        value_text_style.font_size = Some(19);
 
         // Create value text
         // Notice: there are different drawing cases depending on values provided
@@ -736,7 +736,7 @@ impl<'a> ControlWidget<'a> {
 
                 target_text_style.font_id = Some(Some(self.fonts.regular));
                 target_text_style.color = Some(color::WHITE);
-                target_text_style.font_size = Some(13);
+                target_text_style.font_size = Some(15);
 
                 // Draw measured value
                 widget::Text::new(&value_measured)
@@ -778,8 +778,8 @@ impl<'a> ControlWidget<'a> {
         // Create unit text
         widget::Text::new(config.unit)
             .color(color::WHITE.with_alpha(0.2))
-            .bottom_left_with_margins_on(config.ids.1, 12.0, TELEMETRY_WIDGET_PADDING_LEFT)
-            .font_size(11)
+            .bottom_left_with_margins_on(config.ids.1, 10.0, TELEMETRY_WIDGET_PADDING_LEFT)
+            .font_size(12)
             .set(config.ids.6, &mut self.ui);
 
         TELEMETRY_WIDGET_SIZE_WIDTH
@@ -850,7 +850,7 @@ impl<'a> ControlWidget<'a> {
 
         let mut title_style = widget::text::Style::default();
         title_style.color = Some(color::WHITE);
-        title_style.font_size = Some(18);
+        title_style.font_size = Some(19);
         title_style.font_id = Some(Some(self.fonts.bold));
 
         widget::text::Text::new("Ventilator unit inactive")
@@ -860,7 +860,7 @@ impl<'a> ControlWidget<'a> {
 
         let mut message_style = widget::text::Style::default();
         message_style.color = Some(Color::Rgba(1.0, 1.0, 1.0, 0.75));
-        message_style.font_size = Some(13);
+        message_style.font_size = Some(14);
         message_style.font_id = Some(Some(self.fonts.regular));
 
         widget::text::Text::new("Please re-enable it to resume respiration")
