@@ -1024,6 +1024,7 @@ dependencies = [
  "makair-telemetry",
  "plotters",
  "rust-embed",
+ "unic-langid",
  "winit",
 ]
 

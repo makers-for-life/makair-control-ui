@@ -16,11 +16,12 @@ extern crate conrod_core;
 extern crate conrod_winit;
 extern crate fluent;
 extern crate image;
+extern crate unic_langid;
 
 mod chip;
 mod config;
-mod locale;
 mod display;
+mod locale;
 mod physics;
 mod serial;
 
@@ -32,6 +33,8 @@ use log::LevelFilter;
 
 use config::logger::ConfigLogger;
 use display::window::DisplayWindowBuilder;
+use locale::accessor::LocaleAccessor;
+use locale::loader::LocaleLoader;
 
 #[derive(RustEmbed)]
 #[folder = "res/images/"]
@@ -40,6 +43,10 @@ pub struct EmbeddedImages;
 #[derive(RustEmbed)]
 #[folder = "res/fonts/"]
 pub struct EmbeddedFonts;
+
+#[derive(RustEmbed)]
+#[folder = "res/locales/"]
+pub struct EmbeddedLocales;
 
 struct AppArgs {
     log: String,
@@ -58,6 +65,7 @@ pub enum Mode {
 
 lazy_static! {
     static ref APP_ARGS: AppArgs = make_app_args();
+    static ref APP_I18N: LocaleAccessor = make_app_i18n();
 }
 
 fn make_app_args() -> AppArgs {
@@ -136,9 +144,13 @@ fn make_app_args() -> AppArgs {
     }
 }
 
+fn make_app_i18n() -> LocaleAccessor {
+    LocaleLoader::new(&APP_ARGS.translation).into_accessor()
+}
+
 fn ensure_states() {
     // Ensure all statics are valid (a `deref` is enough to lazily initialize them)
-    let _ = APP_ARGS.deref();
+    let (_, _) = (APP_ARGS.deref(), APP_I18N.deref());
 }
 
 fn main() {

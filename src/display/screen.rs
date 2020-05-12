@@ -11,6 +11,7 @@ use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 use crate::chip::ChipState;
 use crate::config::environment::*;
 use crate::physics::types::DataPressure;
+use crate::APP_I18N;
 
 use super::fonts::Fonts;
 use super::widget::{
@@ -333,7 +334,7 @@ impl<'a> Screen<'a> {
         let machine_snapshot = self.machine_snapshot.unwrap();
 
         let peak_config = TelemetryWidgetConfig {
-            title: "P(peak)",
+            title: APP_I18N.t("telemetry-label-peak"),
             value_measured: Some(
                 (machine_snapshot.previous_peak_pressure as f64 / 10.0)
                     .round()
@@ -341,7 +342,7 @@ impl<'a> Screen<'a> {
             ),
             value_target: Some(machine_snapshot.peak_command.to_string()),
             value_arrow: telemetry_data.arrow_image_id,
-            unit: "cmH2O",
+            unit: APP_I18N.t("telemetry-unit-cmh2o"),
             ids: (
                 self.ids.background,
                 self.ids.peak_parent,
@@ -362,7 +363,7 @@ impl<'a> Screen<'a> {
 
         // Initialize the plateau widget
         let plateau_config = TelemetryWidgetConfig {
-            title: "P(plateau)",
+            title: APP_I18N.t("telemetry-label-plateau"),
             value_measured: Some(
                 (machine_snapshot.previous_plateau_pressure as f64 / 10.0)
                     .round()
@@ -370,7 +371,7 @@ impl<'a> Screen<'a> {
             ),
             value_target: Some(machine_snapshot.plateau_command.to_string()),
             value_arrow: telemetry_data.arrow_image_id,
-            unit: "cmH2O",
+            unit: APP_I18N.t("telemetry-unit-cmh2o"),
             ids: (
                 self.ids.peak_parent,
                 self.ids.plateau_parent,
@@ -391,7 +392,7 @@ impl<'a> Screen<'a> {
 
         // Initialize the PEEP widget
         let peep_config = TelemetryWidgetConfig {
-            title: "P(expiratory)",
+            title: APP_I18N.t("telemetry-label-expiratory"),
             value_measured: Some(
                 (machine_snapshot.previous_peep_pressure as f64 / 10.0)
                     .round()
@@ -399,7 +400,7 @@ impl<'a> Screen<'a> {
             ),
             value_target: Some(machine_snapshot.peep_command.to_string()),
             value_arrow: telemetry_data.arrow_image_id,
-            unit: "cmH2O",
+            unit: APP_I18N.t("telemetry-unit-cmh2o"),
             ids: (
                 self.ids.plateau_parent,
                 self.ids.peep_parent,
@@ -420,11 +421,11 @@ impl<'a> Screen<'a> {
 
         // Initialize the cycles widget
         let cycles_config = TelemetryWidgetConfig {
-            title: "Cycles/minute",
+            title: APP_I18N.t("telemetry-label-cycles"),
             value_measured: None,
             value_target: Some(machine_snapshot.cpm_command.to_string()),
             value_arrow: telemetry_data.arrow_image_id,
-            unit: "/minute",
+            unit: APP_I18N.t("telemetry-unit-per-minute"),
             ids: (
                 self.ids.peep_parent,
                 self.ids.cycles_parent,
@@ -445,7 +446,7 @@ impl<'a> Screen<'a> {
 
         // Initialize the ratio widget
         let ratio_config = TelemetryWidgetConfig {
-            title: "Insp-exp ratio",
+            title: APP_I18N.t("telemetry-label-ratio"),
             value_measured: None,
             // TODO: gather dynamic numerator + denominator from telemetry (avoid sharing the same \
             //   constants in 2 places)
@@ -455,7 +456,7 @@ impl<'a> Screen<'a> {
                 CYCLE_RATIO_INSPIRATION + CYCLE_RATIO_EXPIRATION
             )),
             value_arrow: telemetry_data.arrow_image_id,
-            unit: "insp./total",
+            unit: APP_I18N.t("telemetry-unit-insp-on-total"),
             ids: (
                 self.ids.cycles_parent,
                 self.ids.ratio_parent,
@@ -477,11 +478,11 @@ impl<'a> Screen<'a> {
         // Initialize the tidal widget
         // TODO: this is not yet being reported by the telemetry protocol
         let tidal_config = TelemetryWidgetConfig {
-            title: "Tidal volume",
+            title: APP_I18N.t("telemetry-label-tidal"),
             value_measured: Some("n/a".to_string()),
             value_target: None,
             value_arrow: telemetry_data.arrow_image_id,
-            unit: "mL (milliliters)",
+            unit: APP_I18N.t("telemetry-unit-milliliters"),
             ids: (
                 self.ids.ratio_parent,
                 self.ids.tidal_parent,
