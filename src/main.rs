@@ -15,6 +15,7 @@ extern crate rust_embed;
 extern crate conrod_core;
 extern crate conrod_winit;
 extern crate image;
+extern crate fluent;
 
 mod chip;
 mod config;
