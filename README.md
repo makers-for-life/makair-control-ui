@@ -47,7 +47,7 @@ As MakAir was designed to be used internationally, we have made sure that the Co
 
 You can pass the desired locale code when running the `makair-control` binary, using the `--translation` argument. _Make sure to pass the locale ISO code, eg. for French: `--translation=fr`._
 
-**You can find the list of supported languages, with their ISO language codes below (note that more locales may have been added since then):**
+**➡️ You can find the list of supported languages, with their ISO language codes below (note that more locales may have been added since then):**
 
 * 🇬🇧 **English**: `en`
 * 🇫🇷 **French**: `fr`
