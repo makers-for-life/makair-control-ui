@@ -41,6 +41,22 @@ You may also play a pre-recorded file, by passing it as an input (this is handy 
 1. Pull the telemetry library (in the parent directory): `git pull https://github.com/makers-for-life/makair-telemetry.git`
 2. Run an example (from the Control UI directory): `./makair-control --input=../makair-telemetry/records/few_cycles` (where `--input` is an UNIX file path)
 
+## Supported Translations
+
+As MakAir was designed to be used internationally, we have made sure that the Control UI was fully translated in major languages.
+
+You can pass the desired locale code when running the `makair-control` binary, using the `--translation` argument. _Make sure to pass the locale ISO code, eg. for French: `--translation=fr`._
+
+**You can find the list of supported languages, with their ISO language codes below (note that more locales may have been added since then):**
+
+* 🇬🇧 **English**: `en`
+* 🇫🇷 **French**: `fr`
+* 🇩🇪 **German**: `de`
+* 🇮🇹 **Italian**: `it`
+* 🇵🇹 **Portuguese**: `pt`
+* 🇷🇺 **Russian**: `ru`
+* 🇨🇳 **Chinese (Simplified)**: `zh`
+
 ## How To Build A Release? (Cross-Compile For ARM)
 
 To cross-compile a new release for an ARM target (using MUSL; statically-linked libraries), you can call the `release_binaries.sh` script:
