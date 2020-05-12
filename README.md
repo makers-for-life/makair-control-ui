@@ -64,7 +64,7 @@ You can pass the desired locale code when running the `makair-control` binary, u
 
 ℹ️ If your language does not appear in the list above, you may translate the [base English file](./res/locales/en.ftl), then [open a Pull Request](https://github.com/makers-for-life/makair-control-ui/pulls).
 
-ℹ️ Note that CJK-based scripts (eg. Chinese) are not supported, due to our font system not being compatible yet. More work should be done in order to provide support.
+**⚠️ Note that CJK-based scripts (eg. Chinese) are not supported, due to our font system not being compatible yet. More work should be done in order to provide support.**
 
 ## How To Build A Release? (Cross-Compile For ARM)
 
