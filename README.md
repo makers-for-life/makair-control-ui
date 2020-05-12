@@ -57,7 +57,7 @@ You can pass the desired locale code when running the `makair-control` binary, u
 * 🇷🇺 **Russian**: `ru`
 * 🇨🇳 **Chinese (Simplified)**: `zh`
 
-If your language does not appear in the list above, you may translate the [base English file](./res/locales/en.ftl), then [open a Pull Request](https://github.com/makers-for-life/makair-control-ui/pulls).
+ℹ️ If your language does not appear in the list above, you may translate the [base English file](./res/locales/en.ftl), then [open a Pull Request](https://github.com/makers-for-life/makair-control-ui/pulls).
 
 ## How To Build A Release? (Cross-Compile For ARM)
 
