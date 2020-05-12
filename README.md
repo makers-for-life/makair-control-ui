@@ -51,10 +51,16 @@ You can pass the desired locale code when running the `makair-control` binary, u
 
 * 🇬🇧 **English**: `en`
 * 🇫🇷 **French**: `fr`
-* 🇩🇪 **German**: `de`
-* 🇮🇹 **Italian**: `it`
+* 🇩🇪 **German**: `de` — (WIP)
+* 🇮🇹 **Italian**: `it` — (WIP)
+* 🇪🇸 **Spanish**: `es` — (WIP)
 * 🇵🇹 **Portuguese**: `pt`
-* 🇷🇺 **Russian**: `ru`
+* 🇵🇱 **Polish**: `pl` — (WIP)
+* 🇱🇻 **Latvian**: `lv` — (WIP)
+* 🇷🇺 **Russian**: `ru` — (WIP)
+* 🇺🇦 **Ukrainian**: `uk` — (WIP)
+* 🇹🇷 **Turkish**: `tr` — (WIP)
+* 🇦🇿 **Azerbaijani**: `az` — (WIP)
 * 🇨🇳 **Chinese (Simplified)**: `zh`
 
 ℹ️ If your language does not appear in the list above, you may translate the [base English file](./res/locales/en.ftl), then [open a Pull Request](https://github.com/makers-for-life/makair-control-ui/pulls).
