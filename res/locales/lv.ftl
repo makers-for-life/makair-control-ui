@@ -1,4 +1,3 @@
-# TODO
 telemetry-label-peak = K(kulminācija)
 telemetry-label-plateau = A(atslābums)
 telemetry-label-expiratory = I(izelpa)
@@ -22,7 +21,6 @@ status-power-ac = Maiņstrāvas avots
 error-title = Notika kļūda:
 
 stop-title = Ventilatora ierīce neaktīva
-stop-description = 
-Lūdzu, atkārtoti ieslēdziet to, lai atsāktu elpošanu
+stop-description = Lūdzu, atkārtoti ieslēdziet to, lai atsāktu elpošanu
 
 no-data-title = Ierīce ir atvienota vai dati nav saņemti

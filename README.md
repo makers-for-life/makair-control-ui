@@ -57,7 +57,7 @@ You can pass the desired locale code when running the `makair-control` binary, u
 * 🇵🇹 **[Portuguese](./res/locales/pt.ftl)**: `pt`
 * 🇵🇱 **[Polish](./res/locales/pl.ftl)**: `pl` — (WIP)
 * 🇨🇿 **[Czech](./res/locales/cs.ftl)**: `cs` — (WIP)
-* 🇱🇻 **[Latvian](./res/locales/lv.ftl)**: `lv` — (WIP)
+* 🇱🇻 **[Latvian](./res/locales/lv.ftl)**: `lv`
 * 🇷🇺 **[Russian](./res/locales/ru.ftl)**: `ru`
 * 🇺🇦 **[Ukrainian](./res/locales/uk.ftl)**: `uk`
 * 🇹🇷 **[Turkish](./res/locales/tr.ftl)**: `tr` — (WIP)
