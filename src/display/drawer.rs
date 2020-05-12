@@ -136,7 +136,7 @@ impl<'a> DisplayDrawer<'a> {
                         chrono::Local::now().format("%Y%m%d-%H%M%S")
                     );
                     let file = std::fs::File::create(&path)
-                        .unwrap_or_else(|_| panic!("Could not create file '{}'", &path));
+                        .unwrap_or_else(|_| panic!("could not create file '{}'", &path));
                     std::io::BufWriter::new(file)
                 });
                 std::thread::spawn(move || {

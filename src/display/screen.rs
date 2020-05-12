@@ -475,6 +475,7 @@ impl<'a> Screen<'a> {
             .render(ControlWidgetType::Telemetry(ratio_config));
 
         // Initialize the tidal widget
+        // TODO: this is not yet being reported by the telemetry protocol
         let tidal_config = TelemetryWidgetConfig {
             title: "Tidal volume",
             value_measured: Some("n/a".to_string()),

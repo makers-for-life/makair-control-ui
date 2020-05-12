@@ -14,11 +14,12 @@ extern crate rust_embed;
 #[macro_use]
 extern crate conrod_core;
 extern crate conrod_winit;
-extern crate image;
 extern crate fluent;
+extern crate image;
 
 mod chip;
 mod config;
+mod locale;
 mod display;
 mod physics;
 mod serial;
@@ -42,6 +43,7 @@ pub struct EmbeddedFonts;
 
 struct AppArgs {
     log: String,
+    translation: String,
     mode: Mode,
     fullscreen: bool,
 }
@@ -98,8 +100,17 @@ fn make_app_args() -> AppArgs {
                 .long("fullscreen")
                 .help("Launch in fullscreen mode"),
         )
+        .arg(
+            Arg::with_name("translation")
+                .short("t")
+                .long("translation")
+                .help("Translation locale ISO code")
+                .default_value("en")
+                .takes_value(true),
+        )
         .get_matches();
 
+    // Parse input mode
     let mode = match (matches.value_of("port"), matches.value_of("input")) {
         (Some(p), _) => Mode::Port {
             port: p.to_string(),
@@ -115,6 +126,11 @@ fn make_app_args() -> AppArgs {
     // Generate owned app arguments
     AppArgs {
         log: String::from(matches.value_of("log").expect("invalid log value")),
+        translation: String::from(
+            matches
+                .value_of("translation")
+                .expect("invalid translation value"),
+        ),
         mode,
         fullscreen: matches.is_present("fullscreen"),
     }
