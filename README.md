@@ -49,19 +49,19 @@ You can pass the desired locale code when running the `makair-control` binary, u
 
 **➡️ You can find the list of supported languages, with their ISO language codes below:**
 
-* 🇬🇧 **English**: `en`
-* 🇫🇷 **French**: `fr`
-* 🇩🇪 **German**: `de` — (WIP)
-* 🇮🇹 **Italian**: `it` — (WIP)
-* 🇪🇸 **Spanish**: `es` — (WIP)
-* 🇵🇹 **Portuguese**: `pt`
-* 🇵🇱 **Polish**: `pl` — (WIP)
-* 🇱🇻 **Latvian**: `lv` — (WIP)
-* 🇷🇺 **Russian**: `ru` — (WIP)
-* 🇺🇦 **Ukrainian**: `uk` — (WIP)
-* 🇹🇷 **Turkish**: `tr` — (WIP)
-* 🇦🇿 **Azerbaijani**: `az` — (WIP)
-* 🇨🇳 **Chinese (Simplified)**: `zh`
+* 🇬🇧 **[English](./res/locales/en.ftl)**: `en`
+* 🇫🇷 **[French](./res/locales/fr.ftl)**: `fr`
+* 🇩🇪 **[German](./res/locales/de.ftl)**: `de` — (WIP)
+* 🇮🇹 **[Italian](./res/locales/it.ftl)**: `it` — (WIP)
+* 🇪🇸 **[Spanish](./res/locales/es.ftl)**: `es` — (WIP)
+* 🇵🇹 **[Portuguese](./res/locales/pt.ftl)**: `pt`
+* 🇵🇱 **[Polish](./res/locales/pl.ftl)**: `pl` — (WIP)
+* 🇱🇻 **[Latvian](./res/locales/lv.ftl)**: `lv` — (WIP)
+* 🇷🇺 **[Russian](./res/locales/ru.ftl)**: `ru` — (WIP)
+* 🇺🇦 **[Ukrainian](./res/locales/uk.ftl)**: `uk` — (WIP)
+* 🇹🇷 **[Turkish](./res/locales/tr.ftl)**: `tr` — (WIP)
+* 🇦🇿 **[Azerbaijani](./res/locales/az.ftl)**: `az` — (WIP)
+* 🇨🇳 **[Chinese (Simplified)](./res/locales/zh.ftl)**: `zh`
 
 ℹ️ If your language does not appear in the list above, you may translate the [base English file](./res/locales/en.ftl), then [open a Pull Request](https://github.com/makers-for-life/makair-control-ui/pulls).
 
