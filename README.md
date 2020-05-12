@@ -51,14 +51,15 @@ You can pass the desired locale code when running the `makair-control` binary, u
 
 * 🇬🇧 **[English](./res/locales/en.ftl)**: `en`
 * 🇫🇷 **[French](./res/locales/fr.ftl)**: `fr`
-* 🇩🇪 **[German](./res/locales/de.ftl)**: `de` — (WIP)
-* 🇮🇹 **[Italian](./res/locales/it.ftl)**: `it` — (WIP)
+* 🇩🇪 **[German](./res/locales/de.ftl)**: `de`
+* 🇮🇹 **[Italian](./res/locales/it.ftl)**: `it`
 * 🇪🇸 **[Spanish](./res/locales/es.ftl)**: `es` — (WIP)
 * 🇵🇹 **[Portuguese](./res/locales/pt.ftl)**: `pt`
 * 🇵🇱 **[Polish](./res/locales/pl.ftl)**: `pl` — (WIP)
+* 🇨🇿 **[Czech](./res/locales/cs.ftl)**: `cs` — (WIP)
 * 🇱🇻 **[Latvian](./res/locales/lv.ftl)**: `lv` — (WIP)
-* 🇷🇺 **[Russian](./res/locales/ru.ftl)**: `ru` — (WIP)
-* 🇺🇦 **[Ukrainian](./res/locales/uk.ftl)**: `uk` — (WIP)
+* 🇷🇺 **[Russian](./res/locales/ru.ftl)**: `ru`
+* 🇺🇦 **[Ukrainian](./res/locales/uk.ftl)**: `uk`
 * 🇹🇷 **[Turkish](./res/locales/tr.ftl)**: `tr` — (WIP)
 * 🇦🇿 **[Azerbaijani](./res/locales/az.ftl)**: `az` — (WIP)
 
