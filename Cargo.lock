@@ -1019,6 +1019,7 @@ dependencies = [
  "fluent",
  "glium",
  "image",
+ "inflate",
  "lazy_static",
  "log",
  "makair-telemetry",

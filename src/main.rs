@@ -16,6 +16,7 @@ extern crate conrod_core;
 extern crate conrod_winit;
 extern crate fluent;
 extern crate image;
+extern crate inflate;
 extern crate unic_langid;
 
 mod chip;

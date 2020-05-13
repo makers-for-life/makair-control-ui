@@ -24,6 +24,7 @@ rust-embed = { version = "5.5.1", features = ["compression"] }
 chrono = "0.4.11"
 fluent = "0.12"
 unic-langid = "0.9"
+inflate = "0.4"
 winit = "0.19"
 image = "0.23.3"
 glium = "0.24"

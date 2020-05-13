@@ -7,6 +7,7 @@ use conrod_core::UiBuilder;
 use glium::glutin::Icon;
 use glium::glutin::{ContextBuilder, EventsLoop, WindowBuilder};
 use image::load_from_memory;
+use inflate::inflate_bytes_zlib;
 
 use crate::EmbeddedFonts;
 use crate::EmbeddedImages;
@@ -33,17 +34,22 @@ lazy_static! {
             .unwrap()
             .into_rgba()
             .into_raw();
-    static ref FONT_NOTOSANS_BOLD: conrod_core::text::Font = conrod_core::text::Font::from_bytes(
-        EmbeddedFonts::get("notosans_bold.ttf")
-            .unwrap()
-            .into_owned()
-    )
-    .unwrap();
-    static ref FONT_NOTOSANS_REGULAR: conrod_core::text::Font =
+    static ref FONT_DEFAULT_NOTOSANS_REGULAR: conrod_core::text::Font =
         conrod_core::text::Font::from_bytes(
-            EmbeddedFonts::get("notosans_regular.ttf")
+            inflate_bytes_zlib(&EmbeddedFonts::get("default/notosans_regular.ttf.zz").unwrap())
                 .unwrap()
-                .into_owned()
+        )
+        .unwrap();
+    static ref FONT_DEFAULT_NOTOSANS_BOLD: conrod_core::text::Font =
+        conrod_core::text::Font::from_bytes(
+            inflate_bytes_zlib(&EmbeddedFonts::get("default/notosans_bold.ttf.zz").unwrap())
+                .unwrap()
+        )
+        .unwrap();
+    static ref FONT_CJK_NOTOSANS_ALL: conrod_core::text::Font =
+        conrod_core::text::Font::from_bytes(
+            inflate_bytes_zlib(&EmbeddedFonts::get("cjk/notosans_cjk_regular.ttf.zz").unwrap())
+                .unwrap()
         )
         .unwrap();
 }
@@ -93,12 +99,20 @@ impl DisplayWindow {
         .build();
 
         // Load all required fonts to interface
-        let bold_font = interface.fonts.insert(FONT_NOTOSANS_BOLD.clone());
-
-        // last loaded font is the one that will be used by default
-        let regular_font = interface.fonts.insert(FONT_NOTOSANS_REGULAR.clone());
-
-        let fonts = Fonts::new(regular_font, bold_font);
+        // Notice: this depends on the in-use translation, as eg. CJK glyphs are not included in \
+        //   the default font.
+        let fonts = match APP_ARGS.translation.as_str() {
+            "zh" | "ja" | "ko" => Fonts::new(
+                interface.fonts.insert(FONT_CJK_NOTOSANS_ALL.clone()),
+                interface.fonts.insert(FONT_CJK_NOTOSANS_ALL.clone()),
+            ),
+            _ => Fonts::new(
+                interface
+                    .fonts
+                    .insert(FONT_DEFAULT_NOTOSANS_REGULAR.clone()),
+                interface.fonts.insert(FONT_DEFAULT_NOTOSANS_BOLD.clone()),
+            ),
+        };
 
         // Create window contents drawer
         let mut drawer =
