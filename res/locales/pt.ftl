@@ -1,13 +1,13 @@
 telemetry-label-peak = P (pico)
 telemetry-label-plateau = P (platô)
 telemetry-label-expiratory = P (expiratório)
-telemetry-label-cycles = Ciclos / minuto
+telemetry-label-cycles = Ciclos/minuto
 telemetry-label-ratio = Taxa de insp-exp.
 telemetry-label-tidal = Volume corr.
 
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-per-minute = /minuto
-telemetry-unit-insp-on-total = insp./total
+telemetry-unit-insp-on-total = insp.:exp.
 telemetry-unit-milliliters = mL (mililitros)
 
 alarms-title = ALARMES

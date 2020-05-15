@@ -7,7 +7,7 @@ telemetry-label-tidal = 潮量
 
 telemetry-unit-cmh2o = 厘米水
 telemetry-unit-per-minute = /分钟
-telemetry-unit-insp-on-total = 灵感/总
+telemetry-unit-insp-on-total = 灵感:到期
 telemetry-unit-milliliters = 毫升（毫升）
 
 alarms-title = 警报

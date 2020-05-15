@@ -7,7 +7,7 @@ telemetry-label-tidal = Дыхательный объем
 
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-per-minute = /минута
-telemetry-unit-insp-on-total = вдох/суммарно
+telemetry-unit-insp-on-total = вдох:Выдох
 telemetry-unit-milliliters = миллилитров
 
 alarms-title = ТРЕВОГИ

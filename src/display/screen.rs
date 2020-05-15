@@ -451,7 +451,7 @@ impl<'a> Screen<'a> {
             // TODO: gather dynamic numerator + denominator from telemetry (avoid sharing the same \
             //   constants in 2 places)
             value_target: Some(format!(
-                "{}/{}",
+                "{}:{}",
                 CYCLE_RATIO_INSPIRATION,
                 CYCLE_RATIO_INSPIRATION + CYCLE_RATIO_EXPIRATION
             )),
