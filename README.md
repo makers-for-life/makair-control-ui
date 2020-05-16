@@ -11,6 +11,7 @@
 | V1.1.x | Operational initial release | ✅
 | V1.2.x | Crashes fixed + smoother graph + implemented medical staff feedbacks | ✅
 | V1.3.x | Improve text readability, by increasing font sizes | ✅
+| V1.4.x | Added internationalization capabilities | ✅
 
 ## How To Build?
 
@@ -40,6 +41,33 @@ You may also play a pre-recorded file, by passing it as an input (this is handy 
 
 1. Pull the telemetry library (in the parent directory): `git pull https://github.com/makers-for-life/makair-telemetry.git`
 2. Run an example (from the Control UI directory): `./makair-control --input=../makair-telemetry/records/few_cycles` (where `--input` is an UNIX file path)
+
+## Supported Translations
+
+As MakAir was designed to be used internationally, we have made sure that the Control UI was fully translated in major languages.
+
+You can pass the desired locale code when running the `makair-control` binary, using the `--translation` argument. _Make sure to pass the locale ISO code, eg. for French: `--translation=fr`._
+
+**➡️ You can find the list of supported languages, with their ISO language codes below:**
+
+* 🇬🇧 **[English](./res/locales/en.ftl)**: `en`
+* 🇫🇷 **[French](./res/locales/fr.ftl)**: `fr`
+* 🇩🇪 **[German](./res/locales/de.ftl)**: `de`
+* 🇮🇹 **[Italian](./res/locales/it.ftl)**: `it`
+* 🇪🇸 **[Spanish](./res/locales/es.ftl)**: `es`
+* 🇵🇹 **[Portuguese](./res/locales/pt.ftl)**: `pt`
+* 🇵🇱 **[Polish](./res/locales/pl.ftl)**: `pl` — (WIP)
+* 🇨🇿 **[Czech](./res/locales/cs.ftl)**: `cs` — (WIP)
+* 🇱🇻 **[Latvian](./res/locales/lv.ftl)**: `lv`
+* 🇷🇺 **[Russian](./res/locales/ru.ftl)**: `ru`
+* 🇺🇦 **[Ukrainian](./res/locales/uk.ftl)**: `uk`
+* 🇹🇷 **[Turkish](./res/locales/tr.ftl)**: `tr` — (WIP)
+* 🇦🇿 **[Azerbaijani](./res/locales/az.ftl)**: `az` — (WIP)
+* 🇨🇳 **[Chinese (Simplified)](./res/locales/zh.ftl)**: `zh`
+* 🇯🇵 **[Japanese](./res/locales/ja.ftl)**: `ja` — (WIP)
+* 🇰🇷 **[Korean](./res/locales/ko.ftl)**: `ko` — (WIP)
+
+ℹ️ If your language does not appear in the list above, you may translate the [base English file](./res/locales/en.ftl), then [open a Pull Request](https://github.com/makers-for-life/makair-control-ui/pulls).
 
 ## How To Build A Release? (Cross-Compile For ARM)
 

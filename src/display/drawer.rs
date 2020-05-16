@@ -21,6 +21,7 @@ use super::renderer::{DisplayRenderer, DisplayRendererBuilder};
 use super::screen::Ids;
 use super::support::GliumDisplayWinitWrapper;
 use crate::config::environment::{DISPLAY_WINDOW_SIZE_HEIGHT, DISPLAY_WINDOW_SIZE_WIDTH};
+use crate::locale::accessor::LocaleAccessor;
 use crate::AppArgs;
 use crate::Mode::Test;
 
@@ -33,7 +34,7 @@ pub struct DisplayDrawerBuilder<'a> {
 
 pub struct DisplayDrawer<'a> {
     app_args: AppArgs,
-    renderer: DisplayRenderer,
+    renderer: DisplayRenderer<'a>,
     glium_renderer: conrod_glium::Renderer,
     display: GliumDisplayWinitWrapper,
     interface: &'a mut Ui,
@@ -50,6 +51,7 @@ impl<'a> DisplayDrawerBuilder<'a> {
         events_loop: EventsLoop,
         interface: &'a mut Ui,
         fonts: Fonts,
+        i18n: &'a LocaleAccessor,
     ) -> DisplayDrawer<'a> {
         let is_ci = std::env::var("CI").is_ok();
 
@@ -82,7 +84,7 @@ impl<'a> DisplayDrawerBuilder<'a> {
         // Create drawer
         DisplayDrawer {
             app_args,
-            renderer: DisplayRendererBuilder::new(fonts, ids),
+            renderer: DisplayRendererBuilder::new(fonts, ids, i18n),
             glium_renderer: conrod_glium::Renderer::new(&display.0).unwrap(),
             display,
             interface,
@@ -175,7 +177,7 @@ impl<'a> DisplayDrawer<'a> {
                         chrono::Local::now().format("%Y%m%d-%H%M%S")
                     );
                     let file = std::fs::File::create(&path)
-                        .unwrap_or_else(|_| panic!("Could not create file '{}'", &path));
+                        .unwrap_or_else(|_| panic!("could not create file '{}'", &path));
                     std::io::BufWriter::new(file)
                 });
                 std::thread::spawn(move || {

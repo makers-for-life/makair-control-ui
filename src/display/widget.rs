@@ -23,6 +23,7 @@ use crate::physics::pressure::process_max_allowed_pressure;
 use crate::physics::types::DataPressure;
 
 use super::fonts::Fonts;
+use crate::locale::accessor::LocaleAccessor;
 
 pub struct BackgroundWidgetConfig {
     color: conrod_core::color::Color,
@@ -65,12 +66,12 @@ pub struct HeartbeatWidgetConfig<'a> {
     inner: WidgetId,
 }
 
-pub struct TelemetryWidgetConfig<'a> {
-    pub title: &'a str,
+pub struct TelemetryWidgetConfig {
+    pub title: String,
     pub value_measured: Option<String>,
     pub value_target: Option<String>,
     pub value_arrow: conrod_core::image::Id,
-    pub unit: &'a str,
+    pub unit: String,
     pub ids: (
         WidgetId,
         WidgetId,
@@ -255,17 +256,22 @@ pub enum ControlWidgetType<'a> {
     Graph(GraphWidgetConfig),
     NoData(NoDataWidgetConfig),
     Stop(StopWidgetConfig),
-    Telemetry(TelemetryWidgetConfig<'a>),
+    Telemetry(TelemetryWidgetConfig),
 }
 
 pub struct ControlWidget<'a> {
     ui: conrod_core::UiCell<'a>,
     fonts: &'a Fonts,
+    i18n: &'a LocaleAccessor,
 }
 
 impl<'a> ControlWidget<'a> {
-    pub fn new(ui: conrod_core::UiCell<'a>, fonts: &'a Fonts) -> ControlWidget<'a> {
-        ControlWidget { ui, fonts }
+    pub fn new(
+        ui: conrod_core::UiCell<'a>,
+        fonts: &'a Fonts,
+        i18n: &'a LocaleAccessor,
+    ) -> ControlWidget<'a> {
+        ControlWidget { ui, fonts, i18n }
     }
 
     pub fn render(&mut self, widget_type: ControlWidgetType<'a>) -> f64 {
@@ -334,7 +340,7 @@ impl<'a> ControlWidget<'a> {
         text_style.color = Some(color::WHITE);
         text_style.font_size = Some(12);
 
-        widget::text::Text::new("ALARMS")
+        widget::text::Text::new(&self.i18n.t("alarms-title"))
             .with_style(text_style)
             .top_left_with_margins_on(
                 config.container,
@@ -352,7 +358,7 @@ impl<'a> ControlWidget<'a> {
                 self.alarm(&config, **code, alarm, x);
             }
         } else {
-            widget::text::Text::new("There are no active alarms.")
+            widget::text::Text::new(&self.i18n.t("alarms-empty"))
                 .color(Color::Rgba(1.0, 1.0, 1.0, 0.5))
                 .font_size(12)
                 .right_from(config.title, 42.0)
@@ -556,20 +562,22 @@ impl<'a> ControlWidget<'a> {
         unit_box_style.border = Some(0.0);
         unit_box_style.border_color = Some(color::TRANSPARENT);
 
+        let unit_text_value = if is_unit_stopped {
+            self.i18n.t("status-unit-stopped")
+        } else {
+            self.i18n.t("status-unit-active")
+        };
+
         canvas::Canvas::new()
             .with_style(unit_box_style)
             .w_h(box_width, box_height)
             .top_left_of(config.wrapper)
             .set(config.unit_box, &mut self.ui);
 
-        widget::text::Text::new(if is_unit_stopped {
-            "Unit stopped"
-        } else {
-            "Unit active"
-        })
-        .with_style(unit_text_style)
-        .mid_top_with_margin_on(config.unit_box, STATUS_BOX_TEXT_MARGIN_TOP)
-        .set(config.unit_text, &mut self.ui);
+        widget::text::Text::new(&unit_text_value)
+            .with_style(unit_text_style)
+            .mid_top_with_margin_on(config.unit_box, STATUS_BOX_TEXT_MARGIN_TOP)
+            .set(config.unit_text, &mut self.ui);
 
         // Display power status text
         let mut power_box_style = canvas::Style::default();
@@ -595,7 +603,7 @@ impl<'a> ControlWidget<'a> {
             .set(config.power_box, &mut self.ui);
 
         let power_text_value = if is_battery_powered {
-            let mut value = String::from("Battery");
+            let mut value = self.i18n.t("status-power-battery");
 
             if let Some(battery_level) = config.battery_level {
                 value.push_str(" (");
@@ -605,7 +613,7 @@ impl<'a> ControlWidget<'a> {
 
             value
         } else {
-            "AC power".to_string()
+            self.i18n.t("status-power-ac")
         };
 
         widget::text::Text::new(&power_text_value)
@@ -714,7 +722,7 @@ impl<'a> ControlWidget<'a> {
         .set(config.ids.1, &mut self.ui);
 
         // Create title text
-        widget::Text::new(config.title)
+        widget::Text::new(&config.title)
             .color(color::WHITE)
             .top_left_with_margins_on(config.ids.1, 8.0, TELEMETRY_WIDGET_PADDING_LEFT)
             .font_size(13)
@@ -776,7 +784,7 @@ impl<'a> ControlWidget<'a> {
         }
 
         // Create unit text
-        widget::Text::new(config.unit)
+        widget::Text::new(&config.unit)
             .color(color::WHITE.with_alpha(0.2))
             .bottom_left_with_margins_on(config.ids.1, 10.0, TELEMETRY_WIDGET_PADDING_LEFT)
             .font_size(12)
@@ -792,7 +800,7 @@ impl<'a> ControlWidget<'a> {
         text_style.color = Some(color::WHITE);
         text_style.font_size = Some(30);
 
-        widget::Text::new(&format!("An error happened:\n{}", config.error)) // using \n instead of the wrap methods because I couldn't make them work
+        widget::Text::new(&format!("{}\n{}", self.i18n.t("error-title"), config.error)) // using \n instead of the wrap methods because I couldn't make them work
             .color(color::WHITE)
             .align_top() // Aligned to top otherwise I can't make the line breaks work
             .with_style(text_style)
@@ -853,7 +861,7 @@ impl<'a> ControlWidget<'a> {
         title_style.font_size = Some(19);
         title_style.font_id = Some(Some(self.fonts.bold));
 
-        widget::text::Text::new("Ventilator unit inactive")
+        widget::text::Text::new(&self.i18n.t("stop-title"))
             .with_style(title_style)
             .mid_top_with_margin_on(config.container, DISPLAY_STOPPED_MESSAGE_PADDING_TOP)
             .set(config.title, &mut self.ui);
@@ -863,7 +871,7 @@ impl<'a> ControlWidget<'a> {
         message_style.font_size = Some(14);
         message_style.font_id = Some(Some(self.fonts.regular));
 
-        widget::text::Text::new("Please re-enable it to resume respiration")
+        widget::text::Text::new(&self.i18n.t("stop-description"))
             .with_style(message_style)
             .mid_bottom_with_margin_on(config.container, DISPLAY_STOPPED_MESSAGE_PADDING_BOTTOM)
             .set(config.message, &mut self.ui);
@@ -878,7 +886,7 @@ impl<'a> ControlWidget<'a> {
         text_style.color = Some(color::WHITE);
         text_style.font_size = Some(30);
 
-        widget::Text::new("Device disconnected or no data received")
+        widget::Text::new(&self.i18n.t("no-data-title"))
             .color(color::WHITE)
             .middle()
             .with_style(text_style)

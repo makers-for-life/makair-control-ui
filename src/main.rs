@@ -14,11 +14,15 @@ extern crate rust_embed;
 #[macro_use]
 extern crate conrod_core;
 extern crate conrod_winit;
+extern crate fluent;
 extern crate image;
+extern crate inflate;
+extern crate unic_langid;
 
 mod chip;
 mod config;
 mod display;
+mod locale;
 mod physics;
 mod serial;
 mod test_strategies;
@@ -30,6 +34,8 @@ use log::LevelFilter;
 
 use config::logger::ConfigLogger;
 use display::window::DisplayWindowBuilder;
+use locale::accessor::LocaleAccessor;
+use locale::loader::LocaleLoader;
 use telemetry::structures::TelemetryMessage;
 
 #[derive(RustEmbed)]
@@ -40,9 +46,14 @@ pub struct EmbeddedImages;
 #[folder = "res/fonts/"]
 pub struct EmbeddedFonts;
 
+#[derive(RustEmbed)]
+#[folder = "res/locales/"]
+pub struct EmbeddedLocales;
+
 #[derive(Clone, Debug)]
 pub struct AppArgs {
     log: String,
+    translation: String,
     mode: Mode,
     fullscreen: bool,
 }
@@ -97,8 +108,17 @@ fn make_app_args() -> AppArgs {
                 .long("fullscreen")
                 .help("Launch in fullscreen mode"),
         )
+        .arg(
+            Arg::with_name("translation")
+                .short("t")
+                .long("translation")
+                .help("Translation locale ISO code")
+                .default_value("en")
+                .takes_value(true),
+        )
         .get_matches();
 
+    // Parse input mode
     let mode = match (matches.value_of("port"), matches.value_of("input")) {
         (Some(p), _) => Mode::Port {
             port: p.to_string(),
@@ -114,13 +134,24 @@ fn make_app_args() -> AppArgs {
     // Generate owned app arguments
     AppArgs {
         log: String::from(matches.value_of("log").expect("invalid log value")),
+        translation: String::from(
+            matches
+                .value_of("translation")
+                .expect("invalid translation value"),
+        ),
         mode,
         fullscreen: matches.is_present("fullscreen"),
     }
 }
 
+fn make_app_i18n(args: &AppArgs) -> LocaleAccessor {
+    LocaleLoader::new(&args.translation).into_accessor()
+}
+
 fn main() {
     let app_args = make_app_args();
+
+    let app_i18n = make_app_i18n(&app_args);
 
     let _logger =
         ConfigLogger::init(LevelFilter::from_str(&app_args.log).expect("invalid log level"));
@@ -128,7 +159,7 @@ fn main() {
     info!("starting up");
 
     // Spawn window manager
-    DisplayWindowBuilder::new(app_args).spawn();
+    DisplayWindowBuilder::new(app_args, &app_i18n).spawn();
 
     info!("stopped");
 }
@@ -136,6 +167,7 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use crate::display::window::DisplayWindowBuilder;
+    use crate::locale::loader::LocaleLoader;
     use crate::test_strategies::tests::TelemetryStrategies;
     use crate::AppArgs;
     use proptest::collection;
@@ -217,11 +249,15 @@ mod tests {
     }
 
     fn run_with_msgs(msgs: Vec<TelemetryMessage>) {
-        DisplayWindowBuilder::new(AppArgs {
-            log: "test".to_string(),
-            mode: super::Mode::Test(msgs),
-            fullscreen: false,
-        })
+        DisplayWindowBuilder::new(
+            AppArgs {
+                log: "test".to_string(),
+                translation: "en".to_string(),
+                mode: super::Mode::Test(msgs),
+                fullscreen: false,
+            },
+            &LocaleLoader::new("en").into_accessor(),
+        )
         .spawn();
     }
 }

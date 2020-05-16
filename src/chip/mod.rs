@@ -80,7 +80,7 @@ impl Chip {
                     match AlarmPriority::try_from(*alarm) {
                         Ok(priority) => self.new_alarm((*alarm).into(), priority, true),
                         Err(e) => warn!(
-                            "Skip alarm {} because we couldn't get the priority: {:?}",
+                            "skip alarm {} because we couldn't get the priority: {:?}",
                             alarm, e
                         ),
                     };

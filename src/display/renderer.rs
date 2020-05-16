@@ -28,12 +28,14 @@ use super::screen::{
     ScreenDataStatus, ScreenDataTelemetry,
 };
 use super::support::GliumDisplayWinitWrapper;
+use crate::locale::accessor::LocaleAccessor;
 
 pub struct DisplayRendererBuilder;
 
-pub struct DisplayRenderer {
+pub struct DisplayRenderer<'a> {
     fonts: Fonts,
     ids: Ids,
+    i18n: &'a LocaleAccessor,
 }
 
 const GRAPH_WIDTH: u32 =
@@ -62,12 +64,12 @@ lazy_static! {
 
 #[allow(clippy::new_ret_no_self)]
 impl DisplayRendererBuilder {
-    pub fn new(fonts: Fonts, ids: Ids) -> DisplayRenderer {
-        DisplayRenderer { fonts, ids }
+    pub fn new(fonts: Fonts, ids: Ids, i18n: &'_ LocaleAccessor) -> DisplayRenderer {
+        DisplayRenderer { fonts, ids, i18n }
     }
 }
 
-impl DisplayRenderer {
+impl<'a> DisplayRenderer<'a> {
     #[allow(clippy::too_many_arguments)]
     pub fn render(
         &mut self,
@@ -83,7 +85,7 @@ impl DisplayRenderer {
 
         match chip_state {
             ChipState::Initializing => self.initializing(display, interface, image_map),
-            ChipState::WaitingData => self.empty(interface, image_map),
+            ChipState::WaitingData => self.empty(interface, image_map, self.i18n),
             ChipState::Running | ChipState::Stopped => self.data(
                 display,
                 interface,
@@ -102,10 +104,11 @@ impl DisplayRenderer {
         &mut self,
         interface: &mut Ui,
         image_map: conrod_core::image::Map<texture::Texture2d>,
+        i18n: &LocaleAccessor,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let ui = interface.set_widgets();
 
-        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None);
+        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None, i18n);
 
         screen.render_no_data();
 
@@ -133,7 +136,7 @@ impl DisplayRenderer {
             height: bootloader_logo_height as _,
         };
 
-        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None);
+        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None, self.i18n);
 
         screen.render_initializing(screen_boot_loader);
 
@@ -148,7 +151,7 @@ impl DisplayRenderer {
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let ui = interface.set_widgets();
 
-        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None);
+        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None, self.i18n);
 
         screen.render_error(error);
 
@@ -215,6 +218,7 @@ impl DisplayRenderer {
             &self.fonts,
             Some(machine_snapshot),
             Some(ongoing_alarms),
+            self.i18n,
         );
 
         let screen_data_branding = ScreenDataBranding {
