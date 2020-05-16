@@ -28,7 +28,7 @@ pub struct DisplayWindow<'a> {
 
 impl DisplayWindowBuilder {
     #[allow(clippy::new_ret_no_self)]
-    pub fn new(app_args: AppArgs, i18n: &'_ LocaleAccessor) -> DisplayWindow {
+    pub fn new(app_args: AppArgs, i18n: &LocaleAccessor) -> DisplayWindow {
         DisplayWindow { app_args, i18n }
     }
 }

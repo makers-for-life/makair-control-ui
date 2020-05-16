@@ -64,7 +64,7 @@ lazy_static! {
 
 #[allow(clippy::new_ret_no_self)]
 impl DisplayRendererBuilder {
-    pub fn new(fonts: Fonts, ids: Ids, i18n: &'_ LocaleAccessor) -> DisplayRenderer {
+    pub fn new(fonts: Fonts, ids: Ids, i18n: &LocaleAccessor) -> DisplayRenderer {
         DisplayRenderer { fonts, ids, i18n }
     }
 }
