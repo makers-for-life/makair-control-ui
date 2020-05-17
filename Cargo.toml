@@ -41,6 +41,7 @@ proptest = "0.9.6"
 [features]
 default = []
 graph-scaler = []
+long-tests = []
 
 [profile.dev]
 opt-level = 0

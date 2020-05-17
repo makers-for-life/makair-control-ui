@@ -178,6 +178,7 @@ mod tests {
     use telemetry::structures::{DataSnapshot, TelemetryMessage};
 
     #[test]
+    #[cfg(feature = "long-tests")]
     fn test_gui_with_telemetry_messages() {
         let test_counter = Cell::new(0);
 
