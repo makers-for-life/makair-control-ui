@@ -209,13 +209,15 @@ impl Chip {
 
 #[cfg(test)]
 mod tests {
-    use crate::chip::Chip;
-    use crate::test_strategies::tests::TelemetryStrategies;
-    use proptest::collection;
-    use proptest::test_runner::TestRunner;
 
     #[test]
+    #[cfg(not(feature = "long-tests"))]
     fn test_chip_new_event() {
+        use crate::chip::Chip;
+        use crate::test_strategies::tests::TelemetryStrategies;
+        use proptest::collection;
+        use proptest::test_runner::TestRunner;
+
         TestRunner::default()
             .run(
                 &collection::vec(

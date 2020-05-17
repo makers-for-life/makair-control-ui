@@ -168,18 +168,17 @@ fn main() {
 mod tests {
     use crate::display::window::DisplayWindowBuilder;
     use crate::locale::loader::LocaleLoader;
-    use crate::test_strategies::tests::TelemetryStrategies;
     use crate::AppArgs;
-    use proptest::collection;
-    use proptest::test_runner::TestRunner;
-    use std::cell::Cell;
-    use telemetry::structures::Phase::Inhalation;
-    use telemetry::structures::SubPhase::Inspiration;
-    use telemetry::structures::{DataSnapshot, TelemetryMessage};
+    use telemetry::structures::TelemetryMessage;
 
     #[test]
     #[cfg(feature = "long-tests")]
     fn test_gui_with_telemetry_messages() {
+        use crate::test_strategies::tests::TelemetryStrategies;
+        use proptest::collection;
+        use proptest::test_runner::TestRunner;
+        use std::cell::Cell;
+
         let test_counter = Cell::new(0);
 
         // With any sequence of TelemetryMessage, the GUI must not crash.
@@ -205,7 +204,12 @@ mod tests {
     }
 
     #[test]
+    #[cfg(not(feature = "long-tests"))]
     fn specfic_failing_telemetry_messages() {
+        use telemetry::structures::DataSnapshot;
+        use telemetry::structures::Phase::Inhalation;
+        use telemetry::structures::SubPhase::Inspiration;
+
         run_with_msgs(vec![
             TelemetryMessage::DataSnapshot(DataSnapshot {
                 version: "".to_string(),
