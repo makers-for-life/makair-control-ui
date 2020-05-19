@@ -12,6 +12,8 @@ extern crate lazy_static;
 #[macro_use]
 extern crate rust_embed;
 #[macro_use]
+extern crate quick_error;
+#[macro_use]
 extern crate conrod_core;
 extern crate conrod_winit;
 extern crate fluent;
@@ -23,6 +25,7 @@ mod chip;
 mod config;
 mod display;
 mod locale;
+mod lora;
 mod physics;
 mod serial;
 

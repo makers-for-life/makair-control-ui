@@ -8,6 +8,7 @@ use std::collections::{HashMap, VecDeque};
 use std::convert::TryFrom;
 
 use crate::config::environment::*;
+use crate::lora::LoraController;
 use crate::physics::types::DataPressure;
 use telemetry::alarm::AlarmCode;
 use telemetry::serial::core;
@@ -30,6 +31,7 @@ pub struct Chip {
     pub ongoing_alarms: HashMap<AlarmCode, AlarmPriority>,
     pub battery_level: Option<u8>,
     state: ChipState,
+    lora: LoraController,
 }
 
 impl Chip {
@@ -42,6 +44,7 @@ impl Chip {
             ongoing_alarms: HashMap::new(),
             battery_level: None,
             state: ChipState::WaitingData,
+            lora: LoraController::new().expect("Unable to init Lora"),
         }
     }
 
@@ -85,6 +88,9 @@ impl Chip {
                         ),
                     };
                 }
+
+                // bad quentin do monothreaded bullshit
+                self.lora.sendMessage(snapshot.clone());
 
                 self.last_machine_snapshot = snapshot;
 

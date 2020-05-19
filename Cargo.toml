@@ -33,6 +33,8 @@ conrod_glium = "0.69"
 conrod_winit = "0.69"
 conrod_core = "0.69"
 makair-telemetry = { git = "https://github.com/makers-for-life/makair-telemetry", features = ["env_logger"], rev = "f22dd4bb54ef37ee1218c4249cd4a51198d5ef0c" }
+rn2903 = { git = "https://github.com/waxzce/lora-rust-rn2903-rn2483.git", rev = "b086057ba096920abef3870ad0cefa2c80a343e2" }
+quick-error = "1.2.3"
 
 [features]
 default = []
