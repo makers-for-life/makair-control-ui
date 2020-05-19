@@ -47,4 +47,8 @@ impl LoraController {
         self.txvr.radio_tx(message);
         // });
     }
+
+    pub fn sendHello(&mut self) {
+        self.txvr.radio_tx("hello".to_string());
+    }
 }
