@@ -12,8 +12,6 @@ extern crate lazy_static;
 #[macro_use]
 extern crate rust_embed;
 #[macro_use]
-extern crate quick_error;
-#[macro_use]
 extern crate conrod_core;
 extern crate conrod_winit;
 extern crate fluent;
@@ -173,14 +171,6 @@ fn main() {
 
     // Spawn window manager
     DisplayWindowBuilder::new().spawn(chip);
-
-    // thread to simulate data sending from lora
-    std::thread::spawn(|| {
-        let lora = lora::LoraController::new().map(|mut l| loop {
-            l.sendHello();
-            std::thread::sleep(std::time::Duration::from_millis(4000));
-        });
-    });
 
     info!("stopped");
 }
