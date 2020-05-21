@@ -1111,6 +1111,7 @@ dependencies = [
  "quick-error",
  "rn2903",
  "rust-embed",
+ "sysfs_gpio",
  "unic-langid",
  "winit",
 ]
@@ -1986,6 +1987,15 @@ dependencies = [
  "proc-macro2 1.0.13",
  "quote 1.0.6",
  "unicode-xid 0.2.0",
+]
+
+[[package]]
+name = "sysfs_gpio"
+version = "0.5.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "24961a55846623d8e4f6cec38718945116fed8d6970336a7110710a07aa9b5d1"
+dependencies = [
+ "nix",
 ]
 
 [[package]]
