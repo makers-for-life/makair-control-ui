@@ -170,7 +170,7 @@ fn main() {
     DisplayWindowBuilder::new().spawn();
 
     // thread to simulate data sending from lora
-    std::thread::spawn(move || {
+    std::thread::spawn(|| {
         let lora = lora::LoraController::new().map(|mut l| loop {
             l.sendHello();
             std::thread::sleep(std::time::Duration::from_millis(4000));
