@@ -153,13 +153,25 @@ impl Chip {
     }
 
     fn update_tick(&mut self, tick: u64) {
-        if tick < self.last_tick {
-            self.reset(tick);
+        // Sometimes, a MachineStateSnapshot event can be received with an older systick
+        // This is due to the way the systick is computed on the Makair's side. If we are too close of an ending millisecond
+        // the micro() call will probably return the microseconds of the next millisecond, thus making a wrong order
+        // If we have less than 1ms of difference between the messages, just ignore the systick update
+        let to_update = if tick < self.last_tick {
+            self.last_tick - tick > 1000
         } else {
-            self.last_tick = tick;
+            true
+        };
 
-            if self.boot_time.is_none() {
-                self.update_boot_time();
+        if to_update {
+            if tick < self.last_tick {
+                self.reset(tick);
+            } else {
+                self.last_tick = tick;
+
+                if self.boot_time.is_none() {
+                    self.update_boot_time();
+                }
             }
         }
     }
