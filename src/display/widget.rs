@@ -36,13 +36,39 @@ impl BackgroundWidgetConfig {
     }
 }
 
+pub struct LayoutWidgetConfig {
+    parent: WidgetId,
+    top: f64,
+    height: f64,
+    layout: WidgetId
+}
+
+impl LayoutWidgetConfig {
+    pub fn new(parent: WidgetId, top: f64, height: f64, layout: WidgetId) -> LayoutWidgetConfig {
+        LayoutWidgetConfig { parent, top, height, layout}
+    }
+}
+
+pub struct LayoutConfig {
+    header: LayoutWidgetConfig,
+    body: LayoutWidgetConfig,
+    footer: LayoutWidgetConfig,
+}
+
+impl LayoutConfig {
+    pub fn new(header: LayoutWidgetConfig, body: LayoutWidgetConfig, footer: LayoutWidgetConfig) -> LayoutConfig {
+        LayoutConfig { header, body, footer }
+    }
+}
+
 pub struct BrandingWidgetConfig<'a> {
+    parent: WidgetId,
     version_firmware: &'a str,
     version_control: &'a str,
     width: f64,
     height: f64,
     image: conrod_core::image::Id,
-    ids: (WidgetId, WidgetId),
+    ids: (WidgetId, WidgetId, WidgetId),
 }
 
 pub struct StatusWidgetConfig<'a> {
@@ -66,6 +92,19 @@ pub struct HeartbeatWidgetConfig<'a> {
     inner: WidgetId,
 }
 
+pub struct TelemetryWidgetContainerConfig {
+    width: f64,
+    height: f64,
+    parent: WidgetId,
+    id: WidgetId,
+}
+
+impl TelemetryWidgetContainerConfig {
+    pub fn new(width: f64, height: f64, parent: WidgetId, id: WidgetId) -> TelemetryWidgetContainerConfig {
+        TelemetryWidgetContainerConfig { width, height, parent, id }
+    }
+}
+
 pub struct TelemetryWidgetConfig {
     pub title: String,
     pub value_measured: Option<String>,
@@ -79,11 +118,13 @@ pub struct TelemetryWidgetConfig {
         WidgetId,
         WidgetId,
         WidgetId,
-        WidgetId,
+        Option<WidgetId>,
     ),
     pub x_position: f64,
     pub y_position: f64,
     pub background_color: Color,
+    pub width: f64,
+    pub height: f64,
 }
 
 pub struct GraphWidgetConfig {
@@ -96,14 +137,16 @@ pub struct GraphWidgetConfig {
 
 impl<'a> BrandingWidgetConfig<'a> {
     pub fn new(
+        parent: WidgetId,
         version_firmware: &'a str,
         version_control: &'a str,
         width: f64,
         height: f64,
         image: conrod_core::image::Id,
-        ids: (WidgetId, WidgetId),
+        ids: (WidgetId, WidgetId, WidgetId),
     ) -> BrandingWidgetConfig<'a> {
         BrandingWidgetConfig {
+            parent,
             version_firmware,
             version_control,
             width,
@@ -285,7 +328,9 @@ pub enum ControlWidgetType<'a> {
     Modal(ModalWidgetConfig),
     NoData(NoDataWidgetConfig),
     Stop(StopWidgetConfig),
+    TelemetryContainer(TelemetryWidgetContainerConfig),
     Telemetry(TelemetryWidgetConfig),
+    Layout(LayoutConfig),
     TriggerInspiratorySettings(TriggerInspiratoryWidgetConfig<'a>),
 }
 
@@ -312,7 +357,9 @@ impl<'a> ControlWidget<'a> {
             ControlWidgetType::Modal(config) => self.modal(config),
             ControlWidgetType::NoData(config) => self.no_data(config),
             ControlWidgetType::Stop(config) => self.stop(config),
+            ControlWidgetType::TelemetryContainer(config) => self.telemetry_widgets_container(config),
             ControlWidgetType::Telemetry(config) => self.telemetry_widget(config),
+            ControlWidgetType::Layout(config) => self.layout(config),
             ControlWidgetType::TriggerInspiratorySettings(config) => self.trigger_inspiratory_settings(config)
         }
     }
@@ -332,7 +379,7 @@ impl<'a> ControlWidget<'a> {
             DISPLAY_ALARM_CONTAINER_WIDTH,
             (max(1, alarms_count) as f64) * DISPLAY_ALARM_MESSAGE_HEIGHT
                 + 2.0 * DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL
-                + ((max(1, alarms_count) - 1) as f64) * DISPLAY_ALARM_MESSAGE_SPACING_TOP_INNER,
+                + (alarms_count as f64) * DISPLAY_ALARM_MESSAGE_SPACING_TOP_INNER,
         ];
 
         // Draw container box
@@ -353,7 +400,7 @@ impl<'a> ControlWidget<'a> {
             DISPLAY_ROUNDED_RECTANGLES_ROUND,
             container_color,
         )
-        .mid_top_with_margin_on(config.parent, container_margin_top)
+        .right_from(config.parent, 10.0)
         .set(config.container, &mut self.ui);
 
         // Draw text
@@ -365,7 +412,7 @@ impl<'a> ControlWidget<'a> {
 
         text_style.font_id = Some(Some(self.fonts.bold));
         text_style.color = Some(color::WHITE);
-        text_style.font_size = Some(12);
+        text_style.font_size = Some(14);
 
         widget::text::Text::new(&APP_I18N.t("alarms-title"))
             .with_style(text_style)
@@ -422,7 +469,7 @@ impl<'a> ControlWidget<'a> {
                 config.container,
                 conrod_core::position::Place::End(Some(from_top)),
             )
-            .right_from(config.title, 28.0)
+            .right_from(config.title, 15.0)
             .set(config.alarm_widgets[index], &mut self.ui);
 
         self.alarm_code(&config, code, alarm_priority, index);
@@ -475,7 +522,7 @@ impl<'a> ControlWidget<'a> {
 
         text_style.font_id = Some(Some(self.fonts.bold));
         text_style.color = Some(color::WHITE);
-        text_style.font_size = Some(13);
+        text_style.font_size = Some(24);
 
         widget::text::Text::new(&format!("{}", alarm_code.code()))
             .with_style(text_style)
@@ -509,8 +556,8 @@ impl<'a> ControlWidget<'a> {
 
         widget::text::Text::new(&code.description())
             .color(color::WHITE)
-            .font_size(11)
-            .top_left_with_margins_on(config.alarm_messages_containers[index], 5.0, 10.0)
+            .font_size(24)
+            .top_left_with_margins_on(config.alarm_messages_containers[index], 5.0, 5.0)
             .set(config.alarm_messages[index], &mut self.ui);
     }
 
@@ -523,20 +570,24 @@ impl<'a> ControlWidget<'a> {
     }
 
     fn branding(&mut self, config: BrandingWidgetConfig) -> f64 {
+        widget::rectangle::Rectangle::fill_with([config.width, config.height], color::TRANSPARENT)
+            .top_left_with_margins_on(config.parent, BRANDING_IMAGE_MARGIN_TOP, BRANDING_IMAGE_MARGIN_LEFT)
+            .set(config.ids.0, &mut self.ui);
+
         // Display branding image
         widget::Image::new(config.image)
             .w_h(config.width, config.height)
-            .top_left_with_margins(BRANDING_IMAGE_MARGIN_TOP, BRANDING_IMAGE_MARGIN_LEFT)
-            .set(config.ids.0, &mut self.ui);
+            .top_left_of(config.ids.0)
+            .set(config.ids.1, &mut self.ui);
 
         // Display branding text
         let branding_text = format!("F{} | C{}", config.version_firmware, config.version_control);
 
         widget::Text::new(&branding_text)
             .color(color::WHITE.with_alpha(0.45))
-            .top_left_with_margins(BRANDING_TEXT_MARGIN_TOP, BRANDING_TEXT_MARGIN_LEFT)
+            .top_left_with_margins_on(config.parent, BRANDING_TEXT_MARGIN_TOP, BRANDING_TEXT_MARGIN_LEFT)
             .font_size(10)
-            .set(config.ids.1, &mut self.ui);
+            .set(config.ids.2, &mut self.ui);
 
         config.width
     }
@@ -723,28 +774,33 @@ impl<'a> ControlWidget<'a> {
     }
 
     fn graph(&mut self, config: GraphWidgetConfig) -> f64 {
+        info!("Graph width: {}", config.width);
         widget::Image::new(config.image)
             .w_h(config.width, config.height)
-            .mid_bottom_with_margin_on(config.parent, GRAPH_DRAW_SPACING_FROM_BOTTOM)
-            .x_position(conrod_core::Position::Absolute(
-                -(GRAPH_DRAW_LABEL_JITTER_FIX_WIDTH as f64) / 2.0,
-            )) // Apply dirty left slope jitter fix
+            .top_left_of(config.parent)
             .set(config.id, &mut self.ui);
 
         config.width
     }
 
+    fn telemetry_widgets_container(&mut self, config: TelemetryWidgetContainerConfig) -> f64 {
+        widget::rectangle::Rectangle::fill_with([config.width, config.height], color::WHITE)
+            .right_from(config.parent, 0.0)
+            .set(config.id, &mut self.ui);
+
+        0.0
+    }
+
     fn telemetry_widget(&mut self, config: TelemetryWidgetConfig) -> f64 {
         // Create rounded rectangle
-        widget::rounded_rectangle::RoundedRectangle::styled(
-            [TELEMETRY_WIDGET_SIZE_WIDTH, TELEMETRY_WIDGET_SIZE_HEIGHT],
-            2.5,
-            widget::primitive::shape::Style::Fill(Some(config.background_color)),
+        widget::rectangle::Rectangle::fill_with(
+            [config.width, config.height],
+            config.background_color,
         )
         .bottom_left_with_margins_on(
             config.ids.0,
             config.y_position,
-            config.x_position + TELEMETRY_WIDGET_SIZE_SPACING,
+            config.x_position,
         )
         .set(config.ids.1, &mut self.ui);
 
@@ -752,15 +808,15 @@ impl<'a> ControlWidget<'a> {
         widget::Text::new(&config.title)
             .color(color::WHITE)
             .top_left_with_margins_on(config.ids.1, 8.0, TELEMETRY_WIDGET_PADDING_LEFT)
-            .font_size(13)
+            .font_size(16)
             .set(config.ids.2, &mut self.ui);
 
         // Initiate text style for measured value
         let mut value_text_style = conrod_core::widget::primitive::text::Style::default();
 
-        value_text_style.font_id = Some(Some(self.fonts.bold));
+        value_text_style.font_id = Some(Some(self.fonts.regular));
         value_text_style.color = Some(color::WHITE);
-        value_text_style.font_size = Some(19);
+        value_text_style.font_size = Some(45);
 
         // Create value text
         // Notice: there are different drawing cases depending on values provided
@@ -771,12 +827,12 @@ impl<'a> ControlWidget<'a> {
 
                 target_text_style.font_id = Some(Some(self.fonts.regular));
                 target_text_style.color = Some(color::WHITE);
-                target_text_style.font_size = Some(15);
+                target_text_style.font_size = Some(35);
 
                 // Draw measured value
                 widget::Text::new(&value_measured)
                     .with_style(value_text_style)
-                    .mid_left_with_margin_on(config.ids.1, TELEMETRY_WIDGET_PADDING_LEFT)
+                    .bottom_left_with_margins_on(config.ids.1, 10.0, TELEMETRY_WIDGET_PADDING_LEFT)
                     .set(config.ids.3, &mut self.ui);
 
                 // Draw arrow
@@ -804,18 +860,20 @@ impl<'a> ControlWidget<'a> {
                 // Draw target value
                 widget::Text::new(&value_target)
                     .with_style(value_text_style)
-                    .mid_left_with_margin_on(config.ids.1, TELEMETRY_WIDGET_PADDING_LEFT)
+                    .bottom_left_with_margins_on(config.ids.1, 10.0, TELEMETRY_WIDGET_PADDING_LEFT)
                     .set(config.ids.5, &mut self.ui);
             }
             _ => {}
         }
 
-        // Create unit text
-        widget::Text::new(&config.unit)
-            .color(color::WHITE.with_alpha(0.2))
-            .bottom_left_with_margins_on(config.ids.1, 10.0, TELEMETRY_WIDGET_PADDING_LEFT)
-            .font_size(12)
-            .set(config.ids.6, &mut self.ui);
+        if let Some(unit_id) = config.ids.6 {
+            // Create unit text
+            widget::Text::new(&config.unit)
+                .color(color::WHITE.with_alpha(0.2))
+                .bottom_left_with_margins_on(config.ids.1, 10.0, TELEMETRY_WIDGET_PADDING_LEFT)
+                .font_size(12)
+                .set(unit_id, &mut self.ui);
+        }
 
         TELEMETRY_WIDGET_SIZE_WIDTH
     }
@@ -932,6 +990,23 @@ impl<'a> ControlWidget<'a> {
             .set(config.id, &mut self.ui);
 
         0 as _
+    }
+
+    fn layout(&mut self, config: LayoutConfig) -> f64 {
+        widget::Rectangle::fill_with([DISPLAY_WINDOW_SIZE_WIDTH as _, config.body.height], color::GREEN)
+            .top_left_with_margins_on(config.body.parent, config.body.top, 0.0)
+            .set(config.body.layout, &mut self.ui);
+
+        widget::Rectangle::fill_with([DISPLAY_WINDOW_SIZE_WIDTH as _, config.footer.height], color::BLUE)
+            .down_from(config.footer.parent, config.footer.top)
+            .set(config.footer.layout, &mut self.ui);
+
+        // This block is defined after the others because we want it to overflow and be on top of the screen
+        widget::Rectangle::fill_with([DISPLAY_WINDOW_SIZE_WIDTH as _, config.header.height], color::TRANSPARENT)
+            .top_left_of(config.header.parent)
+            .set(config.header.layout, &mut self.ui);
+
+        0.0
     }
 
     fn trigger_inspiratory_settings(&mut self, config: TriggerInspiratoryWidgetConfig) -> f64 {

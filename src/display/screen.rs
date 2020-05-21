@@ -18,10 +18,15 @@ use super::widget::{
     AlarmsWidgetConfig, BackgroundWidgetConfig, BrandingWidgetConfig, ControlWidget,
     ControlWidgetType, ErrorWidgetConfig, GraphWidgetConfig, HeartbeatWidgetConfig,
     InitializingWidgetConfig, NoDataWidgetConfig, StatusWidgetConfig, StopWidgetConfig,
-    TelemetryWidgetConfig, ModalWidgetConfig, TriggerInspiratoryWidgetConfig,
+    TelemetryWidgetConfig, TelemetryWidgetContainerConfig, LayoutWidgetConfig, LayoutConfig,
+    ModalWidgetConfig, TriggerInspiratoryWidgetConfig,
 };
 
 widget_ids!(pub struct Ids {
+  layout_header,
+  layout_body,
+  layout_footer,
+
   alarm_container,
   alarm_title,
   alarm_empty,
@@ -33,9 +38,9 @@ widget_ids!(pub struct Ids {
 
   background,
 
-  branding,
   pressure_graph,
 
+  branding_container,
   branding_image,
   branding_text,
 
@@ -49,33 +54,32 @@ widget_ids!(pub struct Ids {
   heartbeat_surround,
   heartbeat_inner,
 
+  telemetry_widgets_right,
+  telemetry_widgets_bottom,
+
   cycles_parent,
   cycles_title,
   cycles_value_measured,
   cycles_value_arrow,
   cycles_value_target,
-  cycles_unit,
 
   peak_parent,
   peak_title,
   peak_value_measured,
   peak_value_arrow,
   peak_value_target,
-  peak_unit,
 
   plateau_parent,
   plateau_title,
   plateau_value_measured,
   plateau_value_arrow,
   plateau_value_target,
-  plateau_unit,
 
   peep_parent,
   peep_title,
   peep_value_measured,
   peep_value_arrow,
   peep_value_target,
-  peep_unit,
 
   ratio_parent,
   ratio_title,
@@ -184,9 +188,7 @@ impl<'a> Screen<'a> {
     ) {
         // Render common background
         self.render_background();
-
-        // Render middle elements
-        self.render_graph(graph_data.image_id, graph_data.width, graph_data.height);
+        self.render_layout();
 
         // Render top elements
         self.render_branding(
@@ -199,6 +201,9 @@ impl<'a> Screen<'a> {
         self.render_alarms();
         self.render_status(status_data);
         self.render_heartbeat(heartbeat_data);
+
+        // Render middle elements
+        self.render_graph(graph_data.image_id, graph_data.width, graph_data.height);
 
         // Render bottom elements
         self.render_telemetry(telemetry_data);
@@ -214,6 +219,14 @@ impl<'a> Screen<'a> {
         self.widgets.render(ControlWidgetType::Background(config));
     }
 
+    pub fn render_layout(&mut self) {
+        let header_config = LayoutWidgetConfig::new(self.ids.background, 0.0, LAYOUT_HEADER_SIZE_FULL_HEIGHT, self.ids.layout_header);
+        let body_config = LayoutWidgetConfig::new(self.ids.background, LAYOUT_HEADER_SIZE_HEIGHT, LAYOUT_BODY_SIZE_HEIGHT, self.ids.layout_body);
+        let footer_config = LayoutWidgetConfig::new(self.ids.layout_body, 0.0, LAYOUT_FOOTER_SIZE_HEIGHT, self.ids.layout_footer);
+        let config = LayoutConfig::new(header_config, body_config, footer_config);
+        self.widgets.render(ControlWidgetType::Layout(config));
+    }
+
     pub fn render_branding(
         &mut self,
         version_firmware: &'a str,
@@ -223,12 +236,13 @@ impl<'a> Screen<'a> {
         height: f64,
     ) {
         let config = BrandingWidgetConfig::new(
+            self.ids.layout_header,
             version_firmware,
             version_control,
             width,
             height,
             image_id,
-            (self.ids.branding_image, self.ids.branding_text),
+            (self.ids.branding_container, self.ids.branding_image, self.ids.branding_text),
         );
 
         self.widgets.render(ControlWidgetType::Branding(config));
@@ -236,7 +250,7 @@ impl<'a> Screen<'a> {
 
     pub fn render_alarms(&mut self) {
         let config = AlarmsWidgetConfig {
-            parent: self.ids.background,
+            parent: self.ids.branding_container,
             container: self.ids.alarm_container,
             title: self.ids.alarm_title,
             empty: self.ids.alarm_empty,
@@ -253,7 +267,7 @@ impl<'a> Screen<'a> {
 
     pub fn render_status(&mut self, status_data: ScreenDataStatus<'a>) {
         let config = StatusWidgetConfig::new(
-            self.ids.background,
+            self.ids.layout_header,
             self.ids.status_wrapper,
             self.ids.status_unit_box,
             self.ids.status_unit_text,
@@ -271,7 +285,7 @@ impl<'a> Screen<'a> {
         let config = HeartbeatWidgetConfig::new(
             heartbeat_data.data_pressure,
             self.machine_snapshot.unwrap().peak_command,
-            self.ids.background,
+            self.ids.layout_header,
             self.ids.heartbeat_ground,
             self.ids.heartbeat_surround,
             self.ids.heartbeat_inner,
@@ -285,7 +299,7 @@ impl<'a> Screen<'a> {
             width,
             height,
             image_id,
-            self.ids.background,
+            self.ids.layout_body,
             self.ids.pressure_graph,
         );
 
@@ -350,8 +364,13 @@ impl<'a> Screen<'a> {
     }
 
     pub fn render_telemetry(&mut self, telemetry_data: ScreenDataTelemetry) {
-        let mut last_widget_position = TELEMETRY_WIDGET_SPACING_FROM_LEFT;
         let machine_snapshot = self.machine_snapshot.unwrap();
+
+        let widgets_right_width: f64 = (DISPLAY_WINDOW_SIZE_WIDTH - GRAPH_WIDTH) as f64;
+        let widgets_right_height: f64 = GRAPH_HEIGHT as f64 / 3.0;
+
+        let container_config = TelemetryWidgetContainerConfig::new(widgets_right_width, DISPLAY_WINDOW_SIZE_HEIGHT as f64 - LAYOUT_HEADER_SIZE_HEIGHT, self.ids.pressure_graph, self.ids.telemetry_widgets_right);
+        self.widgets.render(ControlWidgetType::TelemetryContainer(container_config));
 
         let peak_config = TelemetryWidgetConfig {
             title: APP_I18N.t("telemetry-label-peak"),
@@ -364,20 +383,22 @@ impl<'a> Screen<'a> {
             value_arrow: telemetry_data.arrow_image_id,
             unit: APP_I18N.t("telemetry-unit-cmh2o"),
             ids: (
-                self.ids.background,
+                self.ids.telemetry_widgets_right,
                 self.ids.peak_parent,
                 self.ids.peak_title,
                 self.ids.peak_value_measured,
                 self.ids.peak_value_arrow,
                 self.ids.peak_value_target,
-                self.ids.peak_unit,
+                None
             ),
-            x_position: last_widget_position,
-            y_position: TELEMETRY_WIDGET_SPACING_FROM_BOTTOM,
+            x_position: 0.0,
+            y_position: GRAPH_HEIGHT as f64 + LAYOUT_FOOTER_SIZE_HEIGHT - widgets_right_height,
             background_color: Color::Rgba(39.0 / 255.0, 66.0 / 255.0, 100.0 / 255.0, 1.0),
+            width: widgets_right_width,
+            height: widgets_right_height,
         };
 
-        last_widget_position = self
+        self
             .widgets
             .render(ControlWidgetType::Telemetry(peak_config));
 
@@ -393,20 +414,22 @@ impl<'a> Screen<'a> {
             value_arrow: telemetry_data.arrow_image_id,
             unit: APP_I18N.t("telemetry-unit-cmh2o"),
             ids: (
-                self.ids.peak_parent,
+                self.ids.telemetry_widgets_right,
                 self.ids.plateau_parent,
                 self.ids.plateau_title,
                 self.ids.plateau_value_measured,
                 self.ids.plateau_value_arrow,
                 self.ids.plateau_value_target,
-                self.ids.plateau_unit,
+                None
             ),
-            x_position: last_widget_position,
-            y_position: 0.0,
+            x_position: 0.0,
+            y_position: GRAPH_HEIGHT as f64 + LAYOUT_FOOTER_SIZE_HEIGHT - widgets_right_height * 2.0,
             background_color: Color::Rgba(66.0 / 255.0, 44.0 / 255.0, 85.0 / 255.0, 1.0),
+            width: widgets_right_width,
+            height: widgets_right_height,
         };
 
-        last_widget_position = self
+        self
             .widgets
             .render(ControlWidgetType::Telemetry(plateau_config));
 
@@ -422,22 +445,25 @@ impl<'a> Screen<'a> {
             value_arrow: telemetry_data.arrow_image_id,
             unit: APP_I18N.t("telemetry-unit-cmh2o"),
             ids: (
-                self.ids.plateau_parent,
+                self.ids.telemetry_widgets_right,
                 self.ids.peep_parent,
                 self.ids.peep_title,
                 self.ids.peep_value_measured,
                 self.ids.peep_value_arrow,
                 self.ids.peep_value_target,
-                self.ids.peep_unit,
+                None
             ),
-            x_position: last_widget_position,
-            y_position: 0.0,
+            x_position: 0.0,
+            y_position: GRAPH_HEIGHT as f64 + LAYOUT_FOOTER_SIZE_HEIGHT - widgets_right_height * 3.0,
             background_color: Color::Rgba(76.0 / 255.0, 73.0 / 255.0, 25.0 / 255.0, 1.0),
+            width: widgets_right_width,
+            height: widgets_right_height,
         };
 
-        last_widget_position = self
+        self
             .widgets
             .render(ControlWidgetType::Telemetry(peep_config));
+
 
         // Initialize the cycles widget
         let cycles_config = TelemetryWidgetConfig {
@@ -447,20 +473,22 @@ impl<'a> Screen<'a> {
             value_arrow: telemetry_data.arrow_image_id,
             unit: APP_I18N.t("telemetry-unit-per-minute"),
             ids: (
-                self.ids.peep_parent,
+                self.ids.layout_footer,
                 self.ids.cycles_parent,
                 self.ids.cycles_title,
                 self.ids.cycles_value_measured,
                 self.ids.cycles_value_arrow,
                 self.ids.cycles_value_target,
-                self.ids.cycles_unit,
+                None,
             ),
-            x_position: last_widget_position,
+            x_position: 0.0,
             y_position: 0.0,
             background_color: Color::Rgba(47.0 / 255.0, 74.0 / 255.0, 16.0 / 255.0, 1.0),
+            width: TELEMETRY_WIDGET_SIZE_WIDTH,
+            height: LAYOUT_FOOTER_SIZE_HEIGHT,
         };
 
-        last_widget_position = self
+        self
             .widgets
             .render(ControlWidgetType::Telemetry(cycles_config));
 
@@ -484,14 +512,16 @@ impl<'a> Screen<'a> {
                 self.ids.ratio_value_measured,
                 self.ids.ratio_value_arrow,
                 self.ids.ratio_value_target,
-                self.ids.ratio_unit,
+                None,
             ),
-            x_position: last_widget_position,
+            x_position: TELEMETRY_WIDGET_SIZE_WIDTH,
             y_position: 0.0,
             background_color: Color::Rgba(52.0 / 255.0, 52.0 / 255.0, 52.0 / 255.0, 1.0),
+            width: TELEMETRY_WIDGET_SIZE_WIDTH,
+            height: LAYOUT_FOOTER_SIZE_HEIGHT,
         };
 
-        last_widget_position = self
+        self
             .widgets
             .render(ControlWidgetType::Telemetry(ratio_config));
 
@@ -514,11 +544,13 @@ impl<'a> Screen<'a> {
                 self.ids.tidal_value_measured,
                 self.ids.tidal_value_arrow,
                 self.ids.tidal_value_target,
-                self.ids.tidal_unit,
+                Some(self.ids.tidal_unit),
             ),
-            x_position: last_widget_position,
+            x_position: TELEMETRY_WIDGET_SIZE_WIDTH,
             y_position: 0.0,
             background_color: Color::Rgba(52.0 / 255.0, 52.0 / 255.0, 52.0 / 255.0, 1.0),
+            width: TELEMETRY_WIDGET_SIZE_WIDTH,
+            height: LAYOUT_FOOTER_SIZE_HEIGHT,
         };
 
         self.widgets
