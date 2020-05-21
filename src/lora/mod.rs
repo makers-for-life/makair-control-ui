@@ -63,11 +63,6 @@ impl LoraController {
 
                 device_ready = result.0;
 
-                //               if *device_ready.is_none() {
-                //                 sleep(Duration::from_millis(15000));
-                //           }else {
-
-                //         }
                 match device_ready.as_mut() {
                     Some(Err(error)) => match error {
                         rn2903::Error::WrongDevice(_) => {
