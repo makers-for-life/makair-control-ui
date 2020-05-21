@@ -35,6 +35,7 @@ use clap::{App, Arg};
 use log::LevelFilter;
 
 use crate::chip::Chip;
+use crate::lora::LoraController;
 use config::logger::ConfigLogger;
 use display::window::DisplayWindowBuilder;
 use locale::accessor::LocaleAccessor;
@@ -166,8 +167,10 @@ fn main() {
     // Ensure all states are bound
     ensure_states();
 
+    // Launch LORA init and get Sender for chip
+    let lora_sender = LoraController::new();
     // Create our "Chip" that will store all the data
-    let chip = Chip::new();
+    let chip = Chip::new(lora_sender);
 
     // Spawn window manager
     DisplayWindowBuilder::new().spawn(chip);

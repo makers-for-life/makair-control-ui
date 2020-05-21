@@ -6,10 +6,10 @@
 use crate::config::environment::*;
 use rn2903::Rn2903;
 use std::sync::mpsc;
-use std::sync::mpsc::{channel, Receiver, Sender};
+use std::sync::mpsc::{channel, Sender};
 use std::sync::{Arc, Condvar, Mutex};
 use std::thread;
-use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot, TelemetryMessage};
+use telemetry::structures::TelemetryMessage;
 
 use std::thread::sleep;
 use std::time::Duration;
@@ -75,7 +75,10 @@ impl LoraController {
                                 "LORA device not compatible, will consume message but do nothing"
                             );
                             loop {
-                                rx.recv();
+                                if rx.recv().is_err() {
+                                    error!("Chanel on LORA close unexpectidly");
+                                    break;
+                                }
                             }
                         }
                         rn2903::Error::ConnectionFailed(e) => {

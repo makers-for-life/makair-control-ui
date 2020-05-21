@@ -9,6 +9,7 @@ use std::convert::TryFrom;
 
 use crate::config::environment::*;
 use crate::physics::types::DataPressure;
+use std::sync::mpsc::Sender;
 use telemetry::alarm::AlarmCode;
 use telemetry::serial::core;
 use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot, TelemetryMessage};
@@ -30,10 +31,11 @@ pub struct Chip {
     pub ongoing_alarms: HashMap<AlarmCode, AlarmPriority>,
     pub battery_level: Option<u8>,
     state: ChipState,
+    tx_for_lora: Sender<TelemetryMessage>,
 }
 
 impl Chip {
-    pub fn new() -> Chip {
+    pub fn new(sender_for_lora: Sender<TelemetryMessage>) -> Chip {
         Chip {
             boot_time: None,
             last_tick: 0,
@@ -42,10 +44,17 @@ impl Chip {
             ongoing_alarms: HashMap::new(),
             battery_level: None,
             state: ChipState::WaitingData,
+            tx_for_lora: sender_for_lora,
         }
     }
 
     pub fn new_event(&mut self, event: TelemetryMessage) {
+        // send to LORA - can be moved if usefull
+        let sent = self.tx_for_lora.send(event.clone());
+        match sent {
+            Err(e) => error!("problem while sending data to LORA {:?}", e),
+            _ => (),
+        }
         match event {
             TelemetryMessage::AlarmTrap(alarm) => {
                 self.update_tick(alarm.systick);
