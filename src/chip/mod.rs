@@ -187,6 +187,7 @@ impl Chip {
         self.last_tick = new_tick;
         self.data_pressure.clear();
         self.last_machine_snapshot = MachineStateSnapshot::default();
+        self.ongoing_alarms.clear();
 
         self.update_boot_time();
     }
