@@ -188,24 +188,44 @@ impl DisplayRenderer {
 
         // Create widgets
         let mut ui = interface.set_widgets();
+        let ongoing_alarms_len = ongoing_alarms.len();
+        let widgets_alarms_len = self.ids.alarm_alarms.len();
 
-        for i in 0..ongoing_alarms.len() {
-            let index = i + 1;
-            self.ids
-                .alarm_alarms
-                .resize(index, &mut ui.widget_id_generator());
-            self.ids
-                .alarm_codes_containers
-                .resize(index, &mut ui.widget_id_generator());
-            self.ids
-                .alarm_codes
-                .resize(index, &mut ui.widget_id_generator());
-            self.ids
-                .alarm_messages_containers
-                .resize(index, &mut ui.widget_id_generator());
-            self.ids
-                .alarm_messages
-                .resize(index, &mut ui.widget_id_generator());
+        if ongoing_alarms_len > widgets_alarms_len {
+            for i in widgets_alarms_len..ongoing_alarms_len {
+                let index = i + 1;
+                self.ids
+                    .alarm_alarms
+                    .resize(index, &mut ui.widget_id_generator());
+                self.ids
+                    .alarm_codes_containers
+                    .resize(index, &mut ui.widget_id_generator());
+                self.ids
+                    .alarm_codes
+                    .resize(index, &mut ui.widget_id_generator());
+                self.ids
+                    .alarm_messages_containers
+                    .resize(index, &mut ui.widget_id_generator());
+                self.ids
+                    .alarm_messages
+                    .resize(index, &mut ui.widget_id_generator());
+            }
+        } else {
+            let diff = widgets_alarms_len - ongoing_alarms_len;
+            let useless_id = &mut ui.widget_id_generator();
+            if diff > 0 {
+                self.ids.alarm_alarms.resize(ongoing_alarms_len, useless_id);
+                self.ids
+                    .alarm_codes_containers
+                    .resize(ongoing_alarms_len, useless_id);
+                self.ids.alarm_codes.resize(ongoing_alarms_len, useless_id);
+                self.ids
+                    .alarm_codes_containers
+                    .resize(ongoing_alarms_len, useless_id);
+                self.ids
+                    .alarm_messages
+                    .resize(ongoing_alarms_len, useless_id);
+            }
         }
 
         let mut screen = Screen::new(
