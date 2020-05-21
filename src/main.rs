@@ -36,6 +36,7 @@ use std::str::FromStr;
 use clap::{App, Arg};
 use log::LevelFilter;
 
+use crate::chip::Chip;
 use config::logger::ConfigLogger;
 use display::window::DisplayWindowBuilder;
 use locale::accessor::LocaleAccessor;
@@ -167,8 +168,11 @@ fn main() {
     // Ensure all states are bound
     ensure_states();
 
+    // Create our "Chip" that will store all the data
+    let chip = Chip::new();
+
     // Spawn window manager
-    DisplayWindowBuilder::new().spawn();
+    DisplayWindowBuilder::new().spawn(chip);
 
     // thread to simulate data sending from lora
     std::thread::spawn(|| {
