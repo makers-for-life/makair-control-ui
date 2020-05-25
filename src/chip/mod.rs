@@ -31,11 +31,11 @@ pub struct Chip {
     pub ongoing_alarms: HashMap<AlarmCode, AlarmPriority>,
     pub battery_level: Option<u8>,
     state: ChipState,
-    tx_for_lora: Sender<TelemetryMessage>,
+    tx_for_lora: Option<Sender<TelemetryMessage>>,
 }
 
 impl Chip {
-    pub fn new(sender_for_lora: Sender<TelemetryMessage>) -> Chip {
+    pub fn new(sender_for_lora: Option<Sender<TelemetryMessage>>) -> Chip {
         Chip {
             boot_time: None,
             last_tick: 0,
@@ -50,11 +50,14 @@ impl Chip {
 
     pub fn new_event(&mut self, event: TelemetryMessage) {
         // send to LORA - can be moved if usefull
-        let sent = self.tx_for_lora.send(event.clone());
-        match sent {
-            Err(e) => error!("problem while sending data to LORA {:?}", e),
-            _ => (),
-        }
+        if let Some(tx_for_lora) = &self.tx_for_lora {
+            let sent = tx_for_lora.send(event.clone());
+            match sent {
+                Err(e) => error!("problem while sending data to LORA {:?}", e),
+                _ => (),
+            }
+        };
+
         match event {
             TelemetryMessage::AlarmTrap(alarm) => {
                 self.update_tick(alarm.systick);

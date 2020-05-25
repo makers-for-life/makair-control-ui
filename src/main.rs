@@ -58,6 +58,7 @@ struct AppArgs {
     translation: String,
     mode: Mode,
     fullscreen: bool,
+    lora: bool,
 }
 
 pub enum Mode {
@@ -121,6 +122,11 @@ fn make_app_args() -> AppArgs {
                 .default_value("en")
                 .takes_value(true),
         )
+        .arg(
+            Arg::with_name("disable-lora")
+                .long("disable-lora")
+                .help("Disable LORA support")
+        )
         .get_matches();
 
     // Parse input mode
@@ -146,6 +152,7 @@ fn make_app_args() -> AppArgs {
         ),
         mode,
         fullscreen: matches.is_present("fullscreen"),
+        lora: !matches.is_present("disable-lora"),
     }
 }
 
@@ -168,7 +175,7 @@ fn main() {
     ensure_states();
 
     // Launch LORA init and get Sender for chip
-    let lora_sender = LoraController::new();
+    let lora_sender = if APP_ARGS.lora == true { Some(LoraController::new()) } else { None };
     // Create our "Chip" that will store all the data
     let chip = Chip::new(lora_sender);
 
