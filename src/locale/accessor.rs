@@ -19,7 +19,7 @@ impl LocaleAccessor {
             .add_resource(resource)
             .expect("failed to add locale to its bundle");
 
-        LocaleAccessor { bundle: bundle }
+        LocaleAccessor { bundle }
     }
 
     pub fn t(&self, key: &str) -> String {
@@ -28,14 +28,14 @@ impl LocaleAccessor {
         let message = self
             .bundle
             .get_message(key)
-            .expect(&format!("locale key not found: {}", key));
+            .unwrap_or_else(|| panic!("locale key not found: {}", key));
 
         // Notice: return the key if the message has no value (eg. not yet translated)
         if let Some(pattern) = message.value {
             let formatted = self.bundle.format_pattern(&pattern, None, &mut errors);
 
             // Any error? Panic
-            if errors.len() > 0 {
+            if errors.is_empty() {
                 panic!("could not format pattern: {:?}", errors);
             }
 

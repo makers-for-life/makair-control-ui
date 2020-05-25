@@ -28,7 +28,7 @@ impl LocaleLoader {
         info!("loaded locale: [{}]", locale);
 
         LocaleLoader {
-            locale_id: locale_id,
+            locale_id,
             resource: FluentResource::try_new(locale_string).expect("failed to parse locale file"),
         }
     }
