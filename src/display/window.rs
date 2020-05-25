@@ -15,6 +15,8 @@ use crate::EmbeddedImages;
 use crate::config::environment::*;
 use crate::APP_ARGS;
 
+use crate::chip::Chip;
+
 use super::drawer::DisplayDrawerBuilder;
 use super::fonts::Fonts;
 
@@ -55,7 +57,7 @@ lazy_static! {
 }
 
 impl DisplayWindow {
-    pub fn spawn(&self) {
+    pub fn spawn(&self, chip: Chip) {
         debug!("spawning window");
 
         // Create event loop
@@ -116,7 +118,7 @@ impl DisplayWindow {
 
         // Create window contents drawer
         let mut drawer =
-            DisplayDrawerBuilder::new(window, context, events_loop, &mut interface, fonts);
+            DisplayDrawerBuilder::new(window, context, events_loop, &mut interface, fonts, chip);
 
         drawer.run();
     }

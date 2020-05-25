@@ -46,6 +46,7 @@ impl<'a> DisplayDrawerBuilder<'a> {
         events_loop: EventsLoop,
         interface: &'a mut Ui,
         fonts: Fonts,
+        chip: Chip,
     ) -> DisplayDrawer<'a> {
         // Create display
         let display =
@@ -63,7 +64,7 @@ impl<'a> DisplayDrawerBuilder<'a> {
             display,
             interface,
             events_loop,
-            chip: Chip::new(),
+            chip,
         }
     }
 }

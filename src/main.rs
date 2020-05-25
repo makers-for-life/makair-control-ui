@@ -17,12 +17,14 @@ extern crate conrod_winit;
 extern crate fluent;
 extern crate image;
 extern crate inflate;
+extern crate sysfs_gpio;
 extern crate unic_langid;
 
 mod chip;
 mod config;
 mod display;
 mod locale;
+mod lora;
 mod physics;
 mod serial;
 
@@ -32,6 +34,8 @@ use std::str::FromStr;
 use clap::{App, Arg};
 use log::LevelFilter;
 
+use crate::chip::Chip;
+use crate::lora::LoraController;
 use config::logger::ConfigLogger;
 use display::window::DisplayWindowBuilder;
 use locale::accessor::LocaleAccessor;
@@ -54,6 +58,7 @@ struct AppArgs {
     translation: String,
     mode: Mode,
     fullscreen: bool,
+    lora: bool,
 }
 
 pub enum Mode {
@@ -117,6 +122,11 @@ fn make_app_args() -> AppArgs {
                 .default_value("en")
                 .takes_value(true),
         )
+        .arg(
+            Arg::with_name("disable-lora")
+                .long("disable-lora")
+                .help("Disable LORA support"),
+        )
         .get_matches();
 
     // Parse input mode
@@ -142,6 +152,7 @@ fn make_app_args() -> AppArgs {
         ),
         mode,
         fullscreen: matches.is_present("fullscreen"),
+        lora: !matches.is_present("disable-lora"),
     }
 }
 
@@ -163,8 +174,17 @@ fn main() {
     // Ensure all states are bound
     ensure_states();
 
+    // Launch LORA init and get Sender for chip
+    let lora_sender = if APP_ARGS.lora {
+        Some(LoraController::new())
+    } else {
+        None
+    };
+    // Create our "Chip" that will store all the data
+    let chip = Chip::new(lora_sender);
+
     // Spawn window manager
-    DisplayWindowBuilder::new().spawn();
+    DisplayWindowBuilder::new().spawn(chip);
 
     info!("stopped");
 }

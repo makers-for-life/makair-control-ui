@@ -95,6 +95,9 @@ pub const PEAK_PRESSURE_ALERT_ERROR_RATIO: f64 = 0.15;
 pub const CYCLE_RATIO_INSPIRATION: u8 = 1;
 pub const CYCLE_RATIO_EXPIRATION: u8 = 1;
 
+pub const LORA_GPIO_PIN_NUMBER: u64 = 25;
+pub const LORA_DEVICE_PATH: &str = "/dev/ttyAMA0";
+
 #[cfg(not(feature = "graph-scaler"))]
 pub const GRAPH_DRAW_RANGE_HIGH_STATIC_INITIAL: u8 = 65;
 
