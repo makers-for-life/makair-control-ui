@@ -51,10 +51,8 @@ impl Chip {
     pub fn new_event(&mut self, event: TelemetryMessage) {
         // send to LORA - can be moved if usefull
         if let Some(tx_for_lora) = &self.tx_for_lora {
-            let sent = tx_for_lora.send(event.clone());
-            match sent {
-                Err(e) => error!("problem while sending data to LORA {:?}", e),
-                _ => (),
+            if let Err(e) = tx_for_lora.send(event.clone()) {
+                error!("problem while sending data to LORA {:?}", e);
             }
         };
 

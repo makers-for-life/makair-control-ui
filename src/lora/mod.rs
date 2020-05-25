@@ -18,33 +18,34 @@ use sysfs_gpio::{Direction, Pin};
 pub struct LoraController {}
 
 impl LoraController {
+    #[allow(clippy::new_ret_no_self)]
     pub fn new() -> Sender<TelemetryMessage> {
         let (tx, rx) = channel();
 
+        #[allow(clippy::cognitive_complexity)]
         thread::spawn(move || {
             sleep(Duration::from_millis(2000));
 
             loop {
                 let mylora = Pin::new(LORA_GPIO_PIN_NUMBER); // number depends on chip, etc.
-                let lora_setup = mylora
-                    .with_exported(|| {
-                        println!("set the pin direction");
+                let lora_setup = mylora.with_exported(|| {
+                    println!("set the pin direction");
 
-                        mylora.set_direction(Direction::Out).unwrap();
-                        println!("set the pin low");
+                    mylora.set_direction(Direction::Out).unwrap();
+                    println!("set the pin low");
 
-                        mylora.set_value(0).unwrap();
+                    mylora.set_value(0).unwrap();
 
-                        sleep(Duration::from_millis(1000));
-                        println!("set the pin high");
+                    sleep(Duration::from_millis(1000));
+                    println!("set the pin high");
 
-                        mylora.set_value(1).unwrap();
-                        sleep(Duration::from_millis(1000));
-                        Ok(())
-                    });
+                    mylora.set_value(1).unwrap();
+                    sleep(Duration::from_millis(1000));
+                    Ok(())
+                });
 
                 match lora_setup {
-                    Ok(_) => {},
+                    Ok(_) => {}
                     Err(e) => {
                         error!("Error setting up Lora because of: {:?}. Retrying in 1s", e);
                         std::thread::sleep(Duration::from_secs(1));
@@ -140,7 +141,7 @@ impl LoraController {
                         let mut i = 0;
                         while txvr_ready.mac_pause().is_err() && i < 60 {
                             info!("cannot MAC pause LORA device, will try again in one second");
-                            i = i + 1;
+                            i += 1;
                             sleep(Duration::from_millis(1000));
                         }
                         if i >= 60 {
@@ -153,8 +154,10 @@ impl LoraController {
                         loop {
                             let messagewrap = rx.recv();
                             match messagewrap {
-                                Ok(message) => match message {
-                                    TelemetryMessage::MachineStateSnapshot(snapshot) => {
+                                Ok(message) => {
+                                    if let TelemetryMessage::MachineStateSnapshot(snapshot) =
+                                        message
+                                    {
                                         let mes = format!(
                                             "{},{},{},{},{},{},{},{},{}",
                                             snapshot.device_id,
@@ -173,8 +176,7 @@ impl LoraController {
                                         }
                                         sleep(Duration::from_millis(20));
                                     }
-                                    _ => (),
-                                },
+                                }
                                 Err(e) => match e {
                                     mpsc::RecvError => {
                                         error!("Chanel on LORA close unexpectidly");
@@ -188,6 +190,6 @@ impl LoraController {
             }
         });
         // return
-        return tx;
+        tx
     }
 }

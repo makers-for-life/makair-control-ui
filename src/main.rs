@@ -125,7 +125,7 @@ fn make_app_args() -> AppArgs {
         .arg(
             Arg::with_name("disable-lora")
                 .long("disable-lora")
-                .help("Disable LORA support")
+                .help("Disable LORA support"),
         )
         .get_matches();
 
@@ -175,7 +175,11 @@ fn main() {
     ensure_states();
 
     // Launch LORA init and get Sender for chip
-    let lora_sender = if APP_ARGS.lora == true { Some(LoraController::new()) } else { None };
+    let lora_sender = if APP_ARGS.lora {
+        Some(LoraController::new())
+    } else {
+        None
+    };
     // Create our "Chip" that will store all the data
     let chip = Chip::new(lora_sender);
 
