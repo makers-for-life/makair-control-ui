@@ -26,7 +26,7 @@ impl LoraController {
 
             loop {
                 let mylora = Pin::new(LORA_GPIO_PIN_NUMBER); // number depends on chip, etc.
-                mylora
+                let lora_setup = mylora
                     .with_exported(|| {
                         println!("set the pin direction");
 
@@ -41,8 +41,17 @@ impl LoraController {
                         mylora.set_value(1).unwrap();
                         sleep(Duration::from_millis(1000));
                         Ok(())
-                    })
-                    .unwrap();
+                    });
+
+                match lora_setup {
+                    Ok(_) => {},
+                    Err(e) => {
+                        error!("Error setting up Lora because of: {:?}. Retrying in 1s", e);
+                        std::thread::sleep(Duration::from_secs(1));
+                        continue;
+                    }
+                };
+
                 let pair = Arc::new((Mutex::new(None), Condvar::new()));
                 let pair2 = pair.clone();
 
