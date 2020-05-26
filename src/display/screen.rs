@@ -477,9 +477,14 @@ impl<'a> Screen<'a> {
 
         // Initialize the tidal widget
         // TODO: this is not yet being reported by the telemetry protocol
+        let previous_volume = machine_snapshot
+            .previous_volume
+            .map(|v| format!("{}", v))
+            .unwrap_or_else(|| "n/a".to_string());
+
         let tidal_config = TelemetryWidgetConfig {
             title: APP_I18N.t("telemetry-label-tidal"),
-            value_measured: Some("n/a".to_string()),
+            value_measured: Some(previous_volume),
             value_target: None,
             value_arrow: telemetry_data.arrow_image_id,
             unit: APP_I18N.t("telemetry-unit-milliliters"),
