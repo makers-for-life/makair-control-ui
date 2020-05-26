@@ -95,6 +95,9 @@ pub const PEAK_PRESSURE_ALERT_ERROR_RATIO: f64 = 0.15;
 pub const CYCLE_RATIO_INSPIRATION: u8 = 1;
 pub const CYCLE_RATIO_EXPIRATION: u8 = 1;
 
+pub const SETTINGS_MODAL_WIDTH: f64 = 600.0;
+pub const SETTINGS_MODAL_HEIGTH: f64 = 400.0;
+
 #[cfg(feature = "lora")]
 pub const LORA_GPIO_PIN_NUMBER: u64 = 25;
 #[cfg(feature = "lora")]

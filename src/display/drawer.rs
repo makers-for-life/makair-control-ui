@@ -116,6 +116,10 @@ impl<'a> DisplayDrawer<'a> {
                 }
                 last_render = now;
 
+                // Get UI events since the last render
+                let ui_events = self.renderer.run_ui_events(&mut self.interface);
+                self.chip.new_settings_events(ui_events);
+
                 self.refresh();
             } else {
                 std::thread::sleep(std::time::Duration::from_millis(10));
@@ -166,6 +170,7 @@ impl<'a> DisplayDrawer<'a> {
             &mut self.interface,
             self.chip.get_battery_level(),
             &self.chip.get_state(),
+            &self.chip.settings.inspiratory_trigger
         );
 
         if let Some(primitives) = self.interface.draw_if_changed() {

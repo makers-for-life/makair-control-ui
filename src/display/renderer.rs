@@ -10,6 +10,7 @@ use image::{buffer::ConvertBuffer, load_from_memory, RgbImage, RgbaImage};
 use plotters::prelude::*;
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
+use crate::chip::settings::{ChipSettingsEvent, SettingAction, trigger_inspiratory::{TriggerInspiratory, TriggerInspiratoryEvent}};
 
 use crate::EmbeddedImages;
 
@@ -28,11 +29,18 @@ use super::screen::{
 };
 use super::support::GliumDisplayWinitWrapper;
 
+#[derive(Debug, PartialEq, Eq)]
+pub enum DisplayRendererSettingsState {
+    Opened,
+    Closed
+}
+
 pub struct DisplayRendererBuilder;
 
 pub struct DisplayRenderer {
     fonts: Fonts,
     ids: Ids,
+    settings_state: DisplayRendererSettingsState,
 }
 
 const GRAPH_WIDTH: u32 =
@@ -62,7 +70,7 @@ lazy_static! {
 #[allow(clippy::new_ret_no_self)]
 impl DisplayRendererBuilder {
     pub fn new(fonts: Fonts, ids: Ids) -> DisplayRenderer {
-        DisplayRenderer { fonts, ids }
+        DisplayRenderer { fonts, ids, settings_state: DisplayRendererSettingsState::Closed }
     }
 }
 
@@ -77,6 +85,7 @@ impl DisplayRenderer {
         interface: &mut Ui,
         battery_level: Option<u8>,
         chip_state: &ChipState,
+        trigger_inspiratory_settings: &TriggerInspiratory,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let image_map = conrod_core::image::Map::<texture::Texture2d>::new();
 
@@ -92,9 +101,61 @@ impl DisplayRenderer {
                 ongoing_alarms,
                 battery_level,
                 chip_state,
+                trigger_inspiratory_settings,
             ),
             ChipState::Error(e) => self.error(interface, image_map, e.clone()),
         }
+    }
+
+    pub fn run_ui_events(&mut self, interface: &mut Ui) -> Vec<ChipSettingsEvent> {
+        let mut all_events = Vec::new();
+
+        for _ in interface.widget_input(self.ids.branding_image).clicks() {
+            self.toggle_settings();
+        }
+
+        for _ in interface.widget_input(self.ids.modal_background).clicks() {
+            if self.settings_state == DisplayRendererSettingsState::Opened {
+                self.toggle_settings();
+            }
+        }
+
+        for _ in interface.widget_input(self.ids.trigger_inspiratory_status_button).clicks() {
+            all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::Toggle));
+        }
+
+        for _ in interface.widget_input(self.ids.trigger_inspiratory_offset_less_button).clicks() {
+            all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::InspiratoryTriggerOffset(SettingAction::Less)));
+        }
+
+        for _ in interface.widget_input(self.ids.trigger_inspiratory_offset_more_button).clicks() {
+            all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::InspiratoryTriggerOffset(SettingAction::More)));
+        }
+
+        for _ in interface.widget_input(self.ids.trigger_inspiratory_expiratory_less_button).clicks() {
+            all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::ExpiratoryTrigger(SettingAction::Less)));
+        }
+
+        for _ in interface.widget_input(self.ids.trigger_inspiratory_expiratory_more_button).clicks() {
+            all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::ExpiratoryTrigger(SettingAction::More)));
+        }
+
+        for _ in interface.widget_input(self.ids.trigger_inspiratory_plateau_duration_less_button).clicks() {
+            all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::PlateauDuration(SettingAction::Less)));
+        }
+
+        for _ in interface.widget_input(self.ids.trigger_inspiratory_plateau_duration_more_button).clicks() {
+            all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::PlateauDuration(SettingAction::More)));
+        }
+
+        all_events
+    }
+
+    fn toggle_settings(&mut self) {
+        self.settings_state = match self.settings_state {
+            DisplayRendererSettingsState::Closed => DisplayRendererSettingsState::Opened,
+            DisplayRendererSettingsState::Opened => DisplayRendererSettingsState::Closed
+        };
     }
 
     fn empty(
@@ -165,6 +226,7 @@ impl DisplayRenderer {
         ongoing_alarms: &[(&AlarmCode, &AlarmPriority)],
         battery_level: Option<u8>,
         chip_state: &ChipState,
+        trigger_inspiratory_settings: &TriggerInspiratory,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         // Create branding
         let branding_image_texture = self.draw_branding(display);
@@ -263,6 +325,12 @@ impl DisplayRenderer {
             arrow_image_id: telemetry_arrow_image_id,
         };
 
+        let settings = if self.settings_state == DisplayRendererSettingsState::Opened {
+            Some(trigger_inspiratory_settings)
+        } else {
+            None
+        };
+
         match chip_state {
             ChipState::Running => screen.render_with_data(
                 screen_data_branding,
@@ -270,6 +338,7 @@ impl DisplayRenderer {
                 screen_data_heartbeat,
                 screen_data_graph,
                 screen_data_telemetry,
+                settings
             ),
             ChipState::Stopped => screen.render_stop(
                 screen_data_branding,

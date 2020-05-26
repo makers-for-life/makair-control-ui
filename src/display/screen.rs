@@ -8,7 +8,7 @@ use conrod_core::color::{self, Color};
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
-use crate::chip::ChipState;
+use crate::chip::{ChipState, settings::trigger_inspiratory::{TriggerInspiratory}};
 use crate::config::environment::*;
 use crate::physics::types::DataPressure;
 use crate::APP_I18N;
@@ -18,7 +18,7 @@ use super::widget::{
     AlarmsWidgetConfig, BackgroundWidgetConfig, BrandingWidgetConfig, ControlWidget,
     ControlWidgetType, ErrorWidgetConfig, GraphWidgetConfig, HeartbeatWidgetConfig,
     InitializingWidgetConfig, NoDataWidgetConfig, StatusWidgetConfig, StopWidgetConfig,
-    TelemetryWidgetConfig,
+    TelemetryWidgetConfig, ModalWidgetConfig, TriggerInspiratoryWidgetConfig,
 };
 
 widget_ids!(pub struct Ids {
@@ -91,9 +91,29 @@ widget_ids!(pub struct Ids {
   tidal_value_target,
   tidal_unit,
 
-  stopped_background,
-  stopped_container_borders,
-  stopped_container,
+  trigger_inspiratory_status_container,
+  trigger_inspiratory_status_text,
+  trigger_inspiratory_status_button,
+  trigger_inspiratory_offset_container,
+  trigger_inspiratory_offset_more_button,
+  trigger_inspiratory_offset_less_button,
+  trigger_inspiratory_offset_text,
+  trigger_inspiratory_offset_value,
+  trigger_inspiratory_expiratory_container,
+  trigger_inspiratory_expiratory_more_button,
+  trigger_inspiratory_expiratory_less_button,
+  trigger_inspiratory_expiratory_text,
+  trigger_inspiratory_expiratory_value,
+  trigger_inspiratory_plateau_duration_container,
+  trigger_inspiratory_plateau_duration_more_button,
+  trigger_inspiratory_plateau_duration_less_button,
+  trigger_inspiratory_plateau_duration_text,
+  trigger_inspiratory_plateau_duration_value,
+
+  modal_background,
+  modal_container_borders,
+  modal_container,
+
   stopped_title,
   stopped_message,
 
@@ -165,6 +185,7 @@ impl<'a> Screen<'a> {
         heartbeat_data: ScreenDataHeartbeat<'a>,
         graph_data: ScreenDataGraph,
         telemetry_data: ScreenDataTelemetry,
+        with_settings: Option<&'a TriggerInspiratory>
     ) {
         // Render common background
         self.render_background();
@@ -186,6 +207,10 @@ impl<'a> Screen<'a> {
 
         // Render bottom elements
         self.render_telemetry(telemetry_data);
+
+        if let Some(settings) = with_settings {
+            self.render_settings(settings);
+        }
     }
 
     pub fn render_background(&mut self) {
@@ -287,13 +312,13 @@ impl<'a> Screen<'a> {
             heartbeat_data,
             graph_data,
             telemetry_data,
+            None
         );
 
+        self.render_modal(DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH, DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT);
+
         let config = StopWidgetConfig {
-            parent: self.ids.background,
-            background: self.ids.stopped_background,
-            container_borders: self.ids.stopped_container_borders,
-            container: self.ids.stopped_container,
+            container: self.ids.modal_container,
             title: self.ids.stopped_title,
             message: self.ids.stopped_message,
         };
@@ -503,5 +528,53 @@ impl<'a> Screen<'a> {
 
         self.widgets
             .render(ControlWidgetType::Telemetry(tidal_config));
+    }
+
+    fn render_modal(&mut self, width: f64, height: f64) {
+        let modal_config = ModalWidgetConfig {
+            parent: self.ids.background,
+            background: self.ids.modal_background,
+            container_borders: self.ids.modal_container_borders,
+            container: self.ids.modal_container,
+            width,
+            height,
+        };
+
+        self.widgets.render(ControlWidgetType::Modal(modal_config));
+    }
+
+    fn render_settings(&mut self, settings: &'a TriggerInspiratory) {
+        self.render_modal(SETTINGS_MODAL_WIDTH, SETTINGS_MODAL_HEIGTH);
+
+        let config = TriggerInspiratoryWidgetConfig {
+            width: SETTINGS_MODAL_WIDTH,
+            height: SETTINGS_MODAL_HEIGTH,
+            trigger_inspiratory_settings: settings,
+
+            status_container_parent: self.ids.modal_container,
+            status_container_widget: self.ids.trigger_inspiratory_status_container,
+            status_enabled_text_widget: self.ids.trigger_inspiratory_status_text,
+            status_enabled_button_widget: self.ids.trigger_inspiratory_status_button,
+
+            inspiratory_offset_container_parent: self.ids.trigger_inspiratory_offset_container,
+            inspiratory_offset_more_button_widget: self.ids.trigger_inspiratory_offset_more_button,
+            inspiratory_offset_less_button_widget: self.ids.trigger_inspiratory_offset_less_button,
+            inspiratory_offset_text_widget: self.ids.trigger_inspiratory_offset_text,
+            inspiratory_offset_value_widget: self.ids.trigger_inspiratory_offset_value,
+
+            expiratory_trigger_container_parent: self.ids.trigger_inspiratory_expiratory_container,
+            expiratory_trigger_more_button_widget: self.ids.trigger_inspiratory_expiratory_more_button,
+            expiratory_trigger_less_button_widget: self.ids.trigger_inspiratory_expiratory_less_button,
+            expiratory_trigger_text_widget: self.ids.trigger_inspiratory_expiratory_text,
+            expiratory_trigger_value_widget: self.ids.trigger_inspiratory_expiratory_value,
+
+            plateau_duration_container_parent: self.ids.trigger_inspiratory_plateau_duration_container,
+            plateau_duration_more_button_widget: self.ids.trigger_inspiratory_plateau_duration_more_button,
+            plateau_duration_less_button_widget: self.ids.trigger_inspiratory_plateau_duration_less_button,
+            plateau_duration_text_widget: self.ids.trigger_inspiratory_plateau_duration_text,
+            plateau_duration_value_widget: self.ids.trigger_inspiratory_plateau_duration_value,
+        };
+
+        self.widgets.render(ControlWidgetType::TriggerInspiratorySettings(config));
     }
 }
