@@ -476,7 +476,6 @@ impl<'a> Screen<'a> {
             .render(ControlWidgetType::Telemetry(ratio_config));
 
         // Initialize the tidal widget
-        // TODO: this is not yet being reported by the telemetry protocol
         let previous_volume = machine_snapshot
             .previous_volume
             .map(|v| format!("{}", v))
