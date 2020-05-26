@@ -1118,9 +1118,10 @@ dependencies = [
 [[package]]
 name = "makair-telemetry"
 version = "1.0.0"
-source = "git+https://github.com/makers-for-life/makair-telemetry?rev=f22dd4bb54ef37ee1218c4249cd4a51198d5ef0c#f22dd4bb54ef37ee1218c4249cd4a51198d5ef0c"
+source = "git+https://github.com/makers-for-life/makair-telemetry?rev=d7125865db156089ce17936d86d53eb825fba451#d7125865db156089ce17936d86d53eb825fba451"
 dependencies = [
  "base64 0.12.1",
+ "crc32fast",
  "env_logger",
  "log",
  "nom",
