@@ -11,13 +11,13 @@ use conrod_core::{
     widget::{
         self, canvas, id::List, primitive::shape::Style, rounded_rectangle::RoundedRectangle,
     },
-    Colorable, Positionable, Sizeable, Widget,
+    Colorable, Labelable, Positionable, Sizeable, Widget,
 };
 
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::AlarmPriority;
 
-use crate::chip::ChipState;
+use crate::chip::{ChipState, settings::trigger_inspiratory::{TriggerInspiratory, TriggerInspiratoryState}};
 use crate::config::environment::*;
 use crate::physics::pressure::process_max_allowed_pressure;
 use crate::physics::types::DataPressure;
@@ -190,10 +190,16 @@ impl ErrorWidgetConfig {
     }
 }
 
-pub struct StopWidgetConfig {
+pub struct ModalWidgetConfig {
     pub parent: WidgetId,
     pub background: WidgetId,
     pub container_borders: WidgetId,
+    pub container: WidgetId,
+    pub width: f64,
+    pub height: f64,
+}
+
+pub struct StopWidgetConfig {
     pub container: WidgetId,
     pub title: WidgetId,
     pub message: WidgetId,
@@ -245,6 +251,28 @@ pub struct AlarmsWidgetConfig<'a> {
     pub alarms: &'a [(&'a AlarmCode, &'a AlarmPriority)],
 }
 
+pub struct TriggerInspiratoryWidgetConfig<'a> {
+    pub width: f64,
+    pub height: f64,
+    pub trigger_inspiratory_settings: &'a TriggerInspiratory,
+    pub status_container_parent: WidgetId,
+    pub status_container_widget: WidgetId,
+    pub status_enabled_text_widget: WidgetId,
+    pub status_enabled_button_widget: WidgetId,
+
+    pub inspiratory_offset_container_parent: WidgetId,
+    pub inspiratory_offset_text_widget: WidgetId,
+    pub inspiratory_offset_less_button_widget: WidgetId,
+    pub inspiratory_offset_more_button_widget: WidgetId,
+    pub inspiratory_offset_value_widget: WidgetId,
+
+    pub plateau_duration_container_parent: WidgetId,
+    pub plateau_duration_text_widget: WidgetId,
+    pub plateau_duration_less_button_widget: WidgetId,
+    pub plateau_duration_more_button_widget: WidgetId,
+    pub plateau_duration_value_widget: WidgetId,
+}
+
 pub enum ControlWidgetType<'a> {
     Alarms(AlarmsWidgetConfig<'a>),
     Background(BackgroundWidgetConfig),
@@ -254,9 +282,11 @@ pub enum ControlWidgetType<'a> {
     Heartbeat(HeartbeatWidgetConfig<'a>),
     Initializing(InitializingWidgetConfig),
     Graph(GraphWidgetConfig),
+    Modal(ModalWidgetConfig),
     NoData(NoDataWidgetConfig),
     Stop(StopWidgetConfig),
     Telemetry(TelemetryWidgetConfig),
+    TriggerInspiratorySettings(TriggerInspiratoryWidgetConfig<'a>),
 }
 
 pub struct ControlWidget<'a> {
@@ -279,9 +309,11 @@ impl<'a> ControlWidget<'a> {
             ControlWidgetType::Heartbeat(config) => self.heartbeat(config),
             ControlWidgetType::Initializing(config) => self.initializing(config),
             ControlWidgetType::Graph(config) => self.graph(config),
+            ControlWidgetType::Modal(config) => self.modal(config),
             ControlWidgetType::NoData(config) => self.no_data(config),
             ControlWidgetType::Stop(config) => self.stop(config),
             ControlWidgetType::Telemetry(config) => self.telemetry_widget(config),
+            ControlWidgetType::TriggerInspiratorySettings(config) => self.trigger_inspiratory_settings(config)
         }
     }
 
@@ -804,7 +836,7 @@ impl<'a> ControlWidget<'a> {
         0 as _
     }
 
-    fn stop(&mut self, config: StopWidgetConfig) -> f64 {
+    fn modal(&mut self, config: ModalWidgetConfig) -> f64 {
         let mut style = canvas::Style::default();
 
         style.color = Some(Color::Rgba(0.0, 0.0, 0.0, 0.75));
@@ -828,8 +860,8 @@ impl<'a> ControlWidget<'a> {
         )));
         RoundedRectangle::styled(
             [
-                DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH + 5.0,
-                DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT + 5.0,
+                config.width + 5.0,
+                config.height + 5.0,
             ],
             DISPLAY_ROUNDED_RECTANGLES_ROUND,
             container_borders_style,
@@ -845,12 +877,16 @@ impl<'a> ControlWidget<'a> {
         canvas::Canvas::new()
             .with_style(container_style)
             .w_h(
-                DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH,
-                DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT,
+                config.width,
+                config.height,
             )
             .middle_of(config.container_borders)
             .set(config.container, &mut self.ui);
 
+        0 as _
+    }
+
+    fn stop(&mut self, config: StopWidgetConfig) -> f64 {
         let mut title_style = widget::text::Style::default();
         title_style.color = Some(color::WHITE);
         title_style.font_size = Some(19);
@@ -894,6 +930,109 @@ impl<'a> ControlWidget<'a> {
             .w_h(config.width, config.height)
             .middle()
             .set(config.id, &mut self.ui);
+
+        0 as _
+    }
+
+    fn trigger_inspiratory_settings(&mut self, config: TriggerInspiratoryWidgetConfig) -> f64 {
+        let sections_height = config.height / 3.0;
+        widget::Rectangle::fill_with([config.width, sections_height], color::TRANSPARENT)
+            .top_left_of(config.status_container_parent)
+            .set(config.status_container_widget, &mut self.ui);
+
+        let mut status_text_style = widget::text::Style::default();
+        status_text_style.font_id = Some(Some(self.fonts.regular));
+        status_text_style.color = Some(color::WHITE);
+        status_text_style.font_size = Some(20);
+
+        widget::Text::new("Trigger inspiratory status:")
+            .with_style(status_text_style)
+            .top_left_of(config.status_container_widget)
+            .set(config.status_enabled_text_widget, &mut self.ui);
+
+        let status_label = match config.trigger_inspiratory_settings.state {
+            TriggerInspiratoryState::Enabled => String::from("Enabled"),
+            TriggerInspiratoryState::Disabled => String::from("Disabled")
+        };
+
+        widget::Button::new()
+            .right_from(config.status_enabled_text_widget, 10.0)
+            .w_h(100.0, 30.0)
+            .label(&status_label)
+            .set(config.status_enabled_button_widget, &mut self.ui);
+
+
+        widget::Rectangle::fill_with([config.width, sections_height], color::TRANSPARENT)
+            .down_from(config.status_container_widget, 0.0)
+            .set(config.inspiratory_offset_container_parent, &mut self.ui);
+
+        let mut offset_text_style = widget::text::Style::default();
+        offset_text_style.font_id = Some(Some(self.fonts.regular));
+        offset_text_style.color = Some(color::WHITE);
+        offset_text_style.font_size = Some(20);
+
+        widget::Text::new("Inspiratory trigger offset:")
+            .with_style(offset_text_style)
+            .top_left_of(config.inspiratory_offset_container_parent)
+            .set(config.inspiratory_offset_text_widget, &mut self.ui);
+
+        widget::Button::new()
+            .right_from(config.inspiratory_offset_text_widget, 10.0)
+            .w_h(30.0, 30.0)
+            .label(&String::from("<-"))
+            .set(config.inspiratory_offset_less_button_widget, &mut self.ui);
+
+        let mut offset_value_style = widget::text::Style::default();
+        offset_value_style.font_id = Some(Some(self.fonts.regular));
+        offset_value_style.color = Some(color::WHITE);
+        offset_value_style.font_size = Some(20);
+
+        widget::Text::new(format!("{}", config.trigger_inspiratory_settings.inspiratory_trigger_offset).as_str())
+            .with_style(offset_value_style)
+            .right_from(config.inspiratory_offset_less_button_widget, 20.0)
+            .set(config.inspiratory_offset_value_widget, &mut self.ui);
+
+        widget::Button::new()
+            .right_from(config.inspiratory_offset_value_widget, 20.0)
+            .w_h(30.0, 30.0)
+            .label(&String::from("->"))
+            .set(config.inspiratory_offset_more_button_widget, &mut self.ui);
+
+        widget::Rectangle::fill_with([config.width, sections_height], color::TRANSPARENT)
+            .down_from(config.inspiratory_offset_container_parent, 0.0)
+            .set(config.plateau_duration_container_parent, &mut self.ui);
+
+        let mut plateau_text_style = widget::text::Style::default();
+        plateau_text_style.font_id = Some(Some(self.fonts.regular));
+        plateau_text_style.color = Some(color::WHITE);
+        plateau_text_style.font_size = Some(20);
+
+        widget::Text::new("Plateau duration")
+            .with_style(plateau_text_style)
+            .top_left_of(config.plateau_duration_container_parent)
+            .set(config.plateau_duration_text_widget, &mut self.ui);
+
+        widget::Button::new()
+            .right_from(config.plateau_duration_text_widget, 10.0)
+            .w_h(30.0, 30.0)
+            .label(&String::from("<-"))
+            .set(config.plateau_duration_less_button_widget, &mut self.ui);
+
+        let mut plateau_value_style = widget::text::Style::default();
+        plateau_value_style.font_id = Some(Some(self.fonts.regular));
+        plateau_value_style.color = Some(color::WHITE);
+        plateau_value_style.font_size = Some(20);
+
+        widget::Text::new(format!("{}ms", config.trigger_inspiratory_settings.plateau_duration.as_millis()).as_str())
+            .with_style(plateau_value_style)
+            .right_from(config.plateau_duration_less_button_widget, 20.0)
+            .set(config.plateau_duration_value_widget, &mut self.ui);
+
+        widget::Button::new()
+            .right_from(config.plateau_duration_value_widget, 20.0)
+            .w_h(30.0, 30.0)
+            .label(&String::from("->"))
+            .set(config.plateau_duration_more_button_widget, &mut self.ui);
 
         0 as _
     }

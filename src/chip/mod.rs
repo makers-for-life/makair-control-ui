@@ -3,6 +3,8 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+pub mod settings;
+
 use chrono::{offset::Utc, DateTime, Duration};
 use std::collections::{HashMap, VecDeque};
 use std::convert::TryFrom;
@@ -10,6 +12,7 @@ use std::convert::TryFrom;
 use crate::config::environment::*;
 use crate::physics::types::DataPressure;
 use std::sync::mpsc::Sender;
+use settings::{ChipSettings, ChipSettingsEvent};
 use telemetry::alarm::AlarmCode;
 use telemetry::serial::core;
 use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot, TelemetryMessage};
@@ -30,6 +33,7 @@ pub struct Chip {
     pub last_machine_snapshot: MachineStateSnapshot,
     pub ongoing_alarms: HashMap<AlarmCode, AlarmPriority>,
     pub battery_level: Option<u8>,
+    pub settings: ChipSettings,
     state: ChipState,
     tx_for_lora: Option<Sender<TelemetryMessage>>,
 }
@@ -43,6 +47,7 @@ impl Chip {
             last_machine_snapshot: MachineStateSnapshot::default(),
             ongoing_alarms: HashMap::new(),
             battery_level: None,
+            settings: ChipSettings::new(),
             state: ChipState::WaitingData,
             tx_for_lora: sender_for_lora,
         }
@@ -107,6 +112,12 @@ impl Chip {
                 self.state = ChipState::Stopped;
             }
         };
+    }
+
+    pub fn new_settings_events(&mut self, events: Vec<ChipSettingsEvent>) {
+        for event in events {
+            self.settings.new_settings_event(event);
+        }
     }
 
     pub fn new_error(&mut self, error: core::Error) {
