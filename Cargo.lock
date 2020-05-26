@@ -1102,7 +1102,6 @@ dependencies = [
  "conrod_winit",
  "fluent",
  "glium",
- "hex",
  "image 0.23.4",
  "inflate",
  "lazy_static",

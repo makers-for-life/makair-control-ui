@@ -3,23 +3,26 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-use crate::config::environment::*;
-use rn2903::Rn2903;
-use std::sync::mpsc;
-use std::sync::mpsc::{channel, Sender};
-use std::sync::{Arc, Condvar, Mutex};
-use std::thread;
+use std::sync::mpsc::Sender;
 use telemetry::structures::TelemetryMessage;
-
-use std::thread::sleep;
-use std::time::Duration;
-use sysfs_gpio::{Direction, Pin};
 
 pub struct LoraController {}
 
 impl LoraController {
     #[allow(clippy::new_ret_no_self)]
+    #[cfg(feature = "lora")]
     pub fn new() -> Sender<TelemetryMessage> {
+        use crate::config::environment::*;
+        use rn2903::Rn2903;
+        use std::sync::mpsc;
+        use std::sync::mpsc::channel;
+        use std::sync::{Arc, Condvar, Mutex};
+        use std::thread;
+
+        use std::thread::sleep;
+        use std::time::Duration;
+        use sysfs_gpio::{Direction, Pin};
+
         let (tx, rx) = channel();
 
         #[allow(clippy::cognitive_complexity)]
@@ -191,5 +194,10 @@ impl LoraController {
         });
         // return
         tx
+    }
+
+    #[cfg(not(feature = "lora"))]
+    pub fn new() -> Sender<TelemetryMessage> {
+        unreachable!("'lora' feature was disabled during compilation")
     }
 }

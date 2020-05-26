@@ -13,12 +13,6 @@ extern crate lazy_static;
 extern crate rust_embed;
 #[macro_use]
 extern crate conrod_core;
-extern crate conrod_winit;
-extern crate fluent;
-extern crate image;
-extern crate inflate;
-extern crate sysfs_gpio;
-extern crate unic_langid;
 
 mod chip;
 mod config;
@@ -175,7 +169,7 @@ fn main() {
     ensure_states();
 
     // Launch LORA init and get Sender for chip
-    let lora_sender = if APP_ARGS.lora {
+    let lora_sender = if APP_ARGS.lora && cfg!(feature = "lora") {
         Some(LoraController::new())
     } else {
         None
