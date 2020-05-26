@@ -35,7 +35,7 @@ impl LocaleAccessor {
             let formatted = self.bundle.format_pattern(&pattern, None, &mut errors);
 
             // Any error? Panic
-            if errors.is_empty() {
+            if !errors.is_empty() {
                 panic!("could not format pattern: {:?}", errors);
             }
 
