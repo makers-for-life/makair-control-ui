@@ -332,6 +332,7 @@ pub enum ControlWidgetType<'a> {
     Telemetry(TelemetryWidgetConfig),
     Layout(LayoutConfig),
     TriggerInspiratorySettings(TriggerInspiratoryWidgetConfig<'a>),
+    TriggerInspiratoryOverview(TriggerInspiratoryOverview<'a>),
 }
 
 pub struct ControlWidget<'a> {
@@ -360,7 +361,8 @@ impl<'a> ControlWidget<'a> {
             ControlWidgetType::TelemetryContainer(config) => self.telemetry_widgets_container(config),
             ControlWidgetType::Telemetry(config) => self.telemetry_widget(config),
             ControlWidgetType::Layout(config) => self.layout(config),
-            ControlWidgetType::TriggerInspiratorySettings(config) => self.trigger_inspiratory_settings(config)
+            ControlWidgetType::TriggerInspiratorySettings(config) => self.trigger_inspiratory_settings(config),
+            ControlWidgetType::TriggerInspiratoryOverview(config) => self.trigger_inspiratory_overview(config),
         }
     }
 
@@ -375,12 +377,21 @@ impl<'a> ControlWidget<'a> {
             .collect::<Vec<_>>();
         let alarms_count = alarms_for_display.len();
 
-        let dimensions = [
-            DISPLAY_ALARM_CONTAINER_WIDTH,
-            (max(1, alarms_count) as f64) * DISPLAY_ALARM_MESSAGE_HEIGHT
-                + 2.0 * DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL
-                + (alarms_count as f64) * DISPLAY_ALARM_MESSAGE_SPACING_TOP_INNER,
-        ];
+        let container_width = if alarms_count == 0 {
+            DISPLAY_ALARM_CONTAINER_WIDTH_NO_ALARMS
+        } else {
+            DISPLAY_ALARM_CONTAINER_WIDTH_ALARMS
+        };
+
+        let container_margin_left = if alarms_count == 0 {
+            10.0
+        } else {
+            -100.0
+        };
+
+        let container_height = (max(1, alarms_count) as f64) * DISPLAY_ALARM_MESSAGE_HEIGHT
+            + 2.0 * DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL
+            + (alarms_count as f64) * DISPLAY_ALARM_MESSAGE_SPACING_TOP_INNER;
 
         // Draw container box
         let container_color = if alarms_count > 0 {
@@ -389,18 +400,12 @@ impl<'a> ControlWidget<'a> {
             Color::Rgba(17.0 / 255.0, 17.0 / 255.0, 17.0 / 255.0, 0.96)
         };
 
-        let container_margin_top = if alarms_count > 1 {
-            DISPLAY_ALARM_CONTAINER_MARGIN_TOP_MULTIPLE
-        } else {
-            DISPLAY_ALARM_CONTAINER_MARGIN_TOP_SINGLE_OR_NONE
-        };
-
         RoundedRectangle::fill_with(
-            dimensions,
+            [container_width, container_height],
             DISPLAY_ROUNDED_RECTANGLES_ROUND,
             container_color,
         )
-        .right_from(config.parent, 10.0)
+        .right_from(config.parent, container_margin_left)
         .set(config.container, &mut self.ui);
 
         // Draw text
@@ -526,7 +531,7 @@ impl<'a> ControlWidget<'a> {
 
         widget::text::Text::new(&format!("{}", alarm_code.code()))
             .with_style(text_style)
-            .mid_top_with_margin_on(config.alarm_codes_containers[index], 4.0)
+            .mid_top_of(config.alarm_codes_containers[index])
             .set(config.alarm_codes[index], &mut self.ui);
     }
 
@@ -557,7 +562,7 @@ impl<'a> ControlWidget<'a> {
         widget::text::Text::new(&code.description())
             .color(color::WHITE)
             .font_size(24)
-            .top_left_with_margins_on(config.alarm_messages_containers[index], 5.0, 5.0)
+            .top_left_with_margins_on(config.alarm_messages_containers[index], 0.0, 5.0)
             .set(config.alarm_messages[index], &mut self.ui);
     }
 
@@ -774,7 +779,6 @@ impl<'a> ControlWidget<'a> {
     }
 
     fn graph(&mut self, config: GraphWidgetConfig) -> f64 {
-        info!("Graph width: {}", config.width);
         widget::Image::new(config.image)
             .w_h(config.width, config.height)
             .top_left_of(config.parent)
@@ -1111,4 +1115,93 @@ impl<'a> ControlWidget<'a> {
 
         0 as _
     }
+
+    fn trigger_inspiratory_overview(&mut self, config: TriggerInspiratoryOverview) -> f64 {
+        widget::rectangle::Rectangle::fill_with(
+            [config.width, config.height],
+            config.background_color,
+        )
+        .bottom_left_with_margins_on(
+            config.parent,
+            config.y_position,
+            config.x_position,
+        )
+        .set(config.container, &mut self.ui);
+
+        self.trigger_inspiratory_overview_title(&config);
+        self.trigger_inspiratory_overview_status(&config);
+        self.trigger_inspiratory_overview_offset(&config);
+        self.trigger_inspiratory_overview_plateau_duration(&config);
+
+        0 as _
+    }
+
+    fn trigger_inspiratory_overview_title(&mut self, config: &TriggerInspiratoryOverview) {
+        let mut text_style = widget::text::Style::default();
+        text_style.font_id = Some(Some(self.fonts.regular));
+        text_style.color = Some(color::WHITE);
+        text_style.font_size = Some(20);
+
+        widget::Text::new("Trigger")
+            .with_style(text_style)
+            .top_left_of(config.container)
+            .set(config.title_widget, &mut self.ui);
+    }
+
+    fn trigger_inspiratory_overview_status(&mut self, config: &TriggerInspiratoryOverview) {
+        let mut text_style = widget::text::Style::default();
+        text_style.font_id = Some(Some(self.fonts.regular));
+        text_style.color = Some(color::WHITE);
+        text_style.font_size = Some(15);
+
+        let status = if config.trigger_inspiratory_settings.state == TriggerInspiratoryState::Enabled {
+            "Enabled".to_string()
+        } else {
+            "Disabled".to_string()
+        };
+
+        widget::Text::new(&format!("State: {}", status))
+            .with_style(text_style)
+            .down_from(config.title_widget, 5.0)
+            .set(config.status_widget, &mut self.ui);
+    }
+
+    fn trigger_inspiratory_overview_offset(&mut self, config: &TriggerInspiratoryOverview) {
+        let mut text_style = widget::text::Style::default();
+        text_style.font_id = Some(Some(self.fonts.regular));
+        text_style.color = Some(color::WHITE);
+        text_style.font_size = Some(15);
+
+        widget::Text::new(&format!("Offset: {} mmH2O", config.trigger_inspiratory_settings.inspiratory_trigger_offset))
+            .with_style(text_style)
+            .down_from(config.status_widget, 5.0)
+            .set(config.inspiration_trigger_offset_widget, &mut self.ui);
+    }
+
+    fn trigger_inspiratory_overview_plateau_duration(&mut self, config: &TriggerInspiratoryOverview) {
+        let mut text_style = widget::text::Style::default();
+        text_style.font_id = Some(Some(self.fonts.regular));
+        text_style.color = Some(color::WHITE);
+        text_style.font_size = Some(15);
+
+        widget::Text::new(&format!("Plateau duration: {} ms", config.trigger_inspiratory_settings.plateau_duration.as_millis()))
+            .with_style(text_style)
+            .down_from(config.inspiration_trigger_offset_widget, 5.0)
+            .set(config.plateau_duration_widget, &mut self.ui);
+    }
+}
+
+pub struct TriggerInspiratoryOverview<'a> {
+    pub parent: WidgetId,
+    pub container: WidgetId,
+    pub title_widget: WidgetId,
+    pub status_widget: WidgetId,
+    pub inspiration_trigger_offset_widget: WidgetId,
+    pub plateau_duration_widget: WidgetId,
+    pub width: f64,
+    pub height: f64,
+    pub x_position: f64,
+    pub y_position: f64,
+    pub background_color: Color,
+    pub trigger_inspiratory_settings: &'a TriggerInspiratory,
 }

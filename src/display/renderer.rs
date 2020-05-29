@@ -106,13 +106,28 @@ impl DisplayRenderer {
     pub fn run_ui_events(&mut self, interface: &mut Ui) -> Vec<ChipSettingsEvent> {
         let mut all_events = Vec::new();
 
-        for _ in interface.widget_input(self.ids.branding_image).clicks() {
+        // If you click on a text, the text element will receive the click, not its parent
+        // Maybe there is a way to listen on a parent for childs clicks but I couldn't find one.
+        // So we chain each iterator of every childs to be sure to capture the click
+        let trigger_inspiratory_settings_iters = interface.widget_input(self.ids.trigger_inspiratory_overview_container).clicks()
+            .chain(interface.widget_input(self.ids.trigger_inspiratory_overview_title).clicks())
+            .chain(interface.widget_input(self.ids.trigger_inspiratory_overview_status).clicks())
+            .chain(interface.widget_input(self.ids.trigger_inspiratory_overview_offset).clicks())
+            .chain(interface.widget_input(self.ids.trigger_inspiratory_overview_plateau_duration).clicks());
+
+        for _ in trigger_inspiratory_settings_iters {
             self.toggle_settings();
         }
 
-        for _ in interface.widget_input(self.ids.modal_background).clicks() {
+        for click in interface.widget_input(self.ids.modal_background).clicks() {
             if self.settings_state == DisplayRendererSettingsState::Opened {
                 self.toggle_settings();
+            } else {
+                if let Some(rect_of) = interface.rect_of(self.ids.trigger_inspiratory_overview_container) {
+                    if rect_of.is_over(click.xy) {
+                        self.toggle_settings();
+                    }
+                }
             }
         }
 
@@ -313,12 +328,6 @@ impl DisplayRenderer {
             arrow_image_id: telemetry_arrow_image_id,
         };
 
-        let settings = if self.settings_state == DisplayRendererSettingsState::Opened {
-            Some(trigger_inspiratory_settings)
-        } else {
-            None
-        };
-
         match chip_state {
             ChipState::Running => screen.render_with_data(
                 screen_data_branding,
@@ -326,7 +335,8 @@ impl DisplayRenderer {
                 screen_data_heartbeat,
                 screen_data_graph,
                 screen_data_telemetry,
-                settings
+                trigger_inspiratory_settings,
+                self.settings_state == DisplayRendererSettingsState::Opened
             ),
             ChipState::Stopped => screen.render_stop(
                 screen_data_branding,
@@ -334,6 +344,8 @@ impl DisplayRenderer {
                 screen_data_heartbeat,
                 screen_data_graph,
                 screen_data_telemetry,
+                trigger_inspiratory_settings,
+                self.settings_state == DisplayRendererSettingsState::Opened
             ),
             _ => unreachable!(),
         };

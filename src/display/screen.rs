@@ -19,7 +19,7 @@ use super::widget::{
     ControlWidgetType, ErrorWidgetConfig, GraphWidgetConfig, HeartbeatWidgetConfig,
     InitializingWidgetConfig, NoDataWidgetConfig, StatusWidgetConfig, StopWidgetConfig,
     TelemetryWidgetConfig, TelemetryWidgetContainerConfig, LayoutWidgetConfig, LayoutConfig,
-    ModalWidgetConfig, TriggerInspiratoryWidgetConfig,
+    ModalWidgetConfig, TriggerInspiratoryWidgetConfig, TriggerInspiratoryOverview,
 };
 
 widget_ids!(pub struct Ids {
@@ -94,6 +94,12 @@ widget_ids!(pub struct Ids {
   tidal_value_arrow,
   tidal_value_target,
   tidal_unit,
+
+  trigger_inspiratory_overview_container,
+  trigger_inspiratory_overview_title,
+  trigger_inspiratory_overview_status,
+  trigger_inspiratory_overview_offset,
+  trigger_inspiratory_overview_plateau_duration,
 
   trigger_inspiratory_status_container,
   trigger_inspiratory_status_text,
@@ -184,7 +190,8 @@ impl<'a> Screen<'a> {
         heartbeat_data: ScreenDataHeartbeat<'a>,
         graph_data: ScreenDataGraph,
         telemetry_data: ScreenDataTelemetry,
-        with_settings: Option<&'a TriggerInspiratory>
+        trigger_inspiratory: &'a TriggerInspiratory,
+        trigger_inspiratory_open: bool,
     ) {
         // Render common background
         self.render_background();
@@ -206,10 +213,10 @@ impl<'a> Screen<'a> {
         self.render_graph(graph_data.image_id, graph_data.width, graph_data.height);
 
         // Render bottom elements
-        self.render_telemetry(telemetry_data);
+        self.render_telemetry(telemetry_data, trigger_inspiratory);
 
-        if let Some(settings) = with_settings {
-            self.render_settings(settings);
+        if trigger_inspiratory_open {
+            self.render_settings(trigger_inspiratory);
         }
     }
 
@@ -313,6 +320,8 @@ impl<'a> Screen<'a> {
         heartbeat_data: ScreenDataHeartbeat<'a>,
         graph_data: ScreenDataGraph,
         telemetry_data: ScreenDataTelemetry,
+        trigger_inspiratory: &'a TriggerInspiratory,
+        trigger_inspiratory_open: bool,
     ) {
         // Render regular data as background
         self.render_with_data(
@@ -321,19 +330,22 @@ impl<'a> Screen<'a> {
             heartbeat_data,
             graph_data,
             telemetry_data,
-            None
+            trigger_inspiratory,
+            trigger_inspiratory_open
         );
 
-        self.render_modal(DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH, DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT);
+        if !trigger_inspiratory_open {
+            self.render_modal(DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH, DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT);
 
-        let config = StopWidgetConfig {
-            container: self.ids.modal_container,
-            title: self.ids.stopped_title,
-            message: self.ids.stopped_message,
-        };
+            let config = StopWidgetConfig {
+                container: self.ids.modal_container,
+                title: self.ids.stopped_title,
+                message: self.ids.stopped_message,
+            };
 
-        // Render stop layer
-        self.widgets.render(ControlWidgetType::Stop(config));
+            // Render stop layer
+            self.widgets.render(ControlWidgetType::Stop(config));
+        }
     }
 
     pub fn render_no_data(&mut self) {
@@ -363,7 +375,7 @@ impl<'a> Screen<'a> {
         self.widgets.render(ControlWidgetType::Initializing(config));
     }
 
-    pub fn render_telemetry(&mut self, telemetry_data: ScreenDataTelemetry) {
+    pub fn render_telemetry(&mut self, telemetry_data: ScreenDataTelemetry, trigger_inspiratory: &'a TriggerInspiratory) {
         let machine_snapshot = self.machine_snapshot.unwrap();
 
         let widgets_right_width: f64 = (DISPLAY_WINDOW_SIZE_WIDTH - GRAPH_WIDTH) as f64;
@@ -555,6 +567,23 @@ impl<'a> Screen<'a> {
 
         self.widgets
             .render(ControlWidgetType::Telemetry(tidal_config));
+
+        let trigger_inspiratory_config = TriggerInspiratoryOverview {
+            parent: self.ids.tidal_parent,
+            container: self.ids.trigger_inspiratory_overview_container,
+            title_widget: self.ids.trigger_inspiratory_overview_title,
+            status_widget: self.ids.trigger_inspiratory_overview_status,
+            inspiration_trigger_offset_widget: self.ids.trigger_inspiratory_overview_offset,
+            plateau_duration_widget: self.ids.trigger_inspiratory_overview_plateau_duration,
+            background_color: color::BLUE,
+            width: TELEMETRY_WIDGET_SIZE_WIDTH,
+            height: LAYOUT_FOOTER_SIZE_HEIGHT,
+            x_position: TELEMETRY_WIDGET_SIZE_WIDTH,
+            y_position: 0.0,
+            trigger_inspiratory_settings: trigger_inspiratory
+        };
+
+        self.widgets.render(ControlWidgetType::TriggerInspiratoryOverview(trigger_inspiratory_config));
     }
 
     fn render_modal(&mut self, width: f64, height: f64) {

@@ -14,7 +14,7 @@ pub enum TriggerInspiratoryEvent {
     PlateauDuration(SettingAction)
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TriggerInspiratoryState {
     Enabled,
     Disabled
