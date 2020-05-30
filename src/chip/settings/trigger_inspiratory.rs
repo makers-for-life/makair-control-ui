@@ -31,8 +31,8 @@ impl TriggerInspiratory {
     pub fn new() -> TriggerInspiratory {
         TriggerInspiratory {
             state: TriggerInspiratoryState::Disabled,
-            inspiratory_trigger_offset: 0,
-            plateau_duration: Duration::from_millis(0)
+            inspiratory_trigger_offset: 20,
+            plateau_duration: Duration::from_millis(1000)
         }
     }
 
