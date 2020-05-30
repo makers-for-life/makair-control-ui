@@ -1,0 +1,19 @@
+name: UI Build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build
+        run: |
+          cargo build
+
+      - name: Archive binaries
+        uses: actions/upload-artifact@v1
+        with:
+          name: makair-control
+          path: target/*/makair-control
