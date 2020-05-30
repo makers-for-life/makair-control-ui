@@ -131,7 +131,7 @@ widget_ids!(pub struct Ids {
 pub struct Screen<'a> {
     ids: &'a Ids,
     machine_snapshot: Option<&'a MachineStateSnapshot>,
-    ongoing_alarms: Option<&'a [(&'a AlarmCode, &'a AlarmPriority)]>,
+    ongoing_alarms: Option<&'a [(AlarmCode, AlarmPriority)]>,
     widgets: ControlWidget<'a>,
 }
 
@@ -173,7 +173,7 @@ impl<'a> Screen<'a> {
         ids: &'a Ids,
         fonts: &'a Fonts,
         machine_snapshot: Option<&'a MachineStateSnapshot>,
-        ongoing_alarms: Option<&'a [(&'a AlarmCode, &'a AlarmPriority)]>,
+        ongoing_alarms: Option<&'a [(AlarmCode, AlarmPriority)]>,
     ) -> Screen<'a> {
         Screen {
             ids,

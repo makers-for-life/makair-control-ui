@@ -13,7 +13,7 @@ use crate::config::environment::*;
 use crate::physics::types::DataPressure;
 use std::sync::mpsc::Sender;
 use settings::{ChipSettings, ChipSettingsEvent};
-use telemetry::alarm::AlarmCode;
+use telemetry::alarm::{RMC_SW_11, RMC_SW_12, RMC_SW_1, RMC_SW_14, RMC_SW_3, RMC_SW_15, AlarmCode};
 use telemetry::serial::core;
 use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot, TelemetryMessage};
 
@@ -229,13 +229,30 @@ impl Chip {
         }
     }
 
-    pub fn ongoing_alarms_sorted(&self) -> Vec<(&AlarmCode, &AlarmPriority)> {
-        let mut vec_alarms = self
-            .ongoing_alarms
-            .iter()
-            .collect::<Vec<(&AlarmCode, &AlarmPriority)>>();
+    fn deduplicate_alarms(alarms: &mut HashMap<AlarmCode, AlarmPriority>) {
+        if alarms.contains_key(&AlarmCode::from(RMC_SW_11)) && alarms.contains_key(&AlarmCode::from(RMC_SW_12)) {
+            alarms.remove(&AlarmCode::from(RMC_SW_11));
+        }
 
-        vec_alarms.sort_by(|(_, priority1), (_, priority2)| priority1.cmp(&priority2).reverse());
+        if alarms.contains_key(&AlarmCode::from(RMC_SW_1)) && alarms.contains_key(&AlarmCode::from(RMC_SW_14)) {
+            alarms.remove(&AlarmCode::from(RMC_SW_14));
+        }
+
+        if alarms.contains_key(&AlarmCode::from(RMC_SW_3)) && alarms.contains_key(&AlarmCode::from(RMC_SW_15)) {
+            alarms.remove(&AlarmCode::from(RMC_SW_15));
+        }
+    }
+
+    pub fn ongoing_alarms_sorted(&self) -> Vec<(AlarmCode, AlarmPriority)> {
+        let mut ongoing_alarms = self.ongoing_alarms.clone();
+        Chip::deduplicate_alarms(&mut ongoing_alarms);
+
+        let mut vec_alarms: Vec<(AlarmCode, AlarmPriority)> = ongoing_alarms
+            .iter()
+            .map(|(code, priority)| (code.clone(), priority.clone()))
+            .collect();
+
+        vec_alarms.sort_by(|(code1, _), (code2, _)| code1.cmp(&code2));
 
         vec_alarms
     }

@@ -80,7 +80,7 @@ pub struct StatusWidgetConfig<'a> {
     power_text: WidgetId,
     battery_level: Option<u8>,
     chip_state: &'a ChipState,
-    alarms: &'a [(&'a AlarmCode, &'a AlarmPriority)],
+    alarms: &'a [(AlarmCode, AlarmPriority)],
 }
 
 pub struct HeartbeatWidgetConfig<'a> {
@@ -168,7 +168,7 @@ impl<'a> StatusWidgetConfig<'a> {
         power_text: WidgetId,
         battery_level: Option<u8>,
         chip_state: &'a ChipState,
-        alarms: &'a [(&'a AlarmCode, &'a AlarmPriority)],
+        alarms: &'a [(AlarmCode, AlarmPriority)],
     ) -> StatusWidgetConfig<'a> {
         StatusWidgetConfig {
             container,
@@ -291,7 +291,7 @@ pub struct AlarmsWidgetConfig<'a> {
     pub alarm_codes: &'a List,
     pub alarm_messages_containers: &'a List,
     pub alarm_messages: &'a List,
-    pub alarms: &'a [(&'a AlarmCode, &'a AlarmPriority)],
+    pub alarms: &'a [(AlarmCode, AlarmPriority)],
 }
 
 pub struct TriggerInspiratoryWidgetConfig<'a> {
@@ -434,7 +434,7 @@ impl<'a> ControlWidget<'a> {
             for x in 0..alarms_count {
                 let (code, alarm) = alarms_for_display.get(x).unwrap();
 
-                self.alarm(&config, **code, alarm, x);
+                self.alarm(&config, *code, alarm, x);
             }
         } else {
             widget::text::Text::new(&APP_I18N.t("alarms-empty"))
