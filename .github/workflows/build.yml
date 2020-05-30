@@ -16,4 +16,4 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: makair-control
-          path: target/*/makair-control
+          path: target/debug/makair-control
