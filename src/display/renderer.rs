@@ -143,12 +143,12 @@ impl DisplayRenderer {
             all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::InspiratoryTriggerOffset(SettingAction::More)));
         }
 
-        for _ in interface.widget_input(self.ids.trigger_inspiratory_plateau_duration_less_button).clicks() {
-            all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::PlateauDuration(SettingAction::Less)));
+        for _ in interface.widget_input(self.ids.trigger_inspiratory_expiratory_term_less_button).clicks() {
+            all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::ExpiratoryTerm(SettingAction::Less)));
         }
 
-        for _ in interface.widget_input(self.ids.trigger_inspiratory_plateau_duration_more_button).clicks() {
-            all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::PlateauDuration(SettingAction::More)));
+        for _ in interface.widget_input(self.ids.trigger_inspiratory_expiratory_term_more_button).clicks() {
+            all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::ExpiratoryTerm(SettingAction::More)));
         }
 
         all_events

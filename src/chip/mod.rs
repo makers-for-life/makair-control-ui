@@ -11,9 +11,10 @@ use std::convert::TryFrom;
 
 use crate::config::environment::*;
 use crate::physics::types::DataPressure;
-use std::sync::mpsc::Sender;
+use std::sync::mpsc::{self, Sender, Receiver};
 use settings::{ChipSettings, ChipSettingsEvent};
 use telemetry::alarm::{RMC_SW_11, RMC_SW_12, RMC_SW_1, RMC_SW_14, RMC_SW_3, RMC_SW_15, AlarmCode};
+use telemetry::control::ControlMessage;
 use telemetry::serial::core;
 use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot, TelemetryMessage};
 
@@ -36,20 +37,25 @@ pub struct Chip {
     pub settings: ChipSettings,
     state: ChipState,
     tx_for_lora: Option<Sender<TelemetryMessage>>,
+    channel_for_settings: Option<Sender<ControlMessage>>,
 }
 
 impl Chip {
-    pub fn new(sender_for_lora: Option<Sender<TelemetryMessage>>) -> Chip {
+    pub fn new(tx_for_lora: Option<Sender<TelemetryMessage>>) -> Chip {
+        let last_machine_snapshot = MachineStateSnapshot::default();
+        let cycles_per_minute = last_machine_snapshot.cpm_command.clone();
+
         Chip {
             boot_time: None,
             last_tick: 0,
             data_pressure: VecDeque::with_capacity(GRAPH_NUMBER_OF_POINTS + 100),
-            last_machine_snapshot: MachineStateSnapshot::default(),
+            last_machine_snapshot,
             ongoing_alarms: HashMap::new(),
             battery_level: None,
-            settings: ChipSettings::new(),
+            settings: ChipSettings::new(cycles_per_minute as usize),
             state: ChipState::WaitingData,
-            tx_for_lora: sender_for_lora,
+            tx_for_lora,
+            channel_for_settings: None
         }
     }
 
@@ -90,6 +96,7 @@ impl Chip {
             TelemetryMessage::MachineStateSnapshot(snapshot) => {
                 self.clean_if_stopped();
                 self.update_tick(snapshot.systick);
+                self.update_cycles_per_minute(snapshot.cpm_command as usize);
 
                 for alarm in &snapshot.current_alarm_codes {
                     match AlarmPriority::try_from(*alarm) {
@@ -111,12 +118,24 @@ impl Chip {
 
                 self.state = ChipState::Stopped;
             }
+
+            TelemetryMessage::ControlAck(_) => {}
         };
     }
 
     pub fn new_settings_events(&mut self, events: Vec<ChipSettingsEvent>) {
         for event in events {
-            self.settings.new_settings_event(event);
+            let message = self.settings.new_settings_event(event);
+            debug!("New event: {:?}, sender: {:?}", message, self.channel_for_settings);
+            if let Some(tx) = &self.channel_for_settings {
+                if let Err(e) = tx.send(message.clone()) {
+                    // TODO: Maybe we could add an alarm with this problem
+                    // TODO2: Revert the value if it can't be sent?
+                    error!("Error sending message {:?} to the control unit: {:?}", message, e);
+                } else {
+                    debug!("Setting message {:?} sent!", message);
+                }
+            }
         }
     }
 
@@ -255,5 +274,15 @@ impl Chip {
         vec_alarms.sort_by(|(code1, _), (code2, _)| code1.cmp(&code2));
 
         vec_alarms
+    }
+
+    pub fn init_settings_receiver(&mut self) -> Receiver<ControlMessage> {
+        let channel = mpsc::channel();
+        self.channel_for_settings = Some(channel.0);
+        channel.1
+    }
+
+    fn update_cycles_per_minute(&mut self, cycles_per_minute: usize) {
+        self.settings.inspiratory_trigger.set_cycles_per_minute(cycles_per_minute);
     }
 }

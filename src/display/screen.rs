@@ -99,6 +99,7 @@ widget_ids!(pub struct Ids {
   trigger_inspiratory_overview_title,
   trigger_inspiratory_overview_status,
   trigger_inspiratory_overview_offset,
+  trigger_inspiratory_overview_expiratory_term,
   trigger_inspiratory_overview_plateau_duration,
 
   trigger_inspiratory_status_container,
@@ -109,11 +110,11 @@ widget_ids!(pub struct Ids {
   trigger_inspiratory_offset_less_button,
   trigger_inspiratory_offset_text,
   trigger_inspiratory_offset_value,
-  trigger_inspiratory_plateau_duration_container,
-  trigger_inspiratory_plateau_duration_more_button,
-  trigger_inspiratory_plateau_duration_less_button,
-  trigger_inspiratory_plateau_duration_text,
-  trigger_inspiratory_plateau_duration_value,
+  trigger_inspiratory_expiratory_term_container,
+  trigger_inspiratory_expiratory_term_more_button,
+  trigger_inspiratory_expiratory_term_less_button,
+  trigger_inspiratory_expiratory_term_text,
+  trigger_inspiratory_expiratory_term_value,
 
   modal_background,
   modal_container_borders,
@@ -335,7 +336,7 @@ impl<'a> Screen<'a> {
         );
 
         if !trigger_inspiratory_open {
-            self.render_modal(DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH, DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT);
+            self.render_modal(DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH, DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT, None);
 
             let config = StopWidgetConfig {
                 container: self.ids.modal_container,
@@ -574,6 +575,7 @@ impl<'a> Screen<'a> {
             title_widget: self.ids.trigger_inspiratory_overview_title,
             status_widget: self.ids.trigger_inspiratory_overview_status,
             inspiration_trigger_offset_widget: self.ids.trigger_inspiratory_overview_offset,
+            expiratory_term_widget: self.ids.trigger_inspiratory_overview_expiratory_term,
             plateau_duration_widget: self.ids.trigger_inspiratory_overview_plateau_duration,
             background_color: color::BLUE,
             width: TELEMETRY_WIDGET_SIZE_WIDTH,
@@ -586,7 +588,7 @@ impl<'a> Screen<'a> {
         self.widgets.render(ControlWidgetType::TriggerInspiratoryOverview(trigger_inspiratory_config));
     }
 
-    fn render_modal(&mut self, width: f64, height: f64) {
+    fn render_modal(&mut self, width: f64, height: f64, padding: Option<f64>) {
         let modal_config = ModalWidgetConfig {
             parent: self.ids.background,
             background: self.ids.modal_background,
@@ -594,13 +596,14 @@ impl<'a> Screen<'a> {
             container: self.ids.modal_container,
             width,
             height,
+            padding,
         };
 
         self.widgets.render(ControlWidgetType::Modal(modal_config));
     }
 
     fn render_settings(&mut self, settings: &'a TriggerInspiratory) {
-        self.render_modal(SETTINGS_MODAL_WIDTH, SETTINGS_MODAL_HEIGTH);
+        self.render_modal(SETTINGS_MODAL_WIDTH, SETTINGS_MODAL_HEIGTH, Some(10.0));
 
         let config = TriggerInspiratoryWidgetConfig {
             width: SETTINGS_MODAL_WIDTH,
@@ -618,11 +621,11 @@ impl<'a> Screen<'a> {
             inspiratory_offset_text_widget: self.ids.trigger_inspiratory_offset_text,
             inspiratory_offset_value_widget: self.ids.trigger_inspiratory_offset_value,
 
-            plateau_duration_container_parent: self.ids.trigger_inspiratory_plateau_duration_container,
-            plateau_duration_more_button_widget: self.ids.trigger_inspiratory_plateau_duration_more_button,
-            plateau_duration_less_button_widget: self.ids.trigger_inspiratory_plateau_duration_less_button,
-            plateau_duration_text_widget: self.ids.trigger_inspiratory_plateau_duration_text,
-            plateau_duration_value_widget: self.ids.trigger_inspiratory_plateau_duration_value,
+            expiratory_term_container_parent: self.ids.trigger_inspiratory_expiratory_term_container,
+            expiratory_term_more_button_widget: self.ids.trigger_inspiratory_expiratory_term_more_button,
+            expiratory_term_less_button_widget: self.ids.trigger_inspiratory_expiratory_term_less_button,
+            expiratory_term_text_widget: self.ids.trigger_inspiratory_expiratory_term_text,
+            expiratory_term_value_widget: self.ids.trigger_inspiratory_expiratory_term_value,
         };
 
         self.widgets.render(ControlWidgetType::TriggerInspiratorySettings(config));

@@ -127,7 +127,7 @@ impl<'a> DisplayDrawer<'a> {
         }
     }
 
-    fn start_telemetry(&self) -> Receiver<TelemetryChannelType> {
+    fn start_telemetry(&mut self) -> Receiver<TelemetryChannelType> {
         // Start gathering telemetry
         let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
             std::sync::mpsc::channel();
@@ -144,8 +144,11 @@ impl<'a> DisplayDrawer<'a> {
                         .unwrap_or_else(|_| panic!("could not create file '{}'", &path));
                     std::io::BufWriter::new(file)
                 });
+
+                let settings_receiver = self.chip.init_settings_receiver();
+
                 std::thread::spawn(move || {
-                    telemetry::gather_telemetry(&port, tx, optional_file_buffer);
+                    telemetry::gather_telemetry(&port, tx, optional_file_buffer, Some(settings_receiver));
                 });
             }
 
