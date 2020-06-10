@@ -145,8 +145,8 @@ impl TriggerInspiratory {
     }
 
     pub fn get_plateau_duration(&self) -> usize {
-        if self.expiratory_term > 0 && self.cycles_per_minute > 0 {
-            1000 * (10 / (10 + self.expiratory_term) * (60 / self.cycles_per_minute))
+        if self.cycles_per_minute > 0 {
+            (1000.0 * (10.0 / (10.0 + self.expiratory_term as f64) * (60.0 / self.cycles_per_minute as f64))) as usize
         } else {
             0
         }
