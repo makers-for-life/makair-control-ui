@@ -19,7 +19,7 @@ use super::widget::{
     ControlWidgetType, ErrorWidgetConfig, GraphWidgetConfig, HeartbeatWidgetConfig,
     InitializingWidgetConfig, NoDataWidgetConfig, StatusWidgetConfig, StopWidgetConfig,
     TelemetryWidgetConfig, TelemetryWidgetContainerConfig, LayoutWidgetConfig, LayoutConfig,
-    ModalWidgetConfig, TriggerInspiratoryWidgetConfig, TriggerInspiratoryOverview,
+    ModalWidgetConfig, TriggerInspiratoryWidgetConfig, TriggerInspiratoryOverview, ExpRatioSettingsWidgetConfig,
 };
 
 widget_ids!(pub struct Ids {
@@ -88,6 +88,12 @@ widget_ids!(pub struct Ids {
   ratio_value_target,
   ratio_unit,
 
+  exp_ratio_term_container,
+  exp_ratio_term_more_button,
+  exp_ratio_term_less_button,
+  exp_ratio_term_text,
+  exp_ratio_term_value,
+
   tidal_parent,
   tidal_title,
   tidal_value_measured,
@@ -110,11 +116,6 @@ widget_ids!(pub struct Ids {
   trigger_inspiratory_offset_less_button,
   trigger_inspiratory_offset_text,
   trigger_inspiratory_offset_value,
-  trigger_inspiratory_expiratory_term_container,
-  trigger_inspiratory_expiratory_term_more_button,
-  trigger_inspiratory_expiratory_term_less_button,
-  trigger_inspiratory_expiratory_term_text,
-  trigger_inspiratory_expiratory_term_value,
 
   modal_background,
   modal_container_borders,
@@ -193,6 +194,7 @@ impl<'a> Screen<'a> {
         telemetry_data: ScreenDataTelemetry,
         trigger_inspiratory: &'a TriggerInspiratory,
         trigger_inspiratory_open: bool,
+        exp_ratio_open: bool,
     ) {
         // Render common background
         self.render_background();
@@ -217,7 +219,9 @@ impl<'a> Screen<'a> {
         self.render_telemetry(telemetry_data, trigger_inspiratory);
 
         if trigger_inspiratory_open {
-            self.render_settings(trigger_inspiratory);
+            self.render_trigger_settings(trigger_inspiratory);
+        } else if exp_ratio_open {
+            self.render_exp_ratio_settings(trigger_inspiratory);
         }
     }
 
@@ -323,6 +327,7 @@ impl<'a> Screen<'a> {
         telemetry_data: ScreenDataTelemetry,
         trigger_inspiratory: &'a TriggerInspiratory,
         trigger_inspiratory_open: bool,
+        exp_ratio_open: bool,
     ) {
         // Render regular data as background
         self.render_with_data(
@@ -332,7 +337,8 @@ impl<'a> Screen<'a> {
             graph_data,
             telemetry_data,
             trigger_inspiratory,
-            trigger_inspiratory_open
+            trigger_inspiratory_open,
+            exp_ratio_open,
         );
 
         if !trigger_inspiratory_open {
@@ -508,16 +514,14 @@ impl<'a> Screen<'a> {
         // Initialize the ratio widget
         let ratio_config = TelemetryWidgetConfig {
             title: APP_I18N.t("telemetry-label-ratio"),
-            value_measured: None,
-            // TODO: gather dynamic numerator + denominator from telemetry (avoid sharing the same \
-            //   constants in 2 places)
-            value_target: Some(format!(
+            value_measured: Some(format!(
                 "{}:{}",
                 CYCLE_RATIO_INSPIRATION,
-                CYCLE_RATIO_INSPIRATION + CYCLE_RATIO_EXPIRATION
+                (trigger_inspiratory.expiratory_term as f64 / 10.0)
             )),
+            value_target: None,
             value_arrow: telemetry_data.arrow_image_id,
-            unit: APP_I18N.t("telemetry-unit-insp-on-total"),
+            unit: format!("Plateau duration: {}ms", trigger_inspiratory.get_plateau_duration()),
             ids: (
                 self.ids.cycles_parent,
                 self.ids.ratio_parent,
@@ -525,7 +529,7 @@ impl<'a> Screen<'a> {
                 self.ids.ratio_value_measured,
                 self.ids.ratio_value_arrow,
                 self.ids.ratio_value_target,
-                None,
+                Some(self.ids.ratio_unit),
             ),
             x_position: TELEMETRY_WIDGET_SIZE_WIDTH,
             y_position: 0.0,
@@ -602,12 +606,12 @@ impl<'a> Screen<'a> {
         self.widgets.render(ControlWidgetType::Modal(modal_config));
     }
 
-    fn render_settings(&mut self, settings: &'a TriggerInspiratory) {
-        self.render_modal(SETTINGS_MODAL_WIDTH, SETTINGS_MODAL_HEIGTH, Some(10.0));
+    fn render_trigger_settings(&mut self, settings: &'a TriggerInspiratory) {
+        self.render_modal(TRIGGER_SETTINGS_MODAL_WIDTH, TRIGGER_SETTINGS_MODAL_HEIGTH, Some(10.0));
 
         let config = TriggerInspiratoryWidgetConfig {
-            width: SETTINGS_MODAL_WIDTH,
-            height: SETTINGS_MODAL_HEIGTH,
+            width: EXP_RATIO_SETTINGS_MODAL_WIDTH,
+            height: EXP_RATIO_SETTINGS_MODAL_HEIGTH,
             trigger_inspiratory_settings: settings,
 
             status_container_parent: self.ids.modal_container,
@@ -620,14 +624,27 @@ impl<'a> Screen<'a> {
             inspiratory_offset_less_button_widget: self.ids.trigger_inspiratory_offset_less_button,
             inspiratory_offset_text_widget: self.ids.trigger_inspiratory_offset_text,
             inspiratory_offset_value_widget: self.ids.trigger_inspiratory_offset_value,
-
-            expiratory_term_container_parent: self.ids.trigger_inspiratory_expiratory_term_container,
-            expiratory_term_more_button_widget: self.ids.trigger_inspiratory_expiratory_term_more_button,
-            expiratory_term_less_button_widget: self.ids.trigger_inspiratory_expiratory_term_less_button,
-            expiratory_term_text_widget: self.ids.trigger_inspiratory_expiratory_term_text,
-            expiratory_term_value_widget: self.ids.trigger_inspiratory_expiratory_term_value,
         };
 
         self.widgets.render(ControlWidgetType::TriggerInspiratorySettings(config));
+    }
+
+    fn render_exp_ratio_settings(&mut self, settings: &'a TriggerInspiratory) {
+        self.render_modal(EXP_RATIO_SETTINGS_MODAL_WIDTH, EXP_RATIO_SETTINGS_MODAL_HEIGTH, Some(10.0));
+
+        let config = ExpRatioSettingsWidgetConfig {
+            width: EXP_RATIO_SETTINGS_MODAL_WIDTH,
+            height: EXP_RATIO_SETTINGS_MODAL_HEIGTH,
+            trigger_inspiratory_settings: settings,
+
+            exp_ratio_container_parent: self.ids.modal_container,
+            exp_ratio_container_widget: self.ids.exp_ratio_term_container,
+            exp_ratio_more_button_widget: self.ids.exp_ratio_term_more_button,
+            exp_ratio_less_button_widget: self.ids.exp_ratio_term_less_button,
+            exp_ratio_text_widget: self.ids.exp_ratio_term_text,
+            exp_ratio_value_widget: self.ids.exp_ratio_term_value,
+        };
+
+        self.widgets.render(ControlWidgetType::ExpRatioSettings(config));
     }
 }

@@ -309,12 +309,18 @@ pub struct TriggerInspiratoryWidgetConfig<'a> {
     pub inspiratory_offset_less_button_widget: WidgetId,
     pub inspiratory_offset_more_button_widget: WidgetId,
     pub inspiratory_offset_value_widget: WidgetId,
+}
 
-    pub expiratory_term_container_parent: WidgetId,
-    pub expiratory_term_text_widget: WidgetId,
-    pub expiratory_term_less_button_widget: WidgetId,
-    pub expiratory_term_more_button_widget: WidgetId,
-    pub expiratory_term_value_widget: WidgetId,
+pub struct ExpRatioSettingsWidgetConfig<'a> {
+    pub width: f64,
+    pub height: f64,
+    pub trigger_inspiratory_settings: &'a TriggerInspiratory,
+    pub exp_ratio_container_parent: WidgetId,
+    pub exp_ratio_container_widget: WidgetId,
+    pub exp_ratio_text_widget: WidgetId,
+    pub exp_ratio_less_button_widget: WidgetId,
+    pub exp_ratio_more_button_widget: WidgetId,
+    pub exp_ratio_value_widget: WidgetId,
 }
 
 pub struct TriggerInspiratoryOverview<'a> {
@@ -350,6 +356,7 @@ pub enum ControlWidgetType<'a> {
     Layout(LayoutConfig),
     TriggerInspiratorySettings(TriggerInspiratoryWidgetConfig<'a>),
     TriggerInspiratoryOverview(TriggerInspiratoryOverview<'a>),
+    ExpRatioSettings(ExpRatioSettingsWidgetConfig<'a>),
 }
 
 pub struct ControlWidget<'a> {
@@ -380,6 +387,7 @@ impl<'a> ControlWidget<'a> {
             ControlWidgetType::Layout(config) => self.layout(config),
             ControlWidgetType::TriggerInspiratorySettings(config) => self.trigger_inspiratory_settings(config),
             ControlWidgetType::TriggerInspiratoryOverview(config) => self.trigger_inspiratory_overview(config),
+            ControlWidgetType::ExpRatioSettings(config) => self.exp_ratio_settings(config),
         }
     }
 
@@ -962,7 +970,7 @@ impl<'a> ControlWidget<'a> {
             .middle_of(config.container_borders);
 
         if let Some(padding) = config.padding {
-            container = container.pad(padding);
+            container = container.pad_left(padding);
         }
 
         container.set(config.container, &mut self.ui);
@@ -1036,7 +1044,7 @@ impl<'a> ControlWidget<'a> {
     }
 
     fn trigger_inspiratory_settings(&mut self, config: TriggerInspiratoryWidgetConfig) -> f64 {
-        let sections_height = config.height / 3.0;
+        let sections_height = config.height / 2.0;
         let mut canvas_style = widget::canvas::Style::default();
         canvas_style.color = Some(color::TRANSPARENT);
         canvas_style.border = Some(0.0);
@@ -1107,43 +1115,9 @@ impl<'a> ControlWidget<'a> {
             .label(&String::from("+"))
             .set(config.inspiratory_offset_more_button_widget, &mut self.ui);
 
-        widget::Canvas::new()
-            .with_style(canvas_style)
-            .w_h(config.width, sections_height)
-            .down_from(config.inspiratory_offset_container_parent, 0.0)
-            .set(config.expiratory_term_container_parent, &mut self.ui);
+        /*
 
-        let mut plateau_text_style = widget::text::Style::default();
-        plateau_text_style.font_id = Some(Some(self.fonts.regular));
-        plateau_text_style.color = Some(color::WHITE);
-        plateau_text_style.font_size = Some(20);
-
-        widget::Text::new("Expiratory Term")
-            .with_style(plateau_text_style)
-            .mid_left_of(config.expiratory_term_container_parent)
-            .set(config.expiratory_term_text_widget, &mut self.ui);
-
-        widget::Button::new()
-            .right_from(config.expiratory_term_text_widget, 10.0)
-            .w_h(50.0, 30.0)
-            .label(&String::from("-"))
-            .set(config.expiratory_term_less_button_widget, &mut self.ui);
-
-        let mut plateau_value_style = widget::text::Style::default();
-        plateau_value_style.font_id = Some(Some(self.fonts.regular));
-        plateau_value_style.color = Some(color::WHITE);
-        plateau_value_style.font_size = Some(20);
-
-        widget::Text::new(format!("{}", config.trigger_inspiratory_settings.expiratory_term).as_str())
-            .with_style(plateau_value_style)
-            .right_from(config.expiratory_term_less_button_widget, 20.0)
-            .set(config.expiratory_term_value_widget, &mut self.ui);
-
-        widget::Button::new()
-            .right_from(config.expiratory_term_value_widget, 20.0)
-            .w_h(50.0, 30.0)
-            .label(&String::from("+"))
-            .set(config.expiratory_term_more_button_widget, &mut self.ui);
+        */
 
         0 as _
     }
@@ -1163,8 +1137,8 @@ impl<'a> ControlWidget<'a> {
         self.trigger_inspiratory_overview_title(&config);
         self.trigger_inspiratory_overview_status(&config);
         self.trigger_inspiratory_overview_offset(&config);
-        self.trigger_inspiratory_overview_expiratory_term(&config);
-        self.trigger_inspiratory_overview_plateau_duration(&config);
+        //self.trigger_inspiratory_overview_expiratory_term(&config);
+        //self.trigger_inspiratory_overview_plateau_duration(&config);
 
         0 as _
     }
@@ -1211,27 +1185,49 @@ impl<'a> ControlWidget<'a> {
             .set(config.inspiration_trigger_offset_widget, &mut self.ui);
     }
 
-    fn trigger_inspiratory_overview_expiratory_term(&mut self, config: &TriggerInspiratoryOverview) {
-        let mut text_style = widget::text::Style::default();
-        text_style.font_id = Some(Some(self.fonts.regular));
-        text_style.color = Some(color::WHITE);
-        text_style.font_size = Some(15);
+    fn exp_ratio_settings(&mut self, config: ExpRatioSettingsWidgetConfig) -> f64 {
+        let mut canvas_style = widget::canvas::Style::default();
+        canvas_style.color = Some(color::TRANSPARENT);
+        canvas_style.border = Some(0.0);
 
-        widget::Text::new(&format!("Expiratory term: {}", config.trigger_inspiratory_settings.expiratory_term))
-            .with_style(text_style)
-            .down_from(config.inspiration_trigger_offset_widget, 5.0)
-            .set(config.expiratory_term_widget, &mut self.ui);
-    }
+        widget::Canvas::new()
+            .with_style(canvas_style)
+            .w_h(config.width, config.height)
+            .top_left_of(config.exp_ratio_container_parent)
+            .set(config.exp_ratio_container_widget, &mut self.ui);
 
-    fn trigger_inspiratory_overview_plateau_duration(&mut self, config: &TriggerInspiratoryOverview) {
-        let mut text_style = widget::text::Style::default();
-        text_style.font_id = Some(Some(self.fonts.regular));
-        text_style.color = Some(color::WHITE);
-        text_style.font_size = Some(15);
+        let mut plateau_text_style = widget::text::Style::default();
+        plateau_text_style.font_id = Some(Some(self.fonts.regular));
+        plateau_text_style.color = Some(color::WHITE);
+        plateau_text_style.font_size = Some(20);
 
-        widget::Text::new(&format!("Plateau duration: {} ms", config.trigger_inspiratory_settings.get_plateau_duration()))
-            .with_style(text_style)
-            .down_from(config.expiratory_term_widget, 5.0)
-            .set(config.plateau_duration_widget, &mut self.ui);
+        widget::Text::new("Expiratory Term")
+            .with_style(plateau_text_style)
+            .mid_left_of(config.exp_ratio_container_widget)
+            .set(config.exp_ratio_text_widget, &mut self.ui);
+
+        widget::Button::new()
+            .right_from(config.exp_ratio_text_widget, 10.0)
+            .w_h(50.0, 30.0)
+            .label(&String::from("-"))
+            .set(config.exp_ratio_less_button_widget, &mut self.ui);
+
+        let mut plateau_value_style = widget::text::Style::default();
+        plateau_value_style.font_id = Some(Some(self.fonts.regular));
+        plateau_value_style.color = Some(color::WHITE);
+        plateau_value_style.font_size = Some(20);
+
+        widget::Text::new(format!("{}", config.trigger_inspiratory_settings.expiratory_term).as_str())
+            .with_style(plateau_value_style)
+            .right_from(config.exp_ratio_less_button_widget, 20.0)
+            .set(config.exp_ratio_value_widget, &mut self.ui);
+
+        widget::Button::new()
+            .right_from(config.exp_ratio_value_widget, 20.0)
+            .w_h(50.0, 30.0)
+            .label(&String::from("+"))
+            .set(config.exp_ratio_more_button_widget, &mut self.ui);
+
+        0.0
     }
 }

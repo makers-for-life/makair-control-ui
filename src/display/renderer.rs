@@ -5,6 +5,7 @@
 
 use chrono::{DateTime, NaiveDateTime, Utc};
 use conrod_core::Ui;
+use conrod_core::widget::Id as WidgetId;
 use glium::texture;
 use image::{buffer::ConvertBuffer, load_from_memory, RgbImage, RgbaImage};
 use plotters::prelude::*;
@@ -40,7 +41,8 @@ pub struct DisplayRendererBuilder;
 pub struct DisplayRenderer {
     fonts: Fonts,
     ids: Ids,
-    settings_state: DisplayRendererSettingsState,
+    trigger_settings_state: DisplayRendererSettingsState,
+    exp_ratio_settings_state: DisplayRendererSettingsState,
 }
 
 const FIRMWARE_VERSION_NONE: &str = "n/a";
@@ -66,7 +68,12 @@ lazy_static! {
 #[allow(clippy::new_ret_no_self)]
 impl DisplayRendererBuilder {
     pub fn new(fonts: Fonts, ids: Ids) -> DisplayRenderer {
-        DisplayRenderer { fonts, ids, settings_state: DisplayRendererSettingsState::Closed }
+        DisplayRenderer {
+            fonts,
+            ids,
+            trigger_settings_state: DisplayRendererSettingsState::Closed,
+            exp_ratio_settings_state: DisplayRendererSettingsState::Closed,
+        }
     }
 }
 
@@ -109,53 +116,95 @@ impl DisplayRenderer {
         // If you click on a text, the text element will receive the click, not its parent
         // Maybe there is a way to listen on a parent for childs clicks but I couldn't find one.
         // So we chain each iterator of every childs to be sure to capture the click
-        let trigger_inspiratory_settings_iters = interface.widget_input(self.ids.trigger_inspiratory_overview_container).clicks()
-            .chain(interface.widget_input(self.ids.trigger_inspiratory_overview_title).clicks())
-            .chain(interface.widget_input(self.ids.trigger_inspiratory_overview_status).clicks())
-            .chain(interface.widget_input(self.ids.trigger_inspiratory_overview_offset).clicks())
-            .chain(interface.widget_input(self.ids.trigger_inspiratory_overview_plateau_duration).clicks());
+        let trigger_inspiratory_settings_iters = vec![
+            self.ids.trigger_inspiratory_overview_container,
+            self.ids.trigger_inspiratory_overview_title,
+            self.ids.trigger_inspiratory_overview_status,
+            self.ids.trigger_inspiratory_overview_offset,
+        ];
 
-        for _ in trigger_inspiratory_settings_iters {
-            self.toggle_settings();
+        let exp_ratio_settings_iters = vec![
+            self.ids.ratio_parent,
+            self.ids.ratio_title,
+            self.ids.ratio_value_measured,
+            self.ids.ratio_unit
+        ];
+
+        let trigger_inspiratory_settings_clicks = trigger_inspiratory_settings_iters.iter().flat_map(|widget| {
+            interface.widget_input(*widget).clicks().map(|_| ()).chain(interface.widget_input(*widget).taps().map(|_| ()))
+        });
+
+        let exp_ratio_settings_clicks = exp_ratio_settings_iters.iter().flat_map(|widget| {
+            interface.widget_input(*widget).clicks().map(|_| ()).chain(interface.widget_input(*widget).taps().map(|_| ()))
+        });
+
+        for _ in trigger_inspiratory_settings_clicks {
+            self.toggle_trigger_settings();
         }
 
-        for click in interface.widget_input(self.ids.modal_background).clicks() {
-            if self.settings_state == DisplayRendererSettingsState::Opened {
-                self.toggle_settings();
+
+        for _ in exp_ratio_settings_clicks {
+            self.toggle_exp_ratio_settings();
+        }
+
+        for xy in self.get_widget_clicks(self.ids.modal_background, interface) {
+            if self.trigger_settings_state == DisplayRendererSettingsState::Opened {
+                self.toggle_trigger_settings();
             } else {
                 if let Some(rect_of) = interface.rect_of(self.ids.trigger_inspiratory_overview_container) {
-                    if rect_of.is_over(click.xy) {
-                        self.toggle_settings();
+                    if rect_of.is_over(xy) {
+                        self.toggle_trigger_settings();
+                    }
+                }
+            }
+
+            if self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened {
+                self.toggle_exp_ratio_settings();
+            } else {
+                if let Some(rect_of) = interface.rect_of(self.ids.ratio_parent) {
+                    if rect_of.is_over(xy) {
+                        self.toggle_exp_ratio_settings();
                     }
                 }
             }
         }
 
-        for _ in interface.widget_input(self.ids.trigger_inspiratory_status_button).clicks() {
+        for _ in self.get_widget_clicks(self.ids.trigger_inspiratory_status_button, interface) {
             all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::Toggle));
         }
 
-        for _ in interface.widget_input(self.ids.trigger_inspiratory_offset_less_button).clicks() {
+        for _ in self.get_widget_clicks(self.ids.trigger_inspiratory_offset_less_button, interface) {
             all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::InspiratoryTriggerOffset(SettingAction::Less)));
         }
 
-        for _ in interface.widget_input(self.ids.trigger_inspiratory_offset_more_button).clicks() {
+        for _ in self.get_widget_clicks(self.ids.trigger_inspiratory_offset_more_button, interface) {
             all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::InspiratoryTriggerOffset(SettingAction::More)));
         }
 
-        for _ in interface.widget_input(self.ids.trigger_inspiratory_expiratory_term_less_button).clicks() {
+        for _ in self.get_widget_clicks(self.ids.exp_ratio_term_less_button, interface) {
             all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::ExpiratoryTerm(SettingAction::Less)));
         }
 
-        for _ in interface.widget_input(self.ids.trigger_inspiratory_expiratory_term_more_button).clicks() {
+        for _ in self.get_widget_clicks(self.ids.exp_ratio_term_more_button, interface) {
             all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::ExpiratoryTerm(SettingAction::More)));
         }
 
         all_events
     }
 
-    fn toggle_settings(&mut self) {
-        self.settings_state = match self.settings_state {
+    fn get_widget_clicks<'a>(&self, widget: WidgetId, interface: &'a Ui) -> impl Iterator<Item = conrod_core::position::Point> + 'a {
+        interface.widget_input(widget).clicks().map(|c| c.xy).chain(interface.widget_input(widget).taps().map(|t| t.xy))
+    }
+
+    fn toggle_trigger_settings(&mut self) {
+        self.trigger_settings_state = match self.trigger_settings_state {
+            DisplayRendererSettingsState::Closed => DisplayRendererSettingsState::Opened,
+            DisplayRendererSettingsState::Opened => DisplayRendererSettingsState::Closed
+        };
+    }
+
+    fn toggle_exp_ratio_settings(&mut self) {
+        self.exp_ratio_settings_state = match self.exp_ratio_settings_state {
             DisplayRendererSettingsState::Closed => DisplayRendererSettingsState::Opened,
             DisplayRendererSettingsState::Opened => DisplayRendererSettingsState::Closed
         };
@@ -336,7 +385,8 @@ impl DisplayRenderer {
                 screen_data_graph,
                 screen_data_telemetry,
                 trigger_inspiratory_settings,
-                self.settings_state == DisplayRendererSettingsState::Opened
+                self.trigger_settings_state == DisplayRendererSettingsState::Opened,
+                self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened,
             ),
             ChipState::Stopped => screen.render_stop(
                 screen_data_branding,
@@ -345,7 +395,8 @@ impl DisplayRenderer {
                 screen_data_graph,
                 screen_data_telemetry,
                 trigger_inspiratory_settings,
-                self.settings_state == DisplayRendererSettingsState::Opened
+                self.trigger_settings_state == DisplayRendererSettingsState::Opened,
+                self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened,
             ),
             _ => unreachable!(),
         };
