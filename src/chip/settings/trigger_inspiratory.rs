@@ -22,8 +22,8 @@ pub enum TriggerInspiratoryEvent {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TriggerInspiratoryState {
-    Enabled,
-    Disabled
+    Disabled = 0,
+    Enabled = 1,
 }
 
 #[derive(Debug)]
