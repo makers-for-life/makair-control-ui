@@ -99,6 +99,7 @@ fn make_app_args() -> AppArgs {
             Arg::with_name("output")
                 .short("o")
                 .long("output")
+                .env("OUTPUT_DIR")
                 .help("Path to a directory where to record telemetry")
                 .takes_value(true),
         )
