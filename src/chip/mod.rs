@@ -12,9 +12,9 @@ use std::convert::TryFrom;
 use crate::config::environment::*;
 use crate::physics::types::DataPressure;
 use std::sync::mpsc::{self, Sender, Receiver};
-use settings::{ChipSettings, ChipSettingsEvent};
+use settings::{ChipSettings, ChipSettingsEvent, trigger_inspiratory::TriggerInspiratoryState};
 use telemetry::alarm::{RMC_SW_11, RMC_SW_12, RMC_SW_1, RMC_SW_14, RMC_SW_3, RMC_SW_15, AlarmCode};
-use telemetry::control::ControlMessage;
+use telemetry::control::{ControlMessage, ControlSetting};
 use telemetry::serial::core;
 use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot, TelemetryMessage};
 
@@ -97,6 +97,7 @@ impl Chip {
                 self.clean_if_stopped();
                 self.update_tick(snapshot.systick);
                 self.update_cycles_per_minute(snapshot.cpm_command as usize);
+                self.update_settings_values(&snapshot);
 
                 for alarm in &snapshot.current_alarm_codes {
                     match AlarmPriority::try_from(*alarm) {
@@ -119,7 +120,14 @@ impl Chip {
                 self.state = ChipState::Stopped;
             }
 
-            TelemetryMessage::ControlAck(_) => {}
+            TelemetryMessage::ControlAck(ack) => {
+                match ack.setting {
+                    ControlSetting::TriggerEnabled => self.settings.inspiratory_trigger.state = if ack.value == 0 { TriggerInspiratoryState::Disabled } else { TriggerInspiratoryState::Enabled },
+                    ControlSetting::TriggerOffset => self.settings.inspiratory_trigger.inspiratory_trigger_offset = ack.value as usize,
+                    ControlSetting::ExpiratoryTerm => self.settings.inspiratory_trigger.expiratory_term = ack.value as usize,
+                    _ => {}
+                }
+            }
         };
     }
 
@@ -284,5 +292,11 @@ impl Chip {
 
     fn update_cycles_per_minute(&mut self, cycles_per_minute: usize) {
         self.settings.inspiratory_trigger.set_cycles_per_minute(cycles_per_minute);
+    }
+
+    fn update_settings_values(&mut self, snapshot: &MachineStateSnapshot) {
+        self.settings.inspiratory_trigger.state = if snapshot.trigger_enabled { TriggerInspiratoryState::Enabled } else { TriggerInspiratoryState::Disabled };
+        self.settings.inspiratory_trigger.inspiratory_trigger_offset = snapshot.trigger_offset as usize;
+        self.settings.inspiratory_trigger.expiratory_term = snapshot.expiratory_term as usize;
     }
 }

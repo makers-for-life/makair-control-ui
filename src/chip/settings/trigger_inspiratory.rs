@@ -46,7 +46,7 @@ impl TriggerInspiratory {
         }
     }
 
-    pub fn new_event(&mut self, event: TriggerInspiratoryEvent) -> ControlMessage {
+    pub fn new_event(&self, event: TriggerInspiratoryEvent) -> ControlMessage {
         match event {
             TriggerInspiratoryEvent::Toggle => self.toggle(),
             TriggerInspiratoryEvent::InspiratoryTriggerOffset(action) => self.set_inspiratory_trigger_offset(action),
@@ -59,79 +59,88 @@ impl TriggerInspiratory {
         self.cycles_per_minute = cycles_per_minute;
     }
 
-    fn toggle(&mut self) -> ControlMessage {
-        self.state = match self.state {
+    fn toggle(&self) -> ControlMessage {
+        let new_state = match self.state {
             TriggerInspiratoryState::Enabled => TriggerInspiratoryState::Disabled,
             TriggerInspiratoryState::Disabled => TriggerInspiratoryState::Enabled
         };
 
         ControlMessage {
             setting: ControlSetting::TriggerEnabled,
-            value: self.state as u16
+            value: new_state as u16
         }
     }
 
-    fn set_inspiratory_trigger_offset(&mut self, action: SettingAction) -> ControlMessage {
-        match action {
+    fn set_inspiratory_trigger_offset(&self, action: SettingAction) -> ControlMessage {
+        let new_value = match action {
             SettingAction::More => {
                 let new_value = self.inspiratory_trigger_offset + INSPIRATORY_TRIGGER_OFFSET_STEP;
                 if new_value <= INSPIRATORY_TRIGGER_OFFSET_MAX {
-                    self.inspiratory_trigger_offset = new_value;
+                    new_value
+                } else {
+                    self.inspiratory_trigger_offset
                 }
             },
             SettingAction::Less => {
                 if self.inspiratory_trigger_offset != 0 {
-                    self.inspiratory_trigger_offset -= INSPIRATORY_TRIGGER_OFFSET_STEP;
+                    self.inspiratory_trigger_offset - INSPIRATORY_TRIGGER_OFFSET_STEP
+                } else {
+                    self.inspiratory_trigger_offset
                 }
             }
         };
 
         ControlMessage {
             setting: ControlSetting::TriggerOffset,
-            value: self.inspiratory_trigger_offset as u16
+            value: new_value as u16
         }
     }
 
-    fn set_plateau_duration(&mut self, action: SettingAction) -> ControlMessage {
-        match action {
+    fn set_plateau_duration(&self, action: SettingAction) -> ControlMessage {
+        unimplemented!("The ControlMessage for this setting isn't implemented");
+
+        let new_value = match action {
             SettingAction::More => {
                 let new_value = self.plateau_duration + PLATEAU_DURATION_STEP;
                 if new_value <= PLATEAU_DURATION_MAX {
-                    self.plateau_duration = new_value;
+                    new_value
+                } else {
+                    self.plateau_duration
                 }
             },
             SettingAction::Less => {
                 if self.plateau_duration != Duration::from_millis(0) {
-                    self.plateau_duration -= PLATEAU_DURATION_STEP;
+                    self.plateau_duration - PLATEAU_DURATION_STEP
+                } else {
+                    self.plateau_duration
                 }
             }
         };
-
-        ControlMessage {
-            setting: ControlSetting::PEEP,
-            value: self.plateau_duration.as_millis() as u16
-        }
     }
 
-    fn set_expiratory_term(&mut self, action: SettingAction) -> ControlMessage {
-        match action {
+    fn set_expiratory_term(&self, action: SettingAction) -> ControlMessage {
+        let new_value = match action {
             SettingAction::More => {
                 let new_value = self.expiratory_term + EXPIRATORY_TERM_STEP;
                 if new_value <= EXPIRATORY_TERM_MAX {
-                    self.expiratory_term = new_value;
+                    new_value
+                } else {
+                    self.expiratory_term
                 }
             },
             SettingAction::Less => {
                 let new_value = self.expiratory_term - EXPIRATORY_TERM_STEP;
                 if new_value >= EXPIRATORY_TERM_MIN {
-                    self.expiratory_term = new_value;
+                    new_value
+                } else {
+                    self.expiratory_term
                 }
             }
         };
 
         ControlMessage {
             setting: ControlSetting::ExpiratoryTerm,
-            value: self.expiratory_term as u16,
+            value: new_value as u16,
         }
     }
 
