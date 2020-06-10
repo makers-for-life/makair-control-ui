@@ -49,6 +49,7 @@ widget_ids!(pub struct Ids {
   status_unit_text,
   status_power_box,
   status_power_text,
+  status_save_icon,
 
   heartbeat_ground,
   heartbeat_surround,
@@ -147,6 +148,7 @@ pub struct ScreenDataBranding<'a> {
 pub struct ScreenDataStatus<'a> {
     pub battery_level: Option<u8>,
     pub chip_state: &'a ChipState,
+    pub save_image_id: Option<conrod_core::image::Id>,
 }
 
 pub struct ScreenDataHeartbeat<'a> {
@@ -285,9 +287,11 @@ impl<'a> Screen<'a> {
             self.ids.status_unit_text,
             self.ids.status_power_box,
             self.ids.status_power_text,
+            self.ids.status_save_icon,
             status_data.battery_level,
             status_data.chip_state,
             self.ongoing_alarms.unwrap(),
+            status_data.save_image_id,
         );
 
         self.widgets.render(ControlWidgetType::Status(config));

@@ -20,6 +20,8 @@ use crate::config::environment::*;
 use crate::chip::ChipState;
 use crate::physics::types::DataPressure;
 
+use crate::APP_ARGS;
+
 #[cfg(feature = "graph-scaler")]
 use crate::physics::pressure::process_max_allowed_pressure;
 
@@ -60,6 +62,12 @@ lazy_static! {
             .into_raw();
     static ref IMAGE_TELEMETRY_ARROW_RGBA_RAW: Vec<u8> =
         load_from_memory(EmbeddedImages::get("telemetry-arrow.png").unwrap().to_mut())
+            .unwrap()
+            .into_rgba()
+            .into_raw();
+
+    static ref IMAGE_STATUS_SAVE_RGBA_RAW: Vec<u8> =
+        load_from_memory(EmbeddedImages::get("save.png").unwrap().to_mut())
             .unwrap()
             .into_rgba()
             .into_raw();
@@ -131,6 +139,7 @@ impl DisplayRenderer {
         ];
 
         let trigger_inspiratory_settings_clicks = trigger_inspiratory_settings_iters.iter().flat_map(|widget| {
+            // TODO: Can we use the get_widget_clicks method?
             interface.widget_input(*widget).clicks().map(|_| ()).chain(interface.widget_input(*widget).taps().map(|_| ()))
         });
 
@@ -361,9 +370,17 @@ impl DisplayRenderer {
             height: branding_height as _,
         };
 
+        let save_image_id = if APP_ARGS.is_recording() {
+            let save_icon_texture = self.draw_status_save_icon(display);
+            Some(image_map.insert(save_icon_texture))
+        } else {
+            None
+        };
+
         let screen_data_status = ScreenDataStatus {
             chip_state,
             battery_level,
+            save_image_id,
         };
         let screen_data_heartbeat = ScreenDataHeartbeat { data_pressure };
 
@@ -425,6 +442,15 @@ impl DisplayRenderer {
         let raw_image = glium::texture::RawImage2d::from_raw_rgba_reversed(
             &*IMAGE_TELEMETRY_ARROW_RGBA_RAW,
             (TELEMETRY_ARROW_WIDTH, TELEMETRY_ARROW_HEIGHT),
+        );
+
+        glium::texture::Texture2d::new(&display.0, raw_image).unwrap()
+    }
+
+    fn draw_status_save_icon(&self, display: &GliumDisplayWinitWrapper) -> glium::texture::Texture2d {
+        let raw_image = glium::texture::RawImage2d::from_raw_rgba_reversed(
+            &*IMAGE_STATUS_SAVE_RGBA_RAW,
+            (STATUS_SAVE_ICON_WIDTH, STATUS_SAVE_ICON_HEIGHT)
         );
 
         glium::texture::Texture2d::new(&display.0, raw_image).unwrap()

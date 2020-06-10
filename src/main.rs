@@ -55,6 +55,15 @@ struct AppArgs {
     lora: bool,
 }
 
+impl AppArgs {
+    pub fn is_recording(&self) -> bool {
+        match &self.mode {
+            Mode::Port { output_dir, ..} => output_dir.is_some(),
+            _ => false
+        }
+    }
+}
+
 pub enum Mode {
     Port {
         port: String,

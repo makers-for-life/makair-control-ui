@@ -78,9 +78,11 @@ pub struct StatusWidgetConfig<'a> {
     unit_text: WidgetId,
     power_box: WidgetId,
     power_text: WidgetId,
+    save_icon: WidgetId,
     battery_level: Option<u8>,
     chip_state: &'a ChipState,
     alarms: &'a [(AlarmCode, AlarmPriority)],
+    save_icon_id: Option<conrod_core::image::Id>,
 }
 
 pub struct HeartbeatWidgetConfig<'a> {
@@ -166,9 +168,11 @@ impl<'a> StatusWidgetConfig<'a> {
         unit_text: WidgetId,
         power_box: WidgetId,
         power_text: WidgetId,
+        save_icon: WidgetId,
         battery_level: Option<u8>,
         chip_state: &'a ChipState,
         alarms: &'a [(AlarmCode, AlarmPriority)],
+        save_icon_id: Option<conrod_core::image::Id>,
     ) -> StatusWidgetConfig<'a> {
         StatusWidgetConfig {
             container,
@@ -177,9 +181,11 @@ impl<'a> StatusWidgetConfig<'a> {
             unit_text,
             power_box,
             power_text,
+            save_icon,
             battery_level,
             chip_state,
             alarms,
+            save_icon_id,
         }
     }
 }
@@ -686,6 +692,13 @@ impl<'a> ControlWidget<'a> {
             .with_style(unit_text_style)
             .mid_top_with_margin_on(config.unit_box, STATUS_BOX_TEXT_MARGIN_TOP)
             .set(config.unit_text, &mut self.ui);
+
+        if let Some(save_icon_id) = config.save_icon_id {
+            widget::image::Image::new(save_icon_id)
+                .w_h(15.0, 15.0)
+                .right_from(config.unit_text, 3.0)
+                .set(config.save_icon, &mut self.ui);
+        }
 
         // Display power status text
         let mut power_box_style = canvas::Style::default();
