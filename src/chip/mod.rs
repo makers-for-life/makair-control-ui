@@ -16,7 +16,7 @@ use settings::{ChipSettings, ChipSettingsEvent, trigger_inspiratory::TriggerInsp
 use telemetry::alarm::{RMC_SW_11, RMC_SW_12, RMC_SW_1, RMC_SW_14, RMC_SW_3, RMC_SW_15, AlarmCode};
 use telemetry::control::{ControlMessage, ControlSetting};
 use telemetry::serial::core;
-use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot, TelemetryMessage};
+use telemetry::structures::{AlarmPriority, ControlAck, DataSnapshot, MachineStateSnapshot, TelemetryMessage};
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum ChipState {
@@ -121,12 +121,7 @@ impl Chip {
             }
 
             TelemetryMessage::ControlAck(ack) => {
-                match ack.setting {
-                    ControlSetting::TriggerEnabled => self.settings.inspiratory_trigger.state = if ack.value == 0 { TriggerInspiratoryState::Disabled } else { TriggerInspiratoryState::Enabled },
-                    ControlSetting::TriggerOffset => self.settings.inspiratory_trigger.inspiratory_trigger_offset = ack.value as usize,
-                    ControlSetting::ExpiratoryTerm => self.settings.inspiratory_trigger.expiratory_term = ack.value as usize,
-                    _ => {}
-                }
+                self.update_on_ack(ack);
             }
         };
     }
@@ -298,5 +293,18 @@ impl Chip {
         self.settings.inspiratory_trigger.state = if snapshot.trigger_enabled { TriggerInspiratoryState::Enabled } else { TriggerInspiratoryState::Disabled };
         self.settings.inspiratory_trigger.inspiratory_trigger_offset = snapshot.trigger_offset as usize;
         self.settings.inspiratory_trigger.expiratory_term = snapshot.expiratory_term as usize;
+    }
+
+    // TODO: Mutate the last_machine_snapshot is not great, need to be reworked
+    fn update_on_ack(&mut self, ack: ControlAck) {
+        match ack.setting {
+            ControlSetting::PeakPressure => self.last_machine_snapshot.previous_peak_pressure = ack.value,
+            ControlSetting::PlateauPressure => self.last_machine_snapshot.previous_plateau_pressure = ack.value,
+            ControlSetting::PEEP => self.last_machine_snapshot.previous_peep_pressure = ack.value,
+            ControlSetting::CyclesPerMinute => self.last_machine_snapshot.cpm_command = ack.value as u8,
+            ControlSetting::TriggerEnabled => self.settings.inspiratory_trigger.state = if ack.value == 0 { TriggerInspiratoryState::Disabled } else { TriggerInspiratoryState::Enabled },
+            ControlSetting::TriggerOffset => self.settings.inspiratory_trigger.inspiratory_trigger_offset = ack.value as usize,
+            ControlSetting::ExpiratoryTerm => self.settings.inspiratory_trigger.expiratory_term = ack.value as usize,
+        }
     }
 }
