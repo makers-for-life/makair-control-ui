@@ -345,7 +345,7 @@ impl<'a> Screen<'a> {
             exp_ratio_open,
         );
 
-        if !trigger_inspiratory_open {
+        if !trigger_inspiratory_open && !exp_ratio_open {
             self.render_modal(DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH, DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT, None);
 
             let config = StopWidgetConfig {
