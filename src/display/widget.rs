@@ -310,11 +310,14 @@ pub struct TriggerInspiratoryWidgetConfig<'a> {
     pub status_container_widget: WidgetId,
     pub status_enabled_text_widget: WidgetId,
     pub status_enabled_button_widget: WidgetId,
+    pub status_enabled_button_text_widget: WidgetId,
 
     pub inspiratory_offset_container_parent: WidgetId,
     pub inspiratory_offset_text_widget: WidgetId,
     pub inspiratory_offset_less_button_widget: WidgetId,
+    pub inspiratory_offset_less_button_text_widget: WidgetId,
     pub inspiratory_offset_more_button_widget: WidgetId,
+    pub inspiratory_offset_more_button_text_widget: WidgetId,
     pub inspiratory_offset_value_widget: WidgetId,
 }
 
@@ -326,7 +329,9 @@ pub struct ExpRatioSettingsWidgetConfig<'a> {
     pub exp_ratio_container_widget: WidgetId,
     pub exp_ratio_text_widget: WidgetId,
     pub exp_ratio_less_button_widget: WidgetId,
+    pub exp_ratio_less_button_text_widget: WidgetId,
     pub exp_ratio_more_button_widget: WidgetId,
+    pub exp_ratio_more_button_text_widget: WidgetId,
     pub exp_ratio_value_widget: WidgetId,
 }
 
@@ -984,7 +989,7 @@ impl<'a> ControlWidget<'a> {
             .middle_of(config.container_borders);
 
         if let Some(padding) = config.padding {
-            container = container.pad_left(padding);
+            container = container.pad(padding);
         }
 
         container.set(config.container, &mut self.ui);
@@ -993,7 +998,7 @@ impl<'a> ControlWidget<'a> {
             widget::Button::new()
                 .label("Save")
                 .w_h(60.0, MODAL_VALIDATE_BUTTON_HEIGHT)
-                .bottom_right_with_margins_on(config.container, 10.0, 10.0)
+                .bottom_right_of(config.container)
                 .set(validate, &mut self.ui);
         }
 
@@ -1084,7 +1089,7 @@ impl<'a> ControlWidget<'a> {
 
         widget::Text::new("Trigger inspiratory status:")
             .with_style(status_text_style)
-            .mid_left_of(config.status_container_widget)
+            .top_left_of(config.status_container_widget)
             .set(config.status_enabled_text_widget, &mut self.ui);
 
         let status_label = match config.trigger_inspiratory_settings.state {
@@ -1092,11 +1097,25 @@ impl<'a> ControlWidget<'a> {
             TriggerInspiratoryState::Disabled => String::from("Disabled")
         };
 
-        widget::Button::new()
-            .right_from(config.status_enabled_text_widget, 10.0)
-            .w_h(100.0, 30.0)
-            .label(&status_label)
+        let status_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
+
+        widget::RoundedRectangle::styled(
+            [200.0, 30.0],
+            15.0,
+            status_style
+        )
+            .top_left_with_margins_on(config.status_container_widget, 0.0, 300.0)
             .set(config.status_enabled_button_widget, &mut self.ui);
+
+        let mut status_button_text_style = widget::text::Style::default();
+        status_button_text_style.font_id = Some(Some(self.fonts.regular));
+        status_button_text_style.color = Some(color::BLACK);
+        status_button_text_style.font_size = Some(20);
+
+        widget::Text::new(&status_label)
+            .with_style(status_button_text_style)
+            .mid_top_with_margin_on(config.status_enabled_button_widget, 2.0)
+            .set(config.status_enabled_button_text_widget, &mut self.ui);
 
 
         widget::Canvas::new()
@@ -1112,14 +1131,28 @@ impl<'a> ControlWidget<'a> {
 
         widget::Text::new("Inspiratory trigger offset:")
             .with_style(offset_text_style)
-            .mid_left_of(config.inspiratory_offset_container_parent)
+            .top_left_of(config.inspiratory_offset_container_parent)
             .set(config.inspiratory_offset_text_widget, &mut self.ui);
 
-        widget::Button::new()
-            .right_from(config.inspiratory_offset_text_widget, 10.0)
-            .w_h(50.0, 30.0)
-            .label(&String::from("-"))
+        let less_button_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
+
+        widget::RoundedRectangle::styled(
+            [50.0, 30.0],
+            15.0,
+            less_button_style
+        )
+            .top_left_with_margins_on(config.inspiratory_offset_container_parent, 0.0, 300.0)
             .set(config.inspiratory_offset_less_button_widget, &mut self.ui);
+
+        let mut more_less_buttons_text_style = widget::text::Style::default();
+        more_less_buttons_text_style.font_id = Some(Some(self.fonts.bold));
+        more_less_buttons_text_style.color = Some(color::BLACK);
+        more_less_buttons_text_style.font_size = Some(20);
+
+        widget::Text::new("<")
+            .with_style(more_less_buttons_text_style)
+            .mid_top_with_margin_on(config.inspiratory_offset_less_button_widget, 2.0)
+            .set(config.inspiratory_offset_less_button_text_widget, &mut self.ui);
 
         let mut offset_value_style = widget::text::Style::default();
         offset_value_style.font_id = Some(Some(self.fonts.regular));
@@ -1131,11 +1164,19 @@ impl<'a> ControlWidget<'a> {
             .right_from(config.inspiratory_offset_less_button_widget, 20.0)
             .set(config.inspiratory_offset_value_widget, &mut self.ui);
 
-        widget::Button::new()
+
+        widget::RoundedRectangle::styled(
+            [50.0, 30.0],
+            15.0,
+            less_button_style
+        )
             .right_from(config.inspiratory_offset_value_widget, 20.0)
-            .w_h(50.0, 30.0)
-            .label(&String::from("+"))
             .set(config.inspiratory_offset_more_button_widget, &mut self.ui);
+
+        widget::Text::new(">")
+            .with_style(more_less_buttons_text_style)
+            .mid_top_with_margin_on(config.inspiratory_offset_more_button_widget, 2.0)
+            .set(config.inspiratory_offset_more_button_text_widget, &mut self.ui);
 
         0 as _
     }
@@ -1185,7 +1226,7 @@ impl<'a> ControlWidget<'a> {
 
         widget::Text::new(&format!("State: {}", status))
             .with_style(text_style)
-            .down_from(config.title_widget, 5.0)
+            .down_from(config.title_widget, 20.0)
             .set(config.status_widget, &mut self.ui);
     }
 
@@ -1197,7 +1238,7 @@ impl<'a> ControlWidget<'a> {
 
         widget::Text::new(&format!("Offset: {} mmH2O", config.trigger_inspiratory_settings.inspiratory_trigger_offset))
             .with_style(text_style)
-            .down_from(config.status_widget, 5.0)
+            .down_from(config.status_widget, 20.0)
             .set(config.inspiration_trigger_offset_widget, &mut self.ui);
     }
 
@@ -1219,14 +1260,28 @@ impl<'a> ControlWidget<'a> {
 
         widget::Text::new("Expiratory Term")
             .with_style(plateau_text_style)
-            .mid_left_of(config.exp_ratio_container_widget)
+            .top_left_of(config.exp_ratio_container_widget)
             .set(config.exp_ratio_text_widget, &mut self.ui);
 
-        widget::Button::new()
-            .right_from(config.exp_ratio_text_widget, 10.0)
-            .w_h(50.0, 30.0)
-            .label(&String::from("-"))
+        let less_button_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
+
+        widget::RoundedRectangle::styled(
+            [50.0, 30.0],
+            15.0,
+            less_button_style
+        )
+            .top_left_with_margins_on(config.exp_ratio_container_parent, 0.0, 300.0)
             .set(config.exp_ratio_less_button_widget, &mut self.ui);
+
+        let mut more_less_buttons_text_style = widget::text::Style::default();
+        more_less_buttons_text_style.font_id = Some(Some(self.fonts.bold));
+        more_less_buttons_text_style.color = Some(color::BLACK);
+        more_less_buttons_text_style.font_size = Some(20);
+
+        widget::Text::new("<")
+            .with_style(more_less_buttons_text_style)
+            .mid_top_with_margin_on(config.exp_ratio_less_button_widget, 2.0)
+            .set(config.exp_ratio_less_button_text_widget, &mut self.ui);
 
         let mut plateau_value_style = widget::text::Style::default();
         plateau_value_style.font_id = Some(Some(self.fonts.regular));
@@ -1238,11 +1293,18 @@ impl<'a> ControlWidget<'a> {
             .right_from(config.exp_ratio_less_button_widget, 20.0)
             .set(config.exp_ratio_value_widget, &mut self.ui);
 
-        widget::Button::new()
+        widget::RoundedRectangle::styled(
+            [50.0, 30.0],
+            15.0,
+            less_button_style
+        )
             .right_from(config.exp_ratio_value_widget, 20.0)
-            .w_h(50.0, 30.0)
-            .label(&String::from("+"))
             .set(config.exp_ratio_more_button_widget, &mut self.ui);
+
+       widget::Text::new(">")
+            .with_style(more_less_buttons_text_style)
+            .mid_top_with_margin_on(config.exp_ratio_more_button_widget, 2.0)
+            .set(config.exp_ratio_more_button_text_widget, &mut self.ui);
 
         0.0
     }

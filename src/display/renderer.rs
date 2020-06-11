@@ -182,25 +182,35 @@ impl DisplayRenderer {
         }
 
         if self.trigger_settings_state == DisplayRendererSettingsState::Opened {
-            for _ in self.get_widget_clicks(self.ids.trigger_inspiratory_status_button, interface) {
+            for _ in self.get_widget_clicks(self.ids.trigger_inspiratory_status_button, interface)
+                .chain(self.get_widget_clicks(self.ids.trigger_inspiratory_status_button_text, interface))
+            {
                 all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::Toggle));
             }
 
-            for _ in self.get_widget_clicks(self.ids.trigger_inspiratory_offset_less_button, interface) {
+            for _ in self.get_widget_clicks(self.ids.trigger_inspiratory_offset_less_button, interface)
+                .chain(self.get_widget_clicks(self.ids.trigger_inspiratory_offset_less_button_text, interface))
+            {
                 all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::InspiratoryTriggerOffset(SettingAction::Less)));
             }
 
-            for _ in self.get_widget_clicks(self.ids.trigger_inspiratory_offset_more_button, interface) {
+            for _ in self.get_widget_clicks(self.ids.trigger_inspiratory_offset_more_button, interface)
+                .chain(self.get_widget_clicks(self.ids.trigger_inspiratory_offset_more_button_text, interface))
+            {
                 all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::InspiratoryTriggerOffset(SettingAction::More)));
             }
         }
 
         if self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened {
-            for _ in self.get_widget_clicks(self.ids.exp_ratio_term_less_button, interface) {
+            for _ in self.get_widget_clicks(self.ids.exp_ratio_term_less_button, interface)
+                .chain(self.get_widget_clicks(self.ids.exp_ratio_term_less_button_text, interface))
+            {
                 all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::ExpiratoryTerm(SettingAction::Less)));
             }
 
-            for _ in self.get_widget_clicks(self.ids.exp_ratio_term_more_button, interface) {
+            for _ in self.get_widget_clicks(self.ids.exp_ratio_term_more_button, interface)
+                .chain(self.get_widget_clicks(self.ids.exp_ratio_term_more_button_text, interface))
+            {
                 all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::ExpiratoryTerm(SettingAction::More)));
             }
         }

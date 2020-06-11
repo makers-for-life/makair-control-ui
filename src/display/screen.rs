@@ -92,7 +92,9 @@ widget_ids!(pub struct Ids {
 
   exp_ratio_term_container,
   exp_ratio_term_more_button,
+  exp_ratio_term_more_button_text,
   exp_ratio_term_less_button,
+  exp_ratio_term_less_button_text,
   exp_ratio_term_text,
   exp_ratio_term_value,
 
@@ -113,9 +115,12 @@ widget_ids!(pub struct Ids {
   trigger_inspiratory_status_container,
   trigger_inspiratory_status_text,
   trigger_inspiratory_status_button,
+  trigger_inspiratory_status_button_text,
   trigger_inspiratory_offset_container,
   trigger_inspiratory_offset_more_button,
+  trigger_inspiratory_offset_more_button_text,
   trigger_inspiratory_offset_less_button,
+  trigger_inspiratory_offset_less_button_text,
   trigger_inspiratory_offset_text,
   trigger_inspiratory_offset_value,
 
@@ -615,22 +620,26 @@ impl<'a> Screen<'a> {
     }
 
     fn render_trigger_settings(&mut self, settings: &'a TriggerInspiratory) {
+        let padding = 20.0;
         self.render_modal(TRIGGER_SETTINGS_MODAL_WIDTH, TRIGGER_SETTINGS_MODAL_HEIGTH,
-            Some(10.0), Some(self.ids.modal_validate));
+            Some(padding), Some(self.ids.modal_validate));
 
         let config = TriggerInspiratoryWidgetConfig {
-            width: EXP_RATIO_SETTINGS_MODAL_WIDTH,
-            height: EXP_RATIO_SETTINGS_MODAL_HEIGTH - MODAL_VALIDATE_BUTTON_HEIGHT,
+            width: TRIGGER_SETTINGS_MODAL_WIDTH,
+            height: TRIGGER_SETTINGS_MODAL_HEIGTH - MODAL_VALIDATE_BUTTON_HEIGHT - (padding * 2.0),
             trigger_inspiratory_settings: settings,
 
             status_container_parent: self.ids.modal_container,
             status_container_widget: self.ids.trigger_inspiratory_status_container,
             status_enabled_text_widget: self.ids.trigger_inspiratory_status_text,
             status_enabled_button_widget: self.ids.trigger_inspiratory_status_button,
+            status_enabled_button_text_widget: self.ids.trigger_inspiratory_status_button_text,
 
             inspiratory_offset_container_parent: self.ids.trigger_inspiratory_offset_container,
             inspiratory_offset_more_button_widget: self.ids.trigger_inspiratory_offset_more_button,
+            inspiratory_offset_more_button_text_widget: self.ids.trigger_inspiratory_offset_more_button_text,
             inspiratory_offset_less_button_widget: self.ids.trigger_inspiratory_offset_less_button,
+            inspiratory_offset_less_button_text_widget: self.ids.trigger_inspiratory_offset_less_button_text,
             inspiratory_offset_text_widget: self.ids.trigger_inspiratory_offset_text,
             inspiratory_offset_value_widget: self.ids.trigger_inspiratory_offset_value,
         };
@@ -639,18 +648,21 @@ impl<'a> Screen<'a> {
     }
 
     fn render_exp_ratio_settings(&mut self, settings: &'a TriggerInspiratory) {
+        let padding = 20.0;
         self.render_modal(EXP_RATIO_SETTINGS_MODAL_WIDTH, EXP_RATIO_SETTINGS_MODAL_HEIGTH,
-            Some(10.0), Some(self.ids.modal_validate));
+            Some(padding), Some(self.ids.modal_validate));
 
         let config = ExpRatioSettingsWidgetConfig {
             width: EXP_RATIO_SETTINGS_MODAL_WIDTH,
-            height: EXP_RATIO_SETTINGS_MODAL_HEIGTH - MODAL_VALIDATE_BUTTON_HEIGHT,
+            height: EXP_RATIO_SETTINGS_MODAL_HEIGTH - MODAL_VALIDATE_BUTTON_HEIGHT - (padding * 2.0),
             trigger_inspiratory_settings: settings,
 
             exp_ratio_container_parent: self.ids.modal_container,
             exp_ratio_container_widget: self.ids.exp_ratio_term_container,
             exp_ratio_more_button_widget: self.ids.exp_ratio_term_more_button,
+            exp_ratio_more_button_text_widget: self.ids.exp_ratio_term_more_button_text,
             exp_ratio_less_button_widget: self.ids.exp_ratio_term_less_button,
+            exp_ratio_less_button_text_widget: self.ids.exp_ratio_term_less_button_text,
             exp_ratio_text_widget: self.ids.exp_ratio_term_text,
             exp_ratio_value_widget: self.ids.exp_ratio_term_value,
         };
