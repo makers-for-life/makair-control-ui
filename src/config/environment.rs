@@ -104,8 +104,6 @@ pub const LAYOUT_FOOTER_SIZE_HEIGHT: f64 = 100.0;
 
 #[cfg(feature = "lora")]
 pub const LORA_GPIO_PIN_NUMBER: u64 = 25;
-#[cfg(feature = "lora")]
-pub const LORA_DEVICE_PATH: &str = "/dev/ttyAMA0";
 
 #[cfg(not(feature = "graph-scaler"))]
 pub const GRAPH_DRAW_RANGE_HIGH_STATIC_INITIAL: u8 = 65;

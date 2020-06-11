@@ -13,6 +13,7 @@ impl LoraController {
     #[cfg(feature = "lora")]
     pub fn new() -> Sender<TelemetryMessage> {
         use crate::config::environment::*;
+        use crate::APP_ARGS;
         use rn2903::Rn2903;
         use std::sync::mpsc;
         use std::sync::mpsc::channel;
@@ -62,7 +63,7 @@ impl LoraController {
                 thread::spawn(move || {
                     let (lock, cvar) = &*pair2;
                     let mut device = lock.lock().unwrap();
-                    *device = Some(Rn2903::new_at(LORA_DEVICE_PATH));
+                    *device = Some(Rn2903::new_at(&APP_ARGS.lora_device));
                     // We notify the condvar that the value has changed.
                     cvar.notify_one();
                 });
@@ -196,6 +197,7 @@ impl LoraController {
         tx
     }
 
+    #[allow(clippy::new_ret_no_self)]
     #[cfg(not(feature = "lora"))]
     pub fn new() -> Sender<TelemetryMessage> {
         unreachable!("'lora' feature was disabled during compilation")
