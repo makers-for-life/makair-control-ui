@@ -4,7 +4,7 @@
 // License: Public Domain License
 
 use conrod_core::Ui;
-use glium::glutin::{Event, EventsLoop, WindowEvent, KeyboardInput};
+use glium::glutin::{Event, EventsLoop, KeyboardInput, WindowEvent};
 
 use super::support::{self, EventLoop, GliumDisplayWinitWrapper};
 
@@ -44,15 +44,17 @@ impl DisplayEvents {
             // Break from the loop upon `Escape` or closed window.
             if let Event::WindowEvent { event, .. } = event.clone() {
                 match event {
-                    WindowEvent::CloseRequested | WindowEvent::KeyboardInput {
-                        input: KeyboardInput {
-                            virtual_keycode: Some(glium::glutin::VirtualKeyCode::Escape),
-                            ..
-                        },
-                    ..
+                    WindowEvent::CloseRequested
+                    | WindowEvent::KeyboardInput {
+                        input:
+                            KeyboardInput {
+                                virtual_keycode: Some(glium::glutin::VirtualKeyCode::Escape),
+                                ..
+                            },
+                        ..
                     } => {
                         return DisplayEventsHandleOutcome::Break;
-                    },
+                    }
                     _ => (),
                 }
             }

@@ -9,7 +9,7 @@ use conrod_core::widget::Id as WidgetId;
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
-use crate::chip::{ChipState, settings::trigger_inspiratory::{TriggerInspiratory}};
+use crate::chip::{settings::trigger_inspiratory::TriggerInspiratory, ChipState};
 use crate::config::environment::*;
 use crate::physics::types::DataPressure;
 use crate::APP_I18N;
@@ -17,10 +17,11 @@ use crate::APP_I18N;
 use super::fonts::Fonts;
 use super::widget::{
     AlarmsWidgetConfig, BackgroundWidgetConfig, BrandingWidgetConfig, ControlWidget,
-    ControlWidgetType, ErrorWidgetConfig, GraphWidgetConfig, HeartbeatWidgetConfig,
-    InitializingWidgetConfig, NoDataWidgetConfig, StatusWidgetConfig, StopWidgetConfig,
-    TelemetryWidgetConfig, TelemetryWidgetContainerConfig, LayoutWidgetConfig, LayoutConfig,
-    ModalWidgetConfig, TriggerInspiratoryWidgetConfig, TriggerInspiratoryOverview, ExpRatioSettingsWidgetConfig,
+    ControlWidgetType, ErrorWidgetConfig, ExpRatioSettingsWidgetConfig, GraphWidgetConfig,
+    HeartbeatWidgetConfig, InitializingWidgetConfig, LayoutConfig, LayoutWidgetConfig,
+    ModalWidgetConfig, NoDataWidgetConfig, StatusWidgetConfig, StopWidgetConfig,
+    TelemetryWidgetConfig, TelemetryWidgetContainerConfig, TriggerInspiratoryOverview,
+    TriggerInspiratoryWidgetConfig,
 };
 
 widget_ids!(pub struct Ids {
@@ -195,6 +196,7 @@ impl<'a> Screen<'a> {
         }
     }
 
+    #[allow(clippy::too_many_arguments)]
     pub fn render_with_data(
         &mut self,
         branding_data: ScreenDataBranding<'a>,
@@ -242,9 +244,24 @@ impl<'a> Screen<'a> {
     }
 
     pub fn render_layout(&mut self) {
-        let header_config = LayoutWidgetConfig::new(self.ids.background, 0.0, LAYOUT_HEADER_SIZE_FULL_HEIGHT, self.ids.layout_header);
-        let body_config = LayoutWidgetConfig::new(self.ids.background, LAYOUT_HEADER_SIZE_HEIGHT, LAYOUT_BODY_SIZE_HEIGHT, self.ids.layout_body);
-        let footer_config = LayoutWidgetConfig::new(self.ids.layout_body, 0.0, LAYOUT_FOOTER_SIZE_HEIGHT, self.ids.layout_footer);
+        let header_config = LayoutWidgetConfig::new(
+            self.ids.background,
+            0.0,
+            LAYOUT_HEADER_SIZE_FULL_HEIGHT,
+            self.ids.layout_header,
+        );
+        let body_config = LayoutWidgetConfig::new(
+            self.ids.background,
+            LAYOUT_HEADER_SIZE_HEIGHT,
+            LAYOUT_BODY_SIZE_HEIGHT,
+            self.ids.layout_body,
+        );
+        let footer_config = LayoutWidgetConfig::new(
+            self.ids.layout_body,
+            0.0,
+            LAYOUT_FOOTER_SIZE_HEIGHT,
+            self.ids.layout_footer,
+        );
         let config = LayoutConfig::new(header_config, body_config, footer_config);
         self.widgets.render(ControlWidgetType::Layout(config));
     }
@@ -264,7 +281,11 @@ impl<'a> Screen<'a> {
             width,
             height,
             image_id,
-            (self.ids.branding_container, self.ids.branding_image, self.ids.branding_text),
+            (
+                self.ids.branding_container,
+                self.ids.branding_image,
+                self.ids.branding_text,
+            ),
         );
 
         self.widgets.render(ControlWidgetType::Branding(config));
@@ -330,6 +351,7 @@ impl<'a> Screen<'a> {
         self.widgets.render(ControlWidgetType::Graph(config));
     }
 
+    #[allow(clippy::too_many_arguments)]
     pub fn render_stop(
         &mut self,
         branding_data: ScreenDataBranding<'a>,
@@ -354,8 +376,12 @@ impl<'a> Screen<'a> {
         );
 
         if !trigger_inspiratory_open && !exp_ratio_open {
-            self.render_modal(DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH, DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT,
-                None, None);
+            self.render_modal(
+                DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH,
+                DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT,
+                None,
+                None,
+            );
 
             let config = StopWidgetConfig {
                 container: self.ids.modal_container,
@@ -395,14 +421,24 @@ impl<'a> Screen<'a> {
         self.widgets.render(ControlWidgetType::Initializing(config));
     }
 
-    pub fn render_telemetry(&mut self, telemetry_data: ScreenDataTelemetry, trigger_inspiratory: &'a TriggerInspiratory) {
+    pub fn render_telemetry(
+        &mut self,
+        telemetry_data: ScreenDataTelemetry,
+        trigger_inspiratory: &'a TriggerInspiratory,
+    ) {
         let machine_snapshot = self.machine_snapshot.unwrap();
 
         let widgets_right_width: f64 = (DISPLAY_WINDOW_SIZE_WIDTH - GRAPH_WIDTH) as f64;
         let widgets_right_height: f64 = GRAPH_HEIGHT as f64 / 3.0;
 
-        let container_config = TelemetryWidgetContainerConfig::new(widgets_right_width, DISPLAY_WINDOW_SIZE_HEIGHT as f64 - LAYOUT_HEADER_SIZE_HEIGHT, self.ids.pressure_graph, self.ids.telemetry_widgets_right);
-        self.widgets.render(ControlWidgetType::TelemetryContainer(container_config));
+        let container_config = TelemetryWidgetContainerConfig::new(
+            widgets_right_width,
+            DISPLAY_WINDOW_SIZE_HEIGHT as f64 - LAYOUT_HEADER_SIZE_HEIGHT,
+            self.ids.pressure_graph,
+            self.ids.telemetry_widgets_right,
+        );
+        self.widgets
+            .render(ControlWidgetType::TelemetryContainer(container_config));
 
         let peak_config = TelemetryWidgetConfig {
             title: APP_I18N.t("telemetry-label-peak"),
@@ -421,7 +457,7 @@ impl<'a> Screen<'a> {
                 self.ids.peak_value_measured,
                 self.ids.peak_value_arrow,
                 self.ids.peak_value_target,
-                None
+                None,
             ),
             x_position: 0.0,
             y_position: GRAPH_HEIGHT as f64 + LAYOUT_FOOTER_SIZE_HEIGHT - widgets_right_height,
@@ -430,8 +466,7 @@ impl<'a> Screen<'a> {
             height: widgets_right_height,
         };
 
-        self
-            .widgets
+        self.widgets
             .render(ControlWidgetType::Telemetry(peak_config));
 
         // Initialize the plateau widget
@@ -452,17 +487,17 @@ impl<'a> Screen<'a> {
                 self.ids.plateau_value_measured,
                 self.ids.plateau_value_arrow,
                 self.ids.plateau_value_target,
-                None
+                None,
             ),
             x_position: 0.0,
-            y_position: GRAPH_HEIGHT as f64 + LAYOUT_FOOTER_SIZE_HEIGHT - widgets_right_height * 2.0,
+            y_position: GRAPH_HEIGHT as f64 + LAYOUT_FOOTER_SIZE_HEIGHT
+                - widgets_right_height * 2.0,
             background_color: Color::Rgba(66.0 / 255.0, 44.0 / 255.0, 85.0 / 255.0, 1.0),
             width: widgets_right_width,
             height: widgets_right_height,
         };
 
-        self
-            .widgets
+        self.widgets
             .render(ControlWidgetType::Telemetry(plateau_config));
 
         // Initialize the PEEP widget
@@ -483,19 +518,18 @@ impl<'a> Screen<'a> {
                 self.ids.peep_value_measured,
                 self.ids.peep_value_arrow,
                 self.ids.peep_value_target,
-                None
+                None,
             ),
             x_position: 0.0,
-            y_position: GRAPH_HEIGHT as f64 + LAYOUT_FOOTER_SIZE_HEIGHT - widgets_right_height * 3.0,
+            y_position: GRAPH_HEIGHT as f64 + LAYOUT_FOOTER_SIZE_HEIGHT
+                - widgets_right_height * 3.0,
             background_color: Color::Rgba(76.0 / 255.0, 73.0 / 255.0, 25.0 / 255.0, 1.0),
             width: widgets_right_width,
             height: widgets_right_height,
         };
 
-        self
-            .widgets
+        self.widgets
             .render(ControlWidgetType::Telemetry(peep_config));
-
 
         // Initialize the cycles widget
         let cycles_config = TelemetryWidgetConfig {
@@ -520,8 +554,7 @@ impl<'a> Screen<'a> {
             height: LAYOUT_FOOTER_SIZE_HEIGHT,
         };
 
-        self
-            .widgets
+        self.widgets
             .render(ControlWidgetType::Telemetry(cycles_config));
 
         // Initialize the ratio widget
@@ -534,7 +567,10 @@ impl<'a> Screen<'a> {
             )),
             value_target: None,
             value_arrow: telemetry_data.arrow_image_id,
-            unit: format!("Plateau duration: {}ms", trigger_inspiratory.get_plateau_duration()),
+            unit: format!(
+                "Plateau duration: {}ms",
+                trigger_inspiratory.get_plateau_duration()
+            ),
             ids: (
                 self.ids.cycles_parent,
                 self.ids.ratio_parent,
@@ -551,8 +587,7 @@ impl<'a> Screen<'a> {
             height: LAYOUT_FOOTER_SIZE_HEIGHT,
         };
 
-        self
-            .widgets
+        self.widgets
             .render(ControlWidgetType::Telemetry(ratio_config));
 
         // Initialize the tidal widget
@@ -599,13 +634,22 @@ impl<'a> Screen<'a> {
             height: LAYOUT_FOOTER_SIZE_HEIGHT,
             x_position: TELEMETRY_WIDGET_SIZE_WIDTH,
             y_position: 0.0,
-            trigger_inspiratory_settings: trigger_inspiratory
+            trigger_inspiratory_settings: trigger_inspiratory,
         };
 
-        self.widgets.render(ControlWidgetType::TriggerInspiratoryOverview(trigger_inspiratory_config));
+        self.widgets
+            .render(ControlWidgetType::TriggerInspiratoryOverview(
+                trigger_inspiratory_config,
+            ));
     }
 
-    fn render_modal(&mut self, width: f64, height: f64, padding: Option<f64>, validate: Option<(WidgetId, WidgetId)>) {
+    fn render_modal(
+        &mut self,
+        width: f64,
+        height: f64,
+        padding: Option<f64>,
+        validate: Option<(WidgetId, WidgetId)>,
+    ) {
         let modal_config = ModalWidgetConfig {
             parent: self.ids.background,
             background: self.ids.modal_background,
@@ -622,8 +666,12 @@ impl<'a> Screen<'a> {
 
     fn render_trigger_settings(&mut self, settings: &'a TriggerInspiratory) {
         let padding = 20.0;
-        self.render_modal(TRIGGER_SETTINGS_MODAL_WIDTH, TRIGGER_SETTINGS_MODAL_HEIGTH,
-            Some(padding), Some((self.ids.modal_validate, self.ids.modal_validate_text)));
+        self.render_modal(
+            TRIGGER_SETTINGS_MODAL_WIDTH,
+            TRIGGER_SETTINGS_MODAL_HEIGTH,
+            Some(padding),
+            Some((self.ids.modal_validate, self.ids.modal_validate_text)),
+        );
 
         let config = TriggerInspiratoryWidgetConfig {
             width: TRIGGER_SETTINGS_MODAL_WIDTH,
@@ -638,24 +686,35 @@ impl<'a> Screen<'a> {
 
             inspiratory_offset_container_parent: self.ids.trigger_inspiratory_offset_container,
             inspiratory_offset_more_button_widget: self.ids.trigger_inspiratory_offset_more_button,
-            inspiratory_offset_more_button_text_widget: self.ids.trigger_inspiratory_offset_more_button_text,
+            inspiratory_offset_more_button_text_widget: self
+                .ids
+                .trigger_inspiratory_offset_more_button_text,
             inspiratory_offset_less_button_widget: self.ids.trigger_inspiratory_offset_less_button,
-            inspiratory_offset_less_button_text_widget: self.ids.trigger_inspiratory_offset_less_button_text,
+            inspiratory_offset_less_button_text_widget: self
+                .ids
+                .trigger_inspiratory_offset_less_button_text,
             inspiratory_offset_text_widget: self.ids.trigger_inspiratory_offset_text,
             inspiratory_offset_value_widget: self.ids.trigger_inspiratory_offset_value,
         };
 
-        self.widgets.render(ControlWidgetType::TriggerInspiratorySettings(config));
+        self.widgets
+            .render(ControlWidgetType::TriggerInspiratorySettings(config));
     }
 
     fn render_exp_ratio_settings(&mut self, settings: &'a TriggerInspiratory) {
         let padding = 20.0;
-        self.render_modal(EXP_RATIO_SETTINGS_MODAL_WIDTH, EXP_RATIO_SETTINGS_MODAL_HEIGTH,
-            Some(padding), Some((self.ids.modal_validate, self.ids.modal_validate_text)));
+        self.render_modal(
+            EXP_RATIO_SETTINGS_MODAL_WIDTH,
+            EXP_RATIO_SETTINGS_MODAL_HEIGTH,
+            Some(padding),
+            Some((self.ids.modal_validate, self.ids.modal_validate_text)),
+        );
 
         let config = ExpRatioSettingsWidgetConfig {
             width: EXP_RATIO_SETTINGS_MODAL_WIDTH,
-            height: EXP_RATIO_SETTINGS_MODAL_HEIGTH - MODAL_VALIDATE_BUTTON_HEIGHT - (padding * 2.0),
+            height: EXP_RATIO_SETTINGS_MODAL_HEIGTH
+                - MODAL_VALIDATE_BUTTON_HEIGHT
+                - (padding * 2.0),
             trigger_inspiratory_settings: settings,
 
             exp_ratio_container_parent: self.ids.modal_container,
@@ -668,6 +727,7 @@ impl<'a> Screen<'a> {
             exp_ratio_value_widget: self.ids.exp_ratio_term_value,
         };
 
-        self.widgets.render(ControlWidgetType::ExpRatioSettings(config));
+        self.widgets
+            .render(ControlWidgetType::ExpRatioSettings(config));
     }
 }

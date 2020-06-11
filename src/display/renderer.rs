@@ -3,15 +3,18 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+use crate::chip::settings::{
+    trigger_inspiratory::{TriggerInspiratory, TriggerInspiratoryEvent},
+    ChipSettingsEvent, SettingAction,
+};
 use chrono::{DateTime, NaiveDateTime, Utc};
-use conrod_core::Ui;
 use conrod_core::widget::Id as WidgetId;
+use conrod_core::Ui;
 use glium::texture;
 use image::{buffer::ConvertBuffer, load_from_memory, RgbImage, RgbaImage};
 use plotters::prelude::*;
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
-use crate::chip::settings::{ChipSettingsEvent, SettingAction, trigger_inspiratory::{TriggerInspiratory, TriggerInspiratoryEvent}};
 
 use crate::EmbeddedImages;
 
@@ -35,7 +38,7 @@ use super::support::GliumDisplayWinitWrapper;
 #[derive(Debug, PartialEq, Eq)]
 pub enum DisplayRendererSettingsState {
     Opened,
-    Closed
+    Closed,
 }
 
 pub struct DisplayRendererBuilder;
@@ -65,7 +68,6 @@ lazy_static! {
             .unwrap()
             .into_rgba()
             .into_raw();
-
     static ref IMAGE_STATUS_SAVE_RGBA_RAW: Vec<u8> =
         load_from_memory(EmbeddedImages::get("save.png").unwrap().to_mut())
             .unwrap()
@@ -135,16 +137,26 @@ impl DisplayRenderer {
             self.ids.ratio_parent,
             self.ids.ratio_title,
             self.ids.ratio_value_measured,
-            self.ids.ratio_unit
+            self.ids.ratio_unit,
         ];
 
-        let trigger_inspiratory_settings_clicks = trigger_inspiratory_settings_iters.iter().flat_map(|widget| {
-            // TODO: Can we use the get_widget_clicks method?
-            interface.widget_input(*widget).clicks().map(|_| ()).chain(interface.widget_input(*widget).taps().map(|_| ()))
-        });
+        let trigger_inspiratory_settings_clicks = trigger_inspiratory_settings_iters
+            .iter()
+            .flat_map(|widget| {
+                // TODO: Can we use the get_widget_clicks method?
+                interface
+                    .widget_input(*widget)
+                    .clicks()
+                    .map(|_| ())
+                    .chain(interface.widget_input(*widget).taps().map(|_| ()))
+            });
 
         let exp_ratio_settings_clicks = exp_ratio_settings_iters.iter().flat_map(|widget| {
-            interface.widget_input(*widget).clicks().map(|_| ()).chain(interface.widget_input(*widget).taps().map(|_| ()))
+            interface
+                .widget_input(*widget)
+                .clicks()
+                .map(|_| ())
+                .chain(interface.widget_input(*widget).taps().map(|_| ()))
         });
 
         for _ in trigger_inspiratory_settings_clicks {
@@ -155,8 +167,11 @@ impl DisplayRenderer {
             self.toggle_exp_ratio_settings();
         }
 
-        if self.trigger_settings_state == DisplayRendererSettingsState::Opened || self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened {
-            for _ in self.get_widget_clicks(self.ids.modal_validate, interface)
+        if self.trigger_settings_state == DisplayRendererSettingsState::Opened
+            || self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened
+        {
+            for _ in self
+                .get_widget_clicks(self.ids.modal_validate, interface)
                 .chain(self.get_widget_clicks(self.ids.modal_validate_text, interface))
             {
                 if self.trigger_settings_state == DisplayRendererSettingsState::Opened {
@@ -167,9 +182,13 @@ impl DisplayRenderer {
             }
         }
 
-        if self.trigger_settings_state == DisplayRendererSettingsState::Closed && self.exp_ratio_settings_state == DisplayRendererSettingsState::Closed {
+        if self.trigger_settings_state == DisplayRendererSettingsState::Closed
+            && self.exp_ratio_settings_state == DisplayRendererSettingsState::Closed
+        {
             for xy in self.get_widget_clicks(self.ids.modal_background, interface) {
-                if let Some(rect_of) = interface.rect_of(self.ids.trigger_inspiratory_overview_container) {
+                if let Some(rect_of) =
+                    interface.rect_of(self.ids.trigger_inspiratory_overview_container)
+                {
                     if rect_of.is_over(xy) {
                         self.toggle_trigger_settings();
                     }
@@ -184,57 +203,89 @@ impl DisplayRenderer {
         }
 
         if self.trigger_settings_state == DisplayRendererSettingsState::Opened {
-            for _ in self.get_widget_clicks(self.ids.trigger_inspiratory_status_button, interface)
-                .chain(self.get_widget_clicks(self.ids.trigger_inspiratory_status_button_text, interface))
+            for _ in
+                self.get_widget_clicks(self.ids.trigger_inspiratory_status_button, interface)
+                    .chain(self.get_widget_clicks(
+                        self.ids.trigger_inspiratory_status_button_text,
+                        interface,
+                    ))
             {
-                all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::Toggle));
+                all_events.push(ChipSettingsEvent::InspiratoryTrigger(
+                    TriggerInspiratoryEvent::Toggle,
+                ));
             }
 
-            for _ in self.get_widget_clicks(self.ids.trigger_inspiratory_offset_less_button, interface)
-                .chain(self.get_widget_clicks(self.ids.trigger_inspiratory_offset_less_button_text, interface))
+            for _ in self
+                .get_widget_clicks(self.ids.trigger_inspiratory_offset_less_button, interface)
+                .chain(self.get_widget_clicks(
+                    self.ids.trigger_inspiratory_offset_less_button_text,
+                    interface,
+                ))
             {
-                all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::InspiratoryTriggerOffset(SettingAction::Less)));
+                all_events.push(ChipSettingsEvent::InspiratoryTrigger(
+                    TriggerInspiratoryEvent::InspiratoryTriggerOffset(SettingAction::Less),
+                ));
             }
 
-            for _ in self.get_widget_clicks(self.ids.trigger_inspiratory_offset_more_button, interface)
-                .chain(self.get_widget_clicks(self.ids.trigger_inspiratory_offset_more_button_text, interface))
+            for _ in self
+                .get_widget_clicks(self.ids.trigger_inspiratory_offset_more_button, interface)
+                .chain(self.get_widget_clicks(
+                    self.ids.trigger_inspiratory_offset_more_button_text,
+                    interface,
+                ))
             {
-                all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::InspiratoryTriggerOffset(SettingAction::More)));
+                all_events.push(ChipSettingsEvent::InspiratoryTrigger(
+                    TriggerInspiratoryEvent::InspiratoryTriggerOffset(SettingAction::More),
+                ));
             }
         }
 
         if self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened {
-            for _ in self.get_widget_clicks(self.ids.exp_ratio_term_less_button, interface)
+            for _ in self
+                .get_widget_clicks(self.ids.exp_ratio_term_less_button, interface)
                 .chain(self.get_widget_clicks(self.ids.exp_ratio_term_less_button_text, interface))
             {
-                all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::ExpiratoryTerm(SettingAction::Less)));
+                all_events.push(ChipSettingsEvent::InspiratoryTrigger(
+                    TriggerInspiratoryEvent::ExpiratoryTerm(SettingAction::Less),
+                ));
             }
 
-            for _ in self.get_widget_clicks(self.ids.exp_ratio_term_more_button, interface)
+            for _ in self
+                .get_widget_clicks(self.ids.exp_ratio_term_more_button, interface)
                 .chain(self.get_widget_clicks(self.ids.exp_ratio_term_more_button_text, interface))
             {
-                all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerInspiratoryEvent::ExpiratoryTerm(SettingAction::More)));
+                all_events.push(ChipSettingsEvent::InspiratoryTrigger(
+                    TriggerInspiratoryEvent::ExpiratoryTerm(SettingAction::More),
+                ));
             }
         }
 
         all_events
     }
 
-    fn get_widget_clicks<'a>(&self, widget: WidgetId, interface: &'a Ui) -> impl Iterator<Item = conrod_core::position::Point> + 'a {
-        interface.widget_input(widget).clicks().map(|c| c.xy).chain(interface.widget_input(widget).taps().map(|t| t.xy))
+    fn get_widget_clicks<'a>(
+        &self,
+        widget: WidgetId,
+        interface: &'a Ui,
+    ) -> impl Iterator<Item = conrod_core::position::Point> + 'a {
+        interface
+            .widget_input(widget)
+            .clicks()
+            .map(|c| c.xy)
+            .chain(interface.widget_input(widget).taps().map(|t| t.xy))
     }
 
     fn toggle_trigger_settings(&mut self) {
         self.trigger_settings_state = match self.trigger_settings_state {
             DisplayRendererSettingsState::Closed => DisplayRendererSettingsState::Opened,
-            DisplayRendererSettingsState::Opened => DisplayRendererSettingsState::Closed
+            DisplayRendererSettingsState::Opened => DisplayRendererSettingsState::Closed,
         };
     }
 
     fn toggle_exp_ratio_settings(&mut self) {
         self.exp_ratio_settings_state = match self.exp_ratio_settings_state {
             DisplayRendererSettingsState::Closed => DisplayRendererSettingsState::Opened,
-            DisplayRendererSettingsState::Opened => DisplayRendererSettingsState::Closed
+            DisplayRendererSettingsState::Opened => DisplayRendererSettingsState::Closed,
         };
     }
 
@@ -466,10 +517,13 @@ impl DisplayRenderer {
         glium::texture::Texture2d::new(&display.0, raw_image).unwrap()
     }
 
-    fn draw_status_save_icon(&self, display: &GliumDisplayWinitWrapper) -> glium::texture::Texture2d {
+    fn draw_status_save_icon(
+        &self,
+        display: &GliumDisplayWinitWrapper,
+    ) -> glium::texture::Texture2d {
         let raw_image = glium::texture::RawImage2d::from_raw_rgba_reversed(
             &*IMAGE_STATUS_SAVE_RGBA_RAW,
-            (STATUS_SAVE_ICON_WIDTH, STATUS_SAVE_ICON_HEIGHT)
+            (STATUS_SAVE_ICON_WIDTH, STATUS_SAVE_ICON_HEIGHT),
         );
 
         glium::texture::Texture2d::new(&display.0, raw_image).unwrap()

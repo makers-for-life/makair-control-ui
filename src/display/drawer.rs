@@ -148,7 +148,12 @@ impl<'a> DisplayDrawer<'a> {
                 let settings_receiver = self.chip.init_settings_receiver();
 
                 std::thread::spawn(move || {
-                    telemetry::gather_telemetry(&port, tx, optional_file_buffer, Some(settings_receiver));
+                    telemetry::gather_telemetry(
+                        &port,
+                        tx,
+                        optional_file_buffer,
+                        Some(settings_receiver),
+                    );
                 });
             }
 
@@ -173,7 +178,7 @@ impl<'a> DisplayDrawer<'a> {
             &mut self.interface,
             self.chip.get_battery_level(),
             &self.chip.get_state(),
-            &self.chip.settings.inspiratory_trigger
+            &self.chip.settings.inspiratory_trigger,
         );
 
         if let Some(primitives) = self.interface.draw_if_changed() {

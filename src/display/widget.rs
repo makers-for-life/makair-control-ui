@@ -11,13 +11,16 @@ use conrod_core::{
     widget::{
         self, canvas, id::List, primitive::shape::Style, rounded_rectangle::RoundedRectangle,
     },
-    Colorable, Labelable, Positionable, Sizeable, Widget,
+    Colorable, Positionable, Sizeable, Widget,
 };
 
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::AlarmPriority;
 
-use crate::chip::{ChipState, settings::trigger_inspiratory::{TriggerInspiratory, TriggerInspiratoryState}};
+use crate::chip::{
+    settings::trigger_inspiratory::{TriggerInspiratory, TriggerInspiratoryState},
+    ChipState,
+};
 use crate::config::environment::*;
 use crate::physics::pressure::process_max_allowed_pressure;
 use crate::physics::types::DataPressure;
@@ -40,12 +43,17 @@ pub struct LayoutWidgetConfig {
     parent: WidgetId,
     top: f64,
     height: f64,
-    layout: WidgetId
+    layout: WidgetId,
 }
 
 impl LayoutWidgetConfig {
     pub fn new(parent: WidgetId, top: f64, height: f64, layout: WidgetId) -> LayoutWidgetConfig {
-        LayoutWidgetConfig { parent, top, height, layout}
+        LayoutWidgetConfig {
+            parent,
+            top,
+            height,
+            layout,
+        }
     }
 }
 
@@ -56,8 +64,16 @@ pub struct LayoutConfig {
 }
 
 impl LayoutConfig {
-    pub fn new(header: LayoutWidgetConfig, body: LayoutWidgetConfig, footer: LayoutWidgetConfig) -> LayoutConfig {
-        LayoutConfig { header, body, footer }
+    pub fn new(
+        header: LayoutWidgetConfig,
+        body: LayoutWidgetConfig,
+        footer: LayoutWidgetConfig,
+    ) -> LayoutConfig {
+        LayoutConfig {
+            header,
+            body,
+            footer,
+        }
     }
 }
 
@@ -102,8 +118,18 @@ pub struct TelemetryWidgetContainerConfig {
 }
 
 impl TelemetryWidgetContainerConfig {
-    pub fn new(width: f64, height: f64, parent: WidgetId, id: WidgetId) -> TelemetryWidgetContainerConfig {
-        TelemetryWidgetContainerConfig { width, height, parent, id }
+    pub fn new(
+        width: f64,
+        height: f64,
+        parent: WidgetId,
+        id: WidgetId,
+    ) -> TelemetryWidgetContainerConfig {
+        TelemetryWidgetContainerConfig {
+            width,
+            height,
+            parent,
+            id,
+        }
     }
 }
 
@@ -394,11 +420,17 @@ impl<'a> ControlWidget<'a> {
             ControlWidgetType::Modal(config) => self.modal(config),
             ControlWidgetType::NoData(config) => self.no_data(config),
             ControlWidgetType::Stop(config) => self.stop(config),
-            ControlWidgetType::TelemetryContainer(config) => self.telemetry_widgets_container(config),
+            ControlWidgetType::TelemetryContainer(config) => {
+                self.telemetry_widgets_container(config)
+            }
             ControlWidgetType::Telemetry(config) => self.telemetry_widget(config),
             ControlWidgetType::Layout(config) => self.layout(config),
-            ControlWidgetType::TriggerInspiratorySettings(config) => self.trigger_inspiratory_settings(config),
-            ControlWidgetType::TriggerInspiratoryOverview(config) => self.trigger_inspiratory_overview(config),
+            ControlWidgetType::TriggerInspiratorySettings(config) => {
+                self.trigger_inspiratory_settings(config)
+            }
+            ControlWidgetType::TriggerInspiratoryOverview(config) => {
+                self.trigger_inspiratory_overview(config)
+            }
             ControlWidgetType::ExpRatioSettings(config) => self.exp_ratio_settings(config),
         }
     }
@@ -420,11 +452,7 @@ impl<'a> ControlWidget<'a> {
             DISPLAY_ALARM_CONTAINER_WIDTH_ALARMS
         };
 
-        let container_margin_left = if alarms_count == 0 {
-            10.0
-        } else {
-            -100.0
-        };
+        let container_margin_left = if alarms_count == 0 { 10.0 } else { -100.0 };
 
         let container_height = (max(1, alarms_count) as f64) * DISPLAY_ALARM_MESSAGE_HEIGHT
             + 2.0 * DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL
@@ -613,7 +641,11 @@ impl<'a> ControlWidget<'a> {
 
     fn branding(&mut self, config: BrandingWidgetConfig) -> f64 {
         widget::rectangle::Rectangle::fill_with([config.width, config.height], color::TRANSPARENT)
-            .top_left_with_margins_on(config.parent, BRANDING_IMAGE_MARGIN_TOP, BRANDING_IMAGE_MARGIN_LEFT)
+            .top_left_with_margins_on(
+                config.parent,
+                BRANDING_IMAGE_MARGIN_TOP,
+                BRANDING_IMAGE_MARGIN_LEFT,
+            )
             .set(config.ids.0, &mut self.ui);
 
         // Display branding image
@@ -627,7 +659,11 @@ impl<'a> ControlWidget<'a> {
 
         widget::Text::new(&branding_text)
             .color(color::WHITE.with_alpha(0.45))
-            .top_left_with_margins_on(config.parent, BRANDING_TEXT_MARGIN_TOP, BRANDING_TEXT_MARGIN_LEFT)
+            .top_left_with_margins_on(
+                config.parent,
+                BRANDING_TEXT_MARGIN_TOP,
+                BRANDING_TEXT_MARGIN_LEFT,
+            )
             .font_size(10)
             .set(config.ids.2, &mut self.ui);
 
@@ -845,11 +881,7 @@ impl<'a> ControlWidget<'a> {
             [config.width, config.height],
             config.background_color,
         )
-        .bottom_left_with_margins_on(
-            config.ids.0,
-            config.y_position,
-            config.x_position,
-        )
+        .bottom_left_with_margins_on(config.ids.0, config.y_position, config.x_position)
         .set(config.ids.1, &mut self.ui);
 
         // Create title text
@@ -965,10 +997,7 @@ impl<'a> ControlWidget<'a> {
             1.0,
         )));
         RoundedRectangle::styled(
-            [
-                config.width + 5.0,
-                config.height + 5.0,
-            ],
+            [config.width + 5.0, config.height + 5.0],
             DISPLAY_ROUNDED_RECTANGLES_ROUND,
             container_borders_style,
         )
@@ -982,10 +1011,7 @@ impl<'a> ControlWidget<'a> {
 
         let mut container = canvas::Canvas::new()
             .with_style(container_style)
-            .w_h(
-                config.width,
-                config.height,
-            )
+            .w_h(config.width, config.height)
             .middle_of(config.container_borders);
 
         if let Some(padding) = config.padding {
@@ -1000,7 +1026,7 @@ impl<'a> ControlWidget<'a> {
             widget::RoundedRectangle::styled(
                 [60.0, MODAL_VALIDATE_BUTTON_HEIGHT],
                 15.0,
-                button_style
+                button_style,
             )
             .bottom_right_of(config.container)
             .set(validate_button, &mut self.ui);
@@ -1068,18 +1094,27 @@ impl<'a> ControlWidget<'a> {
     }
 
     fn layout(&mut self, config: LayoutConfig) -> f64 {
-        widget::Rectangle::fill_with([DISPLAY_WINDOW_SIZE_WIDTH as _, config.body.height], color::TRANSPARENT)
-            .top_left_with_margins_on(config.body.parent, config.body.top, 0.0)
-            .set(config.body.layout, &mut self.ui);
+        widget::Rectangle::fill_with(
+            [DISPLAY_WINDOW_SIZE_WIDTH as _, config.body.height],
+            color::TRANSPARENT,
+        )
+        .top_left_with_margins_on(config.body.parent, config.body.top, 0.0)
+        .set(config.body.layout, &mut self.ui);
 
-        widget::Rectangle::fill_with([DISPLAY_WINDOW_SIZE_WIDTH as _, config.footer.height], color::TRANSPARENT)
-            .down_from(config.footer.parent, config.footer.top)
-            .set(config.footer.layout, &mut self.ui);
+        widget::Rectangle::fill_with(
+            [DISPLAY_WINDOW_SIZE_WIDTH as _, config.footer.height],
+            color::TRANSPARENT,
+        )
+        .down_from(config.footer.parent, config.footer.top)
+        .set(config.footer.layout, &mut self.ui);
 
         // This block is defined after the others because we want it to overflow and be on top of the screen
-        widget::Rectangle::fill_with([DISPLAY_WINDOW_SIZE_WIDTH as _, config.header.height], color::TRANSPARENT)
-            .top_left_of(config.header.parent)
-            .set(config.header.layout, &mut self.ui);
+        widget::Rectangle::fill_with(
+            [DISPLAY_WINDOW_SIZE_WIDTH as _, config.header.height],
+            color::TRANSPARENT,
+        )
+        .top_left_of(config.header.parent)
+        .set(config.header.layout, &mut self.ui);
 
         0.0
     }
@@ -1108,16 +1143,12 @@ impl<'a> ControlWidget<'a> {
 
         let status_label = match config.trigger_inspiratory_settings.state {
             TriggerInspiratoryState::Enabled => String::from("Enabled"),
-            TriggerInspiratoryState::Disabled => String::from("Disabled")
+            TriggerInspiratoryState::Disabled => String::from("Disabled"),
         };
 
         let status_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
 
-        widget::RoundedRectangle::styled(
-            [200.0, 30.0],
-            15.0,
-            status_style
-        )
+        widget::RoundedRectangle::styled([200.0, 30.0], 15.0, status_style)
             .top_left_with_margins_on(config.status_container_widget, 0.0, 300.0)
             .set(config.status_enabled_button_widget, &mut self.ui);
 
@@ -1130,7 +1161,6 @@ impl<'a> ControlWidget<'a> {
             .with_style(status_button_text_style)
             .mid_top_with_margin_on(config.status_enabled_button_widget, 2.0)
             .set(config.status_enabled_button_text_widget, &mut self.ui);
-
 
         widget::Canvas::new()
             .with_style(canvas_style)
@@ -1150,11 +1180,7 @@ impl<'a> ControlWidget<'a> {
 
         let less_button_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
 
-        widget::RoundedRectangle::styled(
-            [50.0, 30.0],
-            15.0,
-            less_button_style
-        )
+        widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
             .top_left_with_margins_on(config.inspiratory_offset_container_parent, 0.0, 300.0)
             .set(config.inspiratory_offset_less_button_widget, &mut self.ui);
 
@@ -1166,31 +1192,40 @@ impl<'a> ControlWidget<'a> {
         widget::Text::new("<")
             .with_style(more_less_buttons_text_style)
             .mid_top_with_margin_on(config.inspiratory_offset_less_button_widget, 2.0)
-            .set(config.inspiratory_offset_less_button_text_widget, &mut self.ui);
+            .set(
+                config.inspiratory_offset_less_button_text_widget,
+                &mut self.ui,
+            );
 
         let mut offset_value_style = widget::text::Style::default();
         offset_value_style.font_id = Some(Some(self.fonts.regular));
         offset_value_style.color = Some(color::WHITE);
         offset_value_style.font_size = Some(20);
 
-        widget::Text::new(format!("{} mmH2O", config.trigger_inspiratory_settings.inspiratory_trigger_offset).as_str())
-            .with_style(offset_value_style)
-            .right_from(config.inspiratory_offset_less_button_widget, 20.0)
-            .set(config.inspiratory_offset_value_widget, &mut self.ui);
-
-
-        widget::RoundedRectangle::styled(
-            [50.0, 30.0],
-            15.0,
-            less_button_style
+        widget::Text::new(
+            format!(
+                "{} mmH2O",
+                config
+                    .trigger_inspiratory_settings
+                    .inspiratory_trigger_offset
+            )
+            .as_str(),
         )
+        .with_style(offset_value_style)
+        .right_from(config.inspiratory_offset_less_button_widget, 20.0)
+        .set(config.inspiratory_offset_value_widget, &mut self.ui);
+
+        widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
             .right_from(config.inspiratory_offset_value_widget, 20.0)
             .set(config.inspiratory_offset_more_button_widget, &mut self.ui);
 
         widget::Text::new(">")
             .with_style(more_less_buttons_text_style)
             .mid_top_with_margin_on(config.inspiratory_offset_more_button_widget, 2.0)
-            .set(config.inspiratory_offset_more_button_text_widget, &mut self.ui);
+            .set(
+                config.inspiratory_offset_more_button_text_widget,
+                &mut self.ui,
+            );
 
         0 as _
     }
@@ -1200,11 +1235,7 @@ impl<'a> ControlWidget<'a> {
             [config.width, config.height],
             config.background_color,
         )
-        .bottom_left_with_margins_on(
-            config.parent,
-            config.y_position,
-            config.x_position,
-        )
+        .bottom_left_with_margins_on(config.parent, config.y_position, config.x_position)
         .set(config.container, &mut self.ui);
 
         self.trigger_inspiratory_overview_title(&config);
@@ -1232,11 +1263,12 @@ impl<'a> ControlWidget<'a> {
         text_style.color = Some(color::WHITE);
         text_style.font_size = Some(15);
 
-        let status = if config.trigger_inspiratory_settings.state == TriggerInspiratoryState::Enabled {
-            "Enabled".to_string()
-        } else {
-            "Disabled".to_string()
-        };
+        let status =
+            if config.trigger_inspiratory_settings.state == TriggerInspiratoryState::Enabled {
+                "Enabled".to_string()
+            } else {
+                "Disabled".to_string()
+            };
 
         widget::Text::new(&format!("State: {}", status))
             .with_style(text_style)
@@ -1250,10 +1282,15 @@ impl<'a> ControlWidget<'a> {
         text_style.color = Some(color::WHITE);
         text_style.font_size = Some(15);
 
-        widget::Text::new(&format!("Offset: {} mmH2O", config.trigger_inspiratory_settings.inspiratory_trigger_offset))
-            .with_style(text_style)
-            .down_from(config.status_widget, 20.0)
-            .set(config.inspiration_trigger_offset_widget, &mut self.ui);
+        widget::Text::new(&format!(
+            "Offset: {} mmH2O",
+            config
+                .trigger_inspiratory_settings
+                .inspiratory_trigger_offset
+        ))
+        .with_style(text_style)
+        .down_from(config.status_widget, 20.0)
+        .set(config.inspiration_trigger_offset_widget, &mut self.ui);
     }
 
     fn exp_ratio_settings(&mut self, config: ExpRatioSettingsWidgetConfig) -> f64 {
@@ -1279,11 +1316,7 @@ impl<'a> ControlWidget<'a> {
 
         let less_button_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
 
-        widget::RoundedRectangle::styled(
-            [50.0, 30.0],
-            15.0,
-            less_button_style
-        )
+        widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
             .top_left_with_margins_on(config.exp_ratio_container_parent, 0.0, 300.0)
             .set(config.exp_ratio_less_button_widget, &mut self.ui);
 
@@ -1302,20 +1335,18 @@ impl<'a> ControlWidget<'a> {
         plateau_value_style.color = Some(color::WHITE);
         plateau_value_style.font_size = Some(20);
 
-        widget::Text::new(format!("{}", config.trigger_inspiratory_settings.expiratory_term).as_str())
-            .with_style(plateau_value_style)
-            .right_from(config.exp_ratio_less_button_widget, 20.0)
-            .set(config.exp_ratio_value_widget, &mut self.ui);
-
-        widget::RoundedRectangle::styled(
-            [50.0, 30.0],
-            15.0,
-            less_button_style
+        widget::Text::new(
+            format!("{}", config.trigger_inspiratory_settings.expiratory_term).as_str(),
         )
+        .with_style(plateau_value_style)
+        .right_from(config.exp_ratio_less_button_widget, 20.0)
+        .set(config.exp_ratio_value_widget, &mut self.ui);
+
+        widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
             .right_from(config.exp_ratio_value_widget, 20.0)
             .set(config.exp_ratio_more_button_widget, &mut self.ui);
 
-       widget::Text::new(">")
+        widget::Text::new(">")
             .with_style(more_less_buttons_text_style)
             .mid_top_with_margin_on(config.exp_ratio_more_button_widget, 2.0)
             .set(config.exp_ratio_more_button_text_widget, &mut self.ui);

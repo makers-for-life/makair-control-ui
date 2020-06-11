@@ -1,6 +1,6 @@
+use crate::chip::settings::SettingAction;
 use std::time::Duration;
 use telemetry::control::{ControlMessage, ControlSetting};
-use crate::chip::settings::SettingAction;
 
 const INSPIRATORY_TRIGGER_OFFSET_MAX: usize = 100;
 const INSPIRATORY_TRIGGER_OFFSET_STEP: usize = 1;
@@ -9,6 +9,7 @@ const EXPIRATORY_TERM_MAX: usize = 60;
 const EXPIRATORY_TERM_MIN: usize = 10;
 const EXPIRATORY_TERM_STEP: usize = 1;
 
+#[allow(dead_code)]
 const PLATEAU_DURATION_MAX: Duration = Duration::from_millis(3000);
 const PLATEAU_DURATION_STEP: Duration = Duration::from_millis(50);
 
@@ -49,7 +50,9 @@ impl TriggerInspiratory {
     pub fn new_event(&self, event: TriggerInspiratoryEvent) -> ControlMessage {
         match event {
             TriggerInspiratoryEvent::Toggle => self.toggle(),
-            TriggerInspiratoryEvent::InspiratoryTriggerOffset(action) => self.set_inspiratory_trigger_offset(action),
+            TriggerInspiratoryEvent::InspiratoryTriggerOffset(action) => {
+                self.set_inspiratory_trigger_offset(action)
+            }
             //TriggerInspiratoryEvent::PlateauDuration(action) => self.set_plateau_duration(action),
             TriggerInspiratoryEvent::ExpiratoryTerm(action) => self.set_expiratory_term(action),
         }
@@ -62,12 +65,12 @@ impl TriggerInspiratory {
     fn toggle(&self) -> ControlMessage {
         let new_state = match self.state {
             TriggerInspiratoryState::Enabled => TriggerInspiratoryState::Disabled,
-            TriggerInspiratoryState::Disabled => TriggerInspiratoryState::Enabled
+            TriggerInspiratoryState::Disabled => TriggerInspiratoryState::Enabled,
         };
 
         ControlMessage {
             setting: ControlSetting::TriggerEnabled,
-            value: new_state as u16
+            value: new_state as u16,
         }
     }
 
@@ -80,7 +83,7 @@ impl TriggerInspiratory {
                 } else {
                     self.inspiratory_trigger_offset
                 }
-            },
+            }
             SettingAction::Less => {
                 if self.inspiratory_trigger_offset != 0 {
                     self.inspiratory_trigger_offset - INSPIRATORY_TRIGGER_OFFSET_STEP
@@ -92,10 +95,11 @@ impl TriggerInspiratory {
 
         ControlMessage {
             setting: ControlSetting::TriggerOffset,
-            value: new_value as u16
+            value: new_value as u16,
         }
     }
 
+    #[allow(dead_code, unreachable_code, unused_variables)]
     fn set_plateau_duration(&self, action: SettingAction) -> ControlMessage {
         unimplemented!("The ControlMessage for this setting isn't implemented");
 
@@ -107,7 +111,7 @@ impl TriggerInspiratory {
                 } else {
                     self.plateau_duration
                 }
-            },
+            }
             SettingAction::Less => {
                 if self.plateau_duration != Duration::from_millis(0) {
                     self.plateau_duration - PLATEAU_DURATION_STEP
@@ -127,7 +131,7 @@ impl TriggerInspiratory {
                 } else {
                     self.expiratory_term
                 }
-            },
+            }
             SettingAction::Less => {
                 let new_value = self.expiratory_term - EXPIRATORY_TERM_STEP;
                 if new_value >= EXPIRATORY_TERM_MIN {
@@ -146,7 +150,9 @@ impl TriggerInspiratory {
 
     pub fn get_plateau_duration(&self) -> usize {
         if self.cycles_per_minute > 0 {
-            (1000.0 * (10.0 / (10.0 + self.expiratory_term as f64) * (60.0 / self.cycles_per_minute as f64))) as usize
+            (1000.0
+                * (10.0 / (10.0 + self.expiratory_term as f64)
+                    * (60.0 / self.cycles_per_minute as f64))) as usize
         } else {
             0
         }

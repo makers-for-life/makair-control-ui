@@ -5,19 +5,21 @@ use trigger_inspiratory::{TriggerInspiratory, TriggerInspiratoryEvent};
 
 #[derive(Debug)]
 pub struct ChipSettings {
-    pub inspiratory_trigger: TriggerInspiratory
+    pub inspiratory_trigger: TriggerInspiratory,
 }
 
 impl ChipSettings {
     pub fn new(cycles_per_minute: usize) -> ChipSettings {
         ChipSettings {
-            inspiratory_trigger: TriggerInspiratory::new(cycles_per_minute)
+            inspiratory_trigger: TriggerInspiratory::new(cycles_per_minute),
         }
     }
 
     pub fn new_settings_event(&mut self, event: ChipSettingsEvent) -> ControlMessage {
         match event {
-            ChipSettingsEvent::InspiratoryTrigger(event) => self.inspiratory_trigger.new_event(event)
+            ChipSettingsEvent::InspiratoryTrigger(event) => {
+                self.inspiratory_trigger.new_event(event)
+            }
         }
     }
 }
@@ -25,7 +27,7 @@ impl ChipSettings {
 #[derive(Debug)]
 pub enum SettingAction {
     More,
-    Less
+    Less,
 }
 
 #[derive(Debug)]

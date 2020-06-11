@@ -11,12 +11,14 @@ use std::convert::TryFrom;
 
 use crate::config::environment::*;
 use crate::physics::types::DataPressure;
-use std::sync::mpsc::{self, Sender, Receiver};
-use settings::{ChipSettings, ChipSettingsEvent, trigger_inspiratory::TriggerInspiratoryState};
-use telemetry::alarm::{RMC_SW_11, RMC_SW_12, RMC_SW_1, RMC_SW_14, RMC_SW_3, RMC_SW_15, AlarmCode};
+use settings::{trigger_inspiratory::TriggerInspiratoryState, ChipSettings, ChipSettingsEvent};
+use std::sync::mpsc::{self, Receiver, Sender};
+use telemetry::alarm::{AlarmCode, RMC_SW_1, RMC_SW_11, RMC_SW_12, RMC_SW_14, RMC_SW_15, RMC_SW_3};
 use telemetry::control::{ControlMessage, ControlSetting};
 use telemetry::serial::core;
-use telemetry::structures::{AlarmPriority, ControlAck, DataSnapshot, MachineStateSnapshot, TelemetryMessage};
+use telemetry::structures::{
+    AlarmPriority, ControlAck, DataSnapshot, MachineStateSnapshot, TelemetryMessage,
+};
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum ChipState {
@@ -55,7 +57,7 @@ impl Chip {
             settings: ChipSettings::new(cycles_per_minute as usize),
             state: ChipState::WaitingData,
             tx_for_lora,
-            channel_for_settings: None
+            channel_for_settings: None,
         }
     }
 
@@ -129,12 +131,18 @@ impl Chip {
     pub fn new_settings_events(&mut self, events: Vec<ChipSettingsEvent>) {
         for event in events {
             let message = self.settings.new_settings_event(event);
-            debug!("New event: {:?}, sender: {:?}", message, self.channel_for_settings);
+            debug!(
+                "New event: {:?}, sender: {:?}",
+                message, self.channel_for_settings
+            );
             if let Some(tx) = &self.channel_for_settings {
                 if let Err(e) = tx.send(message.clone()) {
                     // TODO: Maybe we could add an alarm with this problem
                     // TODO2: Revert the value if it can't be sent?
-                    error!("Error sending message {:?} to the control unit: {:?}", message, e);
+                    error!(
+                        "Error sending message {:?} to the control unit: {:?}",
+                        message, e
+                    );
                 } else {
                     debug!("Setting message {:?} sent!", message);
                 }
@@ -252,15 +260,21 @@ impl Chip {
     }
 
     fn deduplicate_alarms(alarms: &mut HashMap<AlarmCode, AlarmPriority>) {
-        if alarms.contains_key(&AlarmCode::from(RMC_SW_11)) && alarms.contains_key(&AlarmCode::from(RMC_SW_12)) {
+        if alarms.contains_key(&AlarmCode::from(RMC_SW_11))
+            && alarms.contains_key(&AlarmCode::from(RMC_SW_12))
+        {
             alarms.remove(&AlarmCode::from(RMC_SW_11));
         }
 
-        if alarms.contains_key(&AlarmCode::from(RMC_SW_1)) && alarms.contains_key(&AlarmCode::from(RMC_SW_14)) {
+        if alarms.contains_key(&AlarmCode::from(RMC_SW_1))
+            && alarms.contains_key(&AlarmCode::from(RMC_SW_14))
+        {
             alarms.remove(&AlarmCode::from(RMC_SW_14));
         }
 
-        if alarms.contains_key(&AlarmCode::from(RMC_SW_3)) && alarms.contains_key(&AlarmCode::from(RMC_SW_15)) {
+        if alarms.contains_key(&AlarmCode::from(RMC_SW_3))
+            && alarms.contains_key(&AlarmCode::from(RMC_SW_15))
+        {
             alarms.remove(&AlarmCode::from(RMC_SW_15));
         }
     }
@@ -271,7 +285,7 @@ impl Chip {
 
         let mut vec_alarms: Vec<(AlarmCode, AlarmPriority)> = ongoing_alarms
             .iter()
-            .map(|(code, priority)| (code.clone(), priority.clone()))
+            .map(|(code, priority)| (*code, priority.clone()))
             .collect();
 
         vec_alarms.sort_by(|(code1, _), (code2, _)| code1.cmp(&code2));
@@ -286,25 +300,48 @@ impl Chip {
     }
 
     fn update_cycles_per_minute(&mut self, cycles_per_minute: usize) {
-        self.settings.inspiratory_trigger.set_cycles_per_minute(cycles_per_minute);
+        self.settings
+            .inspiratory_trigger
+            .set_cycles_per_minute(cycles_per_minute);
     }
 
     fn update_settings_values(&mut self, snapshot: &MachineStateSnapshot) {
-        self.settings.inspiratory_trigger.state = if snapshot.trigger_enabled { TriggerInspiratoryState::Enabled } else { TriggerInspiratoryState::Disabled };
-        self.settings.inspiratory_trigger.inspiratory_trigger_offset = snapshot.trigger_offset as usize;
+        self.settings.inspiratory_trigger.state = if snapshot.trigger_enabled {
+            TriggerInspiratoryState::Enabled
+        } else {
+            TriggerInspiratoryState::Disabled
+        };
+        self.settings.inspiratory_trigger.inspiratory_trigger_offset =
+            snapshot.trigger_offset as usize;
         self.settings.inspiratory_trigger.expiratory_term = snapshot.expiratory_term as usize;
     }
 
     // TODO: Mutate the last_machine_snapshot is not great, need to be reworked
     fn update_on_ack(&mut self, ack: ControlAck) {
         match ack.setting {
-            ControlSetting::PeakPressure => self.last_machine_snapshot.previous_peak_pressure = ack.value,
-            ControlSetting::PlateauPressure => self.last_machine_snapshot.previous_plateau_pressure = ack.value,
+            ControlSetting::PeakPressure => {
+                self.last_machine_snapshot.previous_peak_pressure = ack.value
+            }
+            ControlSetting::PlateauPressure => {
+                self.last_machine_snapshot.previous_plateau_pressure = ack.value
+            }
             ControlSetting::PEEP => self.last_machine_snapshot.previous_peep_pressure = ack.value,
-            ControlSetting::CyclesPerMinute => self.last_machine_snapshot.cpm_command = ack.value as u8,
-            ControlSetting::TriggerEnabled => self.settings.inspiratory_trigger.state = if ack.value == 0 { TriggerInspiratoryState::Disabled } else { TriggerInspiratoryState::Enabled },
-            ControlSetting::TriggerOffset => self.settings.inspiratory_trigger.inspiratory_trigger_offset = ack.value as usize,
-            ControlSetting::ExpiratoryTerm => self.settings.inspiratory_trigger.expiratory_term = ack.value as usize,
+            ControlSetting::CyclesPerMinute => {
+                self.last_machine_snapshot.cpm_command = ack.value as u8
+            }
+            ControlSetting::TriggerEnabled => {
+                self.settings.inspiratory_trigger.state = if ack.value == 0 {
+                    TriggerInspiratoryState::Disabled
+                } else {
+                    TriggerInspiratoryState::Enabled
+                }
+            }
+            ControlSetting::TriggerOffset => {
+                self.settings.inspiratory_trigger.inspiratory_trigger_offset = ack.value as usize
+            }
+            ControlSetting::ExpiratoryTerm => {
+                self.settings.inspiratory_trigger.expiratory_term = ack.value as usize
+            }
         }
     }
 }
