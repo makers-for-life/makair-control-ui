@@ -244,7 +244,7 @@ pub struct ModalWidgetConfig {
     pub background: WidgetId,
     pub container_borders: WidgetId,
     pub container: WidgetId,
-    pub validate: Option<WidgetId>,
+    pub validate: Option<(WidgetId, WidgetId)>,
     pub width: f64,
     pub height: f64,
     pub padding: Option<f64>,
@@ -994,12 +994,26 @@ impl<'a> ControlWidget<'a> {
 
         container.set(config.container, &mut self.ui);
 
-        if let Some(validate) = config.validate {
-            widget::Button::new()
-                .label("Save")
-                .w_h(60.0, MODAL_VALIDATE_BUTTON_HEIGHT)
-                .bottom_right_of(config.container)
-                .set(validate, &mut self.ui);
+        if let Some((validate_button, validate_text)) = config.validate {
+            let button_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
+
+            widget::RoundedRectangle::styled(
+                [60.0, MODAL_VALIDATE_BUTTON_HEIGHT],
+                15.0,
+                button_style
+            )
+            .bottom_right_of(config.container)
+            .set(validate_button, &mut self.ui);
+
+            let mut validate_text_style = widget::text::Style::default();
+            validate_text_style.font_id = Some(Some(self.fonts.regular));
+            validate_text_style.color = Some(color::BLACK);
+            validate_text_style.font_size = Some(20);
+
+            widget::Text::new("Save")
+                .with_style(validate_text_style)
+                .mid_top_with_margin_on(validate_button, 2.0)
+                .set(validate_text, &mut self.ui);
         }
 
         0 as _

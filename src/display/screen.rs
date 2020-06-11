@@ -128,6 +128,7 @@ widget_ids!(pub struct Ids {
   modal_container_borders,
   modal_container,
   modal_validate,
+  modal_validate_text,
 
   stopped_title,
   stopped_message,
@@ -604,7 +605,7 @@ impl<'a> Screen<'a> {
         self.widgets.render(ControlWidgetType::TriggerInspiratoryOverview(trigger_inspiratory_config));
     }
 
-    fn render_modal(&mut self, width: f64, height: f64, padding: Option<f64>, validate: Option<WidgetId>) {
+    fn render_modal(&mut self, width: f64, height: f64, padding: Option<f64>, validate: Option<(WidgetId, WidgetId)>) {
         let modal_config = ModalWidgetConfig {
             parent: self.ids.background,
             background: self.ids.modal_background,
@@ -622,7 +623,7 @@ impl<'a> Screen<'a> {
     fn render_trigger_settings(&mut self, settings: &'a TriggerInspiratory) {
         let padding = 20.0;
         self.render_modal(TRIGGER_SETTINGS_MODAL_WIDTH, TRIGGER_SETTINGS_MODAL_HEIGTH,
-            Some(padding), Some(self.ids.modal_validate));
+            Some(padding), Some((self.ids.modal_validate, self.ids.modal_validate_text)));
 
         let config = TriggerInspiratoryWidgetConfig {
             width: TRIGGER_SETTINGS_MODAL_WIDTH,
@@ -650,7 +651,7 @@ impl<'a> Screen<'a> {
     fn render_exp_ratio_settings(&mut self, settings: &'a TriggerInspiratory) {
         let padding = 20.0;
         self.render_modal(EXP_RATIO_SETTINGS_MODAL_WIDTH, EXP_RATIO_SETTINGS_MODAL_HEIGTH,
-            Some(padding), Some(self.ids.modal_validate));
+            Some(padding), Some((self.ids.modal_validate, self.ids.modal_validate_text)));
 
         let config = ExpRatioSettingsWidgetConfig {
             width: EXP_RATIO_SETTINGS_MODAL_WIDTH,
