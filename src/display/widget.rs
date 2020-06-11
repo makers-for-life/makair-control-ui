@@ -244,6 +244,7 @@ pub struct ModalWidgetConfig {
     pub background: WidgetId,
     pub container_borders: WidgetId,
     pub container: WidgetId,
+    pub validate: Option<WidgetId>,
     pub width: f64,
     pub height: f64,
     pub padding: Option<f64>,
@@ -988,6 +989,14 @@ impl<'a> ControlWidget<'a> {
 
         container.set(config.container, &mut self.ui);
 
+        if let Some(validate) = config.validate {
+            widget::Button::new()
+                .label("Save")
+                .w_h(60.0, MODAL_VALIDATE_BUTTON_HEIGHT)
+                .bottom_right_with_margins_on(config.container, 10.0, 10.0)
+                .set(validate, &mut self.ui);
+        }
+
         0 as _
     }
 
@@ -1040,11 +1049,11 @@ impl<'a> ControlWidget<'a> {
     }
 
     fn layout(&mut self, config: LayoutConfig) -> f64 {
-        widget::Rectangle::fill_with([DISPLAY_WINDOW_SIZE_WIDTH as _, config.body.height], color::GREEN)
+        widget::Rectangle::fill_with([DISPLAY_WINDOW_SIZE_WIDTH as _, config.body.height], color::TRANSPARENT)
             .top_left_with_margins_on(config.body.parent, config.body.top, 0.0)
             .set(config.body.layout, &mut self.ui);
 
-        widget::Rectangle::fill_with([DISPLAY_WINDOW_SIZE_WIDTH as _, config.footer.height], color::BLUE)
+        widget::Rectangle::fill_with([DISPLAY_WINDOW_SIZE_WIDTH as _, config.footer.height], color::TRANSPARENT)
             .down_from(config.footer.parent, config.footer.top)
             .set(config.footer.layout, &mut self.ui);
 
@@ -1128,10 +1137,6 @@ impl<'a> ControlWidget<'a> {
             .label(&String::from("+"))
             .set(config.inspiratory_offset_more_button_widget, &mut self.ui);
 
-        /*
-
-        */
-
         0 as _
     }
 
@@ -1150,8 +1155,6 @@ impl<'a> ControlWidget<'a> {
         self.trigger_inspiratory_overview_title(&config);
         self.trigger_inspiratory_overview_status(&config);
         self.trigger_inspiratory_overview_offset(&config);
-        //self.trigger_inspiratory_overview_expiratory_term(&config);
-        //self.trigger_inspiratory_overview_plateau_duration(&config);
 
         0 as _
     }

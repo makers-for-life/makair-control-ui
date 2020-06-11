@@ -4,6 +4,7 @@
 // License: Public Domain License
 
 use conrod_core::color::{self, Color};
+use conrod_core::widget::Id as WidgetId;
 
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
@@ -121,6 +122,7 @@ widget_ids!(pub struct Ids {
   modal_background,
   modal_container_borders,
   modal_container,
+  modal_validate,
 
   stopped_title,
   stopped_message,
@@ -346,7 +348,8 @@ impl<'a> Screen<'a> {
         );
 
         if !trigger_inspiratory_open && !exp_ratio_open {
-            self.render_modal(DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH, DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT, None);
+            self.render_modal(DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH, DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT,
+                None, None);
 
             let config = StopWidgetConfig {
                 container: self.ids.modal_container,
@@ -596,12 +599,13 @@ impl<'a> Screen<'a> {
         self.widgets.render(ControlWidgetType::TriggerInspiratoryOverview(trigger_inspiratory_config));
     }
 
-    fn render_modal(&mut self, width: f64, height: f64, padding: Option<f64>) {
+    fn render_modal(&mut self, width: f64, height: f64, padding: Option<f64>, validate: Option<WidgetId>) {
         let modal_config = ModalWidgetConfig {
             parent: self.ids.background,
             background: self.ids.modal_background,
             container_borders: self.ids.modal_container_borders,
             container: self.ids.modal_container,
+            validate,
             width,
             height,
             padding,
@@ -611,11 +615,12 @@ impl<'a> Screen<'a> {
     }
 
     fn render_trigger_settings(&mut self, settings: &'a TriggerInspiratory) {
-        self.render_modal(TRIGGER_SETTINGS_MODAL_WIDTH, TRIGGER_SETTINGS_MODAL_HEIGTH, Some(10.0));
+        self.render_modal(TRIGGER_SETTINGS_MODAL_WIDTH, TRIGGER_SETTINGS_MODAL_HEIGTH,
+            Some(10.0), Some(self.ids.modal_validate));
 
         let config = TriggerInspiratoryWidgetConfig {
             width: EXP_RATIO_SETTINGS_MODAL_WIDTH,
-            height: EXP_RATIO_SETTINGS_MODAL_HEIGTH,
+            height: EXP_RATIO_SETTINGS_MODAL_HEIGTH - MODAL_VALIDATE_BUTTON_HEIGHT,
             trigger_inspiratory_settings: settings,
 
             status_container_parent: self.ids.modal_container,
@@ -634,11 +639,12 @@ impl<'a> Screen<'a> {
     }
 
     fn render_exp_ratio_settings(&mut self, settings: &'a TriggerInspiratory) {
-        self.render_modal(EXP_RATIO_SETTINGS_MODAL_WIDTH, EXP_RATIO_SETTINGS_MODAL_HEIGTH, Some(10.0));
+        self.render_modal(EXP_RATIO_SETTINGS_MODAL_WIDTH, EXP_RATIO_SETTINGS_MODAL_HEIGTH,
+            Some(10.0), Some(self.ids.modal_validate));
 
         let config = ExpRatioSettingsWidgetConfig {
             width: EXP_RATIO_SETTINGS_MODAL_WIDTH,
-            height: EXP_RATIO_SETTINGS_MODAL_HEIGTH,
+            height: EXP_RATIO_SETTINGS_MODAL_HEIGTH - MODAL_VALIDATE_BUTTON_HEIGHT,
             trigger_inspiratory_settings: settings,
 
             exp_ratio_container_parent: self.ids.modal_container,
