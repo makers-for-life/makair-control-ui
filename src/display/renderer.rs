@@ -156,7 +156,9 @@ impl DisplayRenderer {
         }
 
         if self.trigger_settings_state == DisplayRendererSettingsState::Opened || self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened {
-            for _ in self.get_widget_clicks(self.ids.modal_validate, interface) {
+            for _ in self.get_widget_clicks(self.ids.modal_validate, interface)
+                .chain(self.get_widget_clicks(self.ids.modal_validate_text, interface))
+            {
                 if self.trigger_settings_state == DisplayRendererSettingsState::Opened {
                     self.toggle_trigger_settings();
                 } else if self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened {
