@@ -12,6 +12,7 @@
 | V1.2.x | Crashes fixed + smoother graph + implemented medical staff feedbacks | ✅
 | V1.3.x | Improve text readability, by increasing font sizes | ✅
 | V1.4.x | Added internationalization capabilities | ✅
+| V1.5.x | Improve UI readability + allow to change MakAir's settings | ✅
 
 ## How To Build?
 
