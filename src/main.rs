@@ -53,6 +53,17 @@ struct AppArgs {
     mode: Mode,
     fullscreen: bool,
     lora: bool,
+    #[cfg(feature = "lora")]
+    lora_device: String,
+}
+
+impl AppArgs {
+    pub fn is_recording(&self) -> bool {
+        match &self.mode {
+            Mode::Port { output_dir, .. } => output_dir.is_some(),
+            _ => false,
+        }
+    }
 }
 
 pub enum Mode {
@@ -122,6 +133,12 @@ fn make_app_args() -> AppArgs {
                 .long("disable-lora")
                 .help("Disable LORA support"),
         )
+        .arg(
+            Arg::with_name("lora-device")
+                .long("lora-device")
+                .default_value("/dev/ttyAMA0")
+                .help("Path to the LORA device"),
+        )
         .get_matches();
 
     // Parse input mode
@@ -148,6 +165,12 @@ fn make_app_args() -> AppArgs {
         mode,
         fullscreen: matches.is_present("fullscreen"),
         lora: !matches.is_present("disable-lora"),
+        #[cfg(feature = "lora")]
+        lora_device: String::from(
+            matches
+                .value_of("lora-device")
+                .expect("invalid lora-device value"),
+        ),
     }
 }
 

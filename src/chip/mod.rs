@@ -3,16 +3,22 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+pub mod settings;
+
 use chrono::{offset::Utc, DateTime, Duration};
 use std::collections::{HashMap, VecDeque};
 use std::convert::TryFrom;
 
 use crate::config::environment::*;
 use crate::physics::types::DataPressure;
-use std::sync::mpsc::Sender;
-use telemetry::alarm::AlarmCode;
+use settings::{trigger_inspiratory::TriggerInspiratoryState, ChipSettings, ChipSettingsEvent};
+use std::sync::mpsc::{self, Receiver, Sender};
+use telemetry::alarm::{AlarmCode, RMC_SW_1, RMC_SW_11, RMC_SW_12, RMC_SW_14, RMC_SW_15, RMC_SW_3};
+use telemetry::control::{ControlMessage, ControlSetting};
 use telemetry::serial::core;
-use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot, TelemetryMessage};
+use telemetry::structures::{
+    AlarmPriority, ControlAck, DataSnapshot, MachineStateSnapshot, TelemetryMessage,
+};
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum ChipState {
@@ -30,21 +36,28 @@ pub struct Chip {
     pub last_machine_snapshot: MachineStateSnapshot,
     pub ongoing_alarms: HashMap<AlarmCode, AlarmPriority>,
     pub battery_level: Option<u8>,
+    pub settings: ChipSettings,
     state: ChipState,
     tx_for_lora: Option<Sender<TelemetryMessage>>,
+    channel_for_settings: Option<Sender<ControlMessage>>,
 }
 
 impl Chip {
-    pub fn new(sender_for_lora: Option<Sender<TelemetryMessage>>) -> Chip {
+    pub fn new(tx_for_lora: Option<Sender<TelemetryMessage>>) -> Chip {
+        let last_machine_snapshot = MachineStateSnapshot::default();
+        let cycles_per_minute = last_machine_snapshot.cpm_command;
+
         Chip {
             boot_time: None,
             last_tick: 0,
             data_pressure: VecDeque::with_capacity(GRAPH_NUMBER_OF_POINTS + 100),
-            last_machine_snapshot: MachineStateSnapshot::default(),
+            last_machine_snapshot,
             ongoing_alarms: HashMap::new(),
             battery_level: None,
+            settings: ChipSettings::new(cycles_per_minute as usize),
             state: ChipState::WaitingData,
-            tx_for_lora: sender_for_lora,
+            tx_for_lora,
+            channel_for_settings: None,
         }
     }
 
@@ -85,6 +98,8 @@ impl Chip {
             TelemetryMessage::MachineStateSnapshot(snapshot) => {
                 self.clean_if_stopped();
                 self.update_tick(snapshot.systick);
+                self.update_cycles_per_minute(snapshot.cpm_command as usize);
+                self.update_settings_values(&snapshot);
 
                 for alarm in &snapshot.current_alarm_codes {
                     match AlarmPriority::try_from(*alarm) {
@@ -106,7 +121,33 @@ impl Chip {
 
                 self.state = ChipState::Stopped;
             }
+
+            TelemetryMessage::ControlAck(ack) => {
+                self.update_on_ack(ack);
+            }
         };
+    }
+
+    pub fn new_settings_events(&mut self, events: Vec<ChipSettingsEvent>) {
+        for event in events {
+            let message = self.settings.new_settings_event(event);
+            debug!(
+                "New event: {:?}, sender: {:?}",
+                message, self.channel_for_settings
+            );
+            if let Some(tx) = &self.channel_for_settings {
+                if let Err(e) = tx.send(message.clone()) {
+                    // TODO: Maybe we could add an alarm with this problem
+                    // TODO2: Revert the value if it can't be sent?
+                    error!(
+                        "Error sending message {:?} to the control unit: {:?}",
+                        message, e
+                    );
+                } else {
+                    debug!("Setting message {:?} sent!", message);
+                }
+            }
+        }
     }
 
     pub fn new_error(&mut self, error: core::Error) {
@@ -218,14 +259,89 @@ impl Chip {
         }
     }
 
-    pub fn ongoing_alarms_sorted(&self) -> Vec<(&AlarmCode, &AlarmPriority)> {
-        let mut vec_alarms = self
-            .ongoing_alarms
-            .iter()
-            .collect::<Vec<(&AlarmCode, &AlarmPriority)>>();
+    fn deduplicate_alarms(alarms: &mut HashMap<AlarmCode, AlarmPriority>) {
+        if alarms.contains_key(&AlarmCode::from(RMC_SW_11))
+            && alarms.contains_key(&AlarmCode::from(RMC_SW_12))
+        {
+            alarms.remove(&AlarmCode::from(RMC_SW_11));
+        }
 
-        vec_alarms.sort_by(|(_, priority1), (_, priority2)| priority1.cmp(&priority2).reverse());
+        if alarms.contains_key(&AlarmCode::from(RMC_SW_1))
+            && alarms.contains_key(&AlarmCode::from(RMC_SW_14))
+        {
+            alarms.remove(&AlarmCode::from(RMC_SW_14));
+        }
+
+        if alarms.contains_key(&AlarmCode::from(RMC_SW_3))
+            && alarms.contains_key(&AlarmCode::from(RMC_SW_15))
+        {
+            alarms.remove(&AlarmCode::from(RMC_SW_15));
+        }
+    }
+
+    pub fn ongoing_alarms_sorted(&self) -> Vec<(AlarmCode, AlarmPriority)> {
+        let mut ongoing_alarms = self.ongoing_alarms.clone();
+        Chip::deduplicate_alarms(&mut ongoing_alarms);
+
+        let mut vec_alarms: Vec<(AlarmCode, AlarmPriority)> = ongoing_alarms
+            .iter()
+            .map(|(code, priority)| (*code, priority.clone()))
+            .collect();
+
+        vec_alarms.sort_by(|(code1, _), (code2, _)| code1.cmp(&code2));
 
         vec_alarms
+    }
+
+    pub fn init_settings_receiver(&mut self) -> Receiver<ControlMessage> {
+        let channel = mpsc::channel();
+        self.channel_for_settings = Some(channel.0);
+        channel.1
+    }
+
+    fn update_cycles_per_minute(&mut self, cycles_per_minute: usize) {
+        self.settings
+            .inspiratory_trigger
+            .set_cycles_per_minute(cycles_per_minute);
+    }
+
+    fn update_settings_values(&mut self, snapshot: &MachineStateSnapshot) {
+        self.settings.inspiratory_trigger.state = if snapshot.trigger_enabled {
+            TriggerInspiratoryState::Enabled
+        } else {
+            TriggerInspiratoryState::Disabled
+        };
+        self.settings.inspiratory_trigger.inspiratory_trigger_offset =
+            snapshot.trigger_offset as usize;
+        self.settings.inspiratory_trigger.expiratory_term = snapshot.expiratory_term as usize;
+    }
+
+    // TODO: Mutate the last_machine_snapshot is not great, need to be reworked
+    fn update_on_ack(&mut self, ack: ControlAck) {
+        match ack.setting {
+            ControlSetting::PeakPressure => {
+                self.last_machine_snapshot.previous_peak_pressure = ack.value
+            }
+            ControlSetting::PlateauPressure => {
+                self.last_machine_snapshot.previous_plateau_pressure = ack.value
+            }
+            ControlSetting::PEEP => self.last_machine_snapshot.previous_peep_pressure = ack.value,
+            ControlSetting::CyclesPerMinute => {
+                self.last_machine_snapshot.cpm_command = ack.value as u8
+            }
+            ControlSetting::TriggerEnabled => {
+                self.settings.inspiratory_trigger.state = if ack.value == 0 {
+                    TriggerInspiratoryState::Disabled
+                } else {
+                    TriggerInspiratoryState::Enabled
+                }
+            }
+            ControlSetting::TriggerOffset => {
+                self.settings.inspiratory_trigger.inspiratory_trigger_offset = ack.value as usize
+            }
+            ControlSetting::ExpiratoryTerm => {
+                self.settings.inspiratory_trigger.expiratory_term = ack.value as usize
+            }
+        }
     }
 }
