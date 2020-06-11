@@ -45,7 +45,7 @@ pub struct Chip {
 impl Chip {
     pub fn new(tx_for_lora: Option<Sender<TelemetryMessage>>) -> Chip {
         let last_machine_snapshot = MachineStateSnapshot::default();
-        let cycles_per_minute = last_machine_snapshot.cpm_command.clone();
+        let cycles_per_minute = last_machine_snapshot.cpm_command;
 
         Chip {
             boot_time: None,
