@@ -135,10 +135,13 @@ impl<'a> DisplayDrawer<'a> {
         match &APP_ARGS.mode {
             crate::Mode::Port { port, output_dir } => {
                 let optional_file_buffer = output_dir.as_ref().map(|dir| {
+                    let file_count: Vec<std::io::Result<std::fs::DirEntry>> =
+                        std::fs::read_dir(dir).expect("Should read dir").collect();
                     let path = format!(
-                        "{}/{}.record",
+                        "{}/{}-{}.record",
                         &dir,
-                        chrono::Local::now().format("%Y%m%d-%H%M%S")
+                        chrono::Local::now().format("%Y%m%d-%H%M%S"),
+                        file_count.len() + 1
                     );
                     let file = std::fs::File::create(&path)
                         .unwrap_or_else(|_| panic!("could not create file '{}'", &path));
