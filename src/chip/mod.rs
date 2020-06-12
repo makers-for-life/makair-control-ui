@@ -320,12 +320,12 @@ impl Chip {
     fn update_on_ack(&mut self, ack: ControlAck) {
         match ack.setting {
             ControlSetting::PeakPressure => {
-                self.last_machine_snapshot.previous_peak_pressure = ack.value
+                self.last_machine_snapshot.peak_command = ack.value as u8
             }
             ControlSetting::PlateauPressure => {
-                self.last_machine_snapshot.previous_plateau_pressure = ack.value
+                self.last_machine_snapshot.plateau_command = ack.value as u8
             }
-            ControlSetting::PEEP => self.last_machine_snapshot.previous_peep_pressure = ack.value,
+            ControlSetting::PEEP => self.last_machine_snapshot.peep_command = ack.value as u8,
             ControlSetting::CyclesPerMinute => {
                 self.last_machine_snapshot.cpm_command = ack.value as u8
             }
