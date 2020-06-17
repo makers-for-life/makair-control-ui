@@ -14,6 +14,8 @@ use crate::EmbeddedImages;
 use crate::Mode::Test;
 use crate::{AppArgs, EmbeddedFonts};
 
+use crate::chip::Chip;
+
 use super::drawer::DisplayDrawerBuilder;
 use super::fonts::Fonts;
 use crate::locale::accessor::LocaleAccessor;
@@ -60,7 +62,7 @@ lazy_static! {
 }
 
 impl<'a> DisplayWindow<'a> {
-    pub fn spawn(&self) {
+    pub fn spawn(&self, chip: Chip) {
         debug!("spawning window");
 
         // Create event loop
@@ -128,6 +130,7 @@ impl<'a> DisplayWindow<'a> {
             events_loop,
             &mut interface,
             fonts,
+            chip,
             self.i18n,
         );
 

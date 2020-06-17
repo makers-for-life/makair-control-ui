@@ -12,6 +12,7 @@
 | V1.2.x | Crashes fixed + smoother graph + implemented medical staff feedbacks | ✅
 | V1.3.x | Improve text readability, by increasing font sizes | ✅
 | V1.4.x | Added internationalization capabilities | ✅
+| V1.5.x | Improve UI readability + allow to change MakAir's settings | ✅
 
 ## How To Build?
 
@@ -20,7 +21,7 @@ In order to setup your environment and build the code, please follow the followi
 1. Install [Rustup](https://rustup.rs/)
 2. Ènsure you are using the Rust stable toolchain: `rustup default stable`
 3. On Linux, make sure you have cmake installed and those libraries (debian):
-  `libxcb-shape0 libxcb-shape0-dev libxcb-xfixes0 libxcb-xfixes0-dev libfontconfig libfontconfig1-dev`
+  `libxcb-shape0 libxcb-shape0-dev libxcb-xfixes0 libxcb-xfixes0-dev libfontconfig libfontconfig1-dev libudev-dev`
 4. Build the project: `cargo build`
 
 Wayland support may be available but it hasn't been tested. You need a working X11 server.

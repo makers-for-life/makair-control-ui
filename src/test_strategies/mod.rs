@@ -193,6 +193,10 @@ pub mod tests {
                 0u16..,
                 0u16..,
                 current_alarm_codes_strategy(),
+                (0u16..).prop_map(Some),
+                0u8..,
+                any::<bool>(),
+                0u8..,
             )
                 .prop_map(
                     |(
@@ -210,6 +214,10 @@ pub mod tests {
                         previous_plateau_pressure,
                         previous_peep_pressure,
                         current_alarm_codes,
+                        previous_volume,
+                        expiratory_term,
+                        trigger_enabled,
+                        trigger_offset,
                     )| {
                         (
                             MachineStateSnapshot {
@@ -225,6 +233,10 @@ pub mod tests {
                                 previous_plateau_pressure,
                                 previous_peep_pressure,
                                 current_alarm_codes,
+                                previous_volume,
+                                expiratory_term,
+                                trigger_enabled,
+                                trigger_offset,
                             },
                             device_id,
                         )

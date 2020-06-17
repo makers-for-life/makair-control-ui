@@ -3,7 +3,12 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+use crate::chip::settings::{
+    trigger_inspiratory::{TriggerInspiratory, TriggerInspiratoryEvent},
+    ChipSettingsEvent, SettingAction,
+};
 use chrono::{DateTime, NaiveDateTime, Utc};
+use conrod_core::widget::Id as WidgetId;
 use conrod_core::Ui;
 use glium::texture;
 use image::{buffer::ConvertBuffer, load_from_memory, RgbImage, RgbaImage};
@@ -12,7 +17,7 @@ use plotters::prelude::*;
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
-use crate::EmbeddedImages;
+use crate::{AppArgs, EmbeddedImages};
 
 use crate::config::environment::*;
 
@@ -30,17 +35,22 @@ use super::screen::{
 use super::support::GliumDisplayWinitWrapper;
 use crate::locale::accessor::LocaleAccessor;
 
+#[derive(Debug, PartialEq, Eq)]
+pub enum DisplayRendererSettingsState {
+    Opened,
+    Closed,
+}
+
 pub struct DisplayRendererBuilder;
 
 pub struct DisplayRenderer<'a> {
     fonts: Fonts,
     ids: Ids,
+    trigger_settings_state: DisplayRendererSettingsState,
+    exp_ratio_settings_state: DisplayRendererSettingsState,
     i18n: &'a LocaleAccessor,
+    app_args: AppArgs,
 }
-
-const GRAPH_WIDTH: u32 =
-    DISPLAY_WINDOW_SIZE_WIDTH - DISPLAY_GRAPH_OFFSET_WIDTH + GRAPH_DRAW_LABEL_JITTER_FIX_WIDTH;
-const GRAPH_HEIGHT: u32 = DISPLAY_WINDOW_SIZE_HEIGHT - DISPLAY_GRAPH_OFFSET_HEIGHT;
 
 const FIRMWARE_VERSION_NONE: &str = "n/a";
 
@@ -60,12 +70,29 @@ lazy_static! {
             .unwrap()
             .into_rgba()
             .into_raw();
+    static ref IMAGE_STATUS_SAVE_RGBA_RAW: Vec<u8> =
+        load_from_memory(EmbeddedImages::get("save.png").unwrap().to_mut())
+            .unwrap()
+            .into_rgba()
+            .into_raw();
 }
 
 #[allow(clippy::new_ret_no_self)]
 impl DisplayRendererBuilder {
-    pub fn new(fonts: Fonts, ids: Ids, i18n: &LocaleAccessor) -> DisplayRenderer {
-        DisplayRenderer { fonts, ids, i18n }
+    pub fn new(
+        fonts: Fonts,
+        ids: Ids,
+        i18n: &LocaleAccessor,
+        app_args: AppArgs,
+    ) -> DisplayRenderer {
+        DisplayRenderer {
+            fonts,
+            ids,
+            trigger_settings_state: DisplayRendererSettingsState::Closed,
+            exp_ratio_settings_state: DisplayRendererSettingsState::Closed,
+            i18n,
+            app_args,
+        }
     }
 }
 
@@ -75,11 +102,12 @@ impl<'a> DisplayRenderer<'a> {
         &mut self,
         data_pressure: &DataPressure,
         machine_snapshot: &MachineStateSnapshot,
-        ongoing_alarms: &[(&AlarmCode, &AlarmPriority)],
+        ongoing_alarms: &[(AlarmCode, AlarmPriority)],
         display: &GliumDisplayWinitWrapper,
         interface: &mut Ui,
         battery_level: Option<u8>,
         chip_state: &ChipState,
+        trigger_inspiratory_settings: &TriggerInspiratory,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let image_map = conrod_core::image::Map::<texture::Texture2d>::new();
 
@@ -95,9 +123,179 @@ impl<'a> DisplayRenderer<'a> {
                 ongoing_alarms,
                 battery_level,
                 chip_state,
+                trigger_inspiratory_settings,
             ),
             ChipState::Error(e) => self.error(interface, image_map, e.clone()),
         }
+    }
+
+    pub fn run_ui_events(&mut self, interface: &mut Ui) -> Vec<ChipSettingsEvent> {
+        let mut all_events = Vec::new();
+
+        // If you click on a text, the text element will receive the click, not its parent
+        // Maybe there is a way to listen on a parent for childs clicks but I couldn't find one.
+        // So we chain each iterator of every childs to be sure to capture the click
+        let trigger_inspiratory_settings_iters = vec![
+            self.ids.trigger_inspiratory_overview_container,
+            self.ids.trigger_inspiratory_overview_title,
+            self.ids.trigger_inspiratory_overview_status,
+            self.ids.trigger_inspiratory_overview_offset,
+        ];
+
+        let exp_ratio_settings_iters = vec![
+            self.ids.ratio_parent,
+            self.ids.ratio_title,
+            self.ids.ratio_value_measured,
+            self.ids.ratio_unit,
+        ];
+
+        let trigger_inspiratory_settings_clicks = trigger_inspiratory_settings_iters
+            .iter()
+            .flat_map(|widget| {
+                // TODO: Can we use the get_widget_clicks method?
+                interface
+                    .widget_input(*widget)
+                    .clicks()
+                    .map(|_| ())
+                    .chain(interface.widget_input(*widget).taps().map(|_| ()))
+            });
+
+        let exp_ratio_settings_clicks = exp_ratio_settings_iters.iter().flat_map(|widget| {
+            interface
+                .widget_input(*widget)
+                .clicks()
+                .map(|_| ())
+                .chain(interface.widget_input(*widget).taps().map(|_| ()))
+        });
+
+        for _ in trigger_inspiratory_settings_clicks {
+            self.toggle_trigger_settings();
+        }
+
+        for _ in exp_ratio_settings_clicks {
+            self.toggle_exp_ratio_settings();
+        }
+
+        if self.trigger_settings_state == DisplayRendererSettingsState::Opened
+            || self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened
+        {
+            for _ in self
+                .get_widget_clicks(self.ids.modal_validate, interface)
+                .chain(self.get_widget_clicks(self.ids.modal_validate_text, interface))
+            {
+                if self.trigger_settings_state == DisplayRendererSettingsState::Opened {
+                    self.toggle_trigger_settings();
+                } else if self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened {
+                    self.toggle_exp_ratio_settings();
+                }
+            }
+        }
+
+        if self.trigger_settings_state == DisplayRendererSettingsState::Closed
+            && self.exp_ratio_settings_state == DisplayRendererSettingsState::Closed
+        {
+            for xy in self.get_widget_clicks(self.ids.modal_background, interface) {
+                if let Some(rect_of) =
+                    interface.rect_of(self.ids.trigger_inspiratory_overview_container)
+                {
+                    if rect_of.is_over(xy) {
+                        self.toggle_trigger_settings();
+                    }
+                }
+
+                if let Some(rect_of) = interface.rect_of(self.ids.ratio_parent) {
+                    if rect_of.is_over(xy) {
+                        self.toggle_exp_ratio_settings();
+                    }
+                }
+            }
+        }
+
+        if self.trigger_settings_state == DisplayRendererSettingsState::Opened {
+            for _ in
+                self.get_widget_clicks(self.ids.trigger_inspiratory_status_button, interface)
+                    .chain(self.get_widget_clicks(
+                        self.ids.trigger_inspiratory_status_button_text,
+                        interface,
+                    ))
+            {
+                all_events.push(ChipSettingsEvent::InspiratoryTrigger(
+                    TriggerInspiratoryEvent::Toggle,
+                ));
+            }
+
+            for _ in self
+                .get_widget_clicks(self.ids.trigger_inspiratory_offset_less_button, interface)
+                .chain(self.get_widget_clicks(
+                    self.ids.trigger_inspiratory_offset_less_button_text,
+                    interface,
+                ))
+            {
+                all_events.push(ChipSettingsEvent::InspiratoryTrigger(
+                    TriggerInspiratoryEvent::InspiratoryTriggerOffset(SettingAction::Less),
+                ));
+            }
+
+            for _ in self
+                .get_widget_clicks(self.ids.trigger_inspiratory_offset_more_button, interface)
+                .chain(self.get_widget_clicks(
+                    self.ids.trigger_inspiratory_offset_more_button_text,
+                    interface,
+                ))
+            {
+                all_events.push(ChipSettingsEvent::InspiratoryTrigger(
+                    TriggerInspiratoryEvent::InspiratoryTriggerOffset(SettingAction::More),
+                ));
+            }
+        }
+
+        if self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened {
+            for _ in self
+                .get_widget_clicks(self.ids.exp_ratio_term_less_button, interface)
+                .chain(self.get_widget_clicks(self.ids.exp_ratio_term_less_button_text, interface))
+            {
+                all_events.push(ChipSettingsEvent::InspiratoryTrigger(
+                    TriggerInspiratoryEvent::ExpiratoryTerm(SettingAction::Less),
+                ));
+            }
+
+            for _ in self
+                .get_widget_clicks(self.ids.exp_ratio_term_more_button, interface)
+                .chain(self.get_widget_clicks(self.ids.exp_ratio_term_more_button_text, interface))
+            {
+                all_events.push(ChipSettingsEvent::InspiratoryTrigger(
+                    TriggerInspiratoryEvent::ExpiratoryTerm(SettingAction::More),
+                ));
+            }
+        }
+
+        all_events
+    }
+
+    fn get_widget_clicks<'b>(
+        &self,
+        widget: WidgetId,
+        interface: &'b Ui,
+    ) -> impl Iterator<Item = conrod_core::position::Point> + 'b {
+        interface
+            .widget_input(widget)
+            .clicks()
+            .map(|c| c.xy)
+            .chain(interface.widget_input(widget).taps().map(|t| t.xy))
+    }
+
+    fn toggle_trigger_settings(&mut self) {
+        self.trigger_settings_state = match self.trigger_settings_state {
+            DisplayRendererSettingsState::Closed => DisplayRendererSettingsState::Opened,
+            DisplayRendererSettingsState::Opened => DisplayRendererSettingsState::Closed,
+        };
+    }
+
+    fn toggle_exp_ratio_settings(&mut self) {
+        self.exp_ratio_settings_state = match self.exp_ratio_settings_state {
+            DisplayRendererSettingsState::Closed => DisplayRendererSettingsState::Opened,
+            DisplayRendererSettingsState::Opened => DisplayRendererSettingsState::Closed,
+        };
     }
 
     fn empty(
@@ -166,9 +364,10 @@ impl<'a> DisplayRenderer<'a> {
         mut image_map: conrod_core::image::Map<texture::Texture2d>,
         data_pressure: &DataPressure,
         machine_snapshot: &MachineStateSnapshot,
-        ongoing_alarms: &[(&AlarmCode, &AlarmPriority)],
+        ongoing_alarms: &[(AlarmCode, AlarmPriority)],
         battery_level: Option<u8>,
         chip_state: &ChipState,
+        trigger_inspiratory_settings: &TriggerInspiratory,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         // Create branding
         let branding_image_texture = self.draw_branding(display);
@@ -192,24 +391,44 @@ impl<'a> DisplayRenderer<'a> {
 
         // Create widgets
         let mut ui = interface.set_widgets();
+        let ongoing_alarms_len = ongoing_alarms.len();
+        let widgets_alarms_len = self.ids.alarm_alarms.len();
 
-        for i in 0..ongoing_alarms.len() {
-            let index = i + 1;
-            self.ids
-                .alarm_alarms
-                .resize(index, &mut ui.widget_id_generator());
-            self.ids
-                .alarm_codes_containers
-                .resize(index, &mut ui.widget_id_generator());
-            self.ids
-                .alarm_codes
-                .resize(index, &mut ui.widget_id_generator());
-            self.ids
-                .alarm_messages_containers
-                .resize(index, &mut ui.widget_id_generator());
-            self.ids
-                .alarm_messages
-                .resize(index, &mut ui.widget_id_generator());
+        if ongoing_alarms_len > widgets_alarms_len {
+            for i in widgets_alarms_len..ongoing_alarms_len {
+                let index = i + 1;
+                self.ids
+                    .alarm_alarms
+                    .resize(index, &mut ui.widget_id_generator());
+                self.ids
+                    .alarm_codes_containers
+                    .resize(index, &mut ui.widget_id_generator());
+                self.ids
+                    .alarm_codes
+                    .resize(index, &mut ui.widget_id_generator());
+                self.ids
+                    .alarm_messages_containers
+                    .resize(index, &mut ui.widget_id_generator());
+                self.ids
+                    .alarm_messages
+                    .resize(index, &mut ui.widget_id_generator());
+            }
+        } else {
+            let diff = widgets_alarms_len - ongoing_alarms_len;
+            let useless_id = &mut ui.widget_id_generator();
+            if diff > 0 {
+                self.ids.alarm_alarms.resize(ongoing_alarms_len, useless_id);
+                self.ids
+                    .alarm_codes_containers
+                    .resize(ongoing_alarms_len, useless_id);
+                self.ids.alarm_codes.resize(ongoing_alarms_len, useless_id);
+                self.ids
+                    .alarm_codes_containers
+                    .resize(ongoing_alarms_len, useless_id);
+                self.ids
+                    .alarm_messages
+                    .resize(ongoing_alarms_len, useless_id);
+            }
         }
 
         let mut screen = Screen::new(
@@ -232,9 +451,17 @@ impl<'a> DisplayRenderer<'a> {
             height: branding_height as _,
         };
 
+        let save_image_id = if self.app_args.is_recording() {
+            let save_icon_texture = self.draw_status_save_icon(display);
+            Some(image_map.insert(save_icon_texture))
+        } else {
+            None
+        };
+
         let screen_data_status = ScreenDataStatus {
             chip_state,
             battery_level,
+            save_image_id,
         };
         let screen_data_heartbeat = ScreenDataHeartbeat { data_pressure };
 
@@ -255,6 +482,9 @@ impl<'a> DisplayRenderer<'a> {
                 screen_data_heartbeat,
                 screen_data_graph,
                 screen_data_telemetry,
+                trigger_inspiratory_settings,
+                self.trigger_settings_state == DisplayRendererSettingsState::Opened,
+                self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened,
             ),
             ChipState::Stopped => screen.render_stop(
                 screen_data_branding,
@@ -262,6 +492,9 @@ impl<'a> DisplayRenderer<'a> {
                 screen_data_heartbeat,
                 screen_data_graph,
                 screen_data_telemetry,
+                trigger_inspiratory_settings,
+                self.trigger_settings_state == DisplayRendererSettingsState::Opened,
+                self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened,
             ),
             _ => unreachable!(),
         };
@@ -290,6 +523,18 @@ impl<'a> DisplayRenderer<'a> {
         let raw_image = glium::texture::RawImage2d::from_raw_rgba_reversed(
             &*IMAGE_TELEMETRY_ARROW_RGBA_RAW,
             (TELEMETRY_ARROW_WIDTH, TELEMETRY_ARROW_HEIGHT),
+        );
+
+        glium::texture::Texture2d::new(&display.0, raw_image).unwrap()
+    }
+
+    fn draw_status_save_icon(
+        &self,
+        display: &GliumDisplayWinitWrapper,
+    ) -> glium::texture::Texture2d {
+        let raw_image = glium::texture::RawImage2d::from_raw_rgba_reversed(
+            &*IMAGE_STATUS_SAVE_RGBA_RAW,
+            (STATUS_SAVE_ICON_WIDTH, STATUS_SAVE_ICON_HEIGHT),
         );
 
         glium::texture::Texture2d::new(&display.0, raw_image).unwrap()
@@ -384,7 +629,7 @@ impl<'a> DisplayRenderer<'a> {
             .margin_left(GRAPH_DRAW_MARGIN_LEFT)
             .margin_right(GRAPH_DRAW_MARGIN_RIGHT)
             .x_label_area_size(0)
-            .y_label_area_size(GRAPH_DRAW_LABEL_WIDTH + GRAPH_DRAW_LABEL_JITTER_FIX_WIDTH)
+            .y_label_area_size(GRAPH_DRAW_LABEL_WIDTH)
             .build_ranged(oldest_time..newest_time, GRAPH_DRAW_RANGE_LOW..range_high)
             .unwrap();
 

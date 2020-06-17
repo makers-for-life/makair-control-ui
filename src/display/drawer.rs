@@ -43,7 +43,7 @@ pub struct DisplayDrawer<'a> {
 }
 
 impl<'a> DisplayDrawerBuilder<'a> {
-    #[allow(clippy::new_ret_no_self)]
+    #[allow(clippy::new_ret_no_self, clippy::too_many_arguments)]
     pub fn new(
         app_args: AppArgs,
         window: WindowBuilder,
@@ -51,6 +51,7 @@ impl<'a> DisplayDrawerBuilder<'a> {
         events_loop: EventsLoop,
         interface: &'a mut Ui,
         fonts: Fonts,
+        chip: Chip,
         i18n: &'a LocaleAccessor,
     ) -> DisplayDrawer<'a> {
         let is_ci = std::env::var("CI").is_ok();
@@ -83,13 +84,13 @@ impl<'a> DisplayDrawerBuilder<'a> {
 
         // Create drawer
         DisplayDrawer {
-            app_args,
-            renderer: DisplayRendererBuilder::new(fonts, ids, i18n),
+            app_args: app_args.clone(),
+            renderer: DisplayRendererBuilder::new(fonts, ids, i18n, app_args),
             glium_renderer: conrod_glium::Renderer::new(&display.0).unwrap(),
             display,
             interface,
             events_loop,
-            chip: Chip::new(),
+            chip,
         }
     }
 }
@@ -154,6 +155,9 @@ impl<'a> DisplayDrawer<'a> {
                         }
                         last_render = now;
 
+                        // Get UI events since the last render
+                        let ui_events = self.renderer.run_ui_events(&mut self.interface);
+                        self.chip.new_settings_events(ui_events);
                         self.refresh();
                     } else {
                         std::thread::sleep(std::time::Duration::from_millis(10));
@@ -163,7 +167,7 @@ impl<'a> DisplayDrawer<'a> {
         }
     }
 
-    fn start_telemetry(&self) -> Receiver<TelemetryChannelType> {
+    fn start_telemetry(&mut self) -> Receiver<TelemetryChannelType> {
         // Start gathering telemetry
         let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
             std::sync::mpsc::channel();
@@ -171,17 +175,28 @@ impl<'a> DisplayDrawer<'a> {
         match self.app_args.mode.to_owned() {
             crate::Mode::Port { port, output_dir } => {
                 let optional_file_buffer = output_dir.as_ref().map(|dir| {
+                    let file_count: Vec<std::io::Result<std::fs::DirEntry>> =
+                        std::fs::read_dir(dir).expect("Should read dir").collect();
                     let path = format!(
-                        "{}/{}.record",
+                        "{}/{}-{}.record",
                         &dir,
-                        chrono::Local::now().format("%Y%m%d-%H%M%S")
+                        chrono::Local::now().format("%Y%m%d-%H%M%S"),
+                        file_count.len() + 1
                     );
                     let file = std::fs::File::create(&path)
                         .unwrap_or_else(|_| panic!("could not create file '{}'", &path));
                     std::io::BufWriter::new(file)
                 });
+
+                let settings_receiver = self.chip.init_settings_receiver();
+
                 std::thread::spawn(move || {
-                    telemetry::gather_telemetry(&port, tx, optional_file_buffer);
+                    telemetry::gather_telemetry(
+                        &port,
+                        tx,
+                        optional_file_buffer,
+                        Some(settings_receiver),
+                    );
                 });
             }
 
@@ -208,6 +223,7 @@ impl<'a> DisplayDrawer<'a> {
             &mut self.interface,
             self.chip.get_battery_level(),
             &self.chip.get_state(),
+            &self.chip.settings.inspiratory_trigger,
         );
 
         if let Some(primitives) = self.interface.draw_if_changed() {
