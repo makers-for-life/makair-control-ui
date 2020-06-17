@@ -267,7 +267,7 @@ mod tests {
             TelemetryMessage::DataSnapshot(DataSnapshot {
                 version: "".to_string(),
                 device_id: "0-0-0".to_string(),
-                systick: 1_000_000,
+                systick: 1_000_001,
                 centile: 0,
                 pressure: 0,
                 phase: Inhalation,
