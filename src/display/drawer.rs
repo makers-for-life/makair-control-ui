@@ -9,18 +9,21 @@ use chrono::offset::Utc;
 use chrono::Duration;
 use conrod_core::Ui;
 use glium::glutin::{ContextBuilder, EventsLoop, WindowBuilder};
-use glium::Surface;
+use glium::{Display, Surface};
 use telemetry::{self, TelemetryChannelType};
 
 use crate::chip::{Chip, ChipState};
 use crate::serial::poller::{PollEvent, SerialPollerBuilder};
-use crate::APP_ARGS;
 
 use super::events::{DisplayEventsBuilder, DisplayEventsHandleOutcome};
 use super::fonts::Fonts;
 use super::renderer::{DisplayRenderer, DisplayRendererBuilder};
 use super::screen::Ids;
 use super::support::GliumDisplayWinitWrapper;
+use crate::config::environment::{DISPLAY_WINDOW_SIZE_HEIGHT, DISPLAY_WINDOW_SIZE_WIDTH};
+use crate::locale::accessor::LocaleAccessor;
+use crate::AppArgs;
+use crate::Mode::Test;
 
 const FRAMERATE: u64 = 30;
 
@@ -30,7 +33,8 @@ pub struct DisplayDrawerBuilder<'a> {
 }
 
 pub struct DisplayDrawer<'a> {
-    renderer: DisplayRenderer,
+    app_args: AppArgs,
+    renderer: DisplayRenderer<'a>,
     glium_renderer: conrod_glium::Renderer,
     display: GliumDisplayWinitWrapper,
     interface: &'a mut Ui,
@@ -39,18 +43,39 @@ pub struct DisplayDrawer<'a> {
 }
 
 impl<'a> DisplayDrawerBuilder<'a> {
-    #[allow(clippy::new_ret_no_self)]
+    #[allow(clippy::new_ret_no_self, clippy::too_many_arguments)]
     pub fn new(
+        app_args: AppArgs,
         window: WindowBuilder,
         context: ContextBuilder,
         events_loop: EventsLoop,
         interface: &'a mut Ui,
         fonts: Fonts,
         chip: Chip,
+        i18n: &'a LocaleAccessor,
     ) -> DisplayDrawer<'a> {
+        let is_ci = std::env::var("CI").is_ok();
+
         // Create display
-        let display =
-            GliumDisplayWinitWrapper(glium::Display::new(window, context, &events_loop).unwrap());
+        let display = GliumDisplayWinitWrapper(if cfg!(test) && is_ci {
+            // Headless Context.
+            Display::from_gl_window(
+                ContextBuilder::new()
+                    .with_shared_lists(
+                        &ContextBuilder::new()
+                            .build_headless(
+                                &events_loop,
+                                (DISPLAY_WINDOW_SIZE_WIDTH, DISPLAY_WINDOW_SIZE_HEIGHT).into(),
+                            )
+                            .unwrap(),
+                    )
+                    .build_windowed(window, &events_loop)
+                    .unwrap(),
+            )
+            .unwrap()
+        } else {
+            glium::Display::new(window, context, &events_loop).unwrap()
+        });
 
         // TODO: mark window as no cursor
 
@@ -59,7 +84,8 @@ impl<'a> DisplayDrawerBuilder<'a> {
 
         // Create drawer
         DisplayDrawer {
-            renderer: DisplayRendererBuilder::new(fonts, ids),
+            app_args: app_args.clone(),
+            renderer: DisplayRendererBuilder::new(fonts, ids, i18n, app_args),
             glium_renderer: conrod_glium::Renderer::new(&display.0).unwrap(),
             display,
             interface,
@@ -71,58 +97,72 @@ impl<'a> DisplayDrawerBuilder<'a> {
 
 impl<'a> DisplayDrawer<'a> {
     pub fn run(&mut self) {
-        // Create handlers
-        let mut serial_poller = SerialPollerBuilder::new();
-        let mut events_handler = DisplayEventsBuilder::new();
-
-        // Start gathering telemetry
-        let rx = self.start_telemetry();
-
-        // Start drawer loop
-        // Flow: cycles through telemetry events, and refreshes the view every time there is an \
-        //   update on the machines state.
-        let mut last_render = Utc::now();
-
-        'main: loop {
-            // Receive telemetry data (from the input serial from the motherboard)
-            // Empty the events queue before doing anything else
-            'poll_serial: loop {
-                match serial_poller.poll(&rx) {
-                    Ok(PollEvent::Ready(event)) => self.chip.new_event(event),
-                    Ok(PollEvent::Pending) => break 'poll_serial,
-                    Err(error) => {
-                        self.chip.new_error(error);
-                        break 'poll_serial;
-                    }
-                };
-            }
-
-            // Handle incoming events
-            match events_handler.handle(&self.display, &mut self.interface, &mut self.events_loop) {
-                DisplayEventsHandleOutcome::Break => break 'main,
-                DisplayEventsHandleOutcome::Continue => {}
-            }
-
-            // Refresh the pressure data interface, if we have any data in the buffer
-            let now = Utc::now();
-
-            if (now - last_render) > Duration::milliseconds((1000 / FRAMERATE) as _) {
-                if self.chip.get_state() != &ChipState::Stopped {
-                    self.chip.clean_events();
-                    // Force redraw if we are not stopped
-                    // For some reason, with a "shared" Ids struct, conrod won't detect we need to redraw
-                    // even though we know we have a different graph each new frame
-                    self.interface.needs_redraw();
+        match &mut self.app_args.mode {
+            Test(msgs) => {
+                for msg in msgs.to_owned() {
+                    self.chip.new_event(msg.to_owned());
+                    self.refresh();
                 }
-                last_render = now;
+            }
 
-                // Get UI events since the last render
-                let ui_events = self.renderer.run_ui_events(&mut self.interface);
-                self.chip.new_settings_events(ui_events);
+            _ => {
+                // Create handlers
+                let mut serial_poller = SerialPollerBuilder::new();
+                let mut events_handler = DisplayEventsBuilder::new();
 
-                self.refresh();
-            } else {
-                std::thread::sleep(std::time::Duration::from_millis(10));
+                // Start gathering telemetry
+                let rx = self.start_telemetry();
+
+                // Start drawer loop
+                // Flow: cycles through telemetry events, and refreshes the view every time there is an \
+                //   update on the machines state.
+                let mut last_render = Utc::now();
+
+                'main: loop {
+                    // Receive telemetry data (from the input serial from the motherboard)
+                    // Empty the events queue before doing anything else
+                    'poll_serial: loop {
+                        match serial_poller.poll(&rx) {
+                            Ok(PollEvent::Ready(event)) => self.chip.new_event(event),
+                            Ok(PollEvent::Pending) => break 'poll_serial,
+                            Err(error) => {
+                                self.chip.new_error(error);
+                                break 'poll_serial;
+                            }
+                        };
+                    }
+
+                    // Handle incoming events
+                    match events_handler.handle(
+                        &self.display,
+                        &mut self.interface,
+                        &mut self.events_loop,
+                    ) {
+                        DisplayEventsHandleOutcome::Break => break 'main,
+                        DisplayEventsHandleOutcome::Continue => {}
+                    }
+
+                    // Refresh the pressure data interface, if we have any data in the buffer
+                    let now = Utc::now();
+
+                    if (now - last_render) > Duration::milliseconds((1000 / FRAMERATE) as _) {
+                        if self.chip.get_state() != &ChipState::Stopped {
+                            self.chip.clean_events();
+                            // Force redraw if we are not stopped
+                            // For some reason, with a "shared" Ids struct, conrod won't detect we need to redraw
+                            // even though we know we have a different graph each new frame
+                            self.interface.needs_redraw();
+                        }
+                        last_render = now;
+
+                        // Get UI events since the last render
+                        let ui_events = self.renderer.run_ui_events(&mut self.interface);
+                        self.chip.new_settings_events(ui_events);
+                        self.refresh();
+                    } else {
+                        std::thread::sleep(std::time::Duration::from_millis(10));
+                    }
+                }
             }
         }
     }
@@ -132,7 +172,7 @@ impl<'a> DisplayDrawer<'a> {
         let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
             std::sync::mpsc::channel();
 
-        match &APP_ARGS.mode {
+        match self.app_args.mode.to_owned() {
             crate::Mode::Port { port, output_dir } => {
                 let optional_file_buffer = output_dir.as_ref().map(|dir| {
                     let file_count: Vec<std::io::Result<std::fs::DirEntry>> =
@@ -162,10 +202,12 @@ impl<'a> DisplayDrawer<'a> {
 
             crate::Mode::Input(path) => {
                 std::thread::spawn(move || loop {
-                    let file = std::fs::File::open(path).unwrap();
+                    let file = std::fs::File::open(&path).unwrap();
                     telemetry::gather_telemetry_from_file(file, tx.clone(), true);
                 });
             }
+
+            crate::Mode::Test(_) => (),
         }
 
         rx

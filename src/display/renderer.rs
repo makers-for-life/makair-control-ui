@@ -16,14 +16,12 @@ use plotters::prelude::*;
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
-use crate::EmbeddedImages;
+use crate::{AppArgs, EmbeddedImages};
 
 use crate::config::environment::*;
 
 use crate::chip::ChipState;
 use crate::physics::types::DataPressure;
-
-use crate::APP_ARGS;
 
 #[cfg(feature = "graph-scaler")]
 use crate::physics::pressure::process_max_allowed_pressure;
@@ -34,6 +32,7 @@ use super::screen::{
     ScreenDataStatus, ScreenDataTelemetry,
 };
 use super::support::GliumDisplayWinitWrapper;
+use crate::locale::accessor::LocaleAccessor;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum DisplayRendererSettingsState {
@@ -43,11 +42,13 @@ pub enum DisplayRendererSettingsState {
 
 pub struct DisplayRendererBuilder;
 
-pub struct DisplayRenderer {
+pub struct DisplayRenderer<'a> {
     fonts: Fonts,
     ids: Ids,
     trigger_settings_state: DisplayRendererSettingsState,
     exp_ratio_settings_state: DisplayRendererSettingsState,
+    i18n: &'a LocaleAccessor,
+    app_args: AppArgs,
 }
 
 const FIRMWARE_VERSION_NONE: &str = "n/a";
@@ -77,17 +78,24 @@ lazy_static! {
 
 #[allow(clippy::new_ret_no_self)]
 impl DisplayRendererBuilder {
-    pub fn new(fonts: Fonts, ids: Ids) -> DisplayRenderer {
+    pub fn new(
+        fonts: Fonts,
+        ids: Ids,
+        i18n: &LocaleAccessor,
+        app_args: AppArgs,
+    ) -> DisplayRenderer {
         DisplayRenderer {
             fonts,
             ids,
             trigger_settings_state: DisplayRendererSettingsState::Closed,
             exp_ratio_settings_state: DisplayRendererSettingsState::Closed,
+            i18n,
+            app_args,
         }
     }
 }
 
-impl DisplayRenderer {
+impl<'a> DisplayRenderer<'a> {
     #[allow(clippy::too_many_arguments)]
     pub fn render(
         &mut self,
@@ -104,7 +112,7 @@ impl DisplayRenderer {
 
         match chip_state {
             ChipState::Initializing => self.initializing(display, interface, image_map),
-            ChipState::WaitingData => self.empty(interface, image_map),
+            ChipState::WaitingData => self.empty(interface, image_map, self.i18n),
             ChipState::Running | ChipState::Stopped => self.data(
                 display,
                 interface,
@@ -263,11 +271,11 @@ impl DisplayRenderer {
         all_events
     }
 
-    fn get_widget_clicks<'a>(
+    fn get_widget_clicks<'b>(
         &self,
         widget: WidgetId,
-        interface: &'a Ui,
-    ) -> impl Iterator<Item = conrod_core::position::Point> + 'a {
+        interface: &'b Ui,
+    ) -> impl Iterator<Item = conrod_core::position::Point> + 'b {
         interface
             .widget_input(widget)
             .clicks()
@@ -293,10 +301,11 @@ impl DisplayRenderer {
         &mut self,
         interface: &mut Ui,
         image_map: conrod_core::image::Map<texture::Texture2d>,
+        i18n: &LocaleAccessor,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let ui = interface.set_widgets();
 
-        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None);
+        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None, i18n);
 
         screen.render_no_data();
 
@@ -324,7 +333,7 @@ impl DisplayRenderer {
             height: bootloader_logo_height as _,
         };
 
-        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None);
+        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None, self.i18n);
 
         screen.render_initializing(screen_boot_loader);
 
@@ -339,7 +348,7 @@ impl DisplayRenderer {
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let ui = interface.set_widgets();
 
-        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None);
+        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None, self.i18n);
 
         screen.render_error(error);
 
@@ -427,6 +436,7 @@ impl DisplayRenderer {
             &self.fonts,
             Some(machine_snapshot),
             Some(ongoing_alarms),
+            self.i18n,
         );
 
         let screen_data_branding = ScreenDataBranding {
@@ -440,7 +450,7 @@ impl DisplayRenderer {
             height: branding_height as _,
         };
 
-        let save_image_id = if APP_ARGS.is_recording() {
+        let save_image_id = if self.app_args.is_recording() {
             let save_icon_texture = self.draw_status_save_icon(display);
             Some(image_map.insert(save_icon_texture))
         } else {
@@ -643,7 +653,22 @@ impl DisplayRenderer {
         chart
             .draw_series(
                 LineSeries::new(
-                    data_pressure.iter().map(|x| (x.0, x.1 as i32)),
+                    data_pressure
+                        .iter()
+                        .fold(
+                            &mut Vec::with_capacity(0),
+                            |acc: &mut Vec<&(DateTime<Utc>, u16)>, v: &(DateTime<Utc>, u16)| {
+                                // A workaround to a bug in plotters lib.
+                                if let Some(prev) = acc.last() {
+                                    if prev.0 < v.0 {
+                                        acc.push(v);
+                                    }
+                                }
+                                acc
+                            },
+                        )
+                        .iter()
+                        .map(|x| (x.0, x.1 as i32)),
                     ShapeStyle::from(&plotters::style::RGBColor(0, 137, 255))
                         .filled()
                         .stroke_width(GRAPH_DRAW_LINE_SIZE),

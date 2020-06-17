@@ -9,24 +9,29 @@ use glium::glutin::{ContextBuilder, EventsLoop, WindowBuilder};
 use image::load_from_memory;
 use inflate::inflate_bytes_zlib;
 
-use crate::EmbeddedFonts;
-use crate::EmbeddedImages;
-
 use crate::config::environment::*;
-use crate::APP_ARGS;
+use crate::EmbeddedImages;
+use crate::Mode::Test;
+use crate::{AppArgs, EmbeddedFonts};
 
 use crate::chip::Chip;
 
 use super::drawer::DisplayDrawerBuilder;
 use super::fonts::Fonts;
+use crate::locale::accessor::LocaleAccessor;
 
 pub struct DisplayWindowBuilder;
-pub struct DisplayWindow;
+
+#[derive(Clone)]
+pub struct DisplayWindow<'a> {
+    pub app_args: AppArgs,
+    i18n: &'a LocaleAccessor,
+}
 
 impl DisplayWindowBuilder {
     #[allow(clippy::new_ret_no_self)]
-    pub fn new() -> DisplayWindow {
-        DisplayWindow {}
+    pub fn new(app_args: AppArgs, i18n: &LocaleAccessor) -> DisplayWindow {
+        DisplayWindow { app_args, i18n }
     }
 }
 
@@ -56,7 +61,7 @@ lazy_static! {
         .unwrap();
 }
 
-impl DisplayWindow {
+impl<'a> DisplayWindow<'a> {
     pub fn spawn(&self, chip: Chip) {
         debug!("spawning window");
 
@@ -75,11 +80,12 @@ impl DisplayWindow {
                 .unwrap(),
             ))
             .with_dimensions((DISPLAY_WINDOW_SIZE_WIDTH, DISPLAY_WINDOW_SIZE_HEIGHT).into())
-            .with_decorations(!APP_ARGS.fullscreen)
+            .with_decorations(!self.app_args.fullscreen)
             .with_resizable(false)
-            .with_always_on_top(APP_ARGS.fullscreen);
+            .with_visibility(!matches!(self.app_args.mode, Test(_)))
+            .with_always_on_top(self.app_args.fullscreen);
 
-        let window = if APP_ARGS.fullscreen {
+        let window = if self.app_args.fullscreen {
             let primary_monitor = events_loop.get_primary_monitor();
 
             window.with_fullscreen(Some(primary_monitor))
@@ -103,7 +109,7 @@ impl DisplayWindow {
         // Load all required fonts to interface
         // Notice: this depends on the in-use translation, as eg. CJK glyphs are not included in \
         //   the default font.
-        let fonts = match APP_ARGS.translation.as_str() {
+        let fonts = match self.app_args.translation.as_str() {
             "zh" | "ja" | "ko" => Fonts::new(
                 interface.fonts.insert(FONT_CJK_NOTOSANS_ALL.clone()),
                 interface.fonts.insert(FONT_CJK_NOTOSANS_ALL.clone()),
@@ -117,8 +123,16 @@ impl DisplayWindow {
         };
 
         // Create window contents drawer
-        let mut drawer =
-            DisplayDrawerBuilder::new(window, context, events_loop, &mut interface, fonts, chip);
+        let mut drawer = DisplayDrawerBuilder::new(
+            self.app_args.to_owned(),
+            window,
+            context,
+            events_loop,
+            &mut interface,
+            fonts,
+            chip,
+            self.i18n,
+        );
 
         drawer.run();
     }

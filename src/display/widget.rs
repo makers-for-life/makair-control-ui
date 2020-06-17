@@ -24,9 +24,9 @@ use crate::chip::{
 use crate::config::environment::*;
 use crate::physics::pressure::process_max_allowed_pressure;
 use crate::physics::types::DataPressure;
-use crate::APP_I18N;
 
 use super::fonts::Fonts;
+use crate::locale::accessor::LocaleAccessor;
 
 pub struct BackgroundWidgetConfig {
     color: conrod_core::color::Color,
@@ -400,11 +400,16 @@ pub enum ControlWidgetType<'a> {
 pub struct ControlWidget<'a> {
     ui: conrod_core::UiCell<'a>,
     fonts: &'a Fonts,
+    i18n: &'a LocaleAccessor,
 }
 
 impl<'a> ControlWidget<'a> {
-    pub fn new(ui: conrod_core::UiCell<'a>, fonts: &'a Fonts) -> ControlWidget<'a> {
-        ControlWidget { ui, fonts }
+    pub fn new(
+        ui: conrod_core::UiCell<'a>,
+        fonts: &'a Fonts,
+        i18n: &'a LocaleAccessor,
+    ) -> ControlWidget<'a> {
+        ControlWidget { ui, fonts, i18n }
     }
 
     pub fn render(&mut self, widget_type: ControlWidgetType<'a>) -> f64 {
@@ -484,7 +489,7 @@ impl<'a> ControlWidget<'a> {
         text_style.color = Some(color::WHITE);
         text_style.font_size = Some(14);
 
-        widget::text::Text::new(&APP_I18N.t("alarms-title"))
+        widget::text::Text::new(&self.i18n.t("alarms-title"))
             .with_style(text_style)
             .top_left_with_margins_on(
                 config.container,
@@ -502,7 +507,7 @@ impl<'a> ControlWidget<'a> {
                 self.alarm(&config, *code, alarm, x);
             }
         } else {
-            widget::text::Text::new(&APP_I18N.t("alarms-empty"))
+            widget::text::Text::new(&self.i18n.t("alarms-empty"))
                 .color(Color::Rgba(1.0, 1.0, 1.0, 0.5))
                 .font_size(12)
                 .right_from(config.title, 42.0)
@@ -719,9 +724,9 @@ impl<'a> ControlWidget<'a> {
         unit_box_style.border_color = Some(color::TRANSPARENT);
 
         let unit_text_value = if is_unit_stopped {
-            APP_I18N.t("status-unit-stopped")
+            self.i18n.t("status-unit-stopped")
         } else {
-            APP_I18N.t("status-unit-active")
+            self.i18n.t("status-unit-active")
         };
 
         canvas::Canvas::new()
@@ -766,7 +771,7 @@ impl<'a> ControlWidget<'a> {
             .set(config.power_box, &mut self.ui);
 
         let power_text_value = if is_battery_powered {
-            let mut value = APP_I18N.t("status-power-battery");
+            let mut value = self.i18n.t("status-power-battery");
 
             if let Some(battery_level) = config.battery_level {
                 value.push_str(" (");
@@ -776,7 +781,7 @@ impl<'a> ControlWidget<'a> {
 
             value
         } else {
-            APP_I18N.t("status-power-ac")
+            self.i18n.t("status-power-ac")
         };
 
         widget::text::Text::new(&power_text_value)
@@ -965,7 +970,7 @@ impl<'a> ControlWidget<'a> {
         text_style.color = Some(color::WHITE);
         text_style.font_size = Some(30);
 
-        widget::Text::new(&format!("{}\n{}", APP_I18N.t("error-title"), config.error)) // using \n instead of the wrap methods because I couldn't make them work
+        widget::Text::new(&format!("{}\n{}", self.i18n.t("error-title"), config.error)) // using \n instead of the wrap methods because I couldn't make them work
             .color(color::WHITE)
             .align_top() // Aligned to top otherwise I can't make the line breaks work
             .with_style(text_style)
@@ -1051,7 +1056,7 @@ impl<'a> ControlWidget<'a> {
         title_style.font_size = Some(19);
         title_style.font_id = Some(Some(self.fonts.bold));
 
-        widget::text::Text::new(&APP_I18N.t("stop-title"))
+        widget::text::Text::new(&self.i18n.t("stop-title"))
             .with_style(title_style)
             .mid_top_with_margin_on(config.container, DISPLAY_STOPPED_MESSAGE_PADDING_TOP)
             .set(config.title, &mut self.ui);
@@ -1061,7 +1066,7 @@ impl<'a> ControlWidget<'a> {
         message_style.font_size = Some(14);
         message_style.font_id = Some(Some(self.fonts.regular));
 
-        widget::text::Text::new(&APP_I18N.t("stop-description"))
+        widget::text::Text::new(&self.i18n.t("stop-description"))
             .with_style(message_style)
             .mid_bottom_with_margin_on(config.container, DISPLAY_STOPPED_MESSAGE_PADDING_BOTTOM)
             .set(config.message, &mut self.ui);
@@ -1076,7 +1081,7 @@ impl<'a> ControlWidget<'a> {
         text_style.color = Some(color::WHITE);
         text_style.font_size = Some(30);
 
-        widget::Text::new(&APP_I18N.t("no-data-title"))
+        widget::Text::new(&self.i18n.t("no-data-title"))
             .color(color::WHITE)
             .middle()
             .with_style(text_style)

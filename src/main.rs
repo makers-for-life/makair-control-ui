@@ -21,8 +21,8 @@ mod locale;
 mod lora;
 mod physics;
 mod serial;
+mod test_strategies;
 
-use std::ops::Deref;
 use std::str::FromStr;
 
 use clap::{App, Arg};
@@ -34,6 +34,7 @@ use config::logger::ConfigLogger;
 use display::window::DisplayWindowBuilder;
 use locale::accessor::LocaleAccessor;
 use locale::loader::LocaleLoader;
+use telemetry::structures::TelemetryMessage;
 
 #[derive(RustEmbed)]
 #[folder = "res/images/"]
@@ -47,7 +48,8 @@ pub struct EmbeddedFonts;
 #[folder = "res/locales/"]
 pub struct EmbeddedLocales;
 
-struct AppArgs {
+#[derive(Clone, Debug)]
+pub struct AppArgs {
     log: String,
     translation: String,
     mode: Mode,
@@ -66,17 +68,14 @@ impl AppArgs {
     }
 }
 
+#[derive(Clone, Debug)]
 pub enum Mode {
     Port {
         port: String,
         output_dir: Option<String>,
     },
     Input(String),
-}
-
-lazy_static! {
-    static ref APP_ARGS: AppArgs = make_app_args();
-    static ref APP_I18N: LocaleAccessor = make_app_i18n();
+    Test(Vec<TelemetryMessage>),
 }
 
 fn make_app_args() -> AppArgs {
@@ -174,35 +173,138 @@ fn make_app_args() -> AppArgs {
     }
 }
 
-fn make_app_i18n() -> LocaleAccessor {
-    LocaleLoader::new(&APP_ARGS.translation).into_accessor()
-}
-
-fn ensure_states() {
-    // Ensure all statics are valid (a `deref` is enough to lazily initialize them)
-    let (_, _) = (APP_ARGS.deref(), APP_I18N.deref());
+fn make_app_i18n(args: &AppArgs) -> LocaleAccessor {
+    LocaleLoader::new(&args.translation).into_accessor()
 }
 
 fn main() {
+    let app_args = make_app_args();
+
+    let app_i18n = make_app_i18n(&app_args);
+
     let _logger =
-        ConfigLogger::init(LevelFilter::from_str(&APP_ARGS.log).expect("invalid log level"));
+        ConfigLogger::init(LevelFilter::from_str(&app_args.log).expect("invalid log level"));
 
     info!("starting up");
 
-    // Ensure all states are bound
-    ensure_states();
-
     // Launch LORA init and get Sender for chip
-    let lora_sender = if APP_ARGS.lora && cfg!(feature = "lora") {
-        Some(LoraController::new())
+    let lora_sender = if app_args.lora && cfg!(feature = "lora") {
+        Some(LoraController::new(app_args.clone()))
     } else {
         None
     };
+
     // Create our "Chip" that will store all the data
     let chip = Chip::new(lora_sender);
 
     // Spawn window manager
-    DisplayWindowBuilder::new().spawn(chip);
+    DisplayWindowBuilder::new(app_args, &app_i18n).spawn(chip);
 
     info!("stopped");
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::chip::Chip;
+    use crate::display::window::DisplayWindowBuilder;
+    use crate::locale::loader::LocaleLoader;
+    use crate::AppArgs;
+    use telemetry::structures::TelemetryMessage;
+
+    #[test]
+    #[cfg(feature = "long-tests")]
+    fn test_gui_with_telemetry_messages() {
+        use crate::test_strategies::tests::TelemetryStrategies;
+        use proptest::collection;
+        use proptest::test_runner::TestRunner;
+        use std::cell::Cell;
+
+        let test_counter = Cell::new(0);
+
+        // With any sequence of TelemetryMessage, the GUI must not crash.
+        TestRunner::default()
+            .run(
+                &collection::vec(
+                    TelemetryStrategies::new().telemetry_message_strategy(),
+                    1..20,
+                ),
+                |msgs| {
+                    test_counter.set(&test_counter.get() + 1);
+                    println!(
+                        "Test counter:{}, msg.len:{}",
+                        &test_counter.get(),
+                        &msgs.len()
+                    );
+                    run_with_msgs(msgs);
+
+                    Ok(())
+                },
+            )
+            .unwrap();
+    }
+
+    #[test]
+    #[cfg(not(feature = "long-tests"))]
+    fn specfic_failing_telemetry_messages() {
+        use telemetry::structures::DataSnapshot;
+        use telemetry::structures::Phase::Inhalation;
+        use telemetry::structures::SubPhase::Inspiration;
+
+        run_with_msgs(vec![
+            TelemetryMessage::DataSnapshot(DataSnapshot {
+                version: "".to_string(),
+                device_id: "0-0-0".to_string(),
+                systick: 1_000_000,
+                centile: 0,
+                pressure: 100,
+                phase: Inhalation,
+                subphase: Inspiration,
+                blower_valve_position: 0,
+                patient_valve_position: 0,
+                blower_rpm: 0,
+                battery_level: 0,
+            }),
+            TelemetryMessage::DataSnapshot(DataSnapshot {
+                version: "".to_string(),
+                device_id: "0-0-0".to_string(),
+                systick: 1_000_001,
+                centile: 0,
+                pressure: 0,
+                phase: Inhalation,
+                subphase: Inspiration,
+                blower_valve_position: 0,
+                patient_valve_position: 0,
+                blower_rpm: 0,
+                battery_level: 0,
+            }),
+            TelemetryMessage::DataSnapshot(DataSnapshot {
+                version: "".to_string(),
+                device_id: "0-0-0".to_string(),
+                systick: 1_000_000,
+                centile: 0,
+                pressure: 50,
+                phase: Inhalation,
+                subphase: Inspiration,
+                blower_valve_position: 0,
+                patient_valve_position: 0,
+                blower_rpm: 0,
+                battery_level: 0,
+            }),
+        ]);
+    }
+
+    fn run_with_msgs(msgs: Vec<TelemetryMessage>) {
+        DisplayWindowBuilder::new(
+            AppArgs {
+                log: "test".to_string(),
+                translation: "en".to_string(),
+                mode: super::Mode::Test(msgs),
+                fullscreen: false,
+                lora: false,
+                lora_device: "".to_string(),
+            },
+            &LocaleLoader::new("en").into_accessor(),
+        )
+        .spawn(Chip::new(None));
+    }
 }

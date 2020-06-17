@@ -3,6 +3,7 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+use crate::AppArgs;
 use std::sync::mpsc::Sender;
 use telemetry::structures::TelemetryMessage;
 
@@ -11,9 +12,8 @@ pub struct LoraController {}
 impl LoraController {
     #[allow(clippy::new_ret_no_self)]
     #[cfg(feature = "lora")]
-    pub fn new() -> Sender<TelemetryMessage> {
+    pub fn new(app_args: AppArgs) -> Sender<TelemetryMessage> {
         use crate::config::environment::*;
-        use crate::APP_ARGS;
         use rn2903::Rn2903;
         use std::sync::mpsc;
         use std::sync::mpsc::channel;
@@ -31,6 +31,7 @@ impl LoraController {
             sleep(Duration::from_millis(2000));
 
             loop {
+                let lora_device = app_args.lora_device.clone();
                 let mylora = Pin::new(LORA_GPIO_PIN_NUMBER); // number depends on chip, etc.
                 let lora_setup = mylora.with_exported(|| {
                     println!("set the pin direction");
@@ -63,7 +64,7 @@ impl LoraController {
                 thread::spawn(move || {
                     let (lock, cvar) = &*pair2;
                     let mut device = lock.lock().unwrap();
-                    *device = Some(Rn2903::new_at(&APP_ARGS.lora_device));
+                    *device = Some(Rn2903::new_at(lora_device));
                     // We notify the condvar that the value has changed.
                     cvar.notify_one();
                 });

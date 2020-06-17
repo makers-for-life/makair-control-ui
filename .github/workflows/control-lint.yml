@@ -37,7 +37,12 @@ jobs:
         with:
           command: build
 
-      - name: Test lib
-        uses: actions-rs/cargo@v1.0.1
+      - name: Run headless tests
+        uses: GabrielBB/xvfb-action@v1.0
         with:
-          command: test
+          run: cargo test
+
+      - name: Run headless long-tests
+        uses: GabrielBB/xvfb-action@v1.0
+        with:
+          run: cargo test --features long-tests -- --nocapture
