@@ -1336,7 +1336,7 @@ impl<'a> ControlWidget<'a> {
         plateau_value_style.font_size = Some(20);
 
         widget::Text::new(
-            format!("{}", config.trigger_inspiratory_settings.expiratory_term).as_str(),
+            format!("{:.1}", config.trigger_inspiratory_settings.expiratory_term as f64 / 10.0).as_str(),
         )
         .with_style(plateau_value_style)
         .right_from(config.exp_ratio_less_button_widget, 20.0)
