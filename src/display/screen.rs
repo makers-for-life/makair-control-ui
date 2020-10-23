@@ -447,7 +447,11 @@ impl<'a> Screen<'a> {
                     .round()
                     .to_string(),
             ),
-            value_target: Some(machine_snapshot.peak_command.to_string()),
+            value_target: Some(
+                (machine_snapshot.peak_command as f64 / 10.0)
+                    .round()
+                    .to_string(),
+            ),
             value_arrow: telemetry_data.arrow_image_id,
             unit: APP_I18N.t("telemetry-unit-cmh2o"),
             ids: (
@@ -477,7 +481,11 @@ impl<'a> Screen<'a> {
                     .round()
                     .to_string(),
             ),
-            value_target: Some(machine_snapshot.plateau_command.to_string()),
+            value_target: Some(
+                (machine_snapshot.plateau_command as f64 / 10.0)
+                    .round()
+                    .to_string(),
+            ),
             value_arrow: telemetry_data.arrow_image_id,
             unit: APP_I18N.t("telemetry-unit-cmh2o"),
             ids: (
@@ -508,7 +516,11 @@ impl<'a> Screen<'a> {
                     .round()
                     .to_string(),
             ),
-            value_target: Some(machine_snapshot.peep_command.to_string()),
+            value_target: Some(
+                (machine_snapshot.peep_command as f64 / 10.0)
+                    .round()
+                    .to_string(),
+            ),
             value_arrow: telemetry_data.arrow_image_id,
             unit: APP_I18N.t("telemetry-unit-cmh2o"),
             ids: (
