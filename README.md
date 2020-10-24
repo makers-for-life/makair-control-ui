@@ -19,7 +19,7 @@
 In order to setup your environment and build the code, please follow the following commands (for MacOS):
 
 1. Install [Rustup](https://rustup.rs/)
-2. Ènsure you are using the Rust stable toolchain: `rustup default stable`
+2. Ensure you are using the Rust stable toolchain: `rustup default stable`
 3. On Linux, make sure you have cmake installed and those libraries (debian):
   `libxcb-shape0 libxcb-shape0-dev libxcb-xfixes0 libxcb-xfixes0-dev libfontconfig libfontconfig1-dev`
 4. Build the project: `cargo build`
