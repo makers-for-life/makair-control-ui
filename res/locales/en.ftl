@@ -3,7 +3,7 @@ telemetry-label-plateau = P(plateau)
 telemetry-label-expiratory = P(expiratory)
 telemetry-label-cycles = Cycles/minute
 telemetry-label-ratio = Insp-exp ratio
-telemetry-label-ratio-plateau = Plateau duration: { $milliseconds }ms
+telemetry-label-ratio-plateau = Plateau duration:
 telemetry-label-tidal = Tidal volume
 
 telemetry-value-empty = n/a
