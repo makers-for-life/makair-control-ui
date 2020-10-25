@@ -14,10 +14,6 @@ const EXPIRATORY_TERM_MAX: usize = 60;
 const EXPIRATORY_TERM_MIN: usize = 10;
 const EXPIRATORY_TERM_STEP: usize = 1;
 
-#[allow(dead_code)]
-const PLATEAU_DURATION_MAX: Duration = Duration::from_millis(3000);
-const PLATEAU_DURATION_STEP: Duration = Duration::from_millis(50);
-
 #[derive(Debug)]
 pub enum TriggerEvent {
     Toggle,
@@ -58,8 +54,6 @@ impl Trigger {
             TriggerEvent::InspiratoryTriggerOffset(action) => {
                 self.set_inspiratory_trigger_offset(action)
             }
-            // TODO
-            // TriggerEvent::PlateauDuration(action) => self.set_plateau_duration(action),
             TriggerEvent::ExpiratoryTerm(action) => self.set_expiratory_term(action),
         }
     }
@@ -103,29 +97,6 @@ impl Trigger {
             setting: ControlSetting::TriggerOffset,
             value: new_value as u16,
         }
-    }
-
-    #[allow(dead_code, unreachable_code, unused_variables)]
-    fn set_plateau_duration(&self, action: SettingAction) -> ControlMessage {
-        unimplemented!("the ControlMessage for this setting is not implemented");
-
-        let new_value = match action {
-            SettingAction::More => {
-                let new_value = self.plateau_duration + PLATEAU_DURATION_STEP;
-                if new_value <= PLATEAU_DURATION_MAX {
-                    new_value
-                } else {
-                    self.plateau_duration
-                }
-            }
-            SettingAction::Less => {
-                if self.plateau_duration != Duration::from_millis(0) {
-                    self.plateau_duration - PLATEAU_DURATION_STEP
-                } else {
-                    self.plateau_duration
-                }
-            }
-        };
     }
 
     fn set_expiratory_term(&self, action: SettingAction) -> ControlMessage {

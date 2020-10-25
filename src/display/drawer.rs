@@ -24,9 +24,8 @@ use super::support::GliumDisplayWinitWrapper;
 
 const FRAMERATE: u64 = 30;
 
-#[allow(dead_code)]
 pub struct DisplayDrawerBuilder<'a> {
-    phantom: &'a std::marker::PhantomData<u8>,
+    _phantom: &'a std::marker::PhantomData<u8>,
 }
 
 pub struct DisplayDrawer<'a> {
