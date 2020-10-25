@@ -9,10 +9,10 @@ use glium::glutin::{ContextBuilder, EventsLoop, WindowBuilder};
 use image::load_from_memory;
 use inflate::inflate_bytes_zlib;
 
-use crate::EmbeddedFonts;
-use crate::EmbeddedImages;
 use crate::chip::Chip;
 use crate::config::environment::*;
+use crate::EmbeddedFonts;
+use crate::EmbeddedImages;
 use crate::APP_ARGS;
 
 use super::drawer::DisplayDrawerBuilder;
