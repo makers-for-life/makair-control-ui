@@ -21,7 +21,7 @@ jobs:
           sudo apt-get install -y libxcb-shape0 libxcb-shape0-dev libxcb-xfixes0 libxcb-xfixes0-dev libudev-dev
 
       - name: Lint
-        uses: actions-rs/clippy-check@v1.0.5
+        uses: actions-rs/clippy-check@v1.0.7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --all-targets --all-features -- -D warnings

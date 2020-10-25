@@ -36,6 +36,6 @@ error-title = An error happened:
 modal-save = Save
 
 stop-title = Ventilator unit inactive
-stop-description = Please re-enable it to resume respiration
+stop-description = Please re-enable it to resume ventilation
 
 no-data-title = Device disconnected or no data received
