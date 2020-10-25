@@ -7,7 +7,6 @@ telemetry-label-tidal = Дихальний обсяг
 
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-per-minute = /хвилина
-telemetry-unit-insp-on-total = Вдих:Видих
 telemetry-unit-milliliters = мілілітрів
 
 alarms-title = ТРИВОГИ

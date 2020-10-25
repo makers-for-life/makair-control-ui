@@ -7,7 +7,6 @@ telemetry-label-tidal = Volumen corriente
 
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-per-minute = /minuto
-telemetry-unit-insp-on-total = Insp.:Exp.
 telemetry-unit-milliliters = mL (mililitros)
 
 alarms-title = ALARMAS

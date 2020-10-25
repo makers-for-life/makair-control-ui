@@ -7,7 +7,6 @@ telemetry-label-tidal = Atemzugvolumen
 
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-per-minute = /minute
-telemetry-unit-insp-on-total = atem.:aus.
 telemetry-unit-milliliters = mL (milliliter)
 
 alarms-title = ALARME

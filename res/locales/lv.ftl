@@ -7,7 +7,6 @@ telemetry-label-tidal = Plūdmaiņas tilpums
 
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-per-minute = /minutē
-telemetry-unit-insp-on-total = ieel.:izel.
 telemetry-unit-milliliters = mL (mililitri)
 
 alarms-title = TRAUKSME

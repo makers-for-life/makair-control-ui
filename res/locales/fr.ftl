@@ -11,7 +11,6 @@ telemetry-value-empty = n/a
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-mmh2o = mmH2O
 telemetry-unit-per-minute = /minute
-telemetry-unit-insp-on-total = insp.:exp.
 telemetry-unit-milliliters = mL (millilitres)
 telemetry-unit-milliseconds = ms
 
