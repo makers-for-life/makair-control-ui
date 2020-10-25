@@ -3,10 +3,6 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-use crate::chip::settings::{
-    trigger::{Trigger, TriggerEvent},
-    ChipSettingsEvent, SettingAction,
-};
 use chrono::{DateTime, NaiveDateTime, Utc};
 use conrod_core::widget::Id as WidgetId;
 use conrod_core::Ui;
@@ -16,17 +12,17 @@ use plotters::prelude::*;
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
-use crate::EmbeddedImages;
-
-use crate::config::environment::*;
-
+use crate::chip::settings::{
+    trigger::{Trigger, TriggerEvent},
+    ChipSettingsEvent, SettingAction,
+};
 use crate::chip::ChipState;
-use crate::physics::types::DataPressure;
-
-use crate::APP_ARGS;
-
+use crate::config::environment::*;
 #[cfg(feature = "graph-scaler")]
 use crate::physics::pressure::process_max_allowed_pressure;
+use crate::physics::types::DataPressure;
+use crate::EmbeddedImages;
+use crate::APP_ARGS;
 
 use super::fonts::Fonts;
 use super::screen::{
@@ -295,10 +291,12 @@ impl DisplayRenderer {
         mut image_map: conrod_core::image::Map<texture::Texture2d>,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let bootloader_logo_image_texture = self.draw_bootloader_logo(display);
+
         let (bootloader_logo_width, bootloader_logo_height) = (
             bootloader_logo_image_texture.get_width(),
             bootloader_logo_image_texture.get_height().unwrap(),
         );
+
         let image_id = image_map.insert(bootloader_logo_image_texture);
 
         let ui = interface.set_widgets();
@@ -346,18 +344,22 @@ impl DisplayRenderer {
     ) -> conrod_core::image::Map<texture::Texture2d> {
         // Create branding
         let branding_image_texture = self.draw_branding(display);
+
         let (branding_width, branding_height) = (
             branding_image_texture.get_width(),
             branding_image_texture.get_height().unwrap(),
         );
+
         let branding_image_id = image_map.insert(branding_image_texture);
 
         // Create graph
         let graph_image_texture = self.draw_data_chart(data_pressure, machine_snapshot, display);
+
         let (graph_width, graph_height) = (
             graph_image_texture.get_width(),
             graph_image_texture.get_height().unwrap(),
         );
+
         let graph_image_id = image_map.insert(graph_image_texture);
 
         // Create telemetry
@@ -366,6 +368,7 @@ impl DisplayRenderer {
 
         // Create widgets
         let mut ui = interface.set_widgets();
+
         let ongoing_alarms_len = ongoing_alarms.len();
         let widgets_alarms_len = self.ids.alarm_alarms.len();
 
@@ -391,6 +394,7 @@ impl DisplayRenderer {
         } else {
             let diff = widgets_alarms_len - ongoing_alarms_len;
             let useless_id = &mut ui.widget_id_generator();
+
             if diff > 0 {
                 self.ids.alarm_alarms.resize(ongoing_alarms_len, useless_id);
                 self.ids
@@ -460,6 +464,7 @@ impl DisplayRenderer {
                 self.trigger_settings_state == DisplayRendererSettingsState::Opened,
                 self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened,
             ),
+
             ChipState::Stopped => screen.render_stop(
                 screen_data_branding,
                 screen_data_status,
@@ -470,6 +475,7 @@ impl DisplayRenderer {
                 self.trigger_settings_state == DisplayRendererSettingsState::Opened,
                 self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened,
             ),
+
             _ => unreachable!(),
         };
 

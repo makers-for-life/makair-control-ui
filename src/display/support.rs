@@ -6,7 +6,6 @@
 use conrod_winit::WinitWindow;
 
 pub struct GliumDisplayWinitWrapper(pub glium::Display);
-
 pub struct EventLoop;
 
 impl WinitWindow for GliumDisplayWinitWrapper {

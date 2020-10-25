@@ -664,17 +664,18 @@ impl<'a> Screen<'a> {
     }
 
     fn render_trigger_settings(&mut self, settings: &'a Trigger) {
-        let padding = 20.0;
         self.render_modal(
             TRIGGER_SETTINGS_MODAL_WIDTH,
             TRIGGER_SETTINGS_MODAL_HEIGTH,
-            Some(padding),
+            Some(TRIGGER_SETTINGS_MODAL_PADDING),
             Some((self.ids.modal_validate, self.ids.modal_validate_text)),
         );
 
         let config = TriggerWidgetConfig {
             width: TRIGGER_SETTINGS_MODAL_WIDTH,
-            height: TRIGGER_SETTINGS_MODAL_HEIGTH - MODAL_VALIDATE_BUTTON_HEIGHT - (padding * 2.0),
+            height: TRIGGER_SETTINGS_MODAL_HEIGTH
+                - MODAL_VALIDATE_BUTTON_HEIGHT
+                - (TRIGGER_SETTINGS_MODAL_PADDING * 2.0),
             trigger_settings: settings,
 
             status_container_parent: self.ids.modal_container,
@@ -697,11 +698,10 @@ impl<'a> Screen<'a> {
     }
 
     fn render_exp_ratio_settings(&mut self, settings: &'a Trigger) {
-        let padding = 20.0;
         self.render_modal(
             EXP_RATIO_SETTINGS_MODAL_WIDTH,
             EXP_RATIO_SETTINGS_MODAL_HEIGTH,
-            Some(padding),
+            Some(EXP_RATIO_SETTINGS_MODAL_PADDING),
             Some((self.ids.modal_validate, self.ids.modal_validate_text)),
         );
 
@@ -709,7 +709,7 @@ impl<'a> Screen<'a> {
             width: EXP_RATIO_SETTINGS_MODAL_WIDTH,
             height: EXP_RATIO_SETTINGS_MODAL_HEIGTH
                 - MODAL_VALIDATE_BUTTON_HEIGHT
-                - (padding * 2.0),
+                - (EXP_RATIO_SETTINGS_MODAL_PADDING * 2.0),
             trigger_settings: settings,
 
             exp_ratio_container_parent: self.ids.modal_container,

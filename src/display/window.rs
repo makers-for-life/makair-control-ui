@@ -11,11 +11,9 @@ use inflate::inflate_bytes_zlib;
 
 use crate::EmbeddedFonts;
 use crate::EmbeddedImages;
-
+use crate::chip::Chip;
 use crate::config::environment::*;
 use crate::APP_ARGS;
-
-use crate::chip::Chip;
 
 use super::drawer::DisplayDrawerBuilder;
 use super::fonts::Fonts;

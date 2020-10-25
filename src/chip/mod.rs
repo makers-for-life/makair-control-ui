@@ -8,17 +8,18 @@ pub mod settings;
 use chrono::{offset::Utc, DateTime, Duration};
 use std::collections::{HashMap, VecDeque};
 use std::convert::TryFrom;
-
-use crate::config::environment::*;
-use crate::physics::types::DataPressure;
-use settings::{trigger::TriggerState, ChipSettings, ChipSettingsEvent};
 use std::sync::mpsc::{self, Receiver, Sender};
+
+use settings::{trigger::TriggerState, ChipSettings, ChipSettingsEvent};
 use telemetry::alarm::{AlarmCode, RMC_SW_1, RMC_SW_11, RMC_SW_12, RMC_SW_14, RMC_SW_15, RMC_SW_3};
 use telemetry::control::{ControlMessage, ControlSetting};
 use telemetry::serial::core;
 use telemetry::structures::{
     AlarmPriority, ControlAck, DataSnapshot, MachineStateSnapshot, TelemetryMessage,
 };
+
+use crate::config::environment::*;
+use crate::physics::types::DataPressure;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum ChipState {
