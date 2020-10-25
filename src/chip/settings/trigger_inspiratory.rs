@@ -1,3 +1,8 @@
+// MakAir Control UI
+//
+// Copyright: 2020, Makers For Life
+// License: Public Domain License
+
 use crate::chip::settings::SettingAction;
 use std::time::Duration;
 use telemetry::control::{ControlMessage, ControlSetting};

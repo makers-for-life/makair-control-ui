@@ -1,3 +1,8 @@
+// MakAir Control UI
+//
+// Copyright: 2020, Makers For Life
+// License: Public Domain License
+
 pub mod trigger_inspiratory;
 
 use telemetry::control::ControlMessage;
