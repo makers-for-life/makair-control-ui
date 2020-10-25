@@ -558,9 +558,9 @@ impl<'a> Screen<'a> {
         let ratio_config = TelemetryWidgetConfig {
             title: APP_I18N.t("telemetry-label-ratio"),
             value_measured: Some(format!(
-                "{}:{}",
+                "{}:{:.1}",
                 CYCLE_RATIO_INSPIRATION,
-                convert_mmh2o_to_cmh2o(machine_snapshot.expiratory_term as f64).to_string(),
+                machine_snapshot.expiratory_term as f64 / 10.0,
             )),
             value_target: None,
             value_arrow: telemetry_data.arrow_image_id,
