@@ -591,6 +591,7 @@ impl DisplayRenderer {
                     .map(|x| x.1 as i32)
                     .collect::<Vec<i32>>();
 
+                #[allow(clippy::stable-sort-primitive)]
                 data_pressure_points_ordered.sort();
 
                 *data_pressure_points_ordered.last().unwrap_or(&0)

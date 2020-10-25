@@ -593,7 +593,7 @@ impl<'a> Screen<'a> {
         let previous_volume = machine_snapshot
             .previous_volume
             .map(|v| format!("{}", v))
-            .unwrap_or(APP_I18N.t("telemetry-value-empty"));
+            .unwrap_or_else(|| APP_I18N.t("telemetry-value-empty"));
 
         let tidal_config = TelemetryWidgetConfig {
             title: APP_I18N.t("telemetry-label-tidal"),
