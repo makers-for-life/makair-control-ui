@@ -65,7 +65,7 @@ impl Chip {
         // send to LORA - can be moved if usefull
         if let Some(tx_for_lora) = &self.tx_for_lora {
             if let Err(e) = tx_for_lora.send(event.clone()) {
-                error!("problem while sending data to LORA {:?}", e);
+                error!("problem while sending data to lora: {:?}", e);
             }
         };
 
@@ -131,20 +131,22 @@ impl Chip {
     pub fn new_settings_events(&mut self, events: Vec<ChipSettingsEvent>) {
         for event in events {
             let message = self.settings.new_settings_event(event);
+
             debug!(
-                "New event: {:?}, sender: {:?}",
+                "new event: {:?}, sender: {:?}",
                 message, self.channel_for_settings
             );
+
             if let Some(tx) = &self.channel_for_settings {
                 if let Err(e) = tx.send(message.clone()) {
                     // TODO: Maybe we could add an alarm with this problem
                     // TODO2: Revert the value if it can't be sent?
                     error!(
-                        "Error sending message {:?} to the control unit: {:?}",
+                        "error sending message {:?} to the control unit: {:?}",
                         message, e
                     );
                 } else {
-                    debug!("Setting message {:?} sent!", message);
+                    debug!("setting message {:?} sent!", message);
                 }
             }
         }

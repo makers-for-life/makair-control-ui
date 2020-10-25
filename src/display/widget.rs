@@ -1036,7 +1036,7 @@ impl<'a> ControlWidget<'a> {
             validate_text_style.color = Some(color::BLACK);
             validate_text_style.font_size = Some(20);
 
-            widget::Text::new("Save")
+            widget::Text::new(&APP_I18N.t("modal-save"))
                 .with_style(validate_text_style)
                 .mid_top_with_margin_on(validate_button, 2.0)
                 .set(validate_text, &mut self.ui);
@@ -1136,14 +1136,14 @@ impl<'a> ControlWidget<'a> {
         status_text_style.color = Some(color::WHITE);
         status_text_style.font_size = Some(20);
 
-        widget::Text::new("Trigger inspiratory status:")
+        widget::Text::new(&APP_I18N.t("trigger-inspiratory-status"))
             .with_style(status_text_style)
             .top_left_of(config.status_container_widget)
             .set(config.status_enabled_text_widget, &mut self.ui);
 
         let status_label = match config.trigger_inspiratory_settings.state {
-            TriggerInspiratoryState::Enabled => String::from("Enabled"),
-            TriggerInspiratoryState::Disabled => String::from("Disabled"),
+            TriggerInspiratoryState::Enabled => APP_I18N.t("trigger-state-enabled"),
+            TriggerInspiratoryState::Disabled => APP_I18N.t("trigger-state-disabled"),
         };
 
         let status_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
@@ -1173,7 +1173,7 @@ impl<'a> ControlWidget<'a> {
         offset_text_style.color = Some(color::WHITE);
         offset_text_style.font_size = Some(20);
 
-        widget::Text::new("Inspiratory trigger offset:")
+        widget::Text::new(&APP_I18N.t("trigger-inspiratory-offset"))
             .with_style(offset_text_style)
             .top_left_of(config.inspiratory_offset_container_parent)
             .set(config.inspiratory_offset_text_widget, &mut self.ui);
@@ -1204,10 +1204,11 @@ impl<'a> ControlWidget<'a> {
 
         widget::Text::new(
             format!(
-                "{} mmH2O",
+                "{} {}",
                 config
                     .trigger_inspiratory_settings
-                    .inspiratory_trigger_offset
+                    .inspiratory_trigger_offset,
+                APP_I18N.t("telemetry-unit-mmh2o")
             )
             .as_str(),
         )
@@ -1251,7 +1252,7 @@ impl<'a> ControlWidget<'a> {
         text_style.color = Some(color::WHITE);
         text_style.font_size = Some(20);
 
-        widget::Text::new("Trigger")
+        widget::Text::new(&APP_I18N.t("trigger-label-title"))
             .with_style(text_style)
             .top_left_of(config.container)
             .set(config.title_widget, &mut self.ui);
@@ -1265,12 +1266,12 @@ impl<'a> ControlWidget<'a> {
 
         let status =
             if config.trigger_inspiratory_settings.state == TriggerInspiratoryState::Enabled {
-                "Enabled".to_string()
+                APP_I18N.t("trigger-state-enabled")
             } else {
-                "Disabled".to_string()
+                APP_I18N.t("trigger-state-disabled")
             };
 
-        widget::Text::new(&format!("State: {}", status))
+        widget::Text::new(&format!("{} {}", APP_I18N.t("trigger-label-state"), status))
             .with_style(text_style)
             .down_from(config.title_widget, 20.0)
             .set(config.status_widget, &mut self.ui);
@@ -1283,10 +1284,12 @@ impl<'a> ControlWidget<'a> {
         text_style.font_size = Some(15);
 
         widget::Text::new(&format!(
-            "Offset: {} mmH2O",
+            "{} {} {}",
+            APP_I18N.t("trigger-label-offset"),
             config
                 .trigger_inspiratory_settings
-                .inspiratory_trigger_offset
+                .inspiratory_trigger_offset,
+            APP_I18N.t("telemetry-unit-mmh2o")
         ))
         .with_style(text_style)
         .down_from(config.status_widget, 20.0)
@@ -1309,7 +1312,7 @@ impl<'a> ControlWidget<'a> {
         plateau_text_style.color = Some(color::WHITE);
         plateau_text_style.font_size = Some(20);
 
-        widget::Text::new("Expiratory Term")
+        widget::Text::new(&APP_I18N.t("trigger-expiratory-term"))
             .with_style(plateau_text_style)
             .top_left_of(config.exp_ratio_container_widget)
             .set(config.exp_ratio_text_widget, &mut self.ui);

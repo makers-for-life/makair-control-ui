@@ -262,7 +262,9 @@ impl<'a> Screen<'a> {
             LAYOUT_FOOTER_SIZE_HEIGHT,
             self.ids.layout_footer,
         );
+
         let config = LayoutConfig::new(header_config, body_config, footer_config);
+
         self.widgets.render(ControlWidgetType::Layout(config));
     }
 
@@ -568,8 +570,10 @@ impl<'a> Screen<'a> {
             value_target: None,
             value_arrow: telemetry_data.arrow_image_id,
             unit: format!(
-                "Plateau duration: {}ms",
-                trigger_inspiratory.get_plateau_duration()
+                "{} {}{}",
+                APP_I18N.t("telemetry-label-ratio-plateau"),
+                trigger_inspiratory.get_plateau_duration(),
+                APP_I18N.t("telemetry-unit-milliseconds")
             ),
             ids: (
                 self.ids.cycles_parent,
@@ -594,7 +598,7 @@ impl<'a> Screen<'a> {
         let previous_volume = machine_snapshot
             .previous_volume
             .map(|v| format!("{}", v))
-            .unwrap_or_else(|| "n/a".to_string());
+            .unwrap_or(APP_I18N.t("telemetry-value-empty"));
 
         let tidal_config = TelemetryWidgetConfig {
             title: APP_I18N.t("telemetry-label-tidal"),

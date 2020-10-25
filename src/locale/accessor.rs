@@ -4,7 +4,7 @@
 // License: Public Domain License
 
 use fluent::concurrent::FluentBundle;
-use fluent::FluentResource;
+use fluent::{FluentArgs, FluentResource};
 use unic_langid::LanguageIdentifier;
 
 pub struct LocaleAccessor {
@@ -23,6 +23,10 @@ impl LocaleAccessor {
     }
 
     pub fn t(&self, key: &str) -> String {
+        self.process(key, None)
+    }
+
+    fn process(&self, key: &str, arguments: Option<&FluentArgs>) -> String {
         let mut errors = vec![];
 
         let message = self
@@ -32,7 +36,7 @@ impl LocaleAccessor {
 
         // Notice: return the key if the message has no value (eg. not yet translated)
         if let Some(pattern) = message.value {
-            let formatted = self.bundle.format_pattern(&pattern, None, &mut errors);
+            let formatted = self.bundle.format_pattern(&pattern, arguments, &mut errors);
 
             // Any error? Panic
             if !errors.is_empty() {

@@ -136,7 +136,9 @@ impl<'a> DisplayDrawer<'a> {
             crate::Mode::Port { port, output_dir } => {
                 let optional_file_buffer = output_dir.as_ref().map(|dir| {
                     let file_count: Vec<std::io::Result<std::fs::DirEntry>> =
-                        std::fs::read_dir(dir).expect("Should read dir").collect();
+                        std::fs::read_dir(dir)
+                            .expect("should read directory")
+                            .collect();
                     let path = format!(
                         "{}/{}-{}.record",
                         &dir,

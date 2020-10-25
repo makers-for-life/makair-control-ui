@@ -149,7 +149,8 @@ fn make_app_args() -> AppArgs {
         },
         (None, Some(i)) => Mode::Input(i.to_string()),
         (None, None) => {
-            eprintln!("You should provide either a serial port (-p) or an input file (-i)");
+            eprintln!("you should provide either a serial port (-p) or an input file (-i)");
+
             std::process::exit(1);
         }
     };

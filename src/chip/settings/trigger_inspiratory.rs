@@ -106,7 +106,7 @@ impl TriggerInspiratory {
 
     #[allow(dead_code, unreachable_code, unused_variables)]
     fn set_plateau_duration(&self, action: SettingAction) -> ControlMessage {
-        unimplemented!("The ControlMessage for this setting isn't implemented");
+        unimplemented!("the ControlMessage for this setting is not implemented");
 
         let new_value = match action {
             SettingAction::More => {
