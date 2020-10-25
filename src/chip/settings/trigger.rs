@@ -18,7 +18,6 @@ const EXPIRATORY_TERM_STEP: usize = 1;
 pub enum TriggerEvent {
     Toggle,
     InspiratoryTriggerOffset(SettingAction),
-    //PlateauDuration(SettingAction),
     ExpiratoryTerm(SettingAction),
 }
 
