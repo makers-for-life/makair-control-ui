@@ -443,9 +443,7 @@ impl<'a> Screen<'a> {
             value_measured: Some(
                 convert_mmh2o_to_cmh2o(machine_snapshot.previous_peak_pressure as f64).to_string(),
             ),
-            value_target: Some(
-                convert_mmh2o_to_cmh2o(machine_snapshot.peak_command as f64).to_string(),
-            ),
+            value_target: Some(machine_snapshot.peak_command.to_string()),
             value_arrow: telemetry_data.arrow_image_id,
             unit: APP_I18N.t("telemetry-unit-cmh2o"),
             ids: (
@@ -474,9 +472,7 @@ impl<'a> Screen<'a> {
                 convert_mmh2o_to_cmh2o(machine_snapshot.previous_plateau_pressure as f64)
                     .to_string(),
             ),
-            value_target: Some(
-                convert_mmh2o_to_cmh2o(machine_snapshot.plateau_command as f64).to_string(),
-            ),
+            value_target: Some(machine_snapshot.plateau_command.to_string()),
             value_arrow: telemetry_data.arrow_image_id,
             unit: APP_I18N.t("telemetry-unit-cmh2o"),
             ids: (
@@ -505,9 +501,7 @@ impl<'a> Screen<'a> {
             value_measured: Some(
                 convert_mmh2o_to_cmh2o(machine_snapshot.previous_peep_pressure as f64).to_string(),
             ),
-            value_target: Some(
-                convert_mmh2o_to_cmh2o(machine_snapshot.peep_command as f64).to_string(),
-            ),
+            value_target: Some(machine_snapshot.peep_command.to_string()),
             value_arrow: telemetry_data.arrow_image_id,
             unit: APP_I18N.t("telemetry-unit-cmh2o"),
             ids: (
