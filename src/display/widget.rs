@@ -893,7 +893,7 @@ impl<'a> ControlWidget<'a> {
 
         value_text_style.font_id = Some(Some(self.fonts.bold));
         value_text_style.color = Some(color::WHITE);
-        value_text_style.font_size = Some(45);
+        value_text_style.font_size = Some(40);
 
         // Create value text
         // Notice: there are different drawing cases depending on values provided
@@ -904,7 +904,7 @@ impl<'a> ControlWidget<'a> {
 
                 target_text_style.font_id = Some(Some(self.fonts.regular));
                 target_text_style.color = Some(color::WHITE);
-                target_text_style.font_size = Some(35);
+                target_text_style.font_size = Some(29);
 
                 // Draw measured value
                 widget::Text::new(&value_measured)
@@ -916,7 +916,7 @@ impl<'a> ControlWidget<'a> {
                 widget::Image::new(config.value_arrow)
                     .w_h(TELEMETRY_ARROW_WIDTH as f64, TELEMETRY_ARROW_HEIGHT as f64)
                     .right_from(config.ids.3, TELEMETRY_ARROW_SPACING_SIDES)
-                    .y_relative_to(config.ids.3, -8.0)
+                    .y_relative_to(config.ids.3, -7.0)
                     .set(config.ids.4, &mut self.ui);
 
                 // Draw target value
@@ -944,15 +944,21 @@ impl<'a> ControlWidget<'a> {
         }
 
         if let Some(unit_id) = config.ids.6 {
+            // Initiate text sub-style for target value
+            let mut unit_text_style = conrod_core::widget::primitive::text::Style::default();
+
+            unit_text_style.font_id = Some(Some(self.fonts.regular));
+            unit_text_style.color = Some(color::WHITE.with_alpha(0.2));
+            unit_text_style.font_size = Some(13);
+
             // Create unit text
             widget::Text::new(&config.unit)
-                .color(color::WHITE.with_alpha(0.2))
+                .with_style(unit_text_style)
                 .bottom_left_with_margins_on(
                     config.ids.1,
                     TELEMETRY_WIDGET_UNIT_PADDING_BOTTOM,
                     TELEMETRY_WIDGET_PADDING_LEFT,
                 )
-                .font_size(12)
                 .set(unit_id, &mut self.ui);
         }
 
