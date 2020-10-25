@@ -1201,9 +1201,9 @@ impl<'a> ControlWidget<'a> {
 
         widget::Text::new(
             format!(
-                "{} {}",
-                config.trigger_settings.inspiratory_trigger_offset,
-                APP_I18N.t("telemetry-unit-mmh2o")
+                "{:.1} {}",
+                convert_mmh2o_to_cmh2o(config.trigger_settings.inspiratory_trigger_offset as f64),
+                APP_I18N.t("telemetry-unit-cmh2o")
             )
             .as_str(),
         )
@@ -1278,10 +1278,10 @@ impl<'a> ControlWidget<'a> {
         text_style.font_size = Some(15);
 
         widget::Text::new(&format!(
-            "{} {} {}",
+            "{} {:.1} {}",
             APP_I18N.t("trigger-label-offset"),
-            config.trigger_settings.inspiratory_trigger_offset,
-            APP_I18N.t("telemetry-unit-mmh2o")
+            convert_mmh2o_to_cmh2o(config.trigger_settings.inspiratory_trigger_offset as f64),
+            APP_I18N.t("telemetry-unit-cmh2o")
         ))
         .with_style(text_style)
         .down_from(config.status_widget, 20.0)
