@@ -29,7 +29,7 @@ use clap::{App, Arg};
 use log::LevelFilter;
 
 use crate::chip::Chip;
-use crate::lora::LoraController;
+use crate::lora::controller::LoraController;
 use config::logger::ConfigLogger;
 use display::window::DisplayWindowBuilder;
 use locale::accessor::LocaleAccessor;
