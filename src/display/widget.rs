@@ -27,6 +27,7 @@ use crate::physics::types::DataPressure;
 use crate::APP_I18N;
 
 use super::fonts::Fonts;
+use super::utilities::*;
 
 pub struct BackgroundWidgetConfig {
     color: conrod_core::color::Color,
@@ -1341,7 +1342,7 @@ impl<'a> ControlWidget<'a> {
         widget::Text::new(
             format!(
                 "{:.1}",
-                config.trigger_inspiratory_settings.expiratory_term as f64 / 10.0
+                convert_mmh2o_to_cmh2o(config.trigger_inspiratory_settings.expiratory_term as f64)
             )
             .as_str(),
         )

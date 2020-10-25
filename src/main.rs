@@ -18,10 +18,10 @@ mod chip;
 mod config;
 mod display;
 mod locale;
-mod physics;
-mod serial;
 #[cfg(feature = "lora")]
 mod lora;
+mod physics;
+mod serial;
 
 use std::ops::Deref;
 use std::str::FromStr;

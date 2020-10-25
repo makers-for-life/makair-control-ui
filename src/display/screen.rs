@@ -15,6 +15,7 @@ use crate::physics::types::DataPressure;
 use crate::APP_I18N;
 
 use super::fonts::Fonts;
+use super::utilities::*;
 use super::widget::{
     AlarmsWidgetConfig, BackgroundWidgetConfig, BrandingWidgetConfig, ControlWidget,
     ControlWidgetType, ErrorWidgetConfig, ExpRatioSettingsWidgetConfig, GraphWidgetConfig,
@@ -445,14 +446,10 @@ impl<'a> Screen<'a> {
         let peak_config = TelemetryWidgetConfig {
             title: APP_I18N.t("telemetry-label-peak"),
             value_measured: Some(
-                (machine_snapshot.previous_peak_pressure as f64 / 10.0)
-                    .round()
-                    .to_string(),
+                convert_mmh2o_to_cmh2o(machine_snapshot.previous_peak_pressure as f64).to_string(),
             ),
             value_target: Some(
-                (machine_snapshot.peak_command as f64 / 10.0)
-                    .round()
-                    .to_string(),
+                convert_mmh2o_to_cmh2o(machine_snapshot.peak_command as f64).to_string(),
             ),
             value_arrow: telemetry_data.arrow_image_id,
             unit: APP_I18N.t("telemetry-unit-cmh2o"),
@@ -479,14 +476,11 @@ impl<'a> Screen<'a> {
         let plateau_config = TelemetryWidgetConfig {
             title: APP_I18N.t("telemetry-label-plateau"),
             value_measured: Some(
-                (machine_snapshot.previous_plateau_pressure as f64 / 10.0)
-                    .round()
+                convert_mmh2o_to_cmh2o(machine_snapshot.previous_plateau_pressure as f64)
                     .to_string(),
             ),
             value_target: Some(
-                (machine_snapshot.plateau_command as f64 / 10.0)
-                    .round()
-                    .to_string(),
+                convert_mmh2o_to_cmh2o(machine_snapshot.plateau_command as f64).to_string(),
             ),
             value_arrow: telemetry_data.arrow_image_id,
             unit: APP_I18N.t("telemetry-unit-cmh2o"),
@@ -514,14 +508,10 @@ impl<'a> Screen<'a> {
         let peep_config = TelemetryWidgetConfig {
             title: APP_I18N.t("telemetry-label-expiratory"),
             value_measured: Some(
-                (machine_snapshot.previous_peep_pressure as f64 / 10.0)
-                    .round()
-                    .to_string(),
+                convert_mmh2o_to_cmh2o(machine_snapshot.previous_peep_pressure as f64).to_string(),
             ),
             value_target: Some(
-                (machine_snapshot.peep_command as f64 / 10.0)
-                    .round()
-                    .to_string(),
+                convert_mmh2o_to_cmh2o(machine_snapshot.peep_command as f64).to_string(),
             ),
             value_arrow: telemetry_data.arrow_image_id,
             unit: APP_I18N.t("telemetry-unit-cmh2o"),
@@ -577,7 +567,7 @@ impl<'a> Screen<'a> {
             value_measured: Some(format!(
                 "{}:{}",
                 CYCLE_RATIO_INSPIRATION,
-                (trigger_inspiratory.expiratory_term as f64 / 10.0)
+                convert_mmh2o_to_cmh2o(machine_snapshot.expiratory_term as f64).to_string(),
             )),
             value_target: None,
             value_arrow: telemetry_data.arrow_image_id,
