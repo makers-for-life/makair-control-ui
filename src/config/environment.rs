@@ -44,7 +44,7 @@ pub const DISPLAY_ALARM_CONTAINER_PADDING_LEFT: f64 = 22.0;
 
 pub const DISPLAY_ALARM_MESSAGE_WIDTH: f64 = 440.0;
 pub const DISPLAY_ALARM_MESSAGE_HEIGHT: f64 = 33.0;
-pub const DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL_OFFSET: f64 = 5.0; // TODO: this is ugly, idk why the top_initial value below creates a visible offset when set to zero; offset empirically checked to be 5.0f
+pub const DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL_OFFSET: f64 = 5.0; // This is ugly, idk why the top_initial value below creates a visible offset when set to zero; offset empirically checked to be 5.0f
 pub const DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL: f64 = 8.0;
 pub const DISPLAY_ALARM_MESSAGE_SPACING_TOP_INNER: f64 = 6.0;
 

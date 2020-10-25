@@ -104,7 +104,7 @@ impl DisplayWindow {
         // Notice: this depends on the in-use translation, as eg. CJK glyphs are not included in \
         //   the default font.
         let fonts = match APP_ARGS.translation.as_str() {
-            "zh" | "ja" | "ko" => Fonts::new(
+            "zh" => Fonts::new(
                 interface.fonts.insert(FONT_CJK_NOTOSANS_ALL.clone()),
                 interface.fonts.insert(FONT_CJK_NOTOSANS_ALL.clone()),
             ),
