@@ -1204,10 +1204,11 @@ impl<'a> ControlWidget<'a> {
 
         widget::Text::new(
             format!(
-                "{} mmH2O",
+                "{:.1} cmH2O",
                 config
                     .trigger_inspiratory_settings
-                    .inspiratory_trigger_offset
+                    .inspiratory_trigger_offset as f32
+                    / 10.0
             )
             .as_str(),
         )
@@ -1283,10 +1284,11 @@ impl<'a> ControlWidget<'a> {
         text_style.font_size = Some(15);
 
         widget::Text::new(&format!(
-            "Offset: {} mmH2O",
+            "Offset: {:.1} cmH2O",
             config
                 .trigger_inspiratory_settings
-                .inspiratory_trigger_offset
+                .inspiratory_trigger_offset as f32
+                / 10.0
         ))
         .with_style(text_style)
         .down_from(config.status_widget, 20.0)
