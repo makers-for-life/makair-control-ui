@@ -20,7 +20,6 @@ pub struct LoraController;
 
 impl LoraController {
     #[allow(clippy::new_ret_no_self)]
-    #[cfg(feature = "lora")]
     pub fn new() -> Sender<TelemetryMessage> {
         let (tx, rx) = channel();
 
@@ -225,11 +224,5 @@ impl LoraController {
         });
 
         tx
-    }
-
-    #[allow(clippy::new_ret_no_self)]
-    #[cfg(not(feature = "lora"))]
-    pub fn new() -> Sender<TelemetryMessage> {
-        unreachable!("'lora' feature was disabled during compilation")
     }
 }
