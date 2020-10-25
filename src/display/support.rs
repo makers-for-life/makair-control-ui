@@ -1,4 +1,4 @@
-// MakAir
+// MakAir Control UI
 //
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
@@ -6,7 +6,6 @@
 use conrod_winit::WinitWindow;
 
 pub struct GliumDisplayWinitWrapper(pub glium::Display);
-
 pub struct EventLoop;
 
 impl WinitWindow for GliumDisplayWinitWrapper {

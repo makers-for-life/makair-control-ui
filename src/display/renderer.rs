@@ -1,12 +1,8 @@
-// MakAir
+// MakAir Control UI
 //
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-use crate::chip::settings::{
-    trigger_inspiratory::{TriggerInspiratory, TriggerInspiratoryEvent},
-    ChipSettingsEvent, SettingAction,
-};
 use chrono::{DateTime, NaiveDateTime, Utc};
 use conrod_core::widget::Id as WidgetId;
 use conrod_core::Ui;
@@ -16,17 +12,17 @@ use plotters::prelude::*;
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
-use crate::EmbeddedImages;
-
-use crate::config::environment::*;
-
+use crate::chip::settings::{
+    trigger::{Trigger, TriggerEvent},
+    ChipSettingsEvent, SettingAction,
+};
 use crate::chip::ChipState;
-use crate::physics::types::DataPressure;
-
-use crate::APP_ARGS;
-
+use crate::config::environment::*;
 #[cfg(feature = "graph-scaler")]
 use crate::physics::pressure::process_max_allowed_pressure;
+use crate::physics::types::DataPressure;
+use crate::EmbeddedImages;
+use crate::APP_ARGS;
 
 use super::fonts::Fonts;
 use super::screen::{
@@ -98,7 +94,7 @@ impl DisplayRenderer {
         interface: &mut Ui,
         battery_level: Option<u8>,
         chip_state: &ChipState,
-        trigger_inspiratory_settings: &TriggerInspiratory,
+        trigger_settings: &Trigger,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let image_map = conrod_core::image::Map::<texture::Texture2d>::new();
 
@@ -114,7 +110,7 @@ impl DisplayRenderer {
                 ongoing_alarms,
                 battery_level,
                 chip_state,
-                trigger_inspiratory_settings,
+                trigger_settings,
             ),
             ChipState::Error(e) => self.error(interface, image_map, e.clone()),
         }
@@ -126,11 +122,11 @@ impl DisplayRenderer {
         // If you click on a text, the text element will receive the click, not its parent
         // Maybe there is a way to listen on a parent for childs clicks but I couldn't find one.
         // So we chain each iterator of every childs to be sure to capture the click
-        let trigger_inspiratory_settings_iters = vec![
-            self.ids.trigger_inspiratory_overview_container,
-            self.ids.trigger_inspiratory_overview_title,
-            self.ids.trigger_inspiratory_overview_status,
-            self.ids.trigger_inspiratory_overview_offset,
+        let trigger_settings_iters = vec![
+            self.ids.trigger_overview_container,
+            self.ids.trigger_overview_title,
+            self.ids.trigger_overview_status,
+            self.ids.trigger_overview_offset,
         ];
 
         let exp_ratio_settings_iters = vec![
@@ -140,16 +136,14 @@ impl DisplayRenderer {
             self.ids.ratio_unit,
         ];
 
-        let trigger_inspiratory_settings_clicks = trigger_inspiratory_settings_iters
-            .iter()
-            .flat_map(|widget| {
-                // TODO: Can we use the get_widget_clicks method?
-                interface
-                    .widget_input(*widget)
-                    .clicks()
-                    .map(|_| ())
-                    .chain(interface.widget_input(*widget).taps().map(|_| ()))
-            });
+        let trigger_settings_clicks = trigger_settings_iters.iter().flat_map(|widget| {
+            // TODO: Can we use the get_widget_clicks method?
+            interface
+                .widget_input(*widget)
+                .clicks()
+                .map(|_| ())
+                .chain(interface.widget_input(*widget).taps().map(|_| ()))
+        });
 
         let exp_ratio_settings_clicks = exp_ratio_settings_iters.iter().flat_map(|widget| {
             interface
@@ -159,7 +153,7 @@ impl DisplayRenderer {
                 .chain(interface.widget_input(*widget).taps().map(|_| ()))
         });
 
-        for _ in trigger_inspiratory_settings_clicks {
+        for _ in trigger_settings_clicks {
             self.toggle_trigger_settings();
         }
 
@@ -186,9 +180,7 @@ impl DisplayRenderer {
             && self.exp_ratio_settings_state == DisplayRendererSettingsState::Closed
         {
             for xy in self.get_widget_clicks(self.ids.modal_background, interface) {
-                if let Some(rect_of) =
-                    interface.rect_of(self.ids.trigger_inspiratory_overview_container)
-                {
+                if let Some(rect_of) = interface.rect_of(self.ids.trigger_overview_container) {
                     if rect_of.is_over(xy) {
                         self.toggle_trigger_settings();
                     }
@@ -203,39 +195,28 @@ impl DisplayRenderer {
         }
 
         if self.trigger_settings_state == DisplayRendererSettingsState::Opened {
-            for _ in
-                self.get_widget_clicks(self.ids.trigger_inspiratory_status_button, interface)
-                    .chain(self.get_widget_clicks(
-                        self.ids.trigger_inspiratory_status_button_text,
-                        interface,
-                    ))
+            for _ in self
+                .get_widget_clicks(self.ids.trigger_status_button, interface)
+                .chain(self.get_widget_clicks(self.ids.trigger_status_button_text, interface))
+            {
+                all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerEvent::Toggle));
+            }
+
+            for _ in self
+                .get_widget_clicks(self.ids.trigger_offset_less_button, interface)
+                .chain(self.get_widget_clicks(self.ids.trigger_offset_less_button_text, interface))
             {
                 all_events.push(ChipSettingsEvent::InspiratoryTrigger(
-                    TriggerInspiratoryEvent::Toggle,
+                    TriggerEvent::InspiratoryTriggerOffset(SettingAction::Less),
                 ));
             }
 
             for _ in self
-                .get_widget_clicks(self.ids.trigger_inspiratory_offset_less_button, interface)
-                .chain(self.get_widget_clicks(
-                    self.ids.trigger_inspiratory_offset_less_button_text,
-                    interface,
-                ))
+                .get_widget_clicks(self.ids.trigger_offset_more_button, interface)
+                .chain(self.get_widget_clicks(self.ids.trigger_offset_more_button_text, interface))
             {
                 all_events.push(ChipSettingsEvent::InspiratoryTrigger(
-                    TriggerInspiratoryEvent::InspiratoryTriggerOffset(SettingAction::Less),
-                ));
-            }
-
-            for _ in self
-                .get_widget_clicks(self.ids.trigger_inspiratory_offset_more_button, interface)
-                .chain(self.get_widget_clicks(
-                    self.ids.trigger_inspiratory_offset_more_button_text,
-                    interface,
-                ))
-            {
-                all_events.push(ChipSettingsEvent::InspiratoryTrigger(
-                    TriggerInspiratoryEvent::InspiratoryTriggerOffset(SettingAction::More),
+                    TriggerEvent::InspiratoryTriggerOffset(SettingAction::More),
                 ));
             }
         }
@@ -246,7 +227,7 @@ impl DisplayRenderer {
                 .chain(self.get_widget_clicks(self.ids.exp_ratio_term_less_button_text, interface))
             {
                 all_events.push(ChipSettingsEvent::InspiratoryTrigger(
-                    TriggerInspiratoryEvent::ExpiratoryTerm(SettingAction::Less),
+                    TriggerEvent::ExpiratoryTerm(SettingAction::Less),
                 ));
             }
 
@@ -255,7 +236,7 @@ impl DisplayRenderer {
                 .chain(self.get_widget_clicks(self.ids.exp_ratio_term_more_button_text, interface))
             {
                 all_events.push(ChipSettingsEvent::InspiratoryTrigger(
-                    TriggerInspiratoryEvent::ExpiratoryTerm(SettingAction::More),
+                    TriggerEvent::ExpiratoryTerm(SettingAction::More),
                 ));
             }
         }
@@ -310,10 +291,12 @@ impl DisplayRenderer {
         mut image_map: conrod_core::image::Map<texture::Texture2d>,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let bootloader_logo_image_texture = self.draw_bootloader_logo(display);
+
         let (bootloader_logo_width, bootloader_logo_height) = (
             bootloader_logo_image_texture.get_width(),
             bootloader_logo_image_texture.get_height().unwrap(),
         );
+
         let image_id = image_map.insert(bootloader_logo_image_texture);
 
         let ui = interface.set_widgets();
@@ -357,22 +340,26 @@ impl DisplayRenderer {
         ongoing_alarms: &[(AlarmCode, AlarmPriority)],
         battery_level: Option<u8>,
         chip_state: &ChipState,
-        trigger_inspiratory_settings: &TriggerInspiratory,
+        trigger_settings: &Trigger,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         // Create branding
         let branding_image_texture = self.draw_branding(display);
+
         let (branding_width, branding_height) = (
             branding_image_texture.get_width(),
             branding_image_texture.get_height().unwrap(),
         );
+
         let branding_image_id = image_map.insert(branding_image_texture);
 
         // Create graph
         let graph_image_texture = self.draw_data_chart(data_pressure, machine_snapshot, display);
+
         let (graph_width, graph_height) = (
             graph_image_texture.get_width(),
             graph_image_texture.get_height().unwrap(),
         );
+
         let graph_image_id = image_map.insert(graph_image_texture);
 
         // Create telemetry
@@ -381,6 +368,7 @@ impl DisplayRenderer {
 
         // Create widgets
         let mut ui = interface.set_widgets();
+
         let ongoing_alarms_len = ongoing_alarms.len();
         let widgets_alarms_len = self.ids.alarm_alarms.len();
 
@@ -406,6 +394,7 @@ impl DisplayRenderer {
         } else {
             let diff = widgets_alarms_len - ongoing_alarms_len;
             let useless_id = &mut ui.widget_id_generator();
+
             if diff > 0 {
                 self.ids.alarm_alarms.resize(ongoing_alarms_len, useless_id);
                 self.ids
@@ -471,20 +460,22 @@ impl DisplayRenderer {
                 screen_data_heartbeat,
                 screen_data_graph,
                 screen_data_telemetry,
-                trigger_inspiratory_settings,
+                trigger_settings,
                 self.trigger_settings_state == DisplayRendererSettingsState::Opened,
                 self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened,
             ),
+
             ChipState::Stopped => screen.render_stop(
                 screen_data_branding,
                 screen_data_status,
                 screen_data_heartbeat,
                 screen_data_graph,
                 screen_data_telemetry,
-                trigger_inspiratory_settings,
+                trigger_settings,
                 self.trigger_settings_state == DisplayRendererSettingsState::Opened,
                 self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened,
             ),
+
             _ => unreachable!(),
         };
 

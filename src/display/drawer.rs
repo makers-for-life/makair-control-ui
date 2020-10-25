@@ -1,4 +1,4 @@
-// MakAir
+// MakAir Control UI
 //
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
@@ -24,9 +24,8 @@ use super::support::GliumDisplayWinitWrapper;
 
 const FRAMERATE: u64 = 30;
 
-#[allow(dead_code)]
 pub struct DisplayDrawerBuilder<'a> {
-    phantom: &'a std::marker::PhantomData<u8>,
+    _phantom: &'a std::marker::PhantomData<u8>,
 }
 
 pub struct DisplayDrawer<'a> {
@@ -52,9 +51,7 @@ impl<'a> DisplayDrawerBuilder<'a> {
         let display =
             GliumDisplayWinitWrapper(glium::Display::new(window, context, &events_loop).unwrap());
 
-        // TODO: mark window as no cursor
-
-        // create drawer ids
+        // Create drawer IDs
         let ids = Ids::new(interface.widget_id_generator());
 
         // Create drawer
@@ -109,15 +106,18 @@ impl<'a> DisplayDrawer<'a> {
             if (now - last_render) > Duration::milliseconds((1000 / FRAMERATE) as _) {
                 if self.chip.get_state() != &ChipState::Stopped {
                     self.chip.clean_events();
+
                     // Force redraw if we are not stopped
                     // For some reason, with a "shared" Ids struct, conrod won't detect we need to redraw
                     // even though we know we have a different graph each new frame
                     self.interface.needs_redraw();
                 }
+
                 last_render = now;
 
                 // Get UI events since the last render
                 let ui_events = self.renderer.run_ui_events(&mut self.interface);
+
                 self.chip.new_settings_events(ui_events);
 
                 self.refresh();
@@ -136,15 +136,20 @@ impl<'a> DisplayDrawer<'a> {
             crate::Mode::Port { port, output_dir } => {
                 let optional_file_buffer = output_dir.as_ref().map(|dir| {
                     let file_count: Vec<std::io::Result<std::fs::DirEntry>> =
-                        std::fs::read_dir(dir).expect("Should read dir").collect();
+                        std::fs::read_dir(dir)
+                            .expect("should read directory")
+                            .collect();
+
                     let path = format!(
                         "{}/{}-{}.record",
                         &dir,
                         chrono::Local::now().format("%Y%m%d-%H%M%S"),
                         file_count.len() + 1
                     );
+
                     let file = std::fs::File::create(&path)
                         .unwrap_or_else(|_| panic!("could not create file '{}'", &path));
+
                     std::io::BufWriter::new(file)
                 });
 
@@ -163,6 +168,7 @@ impl<'a> DisplayDrawer<'a> {
             crate::Mode::Input(path) => {
                 std::thread::spawn(move || loop {
                     let file = std::fs::File::open(path).unwrap();
+
                     telemetry::gather_telemetry_from_file(file, tx.clone(), true);
                 });
             }

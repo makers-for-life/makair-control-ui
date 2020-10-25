@@ -32,12 +32,12 @@ plotters = {version = "0.2.12", default_features = false, features = ["image_enc
 conrod_glium = "0.69"
 conrod_winit = "0.69"
 conrod_core = "0.69"
-makair-telemetry = { git = "https://github.com/makers-for-life/makair-telemetry", features = ["env_logger"], rev = "aa08cc7814cc4076f653951900e34c7d76cf814f" }
-rn2903 = { git = "https://github.com/waxzce/lora-rust-rn2903-rn2483.git", rev = "b086057ba096920abef3870ad0cefa2c80a343e2", optional = true }
 sysfs_gpio = { version = "0.5", optional = true }
+rn2903 = { git = "https://github.com/waxzce/lora-rust-rn2903-rn2483.git", rev = "b086057ba096920abef3870ad0cefa2c80a343e2", optional = true }
+makair-telemetry = { git = "https://github.com/makers-for-life/makair-telemetry", features = ["env_logger"], rev = "c1fc8502df6f91b961cff139e3334a7e69fef385" }
 
 [features]
-default = ["lora"]
+default = []
 graph-scaler = []
 lora = ["rn2903", "sysfs_gpio"]
 

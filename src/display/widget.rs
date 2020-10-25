@@ -1,4 +1,4 @@
-// MakAir
+// MakAir Control UI
 //
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
@@ -18,7 +18,7 @@ use telemetry::alarm::AlarmCode;
 use telemetry::structures::AlarmPriority;
 
 use crate::chip::{
-    settings::trigger_inspiratory::{TriggerInspiratory, TriggerInspiratoryState},
+    settings::trigger::{Trigger, TriggerState},
     ChipState,
 };
 use crate::config::environment::*;
@@ -27,6 +27,7 @@ use crate::physics::types::DataPressure;
 use crate::APP_I18N;
 
 use super::fonts::Fonts;
+use super::utilities::*;
 
 pub struct BackgroundWidgetConfig {
     color: conrod_core::color::Color,
@@ -328,10 +329,10 @@ pub struct AlarmsWidgetConfig<'a> {
     pub alarms: &'a [(AlarmCode, AlarmPriority)],
 }
 
-pub struct TriggerInspiratoryWidgetConfig<'a> {
+pub struct TriggerWidgetConfig<'a> {
     pub width: f64,
     pub height: f64,
-    pub trigger_inspiratory_settings: &'a TriggerInspiratory,
+    pub trigger_settings: &'a Trigger,
     pub status_container_parent: WidgetId,
     pub status_container_widget: WidgetId,
     pub status_enabled_text_widget: WidgetId,
@@ -350,7 +351,7 @@ pub struct TriggerInspiratoryWidgetConfig<'a> {
 pub struct ExpRatioSettingsWidgetConfig<'a> {
     pub width: f64,
     pub height: f64,
-    pub trigger_inspiratory_settings: &'a TriggerInspiratory,
+    pub trigger_settings: &'a Trigger,
     pub exp_ratio_container_parent: WidgetId,
     pub exp_ratio_container_widget: WidgetId,
     pub exp_ratio_text_widget: WidgetId,
@@ -361,7 +362,7 @@ pub struct ExpRatioSettingsWidgetConfig<'a> {
     pub exp_ratio_value_widget: WidgetId,
 }
 
-pub struct TriggerInspiratoryOverview<'a> {
+pub struct TriggerOverview<'a> {
     pub parent: WidgetId,
     pub container: WidgetId,
     pub title_widget: WidgetId,
@@ -374,7 +375,7 @@ pub struct TriggerInspiratoryOverview<'a> {
     pub x_position: f64,
     pub y_position: f64,
     pub background_color: Color,
-    pub trigger_inspiratory_settings: &'a TriggerInspiratory,
+    pub trigger_settings: &'a Trigger,
 }
 
 pub enum ControlWidgetType<'a> {
@@ -392,8 +393,8 @@ pub enum ControlWidgetType<'a> {
     TelemetryContainer(TelemetryWidgetContainerConfig),
     Telemetry(TelemetryWidgetConfig),
     Layout(LayoutConfig),
-    TriggerInspiratorySettings(TriggerInspiratoryWidgetConfig<'a>),
-    TriggerInspiratoryOverview(TriggerInspiratoryOverview<'a>),
+    TriggerSettings(TriggerWidgetConfig<'a>),
+    TriggerOverview(TriggerOverview<'a>),
     ExpRatioSettings(ExpRatioSettingsWidgetConfig<'a>),
 }
 
@@ -425,12 +426,8 @@ impl<'a> ControlWidget<'a> {
             }
             ControlWidgetType::Telemetry(config) => self.telemetry_widget(config),
             ControlWidgetType::Layout(config) => self.layout(config),
-            ControlWidgetType::TriggerInspiratorySettings(config) => {
-                self.trigger_inspiratory_settings(config)
-            }
-            ControlWidgetType::TriggerInspiratoryOverview(config) => {
-                self.trigger_inspiratory_overview(config)
-            }
+            ControlWidgetType::TriggerSettings(config) => self.trigger_settings(config),
+            ControlWidgetType::TriggerOverview(config) => self.trigger_overview(config),
             ControlWidgetType::ExpRatioSettings(config) => self.exp_ratio_settings(config),
         }
     }
@@ -1036,7 +1033,7 @@ impl<'a> ControlWidget<'a> {
             validate_text_style.color = Some(color::BLACK);
             validate_text_style.font_size = Some(20);
 
-            widget::Text::new("Save")
+            widget::Text::new(&APP_I18N.t("modal-save"))
                 .with_style(validate_text_style)
                 .mid_top_with_margin_on(validate_button, 2.0)
                 .set(validate_text, &mut self.ui);
@@ -1119,7 +1116,7 @@ impl<'a> ControlWidget<'a> {
         0.0
     }
 
-    fn trigger_inspiratory_settings(&mut self, config: TriggerInspiratoryWidgetConfig) -> f64 {
+    fn trigger_settings(&mut self, config: TriggerWidgetConfig) -> f64 {
         let sections_height = config.height / 2.0;
         let mut canvas_style = widget::canvas::Style::default();
         canvas_style.color = Some(color::TRANSPARENT);
@@ -1136,14 +1133,14 @@ impl<'a> ControlWidget<'a> {
         status_text_style.color = Some(color::WHITE);
         status_text_style.font_size = Some(20);
 
-        widget::Text::new("Trigger inspiratory status:")
+        widget::Text::new(&APP_I18N.t("trigger-inspiratory-status"))
             .with_style(status_text_style)
             .top_left_of(config.status_container_widget)
             .set(config.status_enabled_text_widget, &mut self.ui);
 
-        let status_label = match config.trigger_inspiratory_settings.state {
-            TriggerInspiratoryState::Enabled => String::from("Enabled"),
-            TriggerInspiratoryState::Disabled => String::from("Disabled"),
+        let status_label = match config.trigger_settings.state {
+            TriggerState::Enabled => APP_I18N.t("trigger-state-enabled"),
+            TriggerState::Disabled => APP_I18N.t("trigger-state-disabled"),
         };
 
         let status_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
@@ -1173,7 +1170,7 @@ impl<'a> ControlWidget<'a> {
         offset_text_style.color = Some(color::WHITE);
         offset_text_style.font_size = Some(20);
 
-        widget::Text::new("Inspiratory trigger offset:")
+        widget::Text::new(&APP_I18N.t("trigger-inspiratory-offset"))
             .with_style(offset_text_style)
             .top_left_of(config.inspiratory_offset_container_parent)
             .set(config.inspiratory_offset_text_widget, &mut self.ui);
@@ -1204,11 +1201,9 @@ impl<'a> ControlWidget<'a> {
 
         widget::Text::new(
             format!(
-                "{:.1} cmH2O",
-                config
-                    .trigger_inspiratory_settings
-                    .inspiratory_trigger_offset as f32
-                    / 10.0
+                "{:.1} {}",
+                convert_mmh2o_to_cmh2o(config.trigger_settings.inspiratory_trigger_offset as f64),
+                APP_I18N.t("telemetry-unit-cmh2o")
             )
             .as_str(),
         )
@@ -1231,7 +1226,7 @@ impl<'a> ControlWidget<'a> {
         0 as _
     }
 
-    fn trigger_inspiratory_overview(&mut self, config: TriggerInspiratoryOverview) -> f64 {
+    fn trigger_overview(&mut self, config: TriggerOverview) -> f64 {
         widget::rectangle::Rectangle::fill_with(
             [config.width, config.height],
             config.background_color,
@@ -1239,56 +1234,54 @@ impl<'a> ControlWidget<'a> {
         .bottom_left_with_margins_on(config.parent, config.y_position, config.x_position)
         .set(config.container, &mut self.ui);
 
-        self.trigger_inspiratory_overview_title(&config);
-        self.trigger_inspiratory_overview_status(&config);
-        self.trigger_inspiratory_overview_offset(&config);
+        self.trigger_overview_title(&config);
+        self.trigger_overview_status(&config);
+        self.trigger_overview_offset(&config);
 
         0 as _
     }
 
-    fn trigger_inspiratory_overview_title(&mut self, config: &TriggerInspiratoryOverview) {
+    fn trigger_overview_title(&mut self, config: &TriggerOverview) {
         let mut text_style = widget::text::Style::default();
         text_style.font_id = Some(Some(self.fonts.regular));
         text_style.color = Some(color::WHITE);
         text_style.font_size = Some(20);
 
-        widget::Text::new("Trigger")
+        widget::Text::new(&APP_I18N.t("trigger-label-title"))
             .with_style(text_style)
             .top_left_of(config.container)
             .set(config.title_widget, &mut self.ui);
     }
 
-    fn trigger_inspiratory_overview_status(&mut self, config: &TriggerInspiratoryOverview) {
+    fn trigger_overview_status(&mut self, config: &TriggerOverview) {
         let mut text_style = widget::text::Style::default();
         text_style.font_id = Some(Some(self.fonts.regular));
         text_style.color = Some(color::WHITE);
         text_style.font_size = Some(15);
 
-        let status =
-            if config.trigger_inspiratory_settings.state == TriggerInspiratoryState::Enabled {
-                "Enabled".to_string()
-            } else {
-                "Disabled".to_string()
-            };
+        let status = if config.trigger_settings.state == TriggerState::Enabled {
+            APP_I18N.t("trigger-state-enabled")
+        } else {
+            APP_I18N.t("trigger-state-disabled")
+        };
 
-        widget::Text::new(&format!("State: {}", status))
+        widget::Text::new(&format!("{} {}", APP_I18N.t("trigger-label-state"), status))
             .with_style(text_style)
             .down_from(config.title_widget, 20.0)
             .set(config.status_widget, &mut self.ui);
     }
 
-    fn trigger_inspiratory_overview_offset(&mut self, config: &TriggerInspiratoryOverview) {
+    fn trigger_overview_offset(&mut self, config: &TriggerOverview) {
         let mut text_style = widget::text::Style::default();
         text_style.font_id = Some(Some(self.fonts.regular));
         text_style.color = Some(color::WHITE);
         text_style.font_size = Some(15);
 
         widget::Text::new(&format!(
-            "Offset: {:.1} cmH2O",
-            config
-                .trigger_inspiratory_settings
-                .inspiratory_trigger_offset as f32
-                / 10.0
+            "{} {:.1} {}",
+            APP_I18N.t("trigger-label-offset"),
+            convert_mmh2o_to_cmh2o(config.trigger_settings.inspiratory_trigger_offset as f64),
+            APP_I18N.t("telemetry-unit-cmh2o")
         ))
         .with_style(text_style)
         .down_from(config.status_widget, 20.0)
@@ -1311,7 +1304,7 @@ impl<'a> ControlWidget<'a> {
         plateau_text_style.color = Some(color::WHITE);
         plateau_text_style.font_size = Some(20);
 
-        widget::Text::new("Expiratory Term")
+        widget::Text::new(&APP_I18N.t("trigger-expiratory-term"))
             .with_style(plateau_text_style)
             .top_left_of(config.exp_ratio_container_widget)
             .set(config.exp_ratio_text_widget, &mut self.ui);
@@ -1338,7 +1331,11 @@ impl<'a> ControlWidget<'a> {
         plateau_value_style.font_size = Some(20);
 
         widget::Text::new(
-            format!("{}", config.trigger_inspiratory_settings.expiratory_term).as_str(),
+            format!(
+                "{:.1}",
+                convert_mmh2o_to_cmh2o(config.trigger_settings.expiratory_term as f64)
+            )
+            .as_str(),
         )
         .with_style(plateau_value_style)
         .right_from(config.exp_ratio_less_button_widget, 20.0)

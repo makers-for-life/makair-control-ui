@@ -1,4 +1,4 @@
-// MakAir
+// MakAir Control UI
 //
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
@@ -11,11 +11,9 @@ use inflate::inflate_bytes_zlib;
 
 use crate::EmbeddedFonts;
 use crate::EmbeddedImages;
-
+use crate::chip::Chip;
 use crate::config::environment::*;
 use crate::APP_ARGS;
-
-use crate::chip::Chip;
 
 use super::drawer::DisplayDrawerBuilder;
 use super::fonts::Fonts;
@@ -87,9 +85,6 @@ impl DisplayWindow {
             window
         };
 
-        // TODO: disable cursor when fullscreen (cannot be done on WindowBuilder; can only be done \
-        //   on a Window instance)
-
         // Create context
         let context = ContextBuilder::new().with_multisampling(4).with_vsync(true);
 
@@ -104,7 +99,7 @@ impl DisplayWindow {
         // Notice: this depends on the in-use translation, as eg. CJK glyphs are not included in \
         //   the default font.
         let fonts = match APP_ARGS.translation.as_str() {
-            "zh" | "ja" | "ko" => Fonts::new(
+            "zh" => Fonts::new(
                 interface.fonts.insert(FONT_CJK_NOTOSANS_ALL.clone()),
                 interface.fonts.insert(FONT_CJK_NOTOSANS_ALL.clone()),
             ),

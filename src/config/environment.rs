@@ -1,4 +1,4 @@
-// MakAir
+// MakAir Control UI
 //
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
@@ -44,7 +44,7 @@ pub const DISPLAY_ALARM_CONTAINER_PADDING_LEFT: f64 = 22.0;
 
 pub const DISPLAY_ALARM_MESSAGE_WIDTH: f64 = 440.0;
 pub const DISPLAY_ALARM_MESSAGE_HEIGHT: f64 = 33.0;
-pub const DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL_OFFSET: f64 = 5.0; // TODO: this is ugly, idk why the top_initial value below creates a visible offset when set to zero; offset empirically checked to be 5.0f
+pub const DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL_OFFSET: f64 = 5.0; // This is ugly, idk why the top_initial value below creates a visible offset when set to zero; offset empirically checked to be 5.0f
 pub const DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL: f64 = 8.0;
 pub const DISPLAY_ALARM_MESSAGE_SPACING_TOP_INNER: f64 = 6.0;
 
@@ -88,9 +88,11 @@ pub const PEAK_PRESSURE_INITIAL_MIN: f64 = 0.0;
 pub const PEAK_PRESSURE_ALERT_ERROR_RATIO: f64 = 0.15;
 pub const CYCLE_RATIO_INSPIRATION: u8 = 1;
 
+pub const TRIGGER_SETTINGS_MODAL_PADDING: f64 = 20.0;
 pub const TRIGGER_SETTINGS_MODAL_WIDTH: f64 = 600.0;
 pub const TRIGGER_SETTINGS_MODAL_HEIGTH: f64 = 300.0;
 
+pub const EXP_RATIO_SETTINGS_MODAL_PADDING: f64 = 20.0;
 pub const EXP_RATIO_SETTINGS_MODAL_WIDTH: f64 = 600.0;
 pub const EXP_RATIO_SETTINGS_MODAL_HEIGTH: f64 = 150.0;
 

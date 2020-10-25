@@ -19,9 +19,9 @@
 In order to setup your environment and build the code, please follow the following commands (for MacOS):
 
 1. Install [Rustup](https://rustup.rs/)
-2. Ènsure you are using the Rust stable toolchain: `rustup default stable`
+2. Ensure you are using the Rust stable toolchain: `rustup default stable`
 3. On Linux, make sure you have cmake installed and those libraries (debian):
-  `libxcb-shape0 libxcb-shape0-dev libxcb-xfixes0 libxcb-xfixes0-dev libfontconfig libfontconfig1-dev`
+  `libxcb-shape0 libxcb-shape0-dev libxcb-xfixes0 libxcb-xfixes0-dev libfontconfig libfontconfig1-dev libudev-dev`
 4. Build the project: `cargo build`
 
 Wayland support may be available but it hasn't been tested. You need a working X11 server.
@@ -41,7 +41,7 @@ Take note of the serial port used as an input on your Control UI board, and call
 You may also play a pre-recorded file, by passing it as an input (this is handy while developing; example records are available in the telemetry library repository):
 
 1. Pull the telemetry library (in the parent directory): `git pull https://github.com/makers-for-life/makair-telemetry.git`
-2. Run an example (from the Control UI directory): `./makair-control --input=../makair-telemetry/records/few_cycles` (where `--input` is an UNIX file path)
+2. Run an example (from the Control UI directory): `./makair-control --input=../makair-telemetry/records/short_with_errors` (where `--input` is an UNIX file path)
 
 ## Supported Translations
 
@@ -57,16 +57,10 @@ You can pass the desired locale code when running the `makair-control` binary, u
 * 🇮🇹 **[Italian](./res/locales/it.ftl)**: `it`
 * 🇪🇸 **[Spanish](./res/locales/es.ftl)**: `es`
 * 🇵🇹 **[Portuguese](./res/locales/pt.ftl)**: `pt`
-* 🇵🇱 **[Polish](./res/locales/pl.ftl)**: `pl` — (WIP)
-* 🇨🇿 **[Czech](./res/locales/cs.ftl)**: `cs` — (WIP)
 * 🇱🇻 **[Latvian](./res/locales/lv.ftl)**: `lv`
 * 🇷🇺 **[Russian](./res/locales/ru.ftl)**: `ru`
 * 🇺🇦 **[Ukrainian](./res/locales/uk.ftl)**: `uk`
-* 🇹🇷 **[Turkish](./res/locales/tr.ftl)**: `tr` — (WIP)
-* 🇦🇿 **[Azerbaijani](./res/locales/az.ftl)**: `az` — (WIP)
 * 🇨🇳 **[Chinese (Simplified)](./res/locales/zh.ftl)**: `zh`
-* 🇯🇵 **[Japanese](./res/locales/ja.ftl)**: `ja` — (WIP)
-* 🇰🇷 **[Korean](./res/locales/ko.ftl)**: `ko` — (WIP)
 
 ℹ️ If your language does not appear in the list above, you may translate the [base English file](./res/locales/en.ftl), then [open a Pull Request](https://github.com/makers-for-life/makair-control-ui/pulls).
 

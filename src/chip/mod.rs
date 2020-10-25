@@ -1,4 +1,4 @@
-// MakAir
+// MakAir Control UI
 //
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
@@ -8,17 +8,18 @@ pub mod settings;
 use chrono::{offset::Utc, DateTime, Duration};
 use std::collections::{HashMap, VecDeque};
 use std::convert::TryFrom;
-
-use crate::config::environment::*;
-use crate::physics::types::DataPressure;
-use settings::{trigger_inspiratory::TriggerInspiratoryState, ChipSettings, ChipSettingsEvent};
 use std::sync::mpsc::{self, Receiver, Sender};
+
+use settings::{trigger::TriggerState, ChipSettings, ChipSettingsEvent};
 use telemetry::alarm::{AlarmCode, RMC_SW_1, RMC_SW_11, RMC_SW_12, RMC_SW_14, RMC_SW_15, RMC_SW_3};
 use telemetry::control::{ControlMessage, ControlSetting};
 use telemetry::serial::core;
 use telemetry::structures::{
     AlarmPriority, ControlAck, DataSnapshot, MachineStateSnapshot, TelemetryMessage,
 };
+
+use crate::config::environment::*;
+use crate::physics::types::DataPressure;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum ChipState {
@@ -65,7 +66,7 @@ impl Chip {
         // send to LORA - can be moved if usefull
         if let Some(tx_for_lora) = &self.tx_for_lora {
             if let Err(e) = tx_for_lora.send(event.clone()) {
-                error!("problem while sending data to LORA {:?}", e);
+                error!("problem while sending data to lora: {:?}", e);
             }
         };
 
@@ -131,20 +132,22 @@ impl Chip {
     pub fn new_settings_events(&mut self, events: Vec<ChipSettingsEvent>) {
         for event in events {
             let message = self.settings.new_settings_event(event);
+
             debug!(
-                "New event: {:?}, sender: {:?}",
+                "new event: {:?}, sender: {:?}",
                 message, self.channel_for_settings
             );
+
             if let Some(tx) = &self.channel_for_settings {
                 if let Err(e) = tx.send(message.clone()) {
                     // TODO: Maybe we could add an alarm with this problem
                     // TODO2: Revert the value if it can't be sent?
                     error!(
-                        "Error sending message {:?} to the control unit: {:?}",
+                        "error sending message {:?} to the control unit: {:?}",
                         message, e
                     );
                 } else {
-                    debug!("Setting message {:?} sent!", message);
+                    debug!("setting message {:?} sent!", message);
                 }
             }
         }
@@ -307,9 +310,9 @@ impl Chip {
 
     fn update_settings_values(&mut self, snapshot: &MachineStateSnapshot) {
         self.settings.inspiratory_trigger.state = if snapshot.trigger_enabled {
-            TriggerInspiratoryState::Enabled
+            TriggerState::Enabled
         } else {
-            TriggerInspiratoryState::Disabled
+            TriggerState::Disabled
         };
         self.settings.inspiratory_trigger.inspiratory_trigger_offset =
             snapshot.trigger_offset as usize;
@@ -331,9 +334,9 @@ impl Chip {
             }
             ControlSetting::TriggerEnabled => {
                 self.settings.inspiratory_trigger.state = if ack.value == 0 {
-                    TriggerInspiratoryState::Disabled
+                    TriggerState::Disabled
                 } else {
-                    TriggerInspiratoryState::Enabled
+                    TriggerState::Enabled
                 }
             }
             ControlSetting::TriggerOffset => {

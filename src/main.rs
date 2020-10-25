@@ -1,4 +1,4 @@
-// MakAir
+// MakAir Control UI
 //
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
@@ -18,6 +18,7 @@ mod chip;
 mod config;
 mod display;
 mod locale;
+#[cfg(feature = "lora")]
 mod lora;
 mod physics;
 mod serial;
@@ -29,7 +30,9 @@ use clap::{App, Arg};
 use log::LevelFilter;
 
 use crate::chip::Chip;
-use crate::lora::LoraController;
+#[cfg(feature = "lora")]
+use crate::lora::controller::LoraController;
+
 use config::logger::ConfigLogger;
 use display::window::DisplayWindowBuilder;
 use locale::accessor::LocaleAccessor;
@@ -52,6 +55,7 @@ struct AppArgs {
     translation: String,
     mode: Mode,
     fullscreen: bool,
+    #[cfg(feature = "lora")]
     lora: bool,
     #[cfg(feature = "lora")]
     lora_device: String,
@@ -149,7 +153,8 @@ fn make_app_args() -> AppArgs {
         },
         (None, Some(i)) => Mode::Input(i.to_string()),
         (None, None) => {
-            eprintln!("You should provide either a serial port (-p) or an input file (-i)");
+            eprintln!("you should provide either a serial port (-p) or an input file (-i)");
+
             std::process::exit(1);
         }
     };
@@ -164,6 +169,7 @@ fn make_app_args() -> AppArgs {
         ),
         mode,
         fullscreen: matches.is_present("fullscreen"),
+        #[cfg(feature = "lora")]
         lora: !matches.is_present("disable-lora"),
         #[cfg(feature = "lora")]
         lora_device: String::from(
@@ -193,11 +199,16 @@ fn main() {
     ensure_states();
 
     // Launch LORA init and get Sender for chip
-    let lora_sender = if APP_ARGS.lora && cfg!(feature = "lora") {
+    #[cfg(feature = "lora")]
+    let lora_sender = if APP_ARGS.lora {
         Some(LoraController::new())
     } else {
         None
     };
+
+    #[cfg(not(feature = "lora"))]
+    let lora_sender = None;
+
     // Create our "Chip" that will store all the data
     let chip = Chip::new(lora_sender);
 

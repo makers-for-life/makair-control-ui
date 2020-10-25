@@ -1,6 +1,12 @@
-use crate::chip::settings::SettingAction;
+// MakAir Control UI
+//
+// Copyright: 2020, Makers For Life
+// License: Public Domain License
+
 use std::time::Duration;
 use telemetry::control::{ControlMessage, ControlSetting};
+
+use crate::chip::settings::SettingAction;
 
 const INSPIRATORY_TRIGGER_OFFSET_MAX: usize = 100;
 const INSPIRATORY_TRIGGER_OFFSET_STEP: usize = 1;
@@ -9,37 +15,32 @@ const EXPIRATORY_TERM_MAX: usize = 60;
 const EXPIRATORY_TERM_MIN: usize = 10;
 const EXPIRATORY_TERM_STEP: usize = 1;
 
-#[allow(dead_code)]
-const PLATEAU_DURATION_MAX: Duration = Duration::from_millis(3000);
-const PLATEAU_DURATION_STEP: Duration = Duration::from_millis(50);
-
 #[derive(Debug)]
-pub enum TriggerInspiratoryEvent {
+pub enum TriggerEvent {
     Toggle,
     InspiratoryTriggerOffset(SettingAction),
-    //PlateauDuration(SettingAction),
     ExpiratoryTerm(SettingAction),
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum TriggerInspiratoryState {
+pub enum TriggerState {
     Disabled = 0,
     Enabled = 1,
 }
 
 #[derive(Debug)]
-pub struct TriggerInspiratory {
-    pub state: TriggerInspiratoryState,
+pub struct Trigger {
+    pub state: TriggerState,
     pub inspiratory_trigger_offset: usize,
     pub plateau_duration: Duration,
     pub expiratory_term: usize,
     cycles_per_minute: usize,
 }
 
-impl TriggerInspiratory {
-    pub fn new(cycles_per_minute: usize) -> TriggerInspiratory {
-        TriggerInspiratory {
-            state: TriggerInspiratoryState::Disabled,
+impl Trigger {
+    pub fn new(cycles_per_minute: usize) -> Trigger {
+        Trigger {
+            state: TriggerState::Disabled,
             inspiratory_trigger_offset: 20,
             plateau_duration: Duration::from_millis(1000),
             expiratory_term: 20,
@@ -47,14 +48,13 @@ impl TriggerInspiratory {
         }
     }
 
-    pub fn new_event(&self, event: TriggerInspiratoryEvent) -> ControlMessage {
+    pub fn new_event(&self, event: TriggerEvent) -> ControlMessage {
         match event {
-            TriggerInspiratoryEvent::Toggle => self.toggle(),
-            TriggerInspiratoryEvent::InspiratoryTriggerOffset(action) => {
+            TriggerEvent::Toggle => self.toggle(),
+            TriggerEvent::InspiratoryTriggerOffset(action) => {
                 self.set_inspiratory_trigger_offset(action)
             }
-            //TriggerInspiratoryEvent::PlateauDuration(action) => self.set_plateau_duration(action),
-            TriggerInspiratoryEvent::ExpiratoryTerm(action) => self.set_expiratory_term(action),
+            TriggerEvent::ExpiratoryTerm(action) => self.set_expiratory_term(action),
         }
     }
 
@@ -64,8 +64,8 @@ impl TriggerInspiratory {
 
     fn toggle(&self) -> ControlMessage {
         let new_state = match self.state {
-            TriggerInspiratoryState::Enabled => TriggerInspiratoryState::Disabled,
-            TriggerInspiratoryState::Disabled => TriggerInspiratoryState::Enabled,
+            TriggerState::Enabled => TriggerState::Disabled,
+            TriggerState::Disabled => TriggerState::Enabled,
         };
 
         ControlMessage {
@@ -97,29 +97,6 @@ impl TriggerInspiratory {
             setting: ControlSetting::TriggerOffset,
             value: new_value as u16,
         }
-    }
-
-    #[allow(dead_code, unreachable_code, unused_variables)]
-    fn set_plateau_duration(&self, action: SettingAction) -> ControlMessage {
-        unimplemented!("The ControlMessage for this setting isn't implemented");
-
-        let new_value = match action {
-            SettingAction::More => {
-                let new_value = self.plateau_duration + PLATEAU_DURATION_STEP;
-                if new_value <= PLATEAU_DURATION_MAX {
-                    new_value
-                } else {
-                    self.plateau_duration
-                }
-            }
-            SettingAction::Less => {
-                if self.plateau_duration != Duration::from_millis(0) {
-                    self.plateau_duration - PLATEAU_DURATION_STEP
-                } else {
-                    self.plateau_duration
-                }
-            }
-        };
     }
 
     fn set_expiratory_term(&self, action: SettingAction) -> ControlMessage {
