@@ -891,7 +891,7 @@ impl<'a> ControlWidget<'a> {
         // Initiate text style for measured value
         let mut value_text_style = conrod_core::widget::primitive::text::Style::default();
 
-        value_text_style.font_id = Some(Some(self.fonts.regular));
+        value_text_style.font_id = Some(Some(self.fonts.bold));
         value_text_style.color = Some(color::WHITE);
         value_text_style.font_size = Some(45);
 
@@ -909,14 +909,14 @@ impl<'a> ControlWidget<'a> {
                 // Draw measured value
                 widget::Text::new(&value_measured)
                     .with_style(value_text_style)
-                    .bottom_left_with_margins_on(config.ids.1, 10.0, TELEMETRY_WIDGET_PADDING_LEFT)
+                    .mid_left_with_margin_on(config.ids.1, TELEMETRY_WIDGET_PADDING_LEFT)
                     .set(config.ids.3, &mut self.ui);
 
                 // Draw arrow
                 widget::Image::new(config.value_arrow)
                     .w_h(TELEMETRY_ARROW_WIDTH as f64, TELEMETRY_ARROW_HEIGHT as f64)
                     .right_from(config.ids.3, TELEMETRY_ARROW_SPACING_SIDES)
-                    .y_relative_to(config.ids.3, -3.0)
+                    .y_relative_to(config.ids.3, -8.0)
                     .set(config.ids.4, &mut self.ui);
 
                 // Draw target value
@@ -937,7 +937,7 @@ impl<'a> ControlWidget<'a> {
                 // Draw target value
                 widget::Text::new(&value_target)
                     .with_style(value_text_style)
-                    .bottom_left_with_margins_on(config.ids.1, 10.0, TELEMETRY_WIDGET_PADDING_LEFT)
+                    .mid_left_with_margin_on(config.ids.1, TELEMETRY_WIDGET_PADDING_LEFT)
                     .set(config.ids.5, &mut self.ui);
             }
             _ => {}
@@ -947,7 +947,11 @@ impl<'a> ControlWidget<'a> {
             // Create unit text
             widget::Text::new(&config.unit)
                 .color(color::WHITE.with_alpha(0.2))
-                .bottom_left_with_margins_on(config.ids.1, 10.0, TELEMETRY_WIDGET_PADDING_LEFT)
+                .bottom_left_with_margins_on(
+                    config.ids.1,
+                    TELEMETRY_WIDGET_UNIT_PADDING_BOTTOM,
+                    TELEMETRY_WIDGET_PADDING_LEFT,
+                )
                 .font_size(12)
                 .set(unit_id, &mut self.ui);
         }
