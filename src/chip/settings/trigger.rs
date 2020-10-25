@@ -19,7 +19,7 @@ const PLATEAU_DURATION_MAX: Duration = Duration::from_millis(3000);
 const PLATEAU_DURATION_STEP: Duration = Duration::from_millis(50);
 
 #[derive(Debug)]
-pub enum TriggerInspiratoryEvent {
+pub enum TriggerEvent {
     Toggle,
     InspiratoryTriggerOffset(SettingAction),
     //PlateauDuration(SettingAction),
@@ -27,24 +27,24 @@ pub enum TriggerInspiratoryEvent {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum TriggerInspiratoryState {
+pub enum TriggerState {
     Disabled = 0,
     Enabled = 1,
 }
 
 #[derive(Debug)]
-pub struct TriggerInspiratory {
-    pub state: TriggerInspiratoryState,
+pub struct Trigger {
+    pub state: TriggerState,
     pub inspiratory_trigger_offset: usize,
     pub plateau_duration: Duration,
     pub expiratory_term: usize,
     cycles_per_minute: usize,
 }
 
-impl TriggerInspiratory {
-    pub fn new(cycles_per_minute: usize) -> TriggerInspiratory {
-        TriggerInspiratory {
-            state: TriggerInspiratoryState::Disabled,
+impl Trigger {
+    pub fn new(cycles_per_minute: usize) -> Trigger {
+        Trigger {
+            state: TriggerState::Disabled,
             inspiratory_trigger_offset: 20,
             plateau_duration: Duration::from_millis(1000),
             expiratory_term: 20,
@@ -52,14 +52,15 @@ impl TriggerInspiratory {
         }
     }
 
-    pub fn new_event(&self, event: TriggerInspiratoryEvent) -> ControlMessage {
+    pub fn new_event(&self, event: TriggerEvent) -> ControlMessage {
         match event {
-            TriggerInspiratoryEvent::Toggle => self.toggle(),
-            TriggerInspiratoryEvent::InspiratoryTriggerOffset(action) => {
+            TriggerEvent::Toggle => self.toggle(),
+            TriggerEvent::InspiratoryTriggerOffset(action) => {
                 self.set_inspiratory_trigger_offset(action)
             }
-            //TriggerInspiratoryEvent::PlateauDuration(action) => self.set_plateau_duration(action),
-            TriggerInspiratoryEvent::ExpiratoryTerm(action) => self.set_expiratory_term(action),
+            // TODO
+            // TriggerEvent::PlateauDuration(action) => self.set_plateau_duration(action),
+            TriggerEvent::ExpiratoryTerm(action) => self.set_expiratory_term(action),
         }
     }
 
@@ -69,8 +70,8 @@ impl TriggerInspiratory {
 
     fn toggle(&self) -> ControlMessage {
         let new_state = match self.state {
-            TriggerInspiratoryState::Enabled => TriggerInspiratoryState::Disabled,
-            TriggerInspiratoryState::Disabled => TriggerInspiratoryState::Enabled,
+            TriggerState::Enabled => TriggerState::Disabled,
+            TriggerState::Disabled => TriggerState::Enabled,
         };
 
         ControlMessage {

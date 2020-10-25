@@ -9,7 +9,7 @@ use conrod_core::widget::Id as WidgetId;
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
-use crate::chip::{settings::trigger_inspiratory::TriggerInspiratory, ChipState};
+use crate::chip::{settings::trigger::Trigger, ChipState};
 use crate::config::environment::*;
 use crate::physics::types::DataPressure;
 use crate::APP_I18N;
@@ -21,8 +21,7 @@ use super::widget::{
     ControlWidgetType, ErrorWidgetConfig, ExpRatioSettingsWidgetConfig, GraphWidgetConfig,
     HeartbeatWidgetConfig, InitializingWidgetConfig, LayoutConfig, LayoutWidgetConfig,
     ModalWidgetConfig, NoDataWidgetConfig, StatusWidgetConfig, StopWidgetConfig,
-    TelemetryWidgetConfig, TelemetryWidgetContainerConfig, TriggerInspiratoryOverview,
-    TriggerInspiratoryWidgetConfig,
+    TelemetryWidgetConfig, TelemetryWidgetContainerConfig, TriggerOverview, TriggerWidgetConfig,
 };
 
 widget_ids!(pub struct Ids {
@@ -107,24 +106,24 @@ widget_ids!(pub struct Ids {
   tidal_value_target,
   tidal_unit,
 
-  trigger_inspiratory_overview_container,
-  trigger_inspiratory_overview_title,
-  trigger_inspiratory_overview_status,
-  trigger_inspiratory_overview_offset,
-  trigger_inspiratory_overview_expiratory_term,
-  trigger_inspiratory_overview_plateau_duration,
+  trigger_overview_container,
+  trigger_overview_title,
+  trigger_overview_status,
+  trigger_overview_offset,
+  trigger_overview_expiratory_term,
+  trigger_overview_plateau_duration,
 
-  trigger_inspiratory_status_container,
-  trigger_inspiratory_status_text,
-  trigger_inspiratory_status_button,
-  trigger_inspiratory_status_button_text,
-  trigger_inspiratory_offset_container,
-  trigger_inspiratory_offset_more_button,
-  trigger_inspiratory_offset_more_button_text,
-  trigger_inspiratory_offset_less_button,
-  trigger_inspiratory_offset_less_button_text,
-  trigger_inspiratory_offset_text,
-  trigger_inspiratory_offset_value,
+  trigger_status_container,
+  trigger_status_text,
+  trigger_status_button,
+  trigger_status_button_text,
+  trigger_offset_container,
+  trigger_offset_more_button,
+  trigger_offset_more_button_text,
+  trigger_offset_less_button,
+  trigger_offset_less_button_text,
+  trigger_offset_text,
+  trigger_offset_value,
 
   modal_background,
   modal_container_borders,
@@ -205,8 +204,8 @@ impl<'a> Screen<'a> {
         heartbeat_data: ScreenDataHeartbeat<'a>,
         graph_data: ScreenDataGraph,
         telemetry_data: ScreenDataTelemetry,
-        trigger_inspiratory: &'a TriggerInspiratory,
-        trigger_inspiratory_open: bool,
+        trigger: &'a Trigger,
+        trigger_open: bool,
         exp_ratio_open: bool,
     ) {
         // Render common background
@@ -229,12 +228,12 @@ impl<'a> Screen<'a> {
         self.render_graph(graph_data.image_id, graph_data.width, graph_data.height);
 
         // Render bottom elements
-        self.render_telemetry(telemetry_data, trigger_inspiratory);
+        self.render_telemetry(telemetry_data, trigger);
 
-        if trigger_inspiratory_open {
-            self.render_trigger_settings(trigger_inspiratory);
+        if trigger_open {
+            self.render_trigger_settings(trigger);
         } else if exp_ratio_open {
-            self.render_exp_ratio_settings(trigger_inspiratory);
+            self.render_exp_ratio_settings(trigger);
         }
     }
 
@@ -362,8 +361,8 @@ impl<'a> Screen<'a> {
         heartbeat_data: ScreenDataHeartbeat<'a>,
         graph_data: ScreenDataGraph,
         telemetry_data: ScreenDataTelemetry,
-        trigger_inspiratory: &'a TriggerInspiratory,
-        trigger_inspiratory_open: bool,
+        trigger: &'a Trigger,
+        trigger_open: bool,
         exp_ratio_open: bool,
     ) {
         // Render regular data as background
@@ -373,12 +372,12 @@ impl<'a> Screen<'a> {
             heartbeat_data,
             graph_data,
             telemetry_data,
-            trigger_inspiratory,
-            trigger_inspiratory_open,
+            trigger,
+            trigger_open,
             exp_ratio_open,
         );
 
-        if !trigger_inspiratory_open && !exp_ratio_open {
+        if !trigger_open && !exp_ratio_open {
             self.render_modal(
                 DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH,
                 DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT,
@@ -424,11 +423,7 @@ impl<'a> Screen<'a> {
         self.widgets.render(ControlWidgetType::Initializing(config));
     }
 
-    pub fn render_telemetry(
-        &mut self,
-        telemetry_data: ScreenDataTelemetry,
-        trigger_inspiratory: &'a TriggerInspiratory,
-    ) {
+    pub fn render_telemetry(&mut self, telemetry_data: ScreenDataTelemetry, trigger: &'a Trigger) {
         let machine_snapshot = self.machine_snapshot.unwrap();
 
         let widgets_right_width: f64 = (DISPLAY_WINDOW_SIZE_WIDTH - GRAPH_WIDTH) as f64;
@@ -574,7 +569,7 @@ impl<'a> Screen<'a> {
             unit: format!(
                 "{} {}{}",
                 APP_I18N.t("telemetry-label-ratio-plateau"),
-                trigger_inspiratory.get_plateau_duration(),
+                trigger.get_plateau_duration(),
                 APP_I18N.t("telemetry-unit-milliseconds")
             ),
             ids: (
@@ -627,26 +622,24 @@ impl<'a> Screen<'a> {
         self.widgets
             .render(ControlWidgetType::Telemetry(tidal_config));
 
-        let trigger_inspiratory_config = TriggerInspiratoryOverview {
+        let trigger_config = TriggerOverview {
             parent: self.ids.tidal_parent,
-            container: self.ids.trigger_inspiratory_overview_container,
-            title_widget: self.ids.trigger_inspiratory_overview_title,
-            status_widget: self.ids.trigger_inspiratory_overview_status,
-            inspiration_trigger_offset_widget: self.ids.trigger_inspiratory_overview_offset,
-            expiratory_term_widget: self.ids.trigger_inspiratory_overview_expiratory_term,
-            plateau_duration_widget: self.ids.trigger_inspiratory_overview_plateau_duration,
+            container: self.ids.trigger_overview_container,
+            title_widget: self.ids.trigger_overview_title,
+            status_widget: self.ids.trigger_overview_status,
+            inspiration_trigger_offset_widget: self.ids.trigger_overview_offset,
+            expiratory_term_widget: self.ids.trigger_overview_expiratory_term,
+            plateau_duration_widget: self.ids.trigger_overview_plateau_duration,
             background_color: color::BLUE,
             width: TELEMETRY_WIDGET_SIZE_WIDTH,
             height: LAYOUT_FOOTER_SIZE_HEIGHT,
             x_position: TELEMETRY_WIDGET_SIZE_WIDTH,
             y_position: 0.0,
-            trigger_inspiratory_settings: trigger_inspiratory,
+            trigger_settings: trigger,
         };
 
         self.widgets
-            .render(ControlWidgetType::TriggerInspiratoryOverview(
-                trigger_inspiratory_config,
-            ));
+            .render(ControlWidgetType::TriggerOverview(trigger_config));
     }
 
     fn render_modal(
@@ -670,7 +663,7 @@ impl<'a> Screen<'a> {
         self.widgets.render(ControlWidgetType::Modal(modal_config));
     }
 
-    fn render_trigger_settings(&mut self, settings: &'a TriggerInspiratory) {
+    fn render_trigger_settings(&mut self, settings: &'a Trigger) {
         let padding = 20.0;
         self.render_modal(
             TRIGGER_SETTINGS_MODAL_WIDTH,
@@ -679,35 +672,31 @@ impl<'a> Screen<'a> {
             Some((self.ids.modal_validate, self.ids.modal_validate_text)),
         );
 
-        let config = TriggerInspiratoryWidgetConfig {
+        let config = TriggerWidgetConfig {
             width: TRIGGER_SETTINGS_MODAL_WIDTH,
             height: TRIGGER_SETTINGS_MODAL_HEIGTH - MODAL_VALIDATE_BUTTON_HEIGHT - (padding * 2.0),
-            trigger_inspiratory_settings: settings,
+            trigger_settings: settings,
 
             status_container_parent: self.ids.modal_container,
-            status_container_widget: self.ids.trigger_inspiratory_status_container,
-            status_enabled_text_widget: self.ids.trigger_inspiratory_status_text,
-            status_enabled_button_widget: self.ids.trigger_inspiratory_status_button,
-            status_enabled_button_text_widget: self.ids.trigger_inspiratory_status_button_text,
+            status_container_widget: self.ids.trigger_status_container,
+            status_enabled_text_widget: self.ids.trigger_status_text,
+            status_enabled_button_widget: self.ids.trigger_status_button,
+            status_enabled_button_text_widget: self.ids.trigger_status_button_text,
 
-            inspiratory_offset_container_parent: self.ids.trigger_inspiratory_offset_container,
-            inspiratory_offset_more_button_widget: self.ids.trigger_inspiratory_offset_more_button,
-            inspiratory_offset_more_button_text_widget: self
-                .ids
-                .trigger_inspiratory_offset_more_button_text,
-            inspiratory_offset_less_button_widget: self.ids.trigger_inspiratory_offset_less_button,
-            inspiratory_offset_less_button_text_widget: self
-                .ids
-                .trigger_inspiratory_offset_less_button_text,
-            inspiratory_offset_text_widget: self.ids.trigger_inspiratory_offset_text,
-            inspiratory_offset_value_widget: self.ids.trigger_inspiratory_offset_value,
+            inspiratory_offset_container_parent: self.ids.trigger_offset_container,
+            inspiratory_offset_more_button_widget: self.ids.trigger_offset_more_button,
+            inspiratory_offset_more_button_text_widget: self.ids.trigger_offset_more_button_text,
+            inspiratory_offset_less_button_widget: self.ids.trigger_offset_less_button,
+            inspiratory_offset_less_button_text_widget: self.ids.trigger_offset_less_button_text,
+            inspiratory_offset_text_widget: self.ids.trigger_offset_text,
+            inspiratory_offset_value_widget: self.ids.trigger_offset_value,
         };
 
         self.widgets
-            .render(ControlWidgetType::TriggerInspiratorySettings(config));
+            .render(ControlWidgetType::TriggerSettings(config));
     }
 
-    fn render_exp_ratio_settings(&mut self, settings: &'a TriggerInspiratory) {
+    fn render_exp_ratio_settings(&mut self, settings: &'a Trigger) {
         let padding = 20.0;
         self.render_modal(
             EXP_RATIO_SETTINGS_MODAL_WIDTH,
@@ -721,7 +710,7 @@ impl<'a> Screen<'a> {
             height: EXP_RATIO_SETTINGS_MODAL_HEIGTH
                 - MODAL_VALIDATE_BUTTON_HEIGHT
                 - (padding * 2.0),
-            trigger_inspiratory_settings: settings,
+            trigger_settings: settings,
 
             exp_ratio_container_parent: self.ids.modal_container,
             exp_ratio_container_widget: self.ids.exp_ratio_term_container,

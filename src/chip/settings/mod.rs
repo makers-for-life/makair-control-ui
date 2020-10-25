@@ -3,20 +3,20 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-pub mod trigger_inspiratory;
+pub mod trigger;
 
 use telemetry::control::ControlMessage;
-use trigger_inspiratory::{TriggerInspiratory, TriggerInspiratoryEvent};
+use trigger::{Trigger, TriggerEvent};
 
 #[derive(Debug)]
 pub struct ChipSettings {
-    pub inspiratory_trigger: TriggerInspiratory,
+    pub inspiratory_trigger: Trigger,
 }
 
 impl ChipSettings {
     pub fn new(cycles_per_minute: usize) -> ChipSettings {
         ChipSettings {
-            inspiratory_trigger: TriggerInspiratory::new(cycles_per_minute),
+            inspiratory_trigger: Trigger::new(cycles_per_minute),
         }
     }
 
@@ -37,5 +37,5 @@ pub enum SettingAction {
 
 #[derive(Debug)]
 pub enum ChipSettingsEvent {
-    InspiratoryTrigger(TriggerInspiratoryEvent),
+    InspiratoryTrigger(TriggerEvent),
 }

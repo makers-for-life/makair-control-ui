@@ -4,7 +4,7 @@
 // License: Public Domain License
 
 use crate::chip::settings::{
-    trigger_inspiratory::{TriggerInspiratory, TriggerInspiratoryEvent},
+    trigger::{Trigger, TriggerEvent},
     ChipSettingsEvent, SettingAction,
 };
 use chrono::{DateTime, NaiveDateTime, Utc};
@@ -98,7 +98,7 @@ impl DisplayRenderer {
         interface: &mut Ui,
         battery_level: Option<u8>,
         chip_state: &ChipState,
-        trigger_inspiratory_settings: &TriggerInspiratory,
+        trigger_settings: &Trigger,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let image_map = conrod_core::image::Map::<texture::Texture2d>::new();
 
@@ -114,7 +114,7 @@ impl DisplayRenderer {
                 ongoing_alarms,
                 battery_level,
                 chip_state,
-                trigger_inspiratory_settings,
+                trigger_settings,
             ),
             ChipState::Error(e) => self.error(interface, image_map, e.clone()),
         }
@@ -126,11 +126,11 @@ impl DisplayRenderer {
         // If you click on a text, the text element will receive the click, not its parent
         // Maybe there is a way to listen on a parent for childs clicks but I couldn't find one.
         // So we chain each iterator of every childs to be sure to capture the click
-        let trigger_inspiratory_settings_iters = vec![
-            self.ids.trigger_inspiratory_overview_container,
-            self.ids.trigger_inspiratory_overview_title,
-            self.ids.trigger_inspiratory_overview_status,
-            self.ids.trigger_inspiratory_overview_offset,
+        let trigger_settings_iters = vec![
+            self.ids.trigger_overview_container,
+            self.ids.trigger_overview_title,
+            self.ids.trigger_overview_status,
+            self.ids.trigger_overview_offset,
         ];
 
         let exp_ratio_settings_iters = vec![
@@ -140,16 +140,14 @@ impl DisplayRenderer {
             self.ids.ratio_unit,
         ];
 
-        let trigger_inspiratory_settings_clicks = trigger_inspiratory_settings_iters
-            .iter()
-            .flat_map(|widget| {
-                // TODO: Can we use the get_widget_clicks method?
-                interface
-                    .widget_input(*widget)
-                    .clicks()
-                    .map(|_| ())
-                    .chain(interface.widget_input(*widget).taps().map(|_| ()))
-            });
+        let trigger_settings_clicks = trigger_settings_iters.iter().flat_map(|widget| {
+            // TODO: Can we use the get_widget_clicks method?
+            interface
+                .widget_input(*widget)
+                .clicks()
+                .map(|_| ())
+                .chain(interface.widget_input(*widget).taps().map(|_| ()))
+        });
 
         let exp_ratio_settings_clicks = exp_ratio_settings_iters.iter().flat_map(|widget| {
             interface
@@ -159,7 +157,7 @@ impl DisplayRenderer {
                 .chain(interface.widget_input(*widget).taps().map(|_| ()))
         });
 
-        for _ in trigger_inspiratory_settings_clicks {
+        for _ in trigger_settings_clicks {
             self.toggle_trigger_settings();
         }
 
@@ -186,9 +184,7 @@ impl DisplayRenderer {
             && self.exp_ratio_settings_state == DisplayRendererSettingsState::Closed
         {
             for xy in self.get_widget_clicks(self.ids.modal_background, interface) {
-                if let Some(rect_of) =
-                    interface.rect_of(self.ids.trigger_inspiratory_overview_container)
-                {
+                if let Some(rect_of) = interface.rect_of(self.ids.trigger_overview_container) {
                     if rect_of.is_over(xy) {
                         self.toggle_trigger_settings();
                     }
@@ -203,39 +199,28 @@ impl DisplayRenderer {
         }
 
         if self.trigger_settings_state == DisplayRendererSettingsState::Opened {
-            for _ in
-                self.get_widget_clicks(self.ids.trigger_inspiratory_status_button, interface)
-                    .chain(self.get_widget_clicks(
-                        self.ids.trigger_inspiratory_status_button_text,
-                        interface,
-                    ))
+            for _ in self
+                .get_widget_clicks(self.ids.trigger_status_button, interface)
+                .chain(self.get_widget_clicks(self.ids.trigger_status_button_text, interface))
+            {
+                all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerEvent::Toggle));
+            }
+
+            for _ in self
+                .get_widget_clicks(self.ids.trigger_offset_less_button, interface)
+                .chain(self.get_widget_clicks(self.ids.trigger_offset_less_button_text, interface))
             {
                 all_events.push(ChipSettingsEvent::InspiratoryTrigger(
-                    TriggerInspiratoryEvent::Toggle,
+                    TriggerEvent::InspiratoryTriggerOffset(SettingAction::Less),
                 ));
             }
 
             for _ in self
-                .get_widget_clicks(self.ids.trigger_inspiratory_offset_less_button, interface)
-                .chain(self.get_widget_clicks(
-                    self.ids.trigger_inspiratory_offset_less_button_text,
-                    interface,
-                ))
+                .get_widget_clicks(self.ids.trigger_offset_more_button, interface)
+                .chain(self.get_widget_clicks(self.ids.trigger_offset_more_button_text, interface))
             {
                 all_events.push(ChipSettingsEvent::InspiratoryTrigger(
-                    TriggerInspiratoryEvent::InspiratoryTriggerOffset(SettingAction::Less),
-                ));
-            }
-
-            for _ in self
-                .get_widget_clicks(self.ids.trigger_inspiratory_offset_more_button, interface)
-                .chain(self.get_widget_clicks(
-                    self.ids.trigger_inspiratory_offset_more_button_text,
-                    interface,
-                ))
-            {
-                all_events.push(ChipSettingsEvent::InspiratoryTrigger(
-                    TriggerInspiratoryEvent::InspiratoryTriggerOffset(SettingAction::More),
+                    TriggerEvent::InspiratoryTriggerOffset(SettingAction::More),
                 ));
             }
         }
@@ -246,7 +231,7 @@ impl DisplayRenderer {
                 .chain(self.get_widget_clicks(self.ids.exp_ratio_term_less_button_text, interface))
             {
                 all_events.push(ChipSettingsEvent::InspiratoryTrigger(
-                    TriggerInspiratoryEvent::ExpiratoryTerm(SettingAction::Less),
+                    TriggerEvent::ExpiratoryTerm(SettingAction::Less),
                 ));
             }
 
@@ -255,7 +240,7 @@ impl DisplayRenderer {
                 .chain(self.get_widget_clicks(self.ids.exp_ratio_term_more_button_text, interface))
             {
                 all_events.push(ChipSettingsEvent::InspiratoryTrigger(
-                    TriggerInspiratoryEvent::ExpiratoryTerm(SettingAction::More),
+                    TriggerEvent::ExpiratoryTerm(SettingAction::More),
                 ));
             }
         }
@@ -357,7 +342,7 @@ impl DisplayRenderer {
         ongoing_alarms: &[(AlarmCode, AlarmPriority)],
         battery_level: Option<u8>,
         chip_state: &ChipState,
-        trigger_inspiratory_settings: &TriggerInspiratory,
+        trigger_settings: &Trigger,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         // Create branding
         let branding_image_texture = self.draw_branding(display);
@@ -471,7 +456,7 @@ impl DisplayRenderer {
                 screen_data_heartbeat,
                 screen_data_graph,
                 screen_data_telemetry,
-                trigger_inspiratory_settings,
+                trigger_settings,
                 self.trigger_settings_state == DisplayRendererSettingsState::Opened,
                 self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened,
             ),
@@ -481,7 +466,7 @@ impl DisplayRenderer {
                 screen_data_heartbeat,
                 screen_data_graph,
                 screen_data_telemetry,
-                trigger_inspiratory_settings,
+                trigger_settings,
                 self.trigger_settings_state == DisplayRendererSettingsState::Opened,
                 self.exp_ratio_settings_state == DisplayRendererSettingsState::Opened,
             ),

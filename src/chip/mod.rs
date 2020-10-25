@@ -11,7 +11,7 @@ use std::convert::TryFrom;
 
 use crate::config::environment::*;
 use crate::physics::types::DataPressure;
-use settings::{trigger_inspiratory::TriggerInspiratoryState, ChipSettings, ChipSettingsEvent};
+use settings::{trigger::TriggerState, ChipSettings, ChipSettingsEvent};
 use std::sync::mpsc::{self, Receiver, Sender};
 use telemetry::alarm::{AlarmCode, RMC_SW_1, RMC_SW_11, RMC_SW_12, RMC_SW_14, RMC_SW_15, RMC_SW_3};
 use telemetry::control::{ControlMessage, ControlSetting};
@@ -309,9 +309,9 @@ impl Chip {
 
     fn update_settings_values(&mut self, snapshot: &MachineStateSnapshot) {
         self.settings.inspiratory_trigger.state = if snapshot.trigger_enabled {
-            TriggerInspiratoryState::Enabled
+            TriggerState::Enabled
         } else {
-            TriggerInspiratoryState::Disabled
+            TriggerState::Disabled
         };
         self.settings.inspiratory_trigger.inspiratory_trigger_offset =
             snapshot.trigger_offset as usize;
@@ -333,9 +333,9 @@ impl Chip {
             }
             ControlSetting::TriggerEnabled => {
                 self.settings.inspiratory_trigger.state = if ack.value == 0 {
-                    TriggerInspiratoryState::Disabled
+                    TriggerState::Disabled
                 } else {
-                    TriggerInspiratoryState::Enabled
+                    TriggerState::Enabled
                 }
             }
             ControlSetting::TriggerOffset => {
