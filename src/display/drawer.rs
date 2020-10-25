@@ -52,9 +52,7 @@ impl<'a> DisplayDrawerBuilder<'a> {
         let display =
             GliumDisplayWinitWrapper(glium::Display::new(window, context, &events_loop).unwrap());
 
-        // TODO: mark window as no cursor
-
-        // create drawer ids
+        // Create drawer IDs
         let ids = Ids::new(interface.widget_id_generator());
 
         // Create drawer

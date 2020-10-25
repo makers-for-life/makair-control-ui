@@ -87,9 +87,6 @@ impl DisplayWindow {
             window
         };
 
-        // TODO: disable cursor when fullscreen (cannot be done on WindowBuilder; can only be done \
-        //   on a Window instance)
-
         // Create context
         let context = ContextBuilder::new().with_multisampling(4).with_vsync(true);
 
