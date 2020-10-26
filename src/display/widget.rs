@@ -1129,6 +1129,7 @@ impl<'a> ControlWidget<'a> {
     fn trigger_settings(&mut self, config: TriggerWidgetConfig) -> f64 {
         let sections_height = config.height / 2.0;
         let mut canvas_style = widget::canvas::Style::default();
+
         canvas_style.color = Some(color::TRANSPARENT);
         canvas_style.border = Some(0.0);
 
@@ -1139,6 +1140,7 @@ impl<'a> ControlWidget<'a> {
             .set(config.status_container_widget, &mut self.ui);
 
         let mut status_text_style = widget::text::Style::default();
+
         status_text_style.font_id = Some(Some(self.fonts.regular));
         status_text_style.color = Some(color::WHITE);
         status_text_style.font_size = Some(20);
@@ -1160,6 +1162,7 @@ impl<'a> ControlWidget<'a> {
             .set(config.status_enabled_button_widget, &mut self.ui);
 
         let mut status_button_text_style = widget::text::Style::default();
+
         status_button_text_style.font_id = Some(Some(self.fonts.regular));
         status_button_text_style.color = Some(color::BLACK);
         status_button_text_style.font_size = Some(20);
@@ -1176,6 +1179,7 @@ impl<'a> ControlWidget<'a> {
             .set(config.inspiratory_offset_container_parent, &mut self.ui);
 
         let mut offset_text_style = widget::text::Style::default();
+
         offset_text_style.font_id = Some(Some(self.fonts.regular));
         offset_text_style.color = Some(color::WHITE);
         offset_text_style.font_size = Some(20);
@@ -1192,6 +1196,7 @@ impl<'a> ControlWidget<'a> {
             .set(config.inspiratory_offset_less_button_widget, &mut self.ui);
 
         let mut more_less_buttons_text_style = widget::text::Style::default();
+
         more_less_buttons_text_style.font_id = Some(Some(self.fonts.bold));
         more_less_buttons_text_style.color = Some(color::BLACK);
         more_less_buttons_text_style.font_size = Some(20);
@@ -1205,6 +1210,7 @@ impl<'a> ControlWidget<'a> {
             );
 
         let mut offset_value_style = widget::text::Style::default();
+
         offset_value_style.font_id = Some(Some(self.fonts.regular));
         offset_value_style.color = Some(color::WHITE);
         offset_value_style.font_size = Some(20);
@@ -1253,9 +1259,10 @@ impl<'a> ControlWidget<'a> {
 
     fn trigger_overview_title(&mut self, config: &TriggerOverview) {
         let mut text_style = widget::text::Style::default();
-        text_style.font_id = Some(Some(self.fonts.regular));
+
+        text_style.font_id = Some(Some(self.fonts.bold));
         text_style.color = Some(color::WHITE);
-        text_style.font_size = Some(20);
+        text_style.font_size = Some(16);
 
         widget::Text::new(&APP_I18N.t("trigger-label-title"))
             .with_style(text_style)
@@ -1265,9 +1272,10 @@ impl<'a> ControlWidget<'a> {
 
     fn trigger_overview_status(&mut self, config: &TriggerOverview) {
         let mut text_style = widget::text::Style::default();
+
         text_style.font_id = Some(Some(self.fonts.regular));
         text_style.color = Some(color::WHITE);
-        text_style.font_size = Some(15);
+        text_style.font_size = Some(14);
 
         let status = if config.trigger_settings.state == TriggerState::Enabled {
             APP_I18N.t("trigger-state-enabled")
@@ -1283,9 +1291,10 @@ impl<'a> ControlWidget<'a> {
 
     fn trigger_overview_offset(&mut self, config: &TriggerOverview) {
         let mut text_style = widget::text::Style::default();
+
         text_style.font_id = Some(Some(self.fonts.regular));
         text_style.color = Some(color::WHITE);
-        text_style.font_size = Some(15);
+        text_style.font_size = Some(14);
 
         widget::Text::new(&format!(
             "{} {:.1} {}",
@@ -1300,6 +1309,7 @@ impl<'a> ControlWidget<'a> {
 
     fn exp_ratio_settings(&mut self, config: ExpRatioSettingsWidgetConfig) -> f64 {
         let mut canvas_style = widget::canvas::Style::default();
+
         canvas_style.color = Some(color::TRANSPARENT);
         canvas_style.border = Some(0.0);
 
@@ -1310,6 +1320,7 @@ impl<'a> ControlWidget<'a> {
             .set(config.exp_ratio_container_widget, &mut self.ui);
 
         let mut plateau_text_style = widget::text::Style::default();
+
         plateau_text_style.font_id = Some(Some(self.fonts.regular));
         plateau_text_style.color = Some(color::WHITE);
         plateau_text_style.font_size = Some(20);
@@ -1326,6 +1337,7 @@ impl<'a> ControlWidget<'a> {
             .set(config.exp_ratio_less_button_widget, &mut self.ui);
 
         let mut more_less_buttons_text_style = widget::text::Style::default();
+
         more_less_buttons_text_style.font_id = Some(Some(self.fonts.bold));
         more_less_buttons_text_style.color = Some(color::BLACK);
         more_less_buttons_text_style.font_size = Some(20);
@@ -1336,6 +1348,7 @@ impl<'a> ControlWidget<'a> {
             .set(config.exp_ratio_less_button_text_widget, &mut self.ui);
 
         let mut plateau_value_style = widget::text::Style::default();
+
         plateau_value_style.font_id = Some(Some(self.fonts.regular));
         plateau_value_style.color = Some(color::WHITE);
         plateau_value_style.font_size = Some(20);
