@@ -445,7 +445,11 @@ impl<'a> Screen<'a> {
         let peak_config = TelemetryWidgetConfig {
             title: APP_I18N.t("telemetry-label-peak"),
             value_measured: Some(
-                convert_mmh2o_to_cmh2o(machine_snapshot.previous_peak_pressure as f64).to_string(),
+                convert_mmh2o_to_cmh2o(
+                    ConvertMode::Rounded,
+                    machine_snapshot.previous_peak_pressure as f64,
+                )
+                .to_string(),
             ),
             value_target: Some(machine_snapshot.peak_command.to_string()),
             value_arrow: telemetry_data.arrow_image_id,
@@ -473,8 +477,11 @@ impl<'a> Screen<'a> {
         let plateau_config = TelemetryWidgetConfig {
             title: APP_I18N.t("telemetry-label-plateau"),
             value_measured: Some(
-                convert_mmh2o_to_cmh2o(machine_snapshot.previous_plateau_pressure as f64)
-                    .to_string(),
+                convert_mmh2o_to_cmh2o(
+                    ConvertMode::Rounded,
+                    machine_snapshot.previous_plateau_pressure as f64,
+                )
+                .to_string(),
             ),
             value_target: Some(machine_snapshot.plateau_command.to_string()),
             value_arrow: telemetry_data.arrow_image_id,
@@ -503,7 +510,11 @@ impl<'a> Screen<'a> {
         let peep_config = TelemetryWidgetConfig {
             title: APP_I18N.t("telemetry-label-expiratory"),
             value_measured: Some(
-                convert_mmh2o_to_cmh2o(machine_snapshot.previous_peep_pressure as f64).to_string(),
+                convert_mmh2o_to_cmh2o(
+                    ConvertMode::Rounded,
+                    machine_snapshot.previous_peep_pressure as f64,
+                )
+                .to_string(),
             ),
             value_target: Some(machine_snapshot.peep_command.to_string()),
             value_arrow: telemetry_data.arrow_image_id,
@@ -555,13 +566,20 @@ impl<'a> Screen<'a> {
             .render(ControlWidgetType::Telemetry(cycles_config));
 
         // Initialize the ratio widget
+        // Important: if the ratio has decimals, then show them (to the first decimal). If it \
+        //   has no decimals (eg. '2.0'), then show it as an integer.
+        let expiratory_term_value = convert_mmh2o_to_cmh2o(
+            ConvertMode::WithDecimals,
+            machine_snapshot.expiratory_term as f64,
+        );
+
         let ratio_config = TelemetryWidgetConfig {
             title: APP_I18N.t("telemetry-label-ratio"),
-            value_measured: Some(format!(
-                "{}:{:.1}",
-                CYCLE_RATIO_INSPIRATION,
-                machine_snapshot.expiratory_term as f64 / 10.0,
-            )),
+            value_measured: Some(if expiratory_term_value.fract() == 0.0 {
+                format!("{}:{}", CYCLE_RATIO_INSPIRATION, expiratory_term_value,)
+            } else {
+                format!("{}:{:.1}", CYCLE_RATIO_INSPIRATION, expiratory_term_value,)
+            }),
             value_target: None,
             value_arrow: telemetry_data.arrow_image_id,
             unit: format!(

@@ -1218,7 +1218,10 @@ impl<'a> ControlWidget<'a> {
         widget::Text::new(
             format!(
                 "{:.1} {}",
-                convert_mmh2o_to_cmh2o(config.trigger_settings.inspiratory_trigger_offset as f64),
+                convert_mmh2o_to_cmh2o(
+                    ConvertMode::Rounded,
+                    config.trigger_settings.inspiratory_trigger_offset as f64
+                ),
                 APP_I18N.t("telemetry-unit-cmh2o")
             )
             .as_str(),
@@ -1299,7 +1302,10 @@ impl<'a> ControlWidget<'a> {
         widget::Text::new(&format!(
             "{} {:.1} {}",
             APP_I18N.t("trigger-label-offset"),
-            convert_mmh2o_to_cmh2o(config.trigger_settings.inspiratory_trigger_offset as f64),
+            convert_mmh2o_to_cmh2o(
+                ConvertMode::Rounded,
+                config.trigger_settings.inspiratory_trigger_offset as f64
+            ),
             APP_I18N.t("telemetry-unit-cmh2o")
         ))
         .with_style(text_style)
@@ -1356,7 +1362,10 @@ impl<'a> ControlWidget<'a> {
         widget::Text::new(
             format!(
                 "{:.1}",
-                (config.trigger_settings.expiratory_term as f64 / 10.0)
+                convert_mmh2o_to_cmh2o(
+                    ConvertMode::WithDecimals,
+                    config.trigger_settings.expiratory_term as f64,
+                )
             )
             .as_str(),
         )
