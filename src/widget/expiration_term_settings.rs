@@ -9,8 +9,8 @@ use conrod_core::{
     Positionable, Sizeable, Widget,
 };
 
-use crate::config::environment::*;
 use crate::chip::settings::trigger::Trigger;
+use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::physics::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::APP_I18N;
