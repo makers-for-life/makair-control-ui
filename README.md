@@ -16,17 +16,31 @@
 
 ## How To Build?
 
-In order to setup your environment and build the code, please follow the following commands (for MacOS):
+In order to setup your environment and build the code, please follow these steps:
 
 1. Install [Rustup](https://rustup.rs/)
 2. Ensure you are using the Rust stable toolchain: `rustup default stable`
-3. On Linux, make sure you have cmake installed and those libraries (debian):
+3. On Linux, make sure you have `cmake` installed and those libraries (debian):
   `libxcb-shape0 libxcb-shape0-dev libxcb-xfixes0 libxcb-xfixes0-dev libfontconfig libfontconfig1-dev libudev-dev`
 4. Build the project: `cargo build`
 
 Wayland support may be available but it hasn't been tested. You need a working X11 server.
 
-_Tested at Rust version: `rustc 1.43.0 (4fb7144ed 2020-04-20)`_
+_Tested with Rust version: `rustc 1.43.0 (4fb7144ed 2020-04-20)`_
+
+### Building on a ventilator
+
+Building directly on a ventilator may be found convenient by developers. The Raspberry Pis in ventilators run ArchLinux. To build on a ventilator:
+
+1. Make sure `glibc` is up to date (e.g. by running `pacman -S glibc` as root)
+2. Install the following packages:
+  `git gcc make cmake pkg-config`
+3. Enable NTP by running `timedatectl set-ntp TRUE`
+4. Install [Rustup](https://rustup.rs/)
+5. Ensure you are using the Rust stable toolchain: `rustup default stable`
+6. Clone the repository and build the project: `cargo build --release`
+
+**Warning:** Do NOT perform a full system upgrade. This has been observed to break the software.
 
 ## How To Run?
 
@@ -87,4 +101,4 @@ The Control UI behavior can be tuned at compile time, by enabling some optional 
 
 In case of an issue, please review the following points and check if any could help:
 
-* If you are on Linux, you need to be a member of the `dialout` group for your user to be able to use the device created by the serial port;
+* If you are on Linux, you need to be a member of the `dialout` group for your user to be able to use the device created by the serial port.
