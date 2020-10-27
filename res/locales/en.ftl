@@ -34,7 +34,7 @@ trigger-state-disabled = Disabled
 
 error-title = An error happened:
 
-modal-save = Save
+modal-close = Close
 
 stop-title = Ventilator unit inactive
 stop-description = Please re-enable it to resume ventilation

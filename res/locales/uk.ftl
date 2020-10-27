@@ -34,7 +34,7 @@ trigger-state-disabled = Інваліди
 
 error-title = Виникла помилка
 
-modal-save = в порядку
+modal-close = в порядку
 
 stop-title = Апарат ШВЛ не активний
 stop-description = Перезапустіть апарат, щоб відновити вентиляцію

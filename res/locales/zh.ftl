@@ -34,7 +34,7 @@ trigger-state-disabled = 残障人士
 
 error-title = 发生错误：
 
-modal-save = 好
+modal-close = 好
 
 stop-title = 呼吸机单元无效
 stop-description = 请重新启用它以恢复呼吸

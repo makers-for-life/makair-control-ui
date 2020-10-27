@@ -34,7 +34,7 @@ trigger-state-disabled = Atspējots
 
 error-title = Notika kļūda:
 
-modal-save = OK
+modal-close = OK
 
 stop-title = Ventilatora ierīce neaktīva
 stop-description = Lūdzu, atkārtoti ieslēdziet to, lai atsāktu elpošanu

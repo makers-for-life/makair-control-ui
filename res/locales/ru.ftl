@@ -34,7 +34,7 @@ trigger-state-disabled = инвалид
 
 error-title = Произошла ошибка
 
-modal-save = в порядке
+modal-close = в порядке
 
 stop-title = Аппарат ИВЛ не активен
 stop-description = Перезапустите аппарат чтобы возобновить вентиляцию

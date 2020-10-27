@@ -34,7 +34,7 @@ trigger-state-disabled = Behindert
 
 error-title = Ein Fehler ist aufgetreten:
 
-modal-save = OK
+modal-close = OK
 
 stop-title = Das Beatmungsgerät ist nicht aktiv
 stop-description = Starten Sie das Gerät neu, um die Belüftung fortzusetzen.

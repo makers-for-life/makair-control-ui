@@ -34,7 +34,7 @@ trigger-state-disabled = Disabilitato
 
 error-title = Si è verificato un errore:
 
-modal-save = OK
+modal-close = OK
 
 stop-title = Ventilatore inattivo
 stop-description = Riattivalo per riprendere la respirazione
