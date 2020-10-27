@@ -28,7 +28,10 @@ pub struct ExpirationRatioSettingsWidgetConfig<'a> {
     pub expiration_ratio_value_widget: WidgetId,
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: ExpirationRatioSettingsWidgetConfig) -> f64 {
+pub fn render<'a>(
+    master: &mut ControlWidget<'a>,
+    config: ExpirationRatioSettingsWidgetConfig,
+) -> f64 {
     let mut canvas_style = widget::canvas::Style::default();
 
     canvas_style.color = Some(color::TRANSPARENT);
