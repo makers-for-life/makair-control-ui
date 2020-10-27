@@ -5,3 +5,4 @@
 
 pub mod accessor;
 pub mod loader;
+pub mod alarms;

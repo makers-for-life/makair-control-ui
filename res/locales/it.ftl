@@ -17,6 +17,15 @@ telemetry-unit-milliseconds = ms
 alarms-title = ALLARMI
 alarms-empty = Non ci sono allarmi attivi.
 
+alarms-message-plateau-pressure-not-reached = La pressione di plateau non viene raggiunta
+alarms-message-patient-unplugged = Il paziente è scollegato
+alarms-message-peep-pressure-not-reached = La pressione espiratoria non viene raggiunta
+alarms-message-battery-low = La batteria è quasi scarica
+alarms-message-battery-very-low = La batteria è molto scarica
+alarms-message-power-cable-unplugged = Il cavo di alimentazione è scollegato
+alarms-message-pressure-too-high = La pressione è troppo alta
+alarms-message-unknown = Allarme sconosciuto (codice di controllo)
+
 status-unit-stopped = L'unità si è fermata
 status-unit-active = Unità attiva
 status-power-battery = Battery

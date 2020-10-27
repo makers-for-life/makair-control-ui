@@ -16,6 +16,7 @@ use super::alarms;
 
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
+use crate::locale::alarms::{description_to_locale as alarm_description_to_locale};
 
 pub fn render<'a>(
     master: &mut ControlWidget<'a>,
@@ -129,7 +130,7 @@ fn message<'a>(
         )
         .set(config.alarm_messages_containers[index], &mut master.ui);
 
-    widget::text::Text::new(&alarm_code.description())
+    widget::text::Text::new(&alarm_description_to_locale(alarm_code.description()))
         .color(color::WHITE)
         .font_size(DISPLAY_ALARM_MESSAGE_FONT_SIZE)
         .top_left_with_margins_on(config.alarm_messages_containers[index], 3.0, 8.0)

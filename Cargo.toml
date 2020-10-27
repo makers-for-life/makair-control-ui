@@ -34,7 +34,7 @@ conrod_winit = "0.69"
 conrod_core = "0.69"
 sysfs_gpio = { version = "0.5", optional = true }
 rn2903 = { git = "https://github.com/waxzce/lora-rust-rn2903-rn2483.git", rev = "b086057ba096920abef3870ad0cefa2c80a343e2", optional = true }
-makair-telemetry = { git = "https://github.com/makers-for-life/makair-telemetry", features = ["env_logger"], rev = "c1fc8502df6f91b961cff139e3334a7e69fef385" }
+makair-telemetry = { git = "https://github.com/makers-for-life/makair-telemetry", features = ["env_logger"], rev = "62f1f88ac382c732458d1d6d64b8b814488e9a1b" }
 
 [features]
 default = []

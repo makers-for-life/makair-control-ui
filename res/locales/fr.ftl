@@ -17,6 +17,15 @@ telemetry-unit-milliseconds = ms
 alarms-title = ALARMES
 alarms-empty = Aucune alarme n'est active.
 
+alarms-message-plateau-pressure-not-reached = Pression de plateau non atteinte
+alarms-message-patient-unplugged = Patient deconnecté
+alarms-message-peep-pressure-not-reached = PEP non atteinte
+alarms-message-battery-low = Batterie faible
+alarms-message-battery-very-low = Batterie très faible
+alarms-message-power-cable-unplugged = Câble d'alimentation débranché
+alarms-message-pressure-too-high = Pression de crête trop haute
+alarms-message-unknown = Alarme inconnue (vérifiez le code)
+
 status-unit-stopped = Unité arrêtée
 status-unit-active = Unité active
 status-power-battery = Batterie

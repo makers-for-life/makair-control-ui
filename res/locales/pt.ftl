@@ -17,6 +17,15 @@ telemetry-unit-milliseconds = ms
 alarms-title = ALARMES
 alarms-empty = Não há alarmes ativos.
 
+alarms-message-plateau-pressure-not-reached = A pressão de platô não foi atingida
+alarms-message-patient-unplugged = Paciente está desconectado
+alarms-message-peep-pressure-not-reached = A pressão expiratória não é atingida
+alarms-message-battery-low = Bateria está fraca
+alarms-message-battery-very-low = Bateria está muito fraca
+alarms-message-power-cable-unplugged = O cabo de alimentação está desconectado
+alarms-message-pressure-too-high = A pressão está muito alta
+alarms-message-unknown = Alarme desconhecido (código de verificação)
+
 status-unit-stopped = Unidade parada
 status-unit-active = Unidade ativa
 status-power-battery = Bateria
@@ -27,7 +36,7 @@ trigger-label-state = Estado:
 trigger-label-offset = Deslocamento:
 trigger-label-configure = Toque para configurar
 trigger-inspiratory-status = Status inspiratório do gatilho:
-trigger-inspiratory-offset = Deslocamento do gatilho inspiratório:
+trigger-inspiratory-offset = Deslocamento do gatilho:
 trigger-expiratory-term = Termo expiratório
 trigger-state-enabled = ativado
 trigger-state-disabled = Desativado

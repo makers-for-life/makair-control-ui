@@ -17,17 +17,26 @@ telemetry-unit-milliseconds = миллисекунды
 alarms-title = ТРЕВОГИ
 alarms-empty = Активных тревог нет.
 
-status-unit-stopped = Аппарат остановлен
-status-unit-active = Аппарат активен
+alarms-message-plateau-pressure-not-reached = Давление плато не достигается
+alarms-message-patient-unplugged = Пациент отключен от сети
+alarms-message-peep-pressure-not-reached = Давление на выдохе не достигается
+alarms-message-battery-low = Батарея разряжена
+alarms-message-battery-very-low = Батарея очень разряжена
+alarms-message-power-cable-unplugged = Кабель питания отключен
+alarms-message-pressure-too-high = Давление слишком высокое
+alarms-message-unknown = Неизвестный сигнал тревоги
+
+status-unit-stopped = Остановлен
+status-unit-active = Активный
 status-power-battery = Батарея
-status-power-ac = Внешнее питание
+status-power-ac = Кабель
 
 trigger-label-title = Вызывать
 trigger-label-state = Высказывать:
 trigger-label-offset = Смещение:
 trigger-label-configure = Нажмите, чтобы настроить
-trigger-inspiratory-status = Триггерный инспираторный статус:
-trigger-inspiratory-offset = Смещение триггера вдоха:
+trigger-inspiratory-status = Статус триггера:
+trigger-inspiratory-offset = Смещение триггера:
 trigger-expiratory-term = Срок выдоха
 trigger-state-enabled = Включено
 trigger-state-disabled = инвалид
@@ -37,6 +46,6 @@ error-title = Произошла ошибка
 modal-close = в порядке
 
 stop-title = Аппарат ИВЛ не активен
-stop-description = Перезапустите аппарат чтобы возобновить вентиляцию
+stop-description = Включите снова, чтобы проветрить
 
 no-data-title = Аппарат отсоединен или данные не получены

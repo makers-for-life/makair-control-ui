@@ -17,6 +17,15 @@ telemetry-unit-milliseconds = ms
 alarms-title = ALARME
 alarms-empty = Es gibt keine aktiven Alarme.
 
+alarms-message-plateau-pressure-not-reached = Der Plateaudruck wird nicht erreicht
+alarms-message-patient-unplugged = Der Patient ist ausgesteckt
+alarms-message-peep-pressure-not-reached = Der exspiratorische Druck wird nicht erreicht
+alarms-message-battery-low = Batterie ist fast leer
+alarms-message-battery-very-low = Die Batterie ist sehr schwach
+alarms-message-power-cable-unplugged = Das Netzkabel ist nicht angeschlossen
+alarms-message-pressure-too-high = Der Druck ist zu hoch
+alarms-message-unknown = Unbekannter Alarm (Code prüfen)
+
 status-unit-stopped = Gerät gestoppt
 status-unit-active = Gerät aktiv
 status-power-battery = Batterie
@@ -37,6 +46,6 @@ error-title = Ein Fehler ist aufgetreten:
 modal-close = OK
 
 stop-title = Das Beatmungsgerät ist nicht aktiv
-stop-description = Starten Sie das Gerät neu, um die Belüftung fortzusetzen.
+stop-description = Bitte aktivieren Sie es wieder, um zu lüften
 
 no-data-title = Das Gerät ist nicht verbunden oder es werden keine Daten empfangen

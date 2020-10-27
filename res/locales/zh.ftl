@@ -17,6 +17,15 @@ telemetry-unit-milliseconds = 毫秒
 alarms-title = 警报
 alarms-empty = 没有活动的警报。
 
+alarms-message-plateau-pressure-not-reached = 没有达到高原压力
+alarms-message-patient-unplugged = 拔掉病人电源
+alarms-message-peep-pressure-not-reached = 未达到呼气压力
+alarms-message-battery-low = 电池电量低
+alarms-message-battery-very-low = 电池电量很低
+alarms-message-power-cable-unplugged = 拔下电源线
+alarms-message-pressure-too-high = 压力太高
+alarms-message-unknown = 未知警报（校验码）
+
 status-unit-stopped = 单位停止
 status-unit-active = 单位活跃
 status-power-battery = 电池
