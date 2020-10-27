@@ -348,18 +348,18 @@ pub struct TriggerWidgetConfig<'a> {
     pub inspiratory_offset_value_widget: WidgetId,
 }
 
-pub struct ExpRatioSettingsWidgetConfig<'a> {
+pub struct ExpirationRatioSettingsWidgetConfig<'a> {
     pub width: f64,
     pub height: f64,
     pub trigger_settings: &'a Trigger,
-    pub exp_ratio_container_parent: WidgetId,
-    pub exp_ratio_container_widget: WidgetId,
-    pub exp_ratio_text_widget: WidgetId,
-    pub exp_ratio_less_button_widget: WidgetId,
-    pub exp_ratio_less_button_text_widget: WidgetId,
-    pub exp_ratio_more_button_widget: WidgetId,
-    pub exp_ratio_more_button_text_widget: WidgetId,
-    pub exp_ratio_value_widget: WidgetId,
+    pub expiration_ratio_container_parent: WidgetId,
+    pub expiration_ratio_container_widget: WidgetId,
+    pub expiration_ratio_text_widget: WidgetId,
+    pub expiration_ratio_less_button_widget: WidgetId,
+    pub expiration_ratio_less_button_text_widget: WidgetId,
+    pub expiration_ratio_more_button_widget: WidgetId,
+    pub expiration_ratio_more_button_text_widget: WidgetId,
+    pub expiration_ratio_value_widget: WidgetId,
 }
 
 pub struct TriggerOverview<'a> {
@@ -396,7 +396,7 @@ pub enum ControlWidgetType<'a> {
     Layout(LayoutConfig),
     TriggerSettings(TriggerWidgetConfig<'a>),
     TriggerOverview(TriggerOverview<'a>),
-    ExpRatioSettings(ExpRatioSettingsWidgetConfig<'a>),
+    ExpirationRatioSettings(ExpirationRatioSettingsWidgetConfig<'a>),
 }
 
 pub struct ControlWidget<'a> {
@@ -429,7 +429,7 @@ impl<'a> ControlWidget<'a> {
             ControlWidgetType::Layout(config) => self.layout(config),
             ControlWidgetType::TriggerSettings(config) => self.trigger_settings(config),
             ControlWidgetType::TriggerOverview(config) => self.trigger_overview(config),
-            ControlWidgetType::ExpRatioSettings(config) => self.exp_ratio_settings(config),
+            ControlWidgetType::ExpirationRatioSettings(config) => self.expiration_ratio_settings(config),
         }
     }
 
@@ -1251,6 +1251,7 @@ impl<'a> ControlWidget<'a> {
 
         widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
             .right_from(config.inspiratory_offset_value_widget, 20.0)
+            .y_relative(-3.0)
             .set(config.inspiratory_offset_more_button_widget, &mut self.ui);
 
         widget::Text::new(">")
@@ -1354,7 +1355,7 @@ impl<'a> ControlWidget<'a> {
             .set(config.configure_widget, &mut self.ui);
     }
 
-    fn exp_ratio_settings(&mut self, config: ExpRatioSettingsWidgetConfig) -> f64 {
+    fn expiration_ratio_settings(&mut self, config: ExpirationRatioSettingsWidgetConfig) -> f64 {
         let mut canvas_style = widget::canvas::Style::default();
 
         canvas_style.color = Some(color::TRANSPARENT);
@@ -1363,8 +1364,8 @@ impl<'a> ControlWidget<'a> {
         widget::Canvas::new()
             .with_style(canvas_style)
             .w_h(config.width, config.height)
-            .top_left_of(config.exp_ratio_container_parent)
-            .set(config.exp_ratio_container_widget, &mut self.ui);
+            .top_left_of(config.expiration_ratio_container_parent)
+            .set(config.expiration_ratio_container_widget, &mut self.ui);
 
         let mut plateau_text_style = widget::text::Style::default();
 
@@ -1374,14 +1375,14 @@ impl<'a> ControlWidget<'a> {
 
         widget::Text::new(&APP_I18N.t("trigger-expiratory-term"))
             .with_style(plateau_text_style)
-            .top_left_of(config.exp_ratio_container_widget)
-            .set(config.exp_ratio_text_widget, &mut self.ui);
+            .top_left_of(config.expiration_ratio_container_widget)
+            .set(config.expiration_ratio_text_widget, &mut self.ui);
 
         let less_button_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
 
         widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
-            .top_left_with_margins_on(config.exp_ratio_container_parent, 0.0, 300.0)
-            .set(config.exp_ratio_less_button_widget, &mut self.ui);
+            .top_left_with_margins_on(config.expiration_ratio_container_parent, 0.0, 300.0)
+            .set(config.expiration_ratio_less_button_widget, &mut self.ui);
 
         let mut more_less_buttons_text_style = widget::text::Style::default();
 
@@ -1391,8 +1392,8 @@ impl<'a> ControlWidget<'a> {
 
         widget::Text::new("<")
             .with_style(more_less_buttons_text_style)
-            .mid_top_with_margin_on(config.exp_ratio_less_button_widget, 2.0)
-            .set(config.exp_ratio_less_button_text_widget, &mut self.ui);
+            .mid_top_with_margin_on(config.expiration_ratio_less_button_widget, 2.0)
+            .set(config.expiration_ratio_less_button_text_widget, &mut self.ui);
 
         let mut plateau_value_style = widget::text::Style::default();
 
@@ -1411,17 +1412,17 @@ impl<'a> ControlWidget<'a> {
             .as_str(),
         )
         .with_style(plateau_value_style)
-        .right_from(config.exp_ratio_less_button_widget, 20.0)
-        .set(config.exp_ratio_value_widget, &mut self.ui);
+        .right_from(config.expiration_ratio_less_button_widget, 20.0)
+        .set(config.expiration_ratio_value_widget, &mut self.ui);
 
         widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
-            .right_from(config.exp_ratio_value_widget, 20.0)
-            .set(config.exp_ratio_more_button_widget, &mut self.ui);
+            .right_from(config.expiration_ratio_value_widget, 20.0)
+            .set(config.expiration_ratio_more_button_widget, &mut self.ui);
 
         widget::Text::new(">")
             .with_style(more_less_buttons_text_style)
-            .mid_top_with_margin_on(config.exp_ratio_more_button_widget, 2.0)
-            .set(config.exp_ratio_more_button_text_widget, &mut self.ui);
+            .mid_top_with_margin_on(config.expiration_ratio_more_button_widget, 2.0)
+            .set(config.expiration_ratio_more_button_text_widget, &mut self.ui);
 
         0.0
     }

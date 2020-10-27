@@ -18,7 +18,7 @@ use super::fonts::Fonts;
 use super::utilities::*;
 use super::widget::{
     AlarmsWidgetConfig, BackgroundWidgetConfig, BrandingWidgetConfig, ControlWidget,
-    ControlWidgetType, ErrorWidgetConfig, ExpRatioSettingsWidgetConfig, GraphWidgetConfig,
+    ControlWidgetType, ErrorWidgetConfig, ExpirationRatioSettingsWidgetConfig, GraphWidgetConfig,
     HeartbeatWidgetConfig, InitializingWidgetConfig, LayoutConfig, LayoutWidgetConfig,
     ModalWidgetConfig, NoDataWidgetConfig, StatusWidgetConfig, StopWidgetConfig,
     TelemetryWidgetConfig, TelemetryWidgetContainerConfig, TriggerOverview, TriggerWidgetConfig,
@@ -95,13 +95,13 @@ widget_ids!(pub struct Ids {
   ratio_value_target,
   ratio_unit,
 
-  exp_ratio_term_container,
-  exp_ratio_term_more_button,
-  exp_ratio_term_more_button_text,
-  exp_ratio_term_less_button,
-  exp_ratio_term_less_button_text,
-  exp_ratio_term_text,
-  exp_ratio_term_value,
+  expiration_ratio_term_container,
+  expiration_ratio_term_more_button,
+  expiration_ratio_term_more_button_text,
+  expiration_ratio_term_less_button,
+  expiration_ratio_term_less_button_text,
+  expiration_ratio_term_text,
+  expiration_ratio_term_value,
 
   tidal_parent,
   tidal_title,
@@ -211,7 +211,7 @@ impl<'a> Screen<'a> {
         telemetry_data: ScreenDataTelemetry,
         trigger: &'a Trigger,
         trigger_open: bool,
-        exp_ratio_open: bool,
+        expiration_ratio_open: bool,
     ) {
         // Render common background
         self.render_background();
@@ -237,8 +237,8 @@ impl<'a> Screen<'a> {
 
         if trigger_open {
             self.render_trigger_settings(trigger);
-        } else if exp_ratio_open {
-            self.render_exp_ratio_settings(trigger);
+        } else if expiration_ratio_open {
+            self.render_expiration_ratio_settings(trigger);
         }
     }
 
@@ -368,7 +368,7 @@ impl<'a> Screen<'a> {
         telemetry_data: ScreenDataTelemetry,
         trigger: &'a Trigger,
         trigger_open: bool,
-        exp_ratio_open: bool,
+        expiration_ratio_open: bool,
     ) {
         // Render regular data as background
         self.render_with_data(
@@ -379,10 +379,10 @@ impl<'a> Screen<'a> {
             telemetry_data,
             trigger,
             trigger_open,
-            exp_ratio_open,
+            expiration_ratio_open,
         );
 
-        if !trigger_open && !exp_ratio_open {
+        if !trigger_open && !expiration_ratio_open {
             self.render_modal(
                 DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH,
                 DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT,
@@ -715,32 +715,32 @@ impl<'a> Screen<'a> {
             .render(ControlWidgetType::TriggerSettings(config));
     }
 
-    fn render_exp_ratio_settings(&mut self, settings: &'a Trigger) {
+    fn render_expiration_ratio_settings(&mut self, settings: &'a Trigger) {
         self.render_modal(
-            EXP_RATIO_SETTINGS_MODAL_WIDTH,
-            EXP_RATIO_SETTINGS_MODAL_HEIGTH,
-            Some(EXP_RATIO_SETTINGS_MODAL_PADDING),
+            EXPIRATION_RATIO_SETTINGS_MODAL_WIDTH,
+            EXPIRATION_RATIO_SETTINGS_MODAL_HEIGTH,
+            Some(EXPIRATION_RATIO_SETTINGS_MODAL_PADDING),
             Some((self.ids.modal_validate, self.ids.modal_validate_text)),
         );
 
-        let config = ExpRatioSettingsWidgetConfig {
-            width: EXP_RATIO_SETTINGS_MODAL_WIDTH,
-            height: EXP_RATIO_SETTINGS_MODAL_HEIGTH
+        let config = ExpirationRatioSettingsWidgetConfig {
+            width: EXPIRATION_RATIO_SETTINGS_MODAL_WIDTH,
+            height: EXPIRATION_RATIO_SETTINGS_MODAL_HEIGTH
                 - MODAL_VALIDATE_BUTTON_HEIGHT
-                - (EXP_RATIO_SETTINGS_MODAL_PADDING * 2.0),
+                - (EXPIRATION_RATIO_SETTINGS_MODAL_PADDING * 2.0),
             trigger_settings: settings,
 
-            exp_ratio_container_parent: self.ids.modal_container,
-            exp_ratio_container_widget: self.ids.exp_ratio_term_container,
-            exp_ratio_more_button_widget: self.ids.exp_ratio_term_more_button,
-            exp_ratio_more_button_text_widget: self.ids.exp_ratio_term_more_button_text,
-            exp_ratio_less_button_widget: self.ids.exp_ratio_term_less_button,
-            exp_ratio_less_button_text_widget: self.ids.exp_ratio_term_less_button_text,
-            exp_ratio_text_widget: self.ids.exp_ratio_term_text,
-            exp_ratio_value_widget: self.ids.exp_ratio_term_value,
+            expiration_ratio_container_parent: self.ids.modal_container,
+            expiration_ratio_container_widget: self.ids.expiration_ratio_term_container,
+            expiration_ratio_more_button_widget: self.ids.expiration_ratio_term_more_button,
+            expiration_ratio_more_button_text_widget: self.ids.expiration_ratio_term_more_button_text,
+            expiration_ratio_less_button_widget: self.ids.expiration_ratio_term_less_button,
+            expiration_ratio_less_button_text_widget: self.ids.expiration_ratio_term_less_button_text,
+            expiration_ratio_text_widget: self.ids.expiration_ratio_term_text,
+            expiration_ratio_value_widget: self.ids.expiration_ratio_term_value,
         };
 
         self.widgets
-            .render(ControlWidgetType::ExpRatioSettings(config));
+            .render(ControlWidgetType::ExpirationRatioSettings(config));
     }
 }
