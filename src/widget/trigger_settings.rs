@@ -52,7 +52,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerWidgetConfig) -
 
     status_text_style.font_id = Some(Some(master.fonts.regular));
     status_text_style.color = Some(color::WHITE);
-    status_text_style.font_size = Some(TRIGGER_SETTINGS_TEXT_FONT_SIZE);
+    status_text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
 
     widget::Text::new(&APP_I18N.t("trigger-inspiratory-status"))
         .with_style(status_text_style)
@@ -94,7 +94,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerWidgetConfig) -
 
     offset_text_style.font_id = Some(Some(master.fonts.regular));
     offset_text_style.color = Some(color::WHITE);
-    offset_text_style.font_size = Some(TRIGGER_SETTINGS_TEXT_FONT_SIZE);
+    offset_text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
 
     widget::Text::new(&APP_I18N.t("trigger-inspiratory-offset"))
         .with_style(offset_text_style)
@@ -111,7 +111,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerWidgetConfig) -
 
     more_less_buttons_text_style.font_id = Some(Some(master.fonts.bold));
     more_less_buttons_text_style.color = Some(color::BLACK);
-    more_less_buttons_text_style.font_size = Some(20);
+    more_less_buttons_text_style.font_size = Some(MODAL_BUTTON_NAVIGATE_FONT_SIZE);
 
     widget::Text::new("<")
         .with_style(more_less_buttons_text_style)
@@ -125,7 +125,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerWidgetConfig) -
 
     offset_value_style.font_id = Some(Some(master.fonts.regular));
     offset_value_style.color = Some(color::WHITE);
-    offset_value_style.font_size = Some(TRIGGER_SETTINGS_TEXT_FONT_SIZE);
+    offset_value_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
 
     widget::Text::new(
         format!(

@@ -9,6 +9,7 @@ use conrod_core::{
     Positionable, Sizeable, Widget,
 };
 
+use crate::config::environment::*;
 use crate::chip::settings::trigger::Trigger;
 use crate::display::widget::ControlWidget;
 use crate::physics::units::{convert_mmh2o_to_cmh2o, ConvertMode};
@@ -47,7 +48,7 @@ pub fn render<'a>(
 
     plateau_text_style.font_id = Some(Some(master.fonts.regular));
     plateau_text_style.color = Some(color::WHITE);
-    plateau_text_style.font_size = Some(20);
+    plateau_text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
 
     widget::Text::new(&APP_I18N.t("trigger-expiratory-term"))
         .with_style(plateau_text_style)
@@ -57,14 +58,14 @@ pub fn render<'a>(
     let less_button_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
 
     widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
-        .top_left_with_margins_on(config.expiration_ratio_container_parent, 0.0, 300.0)
+        .top_left_with_margins_on(config.expiration_ratio_container_parent, -3.0, 220.0)
         .set(config.expiration_ratio_less_button_widget, &mut master.ui);
 
     let mut more_less_buttons_text_style = widget::text::Style::default();
 
     more_less_buttons_text_style.font_id = Some(Some(master.fonts.bold));
     more_less_buttons_text_style.color = Some(color::BLACK);
-    more_less_buttons_text_style.font_size = Some(20);
+    more_less_buttons_text_style.font_size = Some(MODAL_BUTTON_NAVIGATE_FONT_SIZE);
 
     widget::Text::new("<")
         .with_style(more_less_buttons_text_style)
@@ -78,7 +79,7 @@ pub fn render<'a>(
 
     plateau_value_style.font_id = Some(Some(master.fonts.regular));
     plateau_value_style.color = Some(color::WHITE);
-    plateau_value_style.font_size = Some(20);
+    plateau_value_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
 
     widget::Text::new(
         format!(
@@ -92,10 +93,12 @@ pub fn render<'a>(
     )
     .with_style(plateau_value_style)
     .right_from(config.expiration_ratio_less_button_widget, 20.0)
+    .y_relative(0.0)
     .set(config.expiration_ratio_value_widget, &mut master.ui);
 
     widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
         .right_from(config.expiration_ratio_value_widget, 20.0)
+        .y_relative(-3.0)
         .set(config.expiration_ratio_more_button_widget, &mut master.ui);
 
     widget::Text::new(">")

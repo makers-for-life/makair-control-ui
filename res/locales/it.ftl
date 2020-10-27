@@ -37,7 +37,7 @@ trigger-label-offset = Compensare:
 trigger-label-configure = Tocca per configurare
 trigger-inspiratory-status = Stato inspiratorio trigger:
 trigger-inspiratory-offset = Offset trigger inspiratorio:
-trigger-expiratory-term = Termine di scadenza
+trigger-expiratory-term = Termine di scadenza:
 trigger-state-enabled = Abilitato
 trigger-state-disabled = Disabilitato
 

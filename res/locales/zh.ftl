@@ -37,7 +37,7 @@ trigger-label-offset = 抵消：
 trigger-label-configure = 点击配置
 trigger-inspiratory-status = 触发吸气状态：
 trigger-inspiratory-offset = 吸气扳机偏移量：
-trigger-expiratory-term = 呼气期
+trigger-expiratory-term = 呼气期:
 trigger-state-enabled = 已启用
 trigger-state-disabled = 残障人士
 

@@ -37,7 +37,7 @@ trigger-label-offset = Смещение:
 trigger-label-configure = Нажмите, чтобы настроить
 trigger-inspiratory-status = Статус триггера:
 trigger-inspiratory-offset = Смещение триггера:
-trigger-expiratory-term = Срок выдоха
+trigger-expiratory-term = Срок выдоха:
 trigger-state-enabled = Включено
 trigger-state-disabled = инвалид
 

@@ -37,7 +37,7 @@ trigger-label-offset = Offset:
 trigger-label-configure = Tap to configure
 trigger-inspiratory-status = Inspiratory trigger status:
 trigger-inspiratory-offset = Inspiratory trigger offset:
-trigger-expiratory-term = Expiratory term
+trigger-expiratory-term = Expiratory term:
 trigger-state-enabled = Enabled
 trigger-state-disabled = Disabled
 

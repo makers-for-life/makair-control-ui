@@ -37,7 +37,7 @@ trigger-label-offset = Deslocamento:
 trigger-label-configure = Toque para configurar
 trigger-inspiratory-status = Status inspiratório do gatilho:
 trigger-inspiratory-offset = Deslocamento do gatilho:
-trigger-expiratory-term = Termo expiratório
+trigger-expiratory-term = Termo expiratório:
 trigger-state-enabled = ativado
 trigger-state-disabled = Desativado
 

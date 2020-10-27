@@ -37,7 +37,7 @@ trigger-label-offset = Offset:
 trigger-label-configure = Antippen zum Öffnen
 trigger-inspiratory-status = Inspirationsstatus auslösen:
 trigger-inspiratory-offset = Inspiratorischer Trigger-Offset:
-trigger-expiratory-term = Exspiratorischer Begriff
+trigger-expiratory-term = Exspiratorischer Begriff:
 trigger-state-enabled = aktiviert
 trigger-state-disabled = Behindert
 

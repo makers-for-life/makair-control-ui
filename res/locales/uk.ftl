@@ -37,7 +37,7 @@ trigger-label-offset = Зсув:
 trigger-label-configure = Налаштуйте
 trigger-inspiratory-status = Стан тригера:
 trigger-inspiratory-offset = Зсув тригера:
-trigger-expiratory-term = Термін видиху
+trigger-expiratory-term = Термін видиху:
 trigger-state-enabled = Увімкнено
 trigger-state-disabled = Інваліди
 
