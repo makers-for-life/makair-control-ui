@@ -19,8 +19,8 @@ use telemetry::structures::{
 };
 
 use crate::config::environment::*;
-use crate::display::utilities::*;
 use crate::physics::types::DataPressure;
+use crate::physics::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum ChipState {

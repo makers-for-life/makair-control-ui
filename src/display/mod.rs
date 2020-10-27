@@ -10,6 +10,5 @@ mod renderer;
 mod screen;
 mod support;
 
-pub mod utilities;
 pub mod widget;
 pub mod window;

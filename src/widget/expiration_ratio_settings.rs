@@ -10,8 +10,8 @@ use conrod_core::{
 };
 
 use crate::chip::settings::trigger::Trigger;
-use crate::display::utilities::*;
 use crate::display::widget::ControlWidget;
+use crate::physics::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::APP_I18N;
 
 pub struct ExpirationRatioSettingsWidgetConfig<'a> {
@@ -28,7 +28,10 @@ pub struct ExpirationRatioSettingsWidgetConfig<'a> {
     pub expiration_ratio_value_widget: WidgetId,
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: ExpirationRatioSettingsWidgetConfig) -> f64 {
+pub fn render<'a>(
+    master: &mut ControlWidget<'a>,
+    config: ExpirationRatioSettingsWidgetConfig,
+) -> f64 {
     let mut canvas_style = widget::canvas::Style::default();
 
     canvas_style.color = Some(color::TRANSPARENT);

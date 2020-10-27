@@ -13,6 +13,8 @@ use glium::Surface;
 use telemetry::{self, TelemetryChannelType};
 
 use crate::chip::{Chip, ChipState};
+use crate::config::arguments::RunMode;
+use crate::config::environment::*;
 use crate::serial::poller::{PollEvent, SerialPollerBuilder};
 use crate::APP_ARGS;
 
@@ -21,8 +23,6 @@ use super::fonts::Fonts;
 use super::renderer::{DisplayRenderer, DisplayRendererBuilder};
 use super::screen::Ids;
 use super::support::GliumDisplayWinitWrapper;
-
-const FRAMERATE: u64 = 30;
 
 pub struct DisplayDrawerBuilder<'a> {
     _phantom: &'a std::marker::PhantomData<u8>,
@@ -73,7 +73,7 @@ impl<'a> DisplayDrawer<'a> {
         let mut events_handler = DisplayEventsBuilder::new();
 
         // Start gathering telemetry
-        let rx = self.start_telemetry();
+        let rx = self.telemetry();
 
         // Start drawer loop
         // Flow: cycles through telemetry events, and refreshes the view every time there is an \
@@ -103,7 +103,7 @@ impl<'a> DisplayDrawer<'a> {
             // Refresh the pressure data interface, if we have any data in the buffer
             let now = Utc::now();
 
-            if (now - last_render) > Duration::milliseconds((1000 / FRAMERATE) as _) {
+            if (now - last_render) > Duration::milliseconds((1000 / DISPLAY_FRAMERATE) as _) {
                 if self.chip.get_state() != &ChipState::Stopped {
                     self.chip.clean_events();
 
@@ -127,13 +127,13 @@ impl<'a> DisplayDrawer<'a> {
         }
     }
 
-    fn start_telemetry(&mut self) -> Receiver<TelemetryChannelType> {
+    fn telemetry(&mut self) -> Receiver<TelemetryChannelType> {
         // Start gathering telemetry
         let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
             std::sync::mpsc::channel();
 
         match &APP_ARGS.mode {
-            crate::Mode::Port { port, output_dir } => {
+            RunMode::Port { port, output_dir } => {
                 let optional_file_buffer = output_dir.as_ref().map(|dir| {
                     let file_count: Vec<std::io::Result<std::fs::DirEntry>> =
                         std::fs::read_dir(dir)
@@ -165,7 +165,7 @@ impl<'a> DisplayDrawer<'a> {
                 });
             }
 
-            crate::Mode::Input(path) => {
+            RunMode::Input(path) => {
                 std::thread::spawn(move || loop {
                     let file = std::fs::File::open(path).unwrap();
 
@@ -177,7 +177,6 @@ impl<'a> DisplayDrawer<'a> {
         rx
     }
 
-    #[allow(clippy::ptr_arg)]
     fn refresh(&mut self) {
         let image_map = self.renderer.render(
             &self.chip.data_pressure,

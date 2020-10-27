@@ -12,11 +12,11 @@ use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 use crate::chip::{settings::trigger::Trigger, ChipState};
 use crate::config::environment::*;
 use crate::physics::types::DataPressure;
+use crate::physics::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::widget::*;
 use crate::APP_I18N;
 
 use super::fonts::Fonts;
-use super::utilities::*;
 use super::widget::{ControlWidget, ControlWidgetType};
 
 widget_ids!(pub struct Ids {

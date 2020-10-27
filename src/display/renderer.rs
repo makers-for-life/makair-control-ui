@@ -338,7 +338,7 @@ impl DisplayRenderer {
         image_map
     }
 
-    #[allow(clippy::ptr_arg, clippy::too_many_arguments)]
+    #[allow(clippy::too_many_arguments)]
     fn data(
         &mut self,
         display: &GliumDisplayWinitWrapper,
