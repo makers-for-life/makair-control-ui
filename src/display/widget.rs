@@ -450,7 +450,7 @@ impl<'a> ControlWidget<'a> {
             DISPLAY_ALARM_CONTAINER_WIDTH_ALARMS
         };
 
-        let container_margin_left = if alarms_count == 0 { 10.0 } else { -100.0 };
+        let container_margin_left = if alarms_count == 0 { 30.0 } else { -100.0 };
 
         let container_height = (max(1, alarms_count) as f64) * DISPLAY_ALARM_MESSAGE_HEIGHT
             + 2.0 * DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL
@@ -469,6 +469,7 @@ impl<'a> ControlWidget<'a> {
             container_color,
         )
         .right_from(config.parent, container_margin_left)
+        .y_relative(12.0)
         .set(config.container, &mut self.ui);
 
         // Draw text
@@ -504,6 +505,7 @@ impl<'a> ControlWidget<'a> {
                 .color(Color::Rgba(1.0, 1.0, 1.0, 0.5))
                 .font_size(12)
                 .right_from(config.title, 42.0)
+                .y_relative(0.0)
                 .set(config.empty, &mut self.ui);
         }
 
