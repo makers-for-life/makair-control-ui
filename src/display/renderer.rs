@@ -25,8 +25,9 @@ use crate::EmbeddedImages;
 use crate::APP_ARGS;
 
 use super::fonts::Fonts;
+use super::identifiers::Ids;
 use super::screen::{
-    Ids, Screen, ScreenBootLoader, ScreenDataBranding, ScreenDataGraph, ScreenDataHeartbeat,
+    Screen, ScreenBootLoader, ScreenDataBranding, ScreenDataGraph, ScreenDataHeartbeat,
     ScreenDataStatus, ScreenDataTelemetry,
 };
 use super::support::GliumDisplayWinitWrapper;
@@ -338,7 +339,7 @@ impl DisplayRenderer {
         image_map
     }
 
-    #[allow(clippy::ptr_arg, clippy::too_many_arguments)]
+    #[allow(clippy::too_many_arguments)]
     fn data(
         &mut self,
         display: &GliumDisplayWinitWrapper,

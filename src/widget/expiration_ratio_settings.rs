@@ -10,8 +10,8 @@ use conrod_core::{
 };
 
 use crate::chip::settings::trigger::Trigger;
-use crate::display::utilities::*;
 use crate::display::widget::ControlWidget;
+use crate::physics::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::APP_I18N;
 
 pub struct ExpirationRatioSettingsWidgetConfig<'a> {

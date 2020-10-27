@@ -6,10 +6,10 @@
 mod drawer;
 mod events;
 mod fonts;
+mod identifiers;
 mod renderer;
 mod screen;
 mod support;
 
-pub mod utilities;
 pub mod widget;
 pub mod window;

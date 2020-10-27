@@ -11,13 +11,14 @@ use conrod_core::{
 
 use crate::chip::settings::trigger::{Trigger, TriggerState};
 use crate::config::environment::*;
-use crate::display::utilities::*;
 use crate::display::widget::ControlWidget;
+use crate::physics::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::APP_I18N;
 
 pub struct TriggerWidgetConfig<'a> {
     pub width: f64,
     pub height: f64,
+
     pub trigger_settings: &'a Trigger,
     pub status_container_parent: WidgetId,
     pub status_container_widget: WidgetId,

@@ -23,7 +23,6 @@ impl LoraController {
     pub fn new() -> Sender<TelemetryMessage> {
         let (tx, rx) = channel();
 
-        #[allow(clippy::cognitive_complexity)]
         thread::spawn(move || {
             sleep(Duration::from_millis(2000));
 
