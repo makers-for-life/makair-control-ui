@@ -56,7 +56,7 @@ lazy_static! {
 
 impl DisplayWindow {
     pub fn spawn(&self, chip: Chip) {
-        debug!("spawning window");
+        debug!("spawning window...");
 
         // Create event loop
         let events_loop = EventsLoop::new();
@@ -114,6 +114,8 @@ impl DisplayWindow {
         // Create window contents drawer
         let mut drawer =
             DisplayDrawerBuilder::new(window, context, events_loop, &mut interface, fonts, chip);
+
+        debug!("window built, will spawn now");
 
         drawer.run();
     }
