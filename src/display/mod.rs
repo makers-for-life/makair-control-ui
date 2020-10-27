@@ -9,7 +9,7 @@ mod fonts;
 mod renderer;
 mod screen;
 mod support;
-mod widget;
 
 pub mod utilities;
+pub mod widget;
 pub mod window;

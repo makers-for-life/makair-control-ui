@@ -22,6 +22,7 @@ mod locale;
 mod lora;
 mod physics;
 mod serial;
+mod widget;
 
 use std::ops::Deref;
 use std::str::FromStr;

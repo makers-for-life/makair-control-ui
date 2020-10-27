@@ -63,7 +63,7 @@ impl DisplayWindow {
 
         // Create window
         let window = WindowBuilder::new()
-            .with_title("MakAir")
+            .with_title("MakAir Control UI")
             .with_window_icon(Some(
                 Icon::from_rgba(
                     IMAGE_WINDOW_ICON_RGBA_RAW.to_vec(),
@@ -99,7 +99,7 @@ impl DisplayWindow {
         // Notice: this depends on the in-use translation, as eg. CJK glyphs are not included in \
         //   the default font.
         let fonts = match APP_ARGS.translation.as_str() {
-            "zh" => Fonts::new(
+            "zh" | "ko" | "ja" => Fonts::new(
                 interface.fonts.insert(FONT_CJK_NOTOSANS_ALL.clone()),
                 interface.fonts.insert(FONT_CJK_NOTOSANS_ALL.clone()),
             ),

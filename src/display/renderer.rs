@@ -145,13 +145,14 @@ impl DisplayRenderer {
                 .chain(interface.widget_input(*widget).taps().map(|_| ()))
         });
 
-        let expiration_ratio_settings_clicks = expiration_ratio_settings_iters.iter().flat_map(|widget| {
-            interface
-                .widget_input(*widget)
-                .clicks()
-                .map(|_| ())
-                .chain(interface.widget_input(*widget).taps().map(|_| ()))
-        });
+        let expiration_ratio_settings_clicks =
+            expiration_ratio_settings_iters.iter().flat_map(|widget| {
+                interface
+                    .widget_input(*widget)
+                    .clicks()
+                    .map(|_| ())
+                    .chain(interface.widget_input(*widget).taps().map(|_| ()))
+            });
 
         for _ in trigger_settings_clicks {
             self.toggle_trigger_settings();
@@ -170,7 +171,9 @@ impl DisplayRenderer {
             {
                 if self.trigger_settings_state == DisplayRendererSettingsState::Opened {
                     self.toggle_trigger_settings();
-                } else if self.expiration_ratio_settings_state == DisplayRendererSettingsState::Opened {
+                } else if self.expiration_ratio_settings_state
+                    == DisplayRendererSettingsState::Opened
+                {
                     self.toggle_expiration_ratio_settings();
                 }
             }
@@ -222,18 +225,24 @@ impl DisplayRenderer {
         }
 
         if self.expiration_ratio_settings_state == DisplayRendererSettingsState::Opened {
-            for _ in self
-                .get_widget_clicks(self.ids.expiration_ratio_term_less_button, interface)
-                .chain(self.get_widget_clicks(self.ids.expiration_ratio_term_less_button_text, interface))
+            for _ in
+                self.get_widget_clicks(self.ids.expiration_ratio_term_less_button, interface)
+                    .chain(self.get_widget_clicks(
+                        self.ids.expiration_ratio_term_less_button_text,
+                        interface,
+                    ))
             {
                 all_events.push(ChipSettingsEvent::InspiratoryTrigger(
                     TriggerEvent::ExpiratoryTerm(SettingAction::Less),
                 ));
             }
 
-            for _ in self
-                .get_widget_clicks(self.ids.expiration_ratio_term_more_button, interface)
-                .chain(self.get_widget_clicks(self.ids.expiration_ratio_term_more_button_text, interface))
+            for _ in
+                self.get_widget_clicks(self.ids.expiration_ratio_term_more_button, interface)
+                    .chain(self.get_widget_clicks(
+                        self.ids.expiration_ratio_term_more_button_text,
+                        interface,
+                    ))
             {
                 all_events.push(ChipSettingsEvent::InspiratoryTrigger(
                     TriggerEvent::ExpiratoryTerm(SettingAction::More),
