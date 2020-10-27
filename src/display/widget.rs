@@ -461,8 +461,7 @@ impl<'a> ControlWidget<'a> {
             + DISPLAY_ALARM_MESSAGE_SPACING_BOTTOM_INITIAL;
 
         if alarms_count > 1 {
-            container_height =
-                container_height + (alarms_count as f64) * DISPLAY_ALARM_MESSAGE_SPACING_TOP_INNER;
+            container_height += (alarms_count as f64) * DISPLAY_ALARM_MESSAGE_SPACING_TOP_INNER;
         }
 
         // Draw container box
