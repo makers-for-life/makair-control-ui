@@ -4,5 +4,5 @@
 // License: Public Domain License
 
 pub mod accessor;
-pub mod loader;
 pub mod alarms;
+pub mod loader;
