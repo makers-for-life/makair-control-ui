@@ -30,9 +30,10 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: ErrorWidgetConfig) -> 
     text_style.color = Some(color::WHITE);
     text_style.font_size = Some(30);
 
-    widget::Text::new(&format!("{}\n{}", APP_I18N.t("error-title"), config.error)) // using \n instead of the wrap methods because I couldn't make them work
+    // Notice: using '\n' instead of the wrap methods because I could not make them work
+    widget::Text::new(&format!("{}\n{}", APP_I18N.t("error-title"), config.error))
         .color(color::WHITE)
-        .align_top() // Aligned to top otherwise I can't make the line breaks work
+        .align_top()
         .with_style(text_style)
         .set(config.id, &mut master.ui);
 

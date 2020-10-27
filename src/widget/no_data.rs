@@ -34,5 +34,6 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: NoDataWidgetConfig) ->
         .middle()
         .with_style(text_style)
         .set(config.id, &mut master.ui);
+
     0 as _
 }
