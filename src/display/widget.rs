@@ -537,7 +537,7 @@ impl<'a> ControlWidget<'a> {
         let from_top = if index == 0 {
             DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL
         } else {
-            DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL
+            DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL - 2.0
                 + index as f64
                     * (DISPLAY_ALARM_MESSAGE_HEIGHT + DISPLAY_ALARM_MESSAGE_SPACING_TOP_INNER)
         } + DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL_OFFSET;
