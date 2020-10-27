@@ -25,6 +25,7 @@ status-power-ac = Внешнее питание
 trigger-label-title = Вызывать
 trigger-label-state = Высказывать:
 trigger-label-offset = Смещение:
+trigger-label-configure = Нажмите, чтобы настроить
 trigger-inspiratory-status = Триггерный инспираторный статус:
 trigger-inspiratory-offset = Смещение триггера вдоха:
 trigger-expiratory-term = Срок выдоха

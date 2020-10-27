@@ -25,6 +25,7 @@ status-power-ac = Stromversorgung
 trigger-label-title = Auslösen
 trigger-label-state = Zustand:
 trigger-label-offset = Offset:
+trigger-label-configure = Antippen zum Öffnen
 trigger-inspiratory-status = Inspirationsstatus auslösen:
 trigger-inspiratory-offset = Inspiratorischer Trigger-Offset:
 trigger-expiratory-term = Exspiratorischer Begriff

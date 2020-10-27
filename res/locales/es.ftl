@@ -25,6 +25,7 @@ status-power-ac = Corriente alterna
 trigger-label-title = Desencadenar
 trigger-label-state = Estado:
 trigger-label-offset = Compensar:
+trigger-label-configure = Toque para configurar
 trigger-inspiratory-status = Activar el estado inspiratorio:
 trigger-inspiratory-offset = Desplazamiento del gatillo inspiratorio:
 trigger-expiratory-term = Término expiratorio

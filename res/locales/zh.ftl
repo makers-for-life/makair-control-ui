@@ -25,6 +25,7 @@ status-power-ac = 交流电
 trigger-label-title = 触发
 trigger-label-state = 州：
 trigger-label-offset = 抵消：
+trigger-label-configure = 点击配置
 trigger-inspiratory-status = 触发吸气状态：
 trigger-inspiratory-offset = 吸气扳机偏移量：
 trigger-expiratory-term = 呼气期

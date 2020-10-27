@@ -25,6 +25,7 @@ status-power-ac = Maiņstrāvas avots
 trigger-label-title = Trigeris
 trigger-label-state = Valsts:
 trigger-label-offset = Kompensācija:
+trigger-label-configure = Pieskarieties, lai atvērtu
 trigger-inspiratory-status = Iedvesmojošā stāvokļa izraisītājs:
 trigger-inspiratory-offset = Ieelpošanas trigera nobīde:
 trigger-expiratory-term = Derīguma termiņš

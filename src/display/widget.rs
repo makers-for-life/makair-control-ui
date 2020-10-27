@@ -368,6 +368,7 @@ pub struct TriggerOverview<'a> {
     pub title_widget: WidgetId,
     pub status_widget: WidgetId,
     pub inspiration_trigger_offset_widget: WidgetId,
+    pub configure_widget: WidgetId,
     pub expiratory_term_widget: WidgetId,
     pub plateau_duration_widget: WidgetId,
     pub width: f64,
@@ -884,8 +885,12 @@ impl<'a> ControlWidget<'a> {
         // Create title text
         widget::Text::new(&config.title)
             .color(color::WHITE)
-            .top_left_with_margins_on(config.ids.1, 8.0, TELEMETRY_WIDGET_PADDING_LEFT)
-            .font_size(16)
+            .top_left_with_margins_on(
+                config.ids.1,
+                TELEMETRY_WIDGET_UNIT_PADDING_BOTTOM_TOP,
+                TELEMETRY_WIDGET_PADDING_LEFT,
+            )
+            .font_size(TELEMETRY_WIDGET_TITLE_FONT_SIZE)
             .set(config.ids.2, &mut self.ui);
 
         // Initiate text style for measured value
@@ -949,14 +954,14 @@ impl<'a> ControlWidget<'a> {
 
             unit_text_style.font_id = Some(Some(self.fonts.regular));
             unit_text_style.color = Some(color::WHITE.with_alpha(0.2));
-            unit_text_style.font_size = Some(13);
+            unit_text_style.font_size = Some(TELEMETRY_WIDGET_UNIT_FONT_SIZE);
 
             // Create unit text
             widget::Text::new(&config.unit)
                 .with_style(unit_text_style)
                 .bottom_left_with_margins_on(
                     config.ids.1,
-                    TELEMETRY_WIDGET_UNIT_PADDING_BOTTOM,
+                    TELEMETRY_WIDGET_UNIT_PADDING_BOTTOM_TOP,
                     TELEMETRY_WIDGET_PADDING_LEFT,
                 )
                 .set(unit_id, &mut self.ui);
@@ -1256,6 +1261,7 @@ impl<'a> ControlWidget<'a> {
         self.trigger_overview_title(&config);
         self.trigger_overview_status(&config);
         self.trigger_overview_offset(&config);
+        self.trigger_overview_configure(&config);
 
         0 as _
     }
@@ -1265,11 +1271,15 @@ impl<'a> ControlWidget<'a> {
 
         text_style.font_id = Some(Some(self.fonts.bold));
         text_style.color = Some(color::WHITE);
-        text_style.font_size = Some(16);
+        text_style.font_size = Some(TELEMETRY_WIDGET_TITLE_FONT_SIZE);
 
         widget::Text::new(&APP_I18N.t("trigger-label-title"))
             .with_style(text_style)
-            .top_left_of(config.container)
+            .top_left_with_margins_on(
+                config.container,
+                TELEMETRY_WIDGET_UNIT_PADDING_BOTTOM_TOP,
+                TELEMETRY_WIDGET_PADDING_LEFT,
+            )
             .set(config.title_widget, &mut self.ui);
     }
 
@@ -1278,7 +1288,7 @@ impl<'a> ControlWidget<'a> {
 
         text_style.font_id = Some(Some(self.fonts.regular));
         text_style.color = Some(color::WHITE);
-        text_style.font_size = Some(14);
+        text_style.font_size = Some(TELEMETRY_WIDGET_LABELS_FONT_SIZE);
 
         let status = if config.trigger_settings.state == TriggerState::Enabled {
             APP_I18N.t("trigger-state-enabled")
@@ -1288,7 +1298,7 @@ impl<'a> ControlWidget<'a> {
 
         widget::Text::new(&format!("{} {}", APP_I18N.t("trigger-label-state"), status))
             .with_style(text_style)
-            .down_from(config.title_widget, 20.0)
+            .down_from(config.title_widget, 13.0)
             .set(config.status_widget, &mut self.ui);
     }
 
@@ -1297,7 +1307,7 @@ impl<'a> ControlWidget<'a> {
 
         text_style.font_id = Some(Some(self.fonts.regular));
         text_style.color = Some(color::WHITE);
-        text_style.font_size = Some(14);
+        text_style.font_size = Some(TELEMETRY_WIDGET_LABELS_FONT_SIZE);
 
         widget::Text::new(&format!(
             "{} {:.1} {}",
@@ -1309,8 +1319,25 @@ impl<'a> ControlWidget<'a> {
             APP_I18N.t("telemetry-unit-cmh2o")
         ))
         .with_style(text_style)
-        .down_from(config.status_widget, 20.0)
+        .down_from(config.status_widget, 5.0)
         .set(config.inspiration_trigger_offset_widget, &mut self.ui);
+    }
+
+    fn trigger_overview_configure(&mut self, config: &TriggerOverview) {
+        let mut text_style = widget::text::Style::default();
+
+        text_style.font_id = Some(Some(self.fonts.bold));
+        text_style.color = Some(color::BLACK.with_alpha(0.8));
+        text_style.font_size = Some(TELEMETRY_WIDGET_UNIT_FONT_SIZE);
+
+        widget::Text::new(&APP_I18N.t("trigger-label-configure"))
+            .with_style(text_style)
+            .bottom_left_with_margins_on(
+                config.container,
+                TELEMETRY_WIDGET_UNIT_PADDING_BOTTOM_TOP,
+                TELEMETRY_WIDGET_PADDING_LEFT,
+            )
+            .set(config.configure_widget, &mut self.ui);
     }
 
     fn exp_ratio_settings(&mut self, config: ExpRatioSettingsWidgetConfig) -> f64 {

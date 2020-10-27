@@ -25,6 +25,7 @@ status-power-ac = AC power
 trigger-label-title = Trigger
 trigger-label-state = State:
 trigger-label-offset = Offset:
+trigger-label-configure = Tap to configure
 trigger-inspiratory-status = Inspiratory trigger status:
 trigger-inspiratory-offset = Inspiratory trigger offset:
 trigger-expiratory-term = Expiratory term

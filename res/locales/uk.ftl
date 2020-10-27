@@ -25,6 +25,7 @@ status-power-ac = Зовнішнє живлення
 trigger-label-title = Тригер
 trigger-label-state = Штат:
 trigger-label-offset = Зсув:
+trigger-label-configure = Торкніться, щоб налаштувати
 trigger-inspiratory-status = Тригерний стан вдиху:
 trigger-inspiratory-offset = Зсув тригера для вдиху:
 trigger-expiratory-term = Термін видиху

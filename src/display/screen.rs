@@ -114,6 +114,7 @@ widget_ids!(pub struct Ids {
   trigger_overview_title,
   trigger_overview_status,
   trigger_overview_offset,
+  trigger_overview_configure,
   trigger_overview_expiratory_term,
   trigger_overview_plateau_duration,
 
@@ -644,6 +645,7 @@ impl<'a> Screen<'a> {
             title_widget: self.ids.trigger_overview_title,
             status_widget: self.ids.trigger_overview_status,
             inspiration_trigger_offset_widget: self.ids.trigger_overview_offset,
+            configure_widget: self.ids.trigger_overview_configure,
             expiratory_term_widget: self.ids.trigger_overview_expiratory_term,
             plateau_duration_widget: self.ids.trigger_overview_plateau_duration,
             background_color: color::BLUE,
