@@ -445,16 +445,25 @@ impl<'a> ControlWidget<'a> {
         let alarms_count = alarms_for_display.len();
 
         let container_width = if alarms_count == 0 {
-            DISPLAY_ALARM_CONTAINER_WIDTH_NO_ALARMS
+            DISPLAY_ALARM_CONTAINER_WIDTH_BASE
         } else {
-            DISPLAY_ALARM_CONTAINER_WIDTH_ALARMS
+            DISPLAY_ALARM_CONTAINER_WIDTH_BASE + (BRANDING_WIDTH as f64) + 44.0
         };
 
-        let container_margin_left = if alarms_count == 0 { 30.0 } else { -100.0 };
+        let container_margin_left = if alarms_count == 0 {
+            30.0
+        } else {
+            -1.0 * BRANDING_WIDTH as f64
+        };
 
-        let container_height = (max(1, alarms_count) as f64) * DISPLAY_ALARM_MESSAGE_HEIGHT
-            + 2.0 * DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL
-            + (alarms_count as f64) * DISPLAY_ALARM_MESSAGE_SPACING_TOP_INNER;
+        let mut container_height = (max(1, alarms_count) as f64) * DISPLAY_ALARM_MESSAGE_HEIGHT
+            + DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL
+            + DISPLAY_ALARM_MESSAGE_SPACING_BOTTOM_INITIAL;
+
+        if alarms_count > 1 {
+            container_height =
+                container_height + (alarms_count as f64) * DISPLAY_ALARM_MESSAGE_SPACING_TOP_INNER;
+        }
 
         // Draw container box
         let container_color = if alarms_count > 0 {
@@ -469,7 +478,7 @@ impl<'a> ControlWidget<'a> {
             container_color,
         )
         .right_from(config.parent, container_margin_left)
-        .y_relative(12.0)
+        .down_from(config.parent, -1.0 * BRANDING_HEIGHT as f64)
         .set(config.container, &mut self.ui);
 
         // Draw text
@@ -592,11 +601,11 @@ impl<'a> ControlWidget<'a> {
 
         text_style.font_id = Some(Some(self.fonts.bold));
         text_style.color = Some(color::WHITE);
-        text_style.font_size = Some(24);
+        text_style.font_size = Some(DISPLAY_ALARM_CODE_FONT_SIZE);
 
         widget::text::Text::new(&format!("{}", alarm_code.code()))
             .with_style(text_style)
-            .mid_top_of(config.alarm_codes_containers[index])
+            .mid_top_with_margin_on(config.alarm_codes_containers[index], 2.0)
             .set(config.alarm_codes[index], &mut self.ui);
     }
 
@@ -626,8 +635,8 @@ impl<'a> ControlWidget<'a> {
 
         widget::text::Text::new(&code.description())
             .color(color::WHITE)
-            .font_size(24)
-            .top_left_with_margins_on(config.alarm_messages_containers[index], 0.0, 5.0)
+            .font_size(DISPLAY_ALARM_MESSAGE_FONT_SIZE)
+            .top_left_with_margins_on(config.alarm_messages_containers[index], 3.0, 8.0)
             .set(config.alarm_messages[index], &mut self.ui);
     }
 
