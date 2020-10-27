@@ -90,6 +90,7 @@ widget_ids!(pub struct Ids {
   tidal_unit,
 
   trigger_overview_container,
+  trigger_overview_border,
   trigger_overview_title,
   trigger_overview_status,
   trigger_overview_offset,

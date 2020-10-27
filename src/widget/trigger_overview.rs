@@ -18,6 +18,7 @@ use crate::APP_I18N;
 pub struct TriggerOverview<'a> {
     pub parent: WidgetId,
     pub container: WidgetId,
+    pub border: WidgetId,
     pub title_widget: WidgetId,
     pub status_widget: WidgetId,
     pub inspiration_trigger_offset_widget: WidgetId,
@@ -33,10 +34,17 @@ pub struct TriggerOverview<'a> {
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerOverview) -> f64 {
+    // Create container
     widget::rectangle::Rectangle::fill_with([config.width, config.height], config.background_color)
         .bottom_left_with_margins_on(config.parent, config.y_position, config.x_position)
         .set(config.container, &mut master.ui);
 
+    // Append left border
+    widget::rectangle::Rectangle::fill_with([1.0, config.height], color::BLACK.with_alpha(0.25))
+        .top_left_with_margins_on(config.container, 0.0, -1.0)
+        .set(config.border, &mut master.ui);
+
+    // Append contents
     title(master, &config);
     status(master, &config);
     offset(master, &config);
@@ -57,7 +65,7 @@ fn title<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverview) {
         .top_left_with_margins_on(
             config.container,
             TELEMETRY_WIDGET_UNIT_PADDING_BOTTOM_TOP,
-            TELEMETRY_WIDGET_PADDING_LEFT,
+            TELEMETRY_WIDGET_PADDING_LEFT_DEEP,
         )
         .set(config.title_widget, &mut master.ui);
 }
@@ -114,7 +122,7 @@ fn configure<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverview) {
         .bottom_left_with_margins_on(
             config.container,
             TELEMETRY_WIDGET_UNIT_PADDING_BOTTOM_TOP,
-            TELEMETRY_WIDGET_PADDING_LEFT,
+            TELEMETRY_WIDGET_PADDING_LEFT_DEEP,
         )
         .set(config.configure_widget, &mut master.ui);
 }

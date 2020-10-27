@@ -111,7 +111,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: TelemetryWidgetConfig)
         let mut unit_text_style = conrod_core::widget::primitive::text::Style::default();
 
         unit_text_style.font_id = Some(Some(master.fonts.regular));
-        unit_text_style.color = Some(color::WHITE.with_alpha(0.2));
+        unit_text_style.color = Some(color::WHITE.with_alpha(0.35));
         unit_text_style.font_size = Some(TELEMETRY_WIDGET_UNIT_FONT_SIZE);
 
         // Create unit text

@@ -16,7 +16,7 @@ use super::alarms;
 
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
-use crate::locale::alarms::{description_to_locale as alarm_description_to_locale};
+use crate::locale::alarms::description_to_locale as alarm_description_to_locale;
 
 pub fn render<'a>(
     master: &mut ControlWidget<'a>,

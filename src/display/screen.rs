@@ -438,6 +438,36 @@ impl<'a> Screen<'a> {
             },
         ));
 
+        // Initialize the tidal widget
+        let previous_volume = machine_snapshot
+            .previous_volume
+            .map(|v| format!("{}", v))
+            .unwrap_or_else(|| APP_I18N.t("telemetry-value-empty"));
+
+        self.widgets.render(ControlWidgetType::Telemetry(
+            telemetry_view::TelemetryWidgetConfig {
+                title: APP_I18N.t("telemetry-label-tidal"),
+                value_measured: Some(previous_volume),
+                value_target: None,
+                value_arrow: telemetry_data.arrow_image_id,
+                unit: APP_I18N.t("telemetry-unit-milliliters"),
+                ids: (
+                    self.ids.cycles_parent,
+                    self.ids.tidal_parent,
+                    self.ids.tidal_title,
+                    self.ids.tidal_value_measured,
+                    self.ids.tidal_value_arrow,
+                    self.ids.tidal_value_target,
+                    Some(self.ids.tidal_unit),
+                ),
+                x_position: TELEMETRY_WIDGET_SIZE_WIDTH,
+                y_position: 0.0,
+                background_color: Color::Rgba(52.0 / 255.0, 52.0 / 255.0, 52.0 / 255.0, 1.0),
+                width: TELEMETRY_WIDGET_SIZE_WIDTH,
+                height: LAYOUT_FOOTER_SIZE_HEIGHT,
+            },
+        ));
+
         // Initialize the ratio widget
         // Important: if the ratio has decimals, then show them (to the first decimal). If it \
         //   has no decimals (eg. '2.0'), then show it as an integer.
@@ -463,7 +493,7 @@ impl<'a> Screen<'a> {
                     APP_I18N.t("telemetry-unit-milliseconds")
                 ),
                 ids: (
-                    self.ids.cycles_parent,
+                    self.ids.tidal_parent,
                     self.ids.ratio_parent,
                     self.ids.ratio_title,
                     self.ids.ratio_value_measured,
@@ -473,37 +503,7 @@ impl<'a> Screen<'a> {
                 ),
                 x_position: TELEMETRY_WIDGET_SIZE_WIDTH,
                 y_position: 0.0,
-                background_color: Color::Rgba(52.0 / 255.0, 52.0 / 255.0, 52.0 / 255.0, 1.0),
-                width: TELEMETRY_WIDGET_SIZE_WIDTH,
-                height: LAYOUT_FOOTER_SIZE_HEIGHT,
-            },
-        ));
-
-        // Initialize the tidal widget
-        let previous_volume = machine_snapshot
-            .previous_volume
-            .map(|v| format!("{}", v))
-            .unwrap_or_else(|| APP_I18N.t("telemetry-value-empty"));
-
-        self.widgets.render(ControlWidgetType::Telemetry(
-            telemetry_view::TelemetryWidgetConfig {
-                title: APP_I18N.t("telemetry-label-tidal"),
-                value_measured: Some(previous_volume),
-                value_target: None,
-                value_arrow: telemetry_data.arrow_image_id,
-                unit: APP_I18N.t("telemetry-unit-milliliters"),
-                ids: (
-                    self.ids.ratio_parent,
-                    self.ids.tidal_parent,
-                    self.ids.tidal_title,
-                    self.ids.tidal_value_measured,
-                    self.ids.tidal_value_arrow,
-                    self.ids.tidal_value_target,
-                    Some(self.ids.tidal_unit),
-                ),
-                x_position: TELEMETRY_WIDGET_SIZE_WIDTH,
-                y_position: 0.0,
-                background_color: Color::Rgba(52.0 / 255.0, 52.0 / 255.0, 52.0 / 255.0, 1.0),
+                background_color: color::BLUE,
                 width: TELEMETRY_WIDGET_SIZE_WIDTH,
                 height: LAYOUT_FOOTER_SIZE_HEIGHT,
             },
@@ -512,8 +512,9 @@ impl<'a> Screen<'a> {
         // Initialize the trigger widget
         self.widgets.render(ControlWidgetType::TriggerOverview(
             trigger_overview::TriggerOverview {
-                parent: self.ids.tidal_parent,
+                parent: self.ids.ratio_parent,
                 container: self.ids.trigger_overview_container,
+                border: self.ids.trigger_overview_border,
                 title_widget: self.ids.trigger_overview_title,
                 status_widget: self.ids.trigger_overview_status,
                 inspiration_trigger_offset_widget: self.ids.trigger_overview_offset,
