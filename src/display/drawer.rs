@@ -20,8 +20,8 @@ use crate::APP_ARGS;
 
 use super::events::{DisplayEventsBuilder, DisplayEventsHandleOutcome};
 use super::fonts::Fonts;
+use super::identifiers::Ids;
 use super::renderer::{DisplayRenderer, DisplayRendererBuilder};
-use super::screen::Ids;
 use super::support::GliumDisplayWinitWrapper;
 
 pub struct DisplayDrawerBuilder<'a> {
