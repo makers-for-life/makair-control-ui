@@ -8,7 +8,7 @@ pub mod alarms;
 pub mod background;
 pub mod branding;
 pub mod error;
-pub mod expiration_ratio_settings;
+pub mod expiration_term_settings;
 pub mod graph;
 pub mod heartbeat;
 pub mod initializing;

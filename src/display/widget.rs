@@ -24,7 +24,7 @@ pub enum ControlWidgetType<'a> {
     Layout(layout::LayoutConfig),
     TriggerSettings(trigger_settings::TriggerWidgetConfig<'a>),
     TriggerOverview(trigger_overview::TriggerOverview<'a>),
-    ExpirationRatioSettings(expiration_ratio_settings::ExpirationRatioSettingsWidgetConfig<'a>),
+    ExpirationTermSettings(expiration_term_settings::ExpirationTermSettingsWidgetConfig<'a>),
 }
 
 pub struct ControlWidget<'a> {
@@ -57,8 +57,8 @@ impl<'a> ControlWidget<'a> {
             ControlWidgetType::Layout(config) => layout::render(self, config),
             ControlWidgetType::TriggerSettings(config) => trigger_settings::render(self, config),
             ControlWidgetType::TriggerOverview(config) => trigger_overview::render(self, config),
-            ControlWidgetType::ExpirationRatioSettings(config) => {
-                expiration_ratio_settings::render(self, config)
+            ControlWidgetType::ExpirationTermSettings(config) => {
+                expiration_term_settings::render(self, config)
             }
         }
     }

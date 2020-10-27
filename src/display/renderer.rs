@@ -44,7 +44,7 @@ pub struct DisplayRenderer {
     fonts: Fonts,
     ids: Ids,
     trigger_settings_state: DisplayRendererSettingsState,
-    expiration_ratio_settings_state: DisplayRendererSettingsState,
+    expiration_term_settings_state: DisplayRendererSettingsState,
 }
 
 const FIRMWARE_VERSION_NONE: &str = "n/a";
@@ -79,7 +79,7 @@ impl DisplayRendererBuilder {
             fonts,
             ids,
             trigger_settings_state: DisplayRendererSettingsState::Closed,
-            expiration_ratio_settings_state: DisplayRendererSettingsState::Closed,
+            expiration_term_settings_state: DisplayRendererSettingsState::Closed,
         }
     }
 }
@@ -130,7 +130,7 @@ impl DisplayRenderer {
             self.ids.trigger_overview_offset,
         ];
 
-        let expiration_ratio_settings_iters = vec![
+        let expiration_term_settings_iters = vec![
             self.ids.ratio_parent,
             self.ids.ratio_title,
             self.ids.ratio_value_measured,
@@ -146,8 +146,8 @@ impl DisplayRenderer {
                 .chain(interface.widget_input(*widget).taps().map(|_| ()))
         });
 
-        let expiration_ratio_settings_clicks =
-            expiration_ratio_settings_iters.iter().flat_map(|widget| {
+        let expiration_term_settings_clicks =
+            expiration_term_settings_iters.iter().flat_map(|widget| {
                 interface
                     .widget_input(*widget)
                     .clicks()
@@ -159,12 +159,12 @@ impl DisplayRenderer {
             self.toggle_trigger_settings();
         }
 
-        for _ in expiration_ratio_settings_clicks {
-            self.toggle_expiration_ratio_settings();
+        for _ in expiration_term_settings_clicks {
+            self.toggle_expiration_term_settings();
         }
 
         if self.trigger_settings_state == DisplayRendererSettingsState::Opened
-            || self.expiration_ratio_settings_state == DisplayRendererSettingsState::Opened
+            || self.expiration_term_settings_state == DisplayRendererSettingsState::Opened
         {
             for _ in self
                 .get_widget_clicks(self.ids.modal_validate, interface)
@@ -172,16 +172,16 @@ impl DisplayRenderer {
             {
                 if self.trigger_settings_state == DisplayRendererSettingsState::Opened {
                     self.toggle_trigger_settings();
-                } else if self.expiration_ratio_settings_state
+                } else if self.expiration_term_settings_state
                     == DisplayRendererSettingsState::Opened
                 {
-                    self.toggle_expiration_ratio_settings();
+                    self.toggle_expiration_term_settings();
                 }
             }
         }
 
         if self.trigger_settings_state == DisplayRendererSettingsState::Closed
-            && self.expiration_ratio_settings_state == DisplayRendererSettingsState::Closed
+            && self.expiration_term_settings_state == DisplayRendererSettingsState::Closed
         {
             for xy in self.get_widget_clicks(self.ids.modal_background, interface) {
                 if let Some(rect_of) = interface.rect_of(self.ids.trigger_overview_container) {
@@ -192,7 +192,7 @@ impl DisplayRenderer {
 
                 if let Some(rect_of) = interface.rect_of(self.ids.ratio_parent) {
                     if rect_of.is_over(xy) {
-                        self.toggle_expiration_ratio_settings();
+                        self.toggle_expiration_term_settings();
                     }
                 }
             }
@@ -225,11 +225,11 @@ impl DisplayRenderer {
             }
         }
 
-        if self.expiration_ratio_settings_state == DisplayRendererSettingsState::Opened {
+        if self.expiration_term_settings_state == DisplayRendererSettingsState::Opened {
             for _ in
-                self.get_widget_clicks(self.ids.expiration_ratio_term_less_button, interface)
+                self.get_widget_clicks(self.ids.expiration_term_term_less_button, interface)
                     .chain(self.get_widget_clicks(
-                        self.ids.expiration_ratio_term_less_button_text,
+                        self.ids.expiration_term_term_less_button_text,
                         interface,
                     ))
             {
@@ -239,9 +239,9 @@ impl DisplayRenderer {
             }
 
             for _ in
-                self.get_widget_clicks(self.ids.expiration_ratio_term_more_button, interface)
+                self.get_widget_clicks(self.ids.expiration_term_term_more_button, interface)
                     .chain(self.get_widget_clicks(
-                        self.ids.expiration_ratio_term_more_button_text,
+                        self.ids.expiration_term_term_more_button_text,
                         interface,
                     ))
             {
@@ -273,8 +273,8 @@ impl DisplayRenderer {
         };
     }
 
-    fn toggle_expiration_ratio_settings(&mut self) {
-        self.expiration_ratio_settings_state = match self.expiration_ratio_settings_state {
+    fn toggle_expiration_term_settings(&mut self) {
+        self.expiration_term_settings_state = match self.expiration_term_settings_state {
             DisplayRendererSettingsState::Closed => DisplayRendererSettingsState::Opened,
             DisplayRendererSettingsState::Opened => DisplayRendererSettingsState::Closed,
         };
@@ -472,7 +472,7 @@ impl DisplayRenderer {
                 screen_data_telemetry,
                 trigger_settings,
                 self.trigger_settings_state == DisplayRendererSettingsState::Opened,
-                self.expiration_ratio_settings_state == DisplayRendererSettingsState::Opened,
+                self.expiration_term_settings_state == DisplayRendererSettingsState::Opened,
             ),
 
             ChipState::Stopped => screen.render_stop(
@@ -483,7 +483,7 @@ impl DisplayRenderer {
                 screen_data_telemetry,
                 trigger_settings,
                 self.trigger_settings_state == DisplayRendererSettingsState::Opened,
-                self.expiration_ratio_settings_state == DisplayRendererSettingsState::Opened,
+                self.expiration_term_settings_state == DisplayRendererSettingsState::Opened,
             ),
 
             _ => unreachable!(),

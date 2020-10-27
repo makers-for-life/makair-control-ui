@@ -86,7 +86,7 @@ impl<'a> Screen<'a> {
         telemetry_data: ScreenDataTelemetry,
         trigger: &'a Trigger,
         trigger_open: bool,
-        expiration_ratio_open: bool,
+        expiration_term_open: bool,
     ) {
         // Render common background
         self.render_background();
@@ -112,8 +112,8 @@ impl<'a> Screen<'a> {
 
         if trigger_open {
             self.render_trigger_settings(trigger);
-        } else if expiration_ratio_open {
-            self.render_expiration_ratio_settings(trigger);
+        } else if expiration_term_open {
+            self.render_expiration_term_settings(trigger);
         }
     }
 
@@ -239,7 +239,7 @@ impl<'a> Screen<'a> {
         telemetry_data: ScreenDataTelemetry,
         trigger: &'a Trigger,
         trigger_open: bool,
-        expiration_ratio_open: bool,
+        expiration_term_open: bool,
     ) {
         // Render regular data as background
         self.render_with_data(
@@ -250,10 +250,10 @@ impl<'a> Screen<'a> {
             telemetry_data,
             trigger,
             trigger_open,
-            expiration_ratio_open,
+            expiration_term_open,
         );
 
-        if !trigger_open && !expiration_ratio_open {
+        if !trigger_open && !expiration_term_open {
             self.render_modal(
                 DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH,
                 DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT,
@@ -588,35 +588,35 @@ impl<'a> Screen<'a> {
         ));
     }
 
-    fn render_expiration_ratio_settings(&mut self, settings: &'a Trigger) {
+    fn render_expiration_term_settings(&mut self, settings: &'a Trigger) {
         self.render_modal(
-            EXPIRATION_RATIO_SETTINGS_MODAL_WIDTH,
-            EXPIRATION_RATIO_SETTINGS_MODAL_HEIGTH,
-            Some(EXPIRATION_RATIO_SETTINGS_MODAL_PADDING),
+            EXPIRATION_TERM_SETTINGS_MODAL_WIDTH,
+            EXPIRATION_TERM_SETTINGS_MODAL_HEIGTH,
+            Some(EXPIRATION_TERM_SETTINGS_MODAL_PADDING),
             Some((self.ids.modal_validate, self.ids.modal_validate_text)),
         );
 
         self.widgets
-            .render(ControlWidgetType::ExpirationRatioSettings(
-                expiration_ratio_settings::ExpirationRatioSettingsWidgetConfig {
-                    width: EXPIRATION_RATIO_SETTINGS_MODAL_WIDTH,
-                    height: EXPIRATION_RATIO_SETTINGS_MODAL_HEIGTH
+            .render(ControlWidgetType::ExpirationTermSettings(
+                expiration_term_settings::ExpirationTermSettingsWidgetConfig {
+                    width: EXPIRATION_TERM_SETTINGS_MODAL_WIDTH,
+                    height: EXPIRATION_TERM_SETTINGS_MODAL_HEIGTH
                         - MODAL_VALIDATE_BUTTON_HEIGHT
-                        - (EXPIRATION_RATIO_SETTINGS_MODAL_PADDING * 2.0),
+                        - (EXPIRATION_TERM_SETTINGS_MODAL_PADDING * 2.0),
                     trigger_settings: settings,
 
-                    expiration_ratio_container_parent: self.ids.modal_container,
-                    expiration_ratio_container_widget: self.ids.expiration_ratio_term_container,
-                    expiration_ratio_more_button_widget: self.ids.expiration_ratio_term_more_button,
-                    expiration_ratio_more_button_text_widget: self
+                    expiration_term_container_parent: self.ids.modal_container,
+                    expiration_term_container_widget: self.ids.expiration_term_term_container,
+                    expiration_term_more_button_widget: self.ids.expiration_term_term_more_button,
+                    expiration_term_more_button_text_widget: self
                         .ids
-                        .expiration_ratio_term_more_button_text,
-                    expiration_ratio_less_button_widget: self.ids.expiration_ratio_term_less_button,
-                    expiration_ratio_less_button_text_widget: self
+                        .expiration_term_term_more_button_text,
+                    expiration_term_less_button_widget: self.ids.expiration_term_term_less_button,
+                    expiration_term_less_button_text_widget: self
                         .ids
-                        .expiration_ratio_term_less_button_text,
-                    expiration_ratio_text_widget: self.ids.expiration_ratio_term_text,
-                    expiration_ratio_value_widget: self.ids.expiration_ratio_term_value,
+                        .expiration_term_term_less_button_text,
+                    expiration_term_text_widget: self.ids.expiration_term_term_text,
+                    expiration_term_value_widget: self.ids.expiration_term_term_value,
                 },
             ));
     }
