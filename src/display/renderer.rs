@@ -3,6 +3,8 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+use std::borrow::Cow;
+
 use chrono::{DateTime, NaiveDateTime, Utc};
 use conrod_core::widget::Id as WidgetId;
 use conrod_core::Ui;
@@ -19,6 +21,7 @@ use crate::chip::settings::{
 };
 use crate::chip::ChipState;
 use crate::config::environment::*;
+use crate::utilities::image::reverse_rgba;
 use crate::utilities::parse::parse_version_number;
 #[cfg(feature = "graph-scaler")]
 use crate::utilities::pressure::process_max_allowed_pressure;
@@ -48,26 +51,34 @@ pub struct DisplayRenderer {
 }
 
 lazy_static! {
-    static ref IMAGE_TOP_LOGO_RGBA_RAW: Vec<u8> =
-        load_from_memory(EmbeddedImages::get("top-logo.png").unwrap().to_mut())
+    static ref IMAGE_TOP_LOGO_RGBA_RAW: Vec<u8> = reverse_rgba(
+        &load_from_memory(EmbeddedImages::get("top-logo.png").unwrap().to_mut())
             .unwrap()
             .into_rgba()
-            .into_raw();
-    static ref IMAGE_BOOTLOADER_LOGO_RGBA_RAW: Vec<u8> =
-        load_from_memory(EmbeddedImages::get("bootloader-logo.png").unwrap().to_mut())
+            .into_raw(),
+        BRANDING_WIDTH
+    );
+    static ref IMAGE_BOOTLOADER_LOGO_RGBA_RAW: Vec<u8> = reverse_rgba(
+        &load_from_memory(EmbeddedImages::get("bootloader-logo.png").unwrap().to_mut())
             .unwrap()
             .into_rgba()
-            .into_raw();
-    static ref IMAGE_TELEMETRY_ARROW_RGBA_RAW: Vec<u8> =
-        load_from_memory(EmbeddedImages::get("telemetry-arrow.png").unwrap().to_mut())
+            .into_raw(),
+        BOOTLOADER_LOGO_WIDTH
+    );
+    static ref IMAGE_TELEMETRY_ARROW_RGBA_RAW: Vec<u8> = reverse_rgba(
+        &load_from_memory(EmbeddedImages::get("telemetry-arrow.png").unwrap().to_mut())
             .unwrap()
             .into_rgba()
-            .into_raw();
-    static ref IMAGE_STATUS_SAVE_RGBA_RAW: Vec<u8> =
-        load_from_memory(EmbeddedImages::get("save.png").unwrap().to_mut())
+            .into_raw(),
+        TELEMETRY_ARROW_WIDTH
+    );
+    static ref IMAGE_STATUS_SAVE_RGBA_RAW: Vec<u8> = reverse_rgba(
+        &load_from_memory(EmbeddedImages::get("save.png").unwrap().to_mut())
             .unwrap()
             .into_rgba()
-            .into_raw();
+            .into_raw(),
+        STATUS_SAVE_ICON_WIDTH
+    );
     static ref GRAPH_AXIS_Y_FONT: TextStyle<'static> =
         TextStyle::from(("sans-serif", 15).into_font());
 }
@@ -497,48 +508,73 @@ impl DisplayRenderer {
         &self,
         display: &GliumDisplayWinitWrapper,
     ) -> glium::texture::Texture2d {
-        // Create image from raw buffer
-        let raw_image = glium::texture::RawImage2d::from_raw_rgba_reversed(
-            &*IMAGE_BOOTLOADER_LOGO_RGBA_RAW,
-            (BOOTLOADER_LOGO_WIDTH, BOOTLOADER_LOGO_HEIGHT),
-        );
-
-        glium::texture::Texture2d::new(&display.0, raw_image).unwrap()
+        // Create image from raw buffer (cached)
+        // Notice: build the raw image directly using the texture internals, as to avoid cloning \
+        //   the raw image bytes at every refresh.
+        glium::texture::Texture2d::new(
+            &display.0,
+            glium::texture::RawImage2d {
+                data: Cow::Borrowed(&*IMAGE_BOOTLOADER_LOGO_RGBA_RAW),
+                width: BOOTLOADER_LOGO_WIDTH,
+                height: BOOTLOADER_LOGO_HEIGHT,
+                format: glium::texture::ClientFormat::U8U8U8U8,
+            },
+        )
+        .unwrap()
     }
 
     fn draw_telemetry_arrow(
         &self,
         display: &GliumDisplayWinitWrapper,
     ) -> glium::texture::Texture2d {
-        // Create image from raw buffer
-        let raw_image = glium::texture::RawImage2d::from_raw_rgba_reversed(
-            &*IMAGE_TELEMETRY_ARROW_RGBA_RAW,
-            (TELEMETRY_ARROW_WIDTH, TELEMETRY_ARROW_HEIGHT),
-        );
-
-        glium::texture::Texture2d::new(&display.0, raw_image).unwrap()
+        // Create image from raw buffer (cached)
+        // Notice: build the raw image directly using the texture internals, as to avoid cloning \
+        //   the raw image bytes at every refresh.
+        glium::texture::Texture2d::new(
+            &display.0,
+            glium::texture::RawImage2d {
+                data: Cow::Borrowed(&*IMAGE_TELEMETRY_ARROW_RGBA_RAW),
+                width: TELEMETRY_ARROW_WIDTH,
+                height: TELEMETRY_ARROW_HEIGHT,
+                format: glium::texture::ClientFormat::U8U8U8U8,
+            },
+        )
+        .unwrap()
     }
 
     fn draw_status_save_icon(
         &self,
         display: &GliumDisplayWinitWrapper,
     ) -> glium::texture::Texture2d {
-        let raw_image = glium::texture::RawImage2d::from_raw_rgba_reversed(
-            &*IMAGE_STATUS_SAVE_RGBA_RAW,
-            (STATUS_SAVE_ICON_WIDTH, STATUS_SAVE_ICON_HEIGHT),
-        );
-
-        glium::texture::Texture2d::new(&display.0, raw_image).unwrap()
+        // Create image from raw buffer (cached)
+        // Notice: build the raw image directly using the texture internals, as to avoid cloning \
+        //   the raw image bytes at every refresh.
+        glium::texture::Texture2d::new(
+            &display.0,
+            glium::texture::RawImage2d {
+                data: Cow::Borrowed(&*IMAGE_STATUS_SAVE_RGBA_RAW),
+                width: STATUS_SAVE_ICON_WIDTH,
+                height: STATUS_SAVE_ICON_HEIGHT,
+                format: glium::texture::ClientFormat::U8U8U8U8,
+            },
+        )
+        .unwrap()
     }
 
     fn draw_branding(&self, display: &GliumDisplayWinitWrapper) -> glium::texture::Texture2d {
-        // Create image from raw buffer
-        let raw_image = glium::texture::RawImage2d::from_raw_rgba_reversed(
-            &*IMAGE_TOP_LOGO_RGBA_RAW,
-            (BRANDING_WIDTH, BRANDING_HEIGHT),
-        );
-
-        glium::texture::Texture2d::new(&display.0, raw_image).unwrap()
+        // Create image from raw buffer (cached)
+        // Notice: build the raw image directly using the texture internals, as to avoid cloning \
+        //   the raw image bytes at every refresh.
+        glium::texture::Texture2d::new(
+            &display.0,
+            glium::texture::RawImage2d {
+                data: Cow::Borrowed(&*IMAGE_TOP_LOGO_RGBA_RAW),
+                width: BRANDING_WIDTH,
+                height: BRANDING_HEIGHT,
+                format: glium::texture::ClientFormat::U8U8U8U8,
+            },
+        )
+        .unwrap()
     }
 
     fn draw_data_chart(
