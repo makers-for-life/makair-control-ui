@@ -18,6 +18,7 @@ use crate::chip::settings::{
 };
 use crate::chip::ChipState;
 use crate::config::environment::*;
+use crate::utilities::parse::parse_version_number;
 #[cfg(feature = "graph-scaler")]
 use crate::utilities::pressure::process_max_allowed_pressure;
 use crate::utilities::types::DataPressure;
@@ -44,8 +45,6 @@ pub struct DisplayRenderer {
     trigger_settings_state: DisplayRendererSettingsState,
     expiration_term_settings_state: DisplayRendererSettingsState,
 }
-
-const FIRMWARE_VERSION_NONE: &str = "n/a";
 
 lazy_static! {
     static ref IMAGE_TOP_LOGO_RGBA_RAW: Vec<u8> =
@@ -427,11 +426,11 @@ impl DisplayRenderer {
         );
 
         let screen_data_branding = DisplayDataBranding {
-            firmware_version: if machine_snapshot.version.is_empty() {
-                FIRMWARE_VERSION_NONE
+            firmware_version: parse_version_number(if machine_snapshot.version.is_empty() {
+                BRANDING_TEXT_VERSION_NONE
             } else {
                 &machine_snapshot.version
-            },
+            }),
             image_id: branding_image_id,
             width: branding_width as _,
             height: branding_height as _,
