@@ -31,7 +31,7 @@ _Tested with Rust version: `rustc 1.43.0 (4fb7144ed 2020-04-20)`_
 
 ### Building on a ventilator
 
-Building directly on a ventilator may be found convenient by developers. The Raspberry Pis in ventilators run ArchLinux. To build on a ventilator:
+Building directly on a ventilator is convenient for testing purposes while developing. The Raspberry Pi boards in ventilators run ArchLinux. To build on a ventilator:
 
 1. Make sure `glibc` is up to date (e.g. by running `pacman -S glibc` as root)
 2. Install the following packages:
