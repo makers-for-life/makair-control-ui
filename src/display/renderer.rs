@@ -551,6 +551,7 @@ impl DisplayRenderer {
         let drawing = BitMapBackend::with_buffer(&mut buffer, (GRAPH_WIDTH, GRAPH_HEIGHT))
             .into_drawing_area();
 
+        // Acquire time range
         let newest_time = data_pressure
             .front()
             .unwrap_or(&(
