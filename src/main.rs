@@ -20,8 +20,8 @@ mod display;
 mod locale;
 #[cfg(feature = "lora")]
 mod lora;
-mod physics;
 mod serial;
+mod utilities;
 mod widget;
 
 use std::ops::Deref;

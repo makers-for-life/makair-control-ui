@@ -13,8 +13,8 @@ use conrod_core::{
 
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
-use crate::physics::pressure::process_max_allowed_pressure;
-use crate::physics::types::DataPressure;
+use crate::utilities::pressure::process_max_allowed_pressure;
+use crate::utilities::types::DataPressure;
 
 pub struct Config<'a> {
     data_pressure: &'a DataPressure,

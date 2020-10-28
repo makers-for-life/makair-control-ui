@@ -11,7 +11,7 @@ use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
 use crate::chip::settings::trigger::Trigger;
 use crate::config::environment::*;
-use crate::physics::units::{convert_mmh2o_to_cmh2o, ConvertMode};
+use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::widget::*;
 use crate::APP_I18N;
 

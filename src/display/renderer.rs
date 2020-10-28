@@ -19,8 +19,8 @@ use crate::chip::settings::{
 use crate::chip::ChipState;
 use crate::config::environment::*;
 #[cfg(feature = "graph-scaler")]
-use crate::physics::pressure::process_max_allowed_pressure;
-use crate::physics::types::DataPressure;
+use crate::utilities::pressure::process_max_allowed_pressure;
+use crate::utilities::types::DataPressure;
 use crate::EmbeddedImages;
 use crate::APP_ARGS;
 

@@ -13,7 +13,7 @@ use telemetry::{
 };
 
 use crate::chip::Chip;
-use crate::physics::types::DataPressure;
+use crate::utilities::types::DataPressure;
 
 pub struct SerialHandlerBuilder;
 

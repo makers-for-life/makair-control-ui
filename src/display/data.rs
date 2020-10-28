@@ -4,7 +4,7 @@
 // License: Public Domain License
 
 use crate::chip::ChipState;
-use crate::physics::types::DataPressure;
+use crate::utilities::types::DataPressure;
 
 pub struct DisplayDataBranding<'a> {
     pub firmware_version: &'a str,
