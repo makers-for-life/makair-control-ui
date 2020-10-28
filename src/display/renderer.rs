@@ -620,7 +620,7 @@ impl DisplayRenderer {
             .x_label_area_size(0)
             .y_label_area_size(GRAPH_DRAW_LABEL_WIDTH)
             .build_ranged(oldest_time..newest_time, GRAPH_DRAW_RANGE_LOW..range_high)
-            .unwrap();
+            .expect("failed to build chart");
 
         chart
             .configure_mesh()
@@ -637,7 +637,7 @@ impl DisplayRenderer {
                 (y / TELEMETRY_POINTS_PRECISION_DIVIDE as i32).to_string()
             })
             .draw()
-            .unwrap();
+            .expect("failed to draw chart mesh");
 
         // Docs: https://docs.rs/plotters/0.2.12/plotters/prelude/struct.LineSeries.html
         chart
@@ -650,7 +650,7 @@ impl DisplayRenderer {
                 )
                 .point_size(GRAPH_DRAW_POINT_SIZE),
             )
-            .unwrap();
+            .expect("failed to draw chart data");
 
         drop(chart);
         drop(drawing);
