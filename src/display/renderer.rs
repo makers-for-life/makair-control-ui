@@ -550,7 +550,6 @@ impl DisplayRenderer {
         // Docs: https://docs.rs/plotters/0.2.12/plotters/drawing/struct.BitMapBackend.html
         let root = BitMapBackend::with_buffer(&mut buffer, (GRAPH_WIDTH, GRAPH_HEIGHT))
             .into_drawing_area();
-        root.fill(&BLACK).unwrap();
 
         let newest_time = data_pressure
             .front()
