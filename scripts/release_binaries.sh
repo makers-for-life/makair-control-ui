@@ -63,7 +63,9 @@ pushd "$BASE_DIR" > /dev/null
     # Copy the telemetry library into current working directory
     # Notice: this feels a bit hacky, but for now 'cross' is not capable of passing \
     #   parent directories to its Docker runtime.
-    cp -r ../makair-telemetry ./
+    mkdir -p ./makair-telemetry && \
+        cp -r ../makair-telemetry/src ./makair-telemetry/src/ && \
+        cp ../makair-telemetry/Cargo.toml ./makair-telemetry/ && \
     sed -i '' 's/path = "..\/makair-telemetry"/path = ".\/makair-telemetry"/' ./Cargo.toml
 
     # Build releases
@@ -71,7 +73,7 @@ pushd "$BASE_DIR" > /dev/null
     rc=$?
 
     # Clear out the telemetry library
-    rm -rf ./makair-telemetry
+    rm -r ./makair-telemetry
     sed -i '' 's/path = ".\/makair-telemetry"/path = "..\/makair-telemetry"/' ./Cargo.toml
 
     if [ $rc -eq 0 ]; then
