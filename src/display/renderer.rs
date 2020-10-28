@@ -656,9 +656,6 @@ impl DisplayRenderer {
         drop(root);
 
         // Convert chart to an image
-        // TODO: draw image on a @2x or @4x buffer, then downsize and re-sample as to "simulate" \
-        //   anti-aliasing, as by default all graphs are aliased
-        // TODO: docs on https://docs.rs/image/0.23.4/image/imageops/fn.resize.html
         let rgba_image: RgbaImage = RgbImage::from_raw(GRAPH_WIDTH, GRAPH_HEIGHT, buffer)
             .unwrap()
             .convert();
