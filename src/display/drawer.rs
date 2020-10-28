@@ -89,6 +89,7 @@ impl<'a> DisplayDrawer<'a> {
                     Ok(PollEvent::Pending) => break 'poll_serial,
                     Err(error) => {
                         self.chip.new_error(error);
+
                         break 'poll_serial;
                     }
                 };
