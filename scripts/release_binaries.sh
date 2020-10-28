@@ -71,7 +71,7 @@ pushd "$BASE_DIR" > /dev/null
     rc=$?
 
     # Clear out the telemetry library
-    rm -r ./makair-telemetry
+    rm -rf ./makair-telemetry
     sed -i '' 's/path = ".\/makair-telemetry"/path = "..\/makair-telemetry"/' ./Cargo.toml
 
     if [ $rc -eq 0 ]; then
