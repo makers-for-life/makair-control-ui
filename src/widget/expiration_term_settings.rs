@@ -46,6 +46,13 @@ pub fn render<'a>(
         .top_left_of(config.expiration_term_container_parent)
         .set(config.expiration_term_container_widget, &mut master.ui);
 
+    // Append contents
+    term(master, &config);
+
+    0 as _
+}
+
+pub fn term<'a>(master: &mut ControlWidget<'a>, config: &ExpirationTermSettingsWidgetConfig) {
     // Initialize text style for label
     let mut label_text_style = widget::text::Style::default();
 
@@ -124,6 +131,4 @@ pub fn render<'a>(
             config.expiration_term_more_button_text_widget,
             &mut master.ui,
         );
-
-    0.0
 }

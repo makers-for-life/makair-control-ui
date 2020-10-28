@@ -36,9 +36,6 @@ pub struct TriggerWidgetConfig<'a> {
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerWidgetConfig) -> f64 {
-    // Compute sections height
-    let sections_height = config.height / 2.0;
-
     // Initialize canvas style
     let mut canvas_style = widget::canvas::Style::default();
 
@@ -48,10 +45,24 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerWidgetConfig) -
     // Create canvas
     widget::Canvas::new()
         .with_style(canvas_style)
-        .w_h(config.width, sections_height)
+        .w_h(config.width, config.height / 2.0)
         .top_left_of(config.status_container_parent)
         .set(config.status_container_widget, &mut master.ui);
 
+    // Append contents
+    status(master, &config);
+    offset(master, &config);
+
+    0 as _
+}
+
+pub fn status<'a>(master: &mut ControlWidget<'a>, config: &TriggerWidgetConfig) {
+    // Append sub-contents
+    status_label(master, &config);
+    status_form(master, &config);
+}
+
+pub fn status_label<'a>(master: &mut ControlWidget<'a>, config: &TriggerWidgetConfig) {
     // Initialize text style for status
     let mut status_text_style = widget::text::Style::default();
 
@@ -64,7 +75,10 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerWidgetConfig) -
         .with_style(status_text_style)
         .top_left_of(config.status_container_widget)
         .set(config.status_enabled_text_widget, &mut master.ui);
+}
 
+pub fn status_form<'a>(master: &mut ControlWidget<'a>, config: &TriggerWidgetConfig) {
+    // Acquire status button label
     let status_label = match config.trigger_settings.state {
         TriggerState::Enabled => APP_I18N.t("trigger-state-enabled"),
         TriggerState::Disabled => APP_I18N.t("trigger-state-disabled"),
@@ -97,13 +111,28 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerWidgetConfig) -
         .with_style(status_button_text_style)
         .mid_top_with_margin_on(config.status_enabled_button_widget, 4.0)
         .set(config.status_enabled_button_text_widget, &mut master.ui);
+}
 
+pub fn offset<'a>(master: &mut ControlWidget<'a>, config: &TriggerWidgetConfig) {
+    // Initialize offset canvas style
+    let mut offset_canvas_style = widget::canvas::Style::default();
+
+    offset_canvas_style.color = Some(color::TRANSPARENT);
+    offset_canvas_style.border = Some(0.0);
+
+    // Create offset canvas
     widget::Canvas::new()
-        .with_style(canvas_style)
-        .w_h(config.width, sections_height)
+        .with_style(offset_canvas_style)
+        .w_h(config.width, config.height / 2.0)
         .down_from(config.status_container_widget, 0.0)
         .set(config.inspiratory_offset_container_parent, &mut master.ui);
 
+    // Append sub-contents
+    offset_label(master, &config);
+    offset_form(master, &config);
+}
+
+pub fn offset_label<'a>(master: &mut ControlWidget<'a>, config: &TriggerWidgetConfig) {
     // Initialize text style for offset
     let mut offset_text_style = widget::text::Style::default();
 
@@ -116,7 +145,9 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerWidgetConfig) -
         .with_style(offset_text_style)
         .top_left_of(config.inspiratory_offset_container_parent)
         .set(config.inspiratory_offset_text_widget, &mut master.ui);
+}
 
+pub fn offset_form<'a>(master: &mut ControlWidget<'a>, config: &TriggerWidgetConfig) {
     // Initialize button style for less
     let less_button_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
 
@@ -183,6 +214,4 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerWidgetConfig) -
             config.inspiratory_offset_more_button_text_widget,
             &mut master.ui,
         );
-
-    0 as _
 }
