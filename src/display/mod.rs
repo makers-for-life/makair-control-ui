@@ -3,6 +3,7 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+mod data;
 mod drawer;
 mod events;
 mod fonts;

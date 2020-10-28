@@ -9,13 +9,13 @@ use conrod_core::widget::Id as WidgetId;
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
-use crate::chip::{settings::trigger::Trigger, ChipState};
+use crate::chip::settings::trigger::Trigger;
 use crate::config::environment::*;
-use crate::physics::types::DataPressure;
 use crate::physics::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::widget::*;
 use crate::APP_I18N;
 
+use super::data::*;
 use super::fonts::Fonts;
 use super::identifiers::Ids;
 use super::widget::{ControlWidget, ControlWidgetType};
@@ -25,39 +25,6 @@ pub struct Screen<'a> {
     machine_snapshot: Option<&'a MachineStateSnapshot>,
     ongoing_alarms: Option<&'a [(AlarmCode, AlarmPriority)]>,
     widgets: ControlWidget<'a>,
-}
-
-pub struct ScreenDataBranding<'a> {
-    pub firmware_version: &'a str,
-    pub image_id: conrod_core::image::Id,
-    pub width: f64,
-    pub height: f64,
-}
-
-pub struct ScreenDataStatus<'a> {
-    pub battery_level: Option<u8>,
-    pub chip_state: &'a ChipState,
-    pub save_image_id: Option<conrod_core::image::Id>,
-}
-
-pub struct ScreenDataHeartbeat<'a> {
-    pub data_pressure: &'a DataPressure,
-}
-
-pub struct ScreenDataGraph {
-    pub image_id: conrod_core::image::Id,
-    pub width: f64,
-    pub height: f64,
-}
-
-pub struct ScreenDataTelemetry {
-    pub arrow_image_id: conrod_core::image::Id,
-}
-
-pub struct ScreenBootLoader {
-    pub image_id: conrod_core::image::Id,
-    pub width: f64,
-    pub height: f64,
 }
 
 impl<'a> Screen<'a> {
@@ -79,11 +46,11 @@ impl<'a> Screen<'a> {
     #[allow(clippy::too_many_arguments)]
     pub fn render_with_data(
         &mut self,
-        branding_data: ScreenDataBranding<'a>,
-        status_data: ScreenDataStatus<'a>,
-        heartbeat_data: ScreenDataHeartbeat<'a>,
-        graph_data: ScreenDataGraph,
-        telemetry_data: ScreenDataTelemetry,
+        branding_data: DisplayDataBranding<'a>,
+        status_data: DisplayDataStatus<'a>,
+        heartbeat_data: DisplayDataHeartbeat<'a>,
+        graph_data: DisplayDataGraph,
+        telemetry_data: DisplayDataTelemetry,
         trigger: &'a Trigger,
         trigger_open: bool,
         expiration_term_open: bool,
@@ -110,9 +77,9 @@ impl<'a> Screen<'a> {
         // Render bottom elements
         self.render_telemetry(telemetry_data, trigger);
 
-        if trigger_open {
+        if trigger_open == true {
             self.render_trigger_settings(trigger);
-        } else if expiration_term_open {
+        } else if expiration_term_open == true {
             self.render_expiration_term_settings(trigger);
         }
     }
@@ -189,7 +156,7 @@ impl<'a> Screen<'a> {
             }));
     }
 
-    pub fn render_status(&mut self, status_data: ScreenDataStatus<'a>) {
+    pub fn render_status(&mut self, status_data: DisplayDataStatus<'a>) {
         self.widgets
             .render(ControlWidgetType::Status(status::Config::new(
                 self.ids.layout_header,
@@ -206,7 +173,7 @@ impl<'a> Screen<'a> {
             )));
     }
 
-    pub fn render_heartbeat(&mut self, heartbeat_data: ScreenDataHeartbeat<'a>) {
+    pub fn render_heartbeat(&mut self, heartbeat_data: DisplayDataHeartbeat<'a>) {
         self.widgets
             .render(ControlWidgetType::Heartbeat(heartbeat::Config::new(
                 heartbeat_data.data_pressure,
@@ -232,11 +199,11 @@ impl<'a> Screen<'a> {
     #[allow(clippy::too_many_arguments)]
     pub fn render_stop(
         &mut self,
-        branding_data: ScreenDataBranding<'a>,
-        status_data: ScreenDataStatus<'a>,
-        heartbeat_data: ScreenDataHeartbeat<'a>,
-        graph_data: ScreenDataGraph,
-        telemetry_data: ScreenDataTelemetry,
+        branding_data: DisplayDataBranding<'a>,
+        status_data: DisplayDataStatus<'a>,
+        heartbeat_data: DisplayDataHeartbeat<'a>,
+        graph_data: DisplayDataGraph,
+        telemetry_data: DisplayDataTelemetry,
         trigger: &'a Trigger,
         trigger_open: bool,
         expiration_term_open: bool,
@@ -287,7 +254,7 @@ impl<'a> Screen<'a> {
             )));
     }
 
-    pub fn render_initializing(&mut self, config: ScreenBootLoader) {
+    pub fn render_initializing(&mut self, config: DisplayDataBootloader) {
         self.render_background();
 
         self.widgets
@@ -299,7 +266,7 @@ impl<'a> Screen<'a> {
             )));
     }
 
-    pub fn render_telemetry(&mut self, telemetry_data: ScreenDataTelemetry, trigger: &'a Trigger) {
+    pub fn render_telemetry(&mut self, telemetry_data: DisplayDataTelemetry, trigger: &'a Trigger) {
         let machine_snapshot = self.machine_snapshot.unwrap();
 
         // Process shared values

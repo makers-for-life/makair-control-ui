@@ -24,12 +24,10 @@ use crate::physics::types::DataPressure;
 use crate::EmbeddedImages;
 use crate::APP_ARGS;
 
+use super::data::*;
 use super::fonts::Fonts;
 use super::identifiers::Ids;
-use super::screen::{
-    Screen, ScreenBootLoader, ScreenDataBranding, ScreenDataGraph, ScreenDataHeartbeat,
-    ScreenDataStatus, ScreenDataTelemetry,
-};
+use super::screen::Screen;
 use super::support::GliumDisplayWinitWrapper;
 
 #[derive(Debug, PartialEq, Eq)]
@@ -311,7 +309,7 @@ impl DisplayRenderer {
 
         let ui = interface.set_widgets();
 
-        let screen_boot_loader = ScreenBootLoader {
+        let screen_bootloader = DisplayDataBootloader {
             image_id,
             width: bootloader_logo_width as _,
             height: bootloader_logo_height as _,
@@ -319,7 +317,7 @@ impl DisplayRenderer {
 
         let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None);
 
-        screen.render_initializing(screen_boot_loader);
+        screen.render_initializing(screen_bootloader);
 
         image_map
     }
@@ -428,7 +426,7 @@ impl DisplayRenderer {
             Some(ongoing_alarms),
         );
 
-        let screen_data_branding = ScreenDataBranding {
+        let screen_data_branding = DisplayDataBranding {
             firmware_version: if machine_snapshot.version.is_empty() {
                 FIRMWARE_VERSION_NONE
             } else {
@@ -446,20 +444,20 @@ impl DisplayRenderer {
             None
         };
 
-        let screen_data_status = ScreenDataStatus {
+        let screen_data_status = DisplayDataStatus {
             chip_state,
             battery_level,
             save_image_id,
         };
-        let screen_data_heartbeat = ScreenDataHeartbeat { data_pressure };
+        let screen_data_heartbeat = DisplayDataHeartbeat { data_pressure };
 
-        let screen_data_graph = ScreenDataGraph {
+        let screen_data_graph = DisplayDataGraph {
             image_id: graph_image_id,
             width: graph_width as _,
             height: graph_height as _,
         };
 
-        let screen_data_telemetry = ScreenDataTelemetry {
+        let screen_data_telemetry = DisplayDataTelemetry {
             arrow_image_id: telemetry_arrow_image_id,
         };
 
