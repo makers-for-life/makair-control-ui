@@ -308,7 +308,7 @@ impl<'a> Screen<'a> {
                 ),
                 x_position: 0.0,
                 y_position: GRAPH_HEIGHT as f64 + LAYOUT_FOOTER_SIZE_HEIGHT - widgets_right_height,
-                background_color: Color::Rgba(39.0 / 255.0, 66.0 / 255.0, 100.0 / 255.0, 1.0),
+                background_color: Color::Rgba(57.0 / 255.0, 84.0 / 255.0, 145.0 / 255.0, 1.0),
                 width: widgets_right_width,
                 height: widgets_right_height,
             }));
@@ -339,7 +339,7 @@ impl<'a> Screen<'a> {
                 x_position: 0.0,
                 y_position: GRAPH_HEIGHT as f64 + LAYOUT_FOOTER_SIZE_HEIGHT
                     - widgets_right_height * 2.0,
-                background_color: Color::Rgba(66.0 / 255.0, 44.0 / 255.0, 85.0 / 255.0, 1.0),
+                background_color: Color::Rgba(87.0 / 255.0, 57.0 / 255.0, 143.0 / 255.0, 1.0),
                 width: widgets_right_width,
                 height: widgets_right_height,
             }));
@@ -370,7 +370,7 @@ impl<'a> Screen<'a> {
                 x_position: 0.0,
                 y_position: GRAPH_HEIGHT as f64 + LAYOUT_FOOTER_SIZE_HEIGHT
                     - widgets_right_height * 3.0,
-                background_color: Color::Rgba(76.0 / 255.0, 73.0 / 255.0, 25.0 / 255.0, 1.0),
+                background_color: Color::Rgba(57.0 / 255.0, 143.0 / 255.0, 114.0 / 255.0, 1.0),
                 width: widgets_right_width,
                 height: widgets_right_height,
             }));
@@ -398,7 +398,7 @@ impl<'a> Screen<'a> {
                 ),
                 x_position: 0.0,
                 y_position: 0.0,
-                background_color: Color::Rgba(47.0 / 255.0, 74.0 / 255.0, 16.0 / 255.0, 1.0),
+                background_color: Color::Rgba(457.0 / 255.0, 143.0 / 255.0, 114.0 / 255.0, 1.0),
                 width: TELEMETRY_WIDGET_SIZE_WIDTH,
                 height: LAYOUT_FOOTER_SIZE_HEIGHT,
             }));
@@ -427,7 +427,7 @@ impl<'a> Screen<'a> {
                 ),
                 x_position: TELEMETRY_WIDGET_SIZE_WIDTH,
                 y_position: 0.0,
-                background_color: Color::Rgba(52.0 / 255.0, 52.0 / 255.0, 52.0 / 255.0, 1.0),
+                background_color: Color::Rgba(87.0 / 255.0, 57.0 / 255.0, 143.0 / 255.0, 1.0),
                 width: TELEMETRY_WIDGET_SIZE_WIDTH,
                 height: LAYOUT_FOOTER_SIZE_HEIGHT,
             }));
