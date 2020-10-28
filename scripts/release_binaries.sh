@@ -60,18 +60,18 @@ rc=0
 pushd "$BASE_DIR" > /dev/null
     echo "Executing release steps for MakAir Control v$MAKAIR_CONTROL_VERSION..."
 
-    # Move the telemetry library into current working directory
+    # Copy the telemetry library into current working directory
     # Notice: this feels a bit hacky, but for now 'cross' is not capable of passing \
     #   parent directories to its Docker runtime.
-    mv ../makair-telemetry ./
+    cp ../makair-telemetry ./
     sed -i '' 's/path = "..\/makair-telemetry"/path = ".\/makair-telemetry"/' ./Cargo.toml
 
     # Build releases
     release_for_architecture "armv7" "armv7-unknown-linux-musleabihf"
     rc=$?
 
-    # Move back the telemetry library
-    mv ./makair-telemetry ../
+    # Clear out the telemetry library
+    rm -r ./makair-telemetry
     sed -i '' 's/path = ".\/makair-telemetry"/path = "..\/makair-telemetry"/' ./Cargo.toml
 
     if [ $rc -eq 0 ]; then
