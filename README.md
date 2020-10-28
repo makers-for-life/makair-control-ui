@@ -87,7 +87,7 @@ To cross-compile a new release for an ARM target (using MUSL; statically-linked 
 
 _Make sure to replace the `version` script argument with the current release version. This is used for file naming purposes only._
 
-**⚠️ Important note: this is still a work in progress. We are near cross-compiling capabilities, though some work still needs to be done due to non-MUSL C-based dependencies.**
+**⚠️ Important note: this is still a work in progress. We are near cross-compiling capabilities, though some work still needs to be done due to non-MUSL C-based dependencies. See issue [#38](https://github.com/makers-for-life/makair-control-ui/issues/38).**
 
 ## Optional Features
 
