@@ -380,7 +380,11 @@ impl<'a> Screen<'a> {
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-cycles"),
                 value_measured: None,
-                value_target: Some(machine_snapshot.cpm_command.to_string()),
+                value_target: Some(if machine_snapshot.cpm_command == 0 {
+                    APP_I18N.t("telemetry-value-empty")
+                } else {
+                    machine_snapshot.cpm_command.to_string()
+                }),
                 value_arrow: telemetry_data.arrow_image_id,
                 unit: APP_I18N.t("telemetry-unit-per-minute"),
                 ids: (
@@ -431,26 +435,37 @@ impl<'a> Screen<'a> {
         // Initialize the ratio widget
         // Important: if the ratio has decimals, then show them (to the first decimal). If it \
         //   has no decimals (eg. '2.0'), then show it as an integer.
-        let expiratory_term_value = convert_mmh2o_to_cmh2o(
-            ConvertMode::WithDecimals,
-            machine_snapshot.expiratory_term as f64,
-        );
-
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-ratio"),
-                value_measured: Some(if expiratory_term_value.fract() == 0.0 {
-                    format!("{}:{}", CYCLE_RATIO_INSPIRATION, expiratory_term_value,)
+                value_measured: Some(if machine_snapshot.expiratory_term == 0 {
+                    APP_I18N.t("telemetry-value-empty")
                 } else {
-                    format!("{}:{:.1}", CYCLE_RATIO_INSPIRATION, expiratory_term_value,)
+                    let expiratory_term_value = convert_mmh2o_to_cmh2o(
+                        ConvertMode::WithDecimals,
+                        machine_snapshot.expiratory_term as f64,
+                    );
+
+                    if expiratory_term_value.fract() == 0.0 {
+                        format!("{}:{}", CYCLE_RATIO_INSPIRATION, expiratory_term_value,)
+                    } else {
+                        format!("{}:{:.1}", CYCLE_RATIO_INSPIRATION, expiratory_term_value,)
+                    }
                 }),
                 value_target: None,
                 value_arrow: telemetry_data.arrow_image_id,
                 unit: format!(
-                    "{} {}{}",
+                    "{} {}",
                     APP_I18N.t("telemetry-label-ratio-plateau"),
-                    trigger.get_plateau_duration(),
-                    APP_I18N.t("telemetry-unit-milliseconds")
+                    if let Some(plateau_duration) = trigger.get_plateau_duration() {
+                        format!(
+                            "{}{}",
+                            plateau_duration,
+                            APP_I18N.t("telemetry-unit-milliseconds")
+                        )
+                    } else {
+                        APP_I18N.t("telemetry-value-empty")
+                    }
                 ),
                 ids: (
                     self.ids.tidal_parent,

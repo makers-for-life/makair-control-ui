@@ -125,13 +125,15 @@ impl Trigger {
         }
     }
 
-    pub fn get_plateau_duration(&self) -> usize {
+    pub fn get_plateau_duration(&self) -> Option<usize> {
         if self.cycles_per_minute > 0 {
-            (1000.0
-                * (10.0 / (10.0 + self.expiratory_term as f64)
-                    * (60.0 / self.cycles_per_minute as f64))) as usize
+            Some(
+                (1000.0
+                    * (10.0 / (10.0 + self.expiratory_term as f64)
+                        * (60.0 / self.cycles_per_minute as f64))) as usize,
+            )
         } else {
-            0
+            None
         }
     }
 }
