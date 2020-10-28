@@ -77,9 +77,9 @@ impl<'a> Screen<'a> {
         // Render bottom elements
         self.render_telemetry(telemetry_data, trigger);
 
-        if trigger_open == true {
+        if trigger_open {
             self.render_trigger_settings(trigger);
-        } else if expiration_term_open == true {
+        } else if expiration_term_open {
             self.render_expiration_term_settings(trigger);
         }
     }
