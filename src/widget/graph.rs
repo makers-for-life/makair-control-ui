@@ -37,6 +37,7 @@ impl GraphWidgetConfig {
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: GraphWidgetConfig) -> f64 {
+    // Create image
     widget::Image::new(config.image)
         .w_h(config.width, config.height)
         .top_left_of(config.parent)

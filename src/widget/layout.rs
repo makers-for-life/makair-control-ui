@@ -51,6 +51,7 @@ impl LayoutConfig {
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: LayoutConfig) -> f64 {
+    // Create body layout rectangle
     widget::Rectangle::fill_with(
         [DISPLAY_WINDOW_SIZE_WIDTH as _, config.body.height],
         color::TRANSPARENT,
@@ -58,6 +59,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: LayoutConfig) -> f64 {
     .top_left_with_margins_on(config.body.parent, config.body.top, 0.0)
     .set(config.body.layout, &mut master.ui);
 
+    // Create footer layout rectangle
     widget::Rectangle::fill_with(
         [DISPLAY_WINDOW_SIZE_WIDTH as _, config.footer.height],
         color::TRANSPARENT,
@@ -65,7 +67,9 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: LayoutConfig) -> f64 {
     .down_from(config.footer.parent, config.footer.top)
     .set(config.footer.layout, &mut master.ui);
 
-    // This block is defined after the others because we want it to overflow and be on top of the screen
+    // Create header layout rectangle
+    // Notice: this block is defined after the others because we want it to overflow and be on top \
+    //   of the screen.
     widget::Rectangle::fill_with(
         [DISPLAY_WINDOW_SIZE_WIDTH as _, config.header.height],
         color::TRANSPARENT,

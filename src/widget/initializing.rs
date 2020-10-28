@@ -34,6 +34,7 @@ impl InitializingWidgetConfig {
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: InitializingWidgetConfig) -> f64 {
+    // Create image
     widget::Image::new(config.image)
         .w_h(config.width, config.height)
         .middle()

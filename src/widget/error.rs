@@ -24,12 +24,14 @@ impl ErrorWidgetConfig {
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: ErrorWidgetConfig) -> f64 {
+    // Initialize style
     let mut text_style = conrod_core::widget::primitive::text::Style::default();
 
     text_style.font_id = Some(Some(master.fonts.bold));
     text_style.color = Some(color::WHITE);
     text_style.font_size = Some(30);
 
+    // Create text
     // Notice: using '\n' instead of the wrap methods because I could not make them work
     widget::Text::new(&format!("{}\n{}", APP_I18N.t("error-title"), config.error))
         .color(color::WHITE)

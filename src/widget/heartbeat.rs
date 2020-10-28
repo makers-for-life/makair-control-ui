@@ -79,6 +79,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: HeartbeatWidgetConfig)
         0
     };
 
+    // Acquire maximum allowed pressure
     let pressure_alert_threshold = process_max_allowed_pressure(config.peak_command) as f64;
 
     let last_pressure_ratio = last_pressure as f64 / pressure_alert_threshold;
@@ -95,6 +96,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: HeartbeatWidgetConfig)
         color::WHITE
     };
 
+    // Draw circle for the current pressure (normal, or exceeding alert threshold)
     widget::primitive::shape::circle::Circle::fill_with(inner_radius, inner_color)
         .middle_of(config.surround)
         .set(config.inner, &mut master.ui);

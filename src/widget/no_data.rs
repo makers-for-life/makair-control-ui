@@ -23,12 +23,14 @@ impl NoDataWidgetConfig {
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: NoDataWidgetConfig) -> f64 {
+    // Initialize text style
     let mut text_style = conrod_core::widget::primitive::text::Style::default();
 
     text_style.font_id = Some(Some(master.fonts.bold));
     text_style.color = Some(color::WHITE);
     text_style.font_size = Some(30);
 
+    // Create text
     widget::Text::new(&APP_I18N.t("no-data-title"))
         .color(color::WHITE)
         .middle()

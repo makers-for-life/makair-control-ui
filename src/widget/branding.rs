@@ -45,6 +45,7 @@ impl<'a> BrandingWidgetConfig<'a> {
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: BrandingWidgetConfig) -> f64 {
+    // Create rectangle
     widget::rectangle::Rectangle::fill_with([config.width, config.height], color::TRANSPARENT)
         .top_left_with_margins_on(
             config.parent,

@@ -54,12 +54,14 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerOverview) -> f6
 }
 
 fn title<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverview) {
+    // Initialize text style
     let mut text_style = widget::text::Style::default();
 
     text_style.font_id = Some(Some(master.fonts.bold));
     text_style.color = Some(color::WHITE);
     text_style.font_size = Some(TELEMETRY_WIDGET_TITLE_FONT_SIZE);
 
+    // Create text
     widget::Text::new(&APP_I18N.t("trigger-label-title"))
         .with_style(text_style)
         .top_left_with_margins_on(
@@ -71,6 +73,7 @@ fn title<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverview) {
 }
 
 fn status<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverview) {
+    // Initialize text style
     let mut text_style = widget::text::Style::default();
 
     text_style.font_id = Some(Some(master.fonts.regular));
@@ -83,6 +86,7 @@ fn status<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverview) {
         APP_I18N.t("trigger-state-disabled")
     };
 
+    // Create text
     widget::Text::new(&format!("{} {}", APP_I18N.t("trigger-label-state"), status))
         .with_style(text_style)
         .down_from(config.title_widget, 13.0)
@@ -90,12 +94,14 @@ fn status<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverview) {
 }
 
 fn offset<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverview) {
+    // Initialize text style
     let mut text_style = widget::text::Style::default();
 
     text_style.font_id = Some(Some(master.fonts.regular));
     text_style.color = Some(color::WHITE);
     text_style.font_size = Some(TELEMETRY_WIDGET_LABELS_FONT_SIZE);
 
+    // Create text
     widget::Text::new(&format!(
         "{} {:.1} {}",
         APP_I18N.t("trigger-label-offset"),
@@ -111,12 +117,14 @@ fn offset<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverview) {
 }
 
 fn configure<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverview) {
+    // Initialize text style
     let mut text_style = widget::text::Style::default();
 
     text_style.font_id = Some(Some(master.fonts.bold));
     text_style.color = Some(color::BLACK.with_alpha(0.8));
     text_style.font_size = Some(TELEMETRY_WIDGET_UNIT_FONT_SIZE);
 
+    // Create text
     widget::Text::new(&APP_I18N.t("trigger-label-configure"))
         .with_style(text_style)
         .bottom_left_with_margins_on(

@@ -25,12 +25,14 @@ pub fn render<'a>(
     alarm_priority: &AlarmPriority,
     index: usize,
 ) {
+    // Initialize style
     let mut style = canvas::Style::default();
 
     style.border = Some(0.0);
     style.border_color = Some(color::TRANSPARENT);
     style.color = Some(color::TRANSPARENT);
 
+    // Compute top position for canvas
     let from_top = if index == 0 {
         DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL
     } else {
@@ -39,6 +41,7 @@ pub fn render<'a>(
                 * (DISPLAY_ALARM_MESSAGE_HEIGHT + DISPLAY_ALARM_MESSAGE_SPACING_TOP_INNER)
     } + DISPLAY_ALARM_MESSAGE_SPACING_TOP_INITIAL_OFFSET;
 
+    // Create canvas
     canvas::Canvas::new()
         .with_style(style)
         .y_place_on(
@@ -48,11 +51,13 @@ pub fn render<'a>(
         .right_from(config.title, 15.0)
         .set(config.alarm_widgets[index], &mut master.ui);
 
+    // Draw code & message
     code(master, &config, alarm_code, alarm_priority, index);
     message(master, &config, alarm_code, alarm_priority, index);
 }
 
 fn code_color(alarm_priority: &AlarmPriority) -> Color {
+    // Map alarm code colors
     match alarm_priority {
         AlarmPriority::High => Color::Rgba(1.0, 0.0 / 255.0, 3.0 / 255.0, 1.0),
         AlarmPriority::Medium => Color::Rgba(1.0, 135.0 / 255.0, 0.0, 1.0),
@@ -61,6 +66,7 @@ fn code_color(alarm_priority: &AlarmPriority) -> Color {
 }
 
 fn message_color(alarm_priority: &AlarmPriority) -> Color {
+    // Map alarm message colors
     match alarm_priority {
         AlarmPriority::High => Color::Rgba(180.0 / 255.0, 24.0 / 255.0, 28.0 / 255.0, 1.0),
         AlarmPriority::Medium => Color::Rgba(189.0 / 255.0, 93.0 / 255.0, 0.0, 1.0),
@@ -75,15 +81,14 @@ fn code<'a>(
     alarm_priority: &AlarmPriority,
     index: usize,
 ) {
-    let color = code_color(alarm_priority);
-
-    // Draw canvas
+    // Initialize style
     let mut style = canvas::Style::default();
 
     style.border = Some(0.0);
     style.border_color = Some(color::TRANSPARENT);
-    style.color = Some(color);
+    style.color = Some(code_color(alarm_priority));
 
+    // Create canvas
     widget::Canvas::new()
         .with_style(style)
         .w_h(DISPLAY_ALARM_CODE_WIDTH, DISPLAY_ALARM_CODE_HEIGHT)
@@ -93,7 +98,7 @@ fn code<'a>(
         )
         .set(config.alarm_codes_containers[index], &mut master.ui);
 
-    // Draw text
+    // Insert text in canvas
     let mut text_style = conrod_core::widget::primitive::text::Style::default();
 
     text_style.font_id = Some(Some(master.fonts.bold));
@@ -113,14 +118,14 @@ fn message<'a>(
     alarm_priority: &AlarmPriority,
     index: usize,
 ) {
-    let color = message_color(alarm_priority);
-
+    // Initialize style
     let mut style = canvas::Style::default();
 
     style.border = Some(0.0);
     style.border_color = Some(color::TRANSPARENT);
-    style.color = Some(color);
+    style.color = Some(message_color(alarm_priority));
 
+    // Create canvas
     widget::Canvas::new()
         .with_style(style)
         .w_h(DISPLAY_ALARM_MESSAGE_WIDTH, DISPLAY_ALARM_MESSAGE_HEIGHT)
@@ -130,6 +135,7 @@ fn message<'a>(
         )
         .set(config.alarm_messages_containers[index], &mut master.ui);
 
+    // Insert text in canvas
     widget::text::Text::new(&alarm_description_to_locale(alarm_code.description()))
         .color(color::WHITE)
         .font_size(DISPLAY_ALARM_MESSAGE_FONT_SIZE)

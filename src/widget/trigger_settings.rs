@@ -36,24 +36,30 @@ pub struct TriggerWidgetConfig<'a> {
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerWidgetConfig) -> f64 {
+    // Compute sections height
     let sections_height = config.height / 2.0;
+
+    // Initialize canvas style
     let mut canvas_style = widget::canvas::Style::default();
 
     canvas_style.color = Some(color::TRANSPARENT);
     canvas_style.border = Some(0.0);
 
+    // Create canvas
     widget::Canvas::new()
         .with_style(canvas_style)
         .w_h(config.width, sections_height)
         .top_left_of(config.status_container_parent)
         .set(config.status_container_widget, &mut master.ui);
 
+    // Initialize text style for status
     let mut status_text_style = widget::text::Style::default();
 
     status_text_style.font_id = Some(Some(master.fonts.regular));
     status_text_style.color = Some(color::WHITE);
     status_text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
 
+    // Create text for status
     widget::Text::new(&APP_I18N.t("trigger-inspiratory-status"))
         .with_style(status_text_style)
         .top_left_of(config.status_container_widget)
@@ -64,12 +70,19 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerWidgetConfig) -
         TriggerState::Disabled => APP_I18N.t("trigger-state-disabled"),
     };
 
+    // Initialize button style for status
     let status_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
 
+    // Create status button
     widget::RoundedRectangle::styled([200.0, 30.0], 15.0, status_style)
-        .top_left_with_margins_on(config.status_container_widget, -3.0, 300.0)
+        .top_left_with_margins_on(
+            config.status_container_widget,
+            -3.0,
+            TRIGGER_SETTINGS_MODAL_FORM_PADDING_LEFT,
+        )
         .set(config.status_enabled_button_widget, &mut master.ui);
 
+    // Initialize text style for status button
     let mut status_button_text_style = widget::text::Style::default();
 
     status_button_text_style.font_id = Some(Some(master.fonts.bold));
@@ -79,6 +92,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerWidgetConfig) -
     });
     status_button_text_style.font_size = Some(16);
 
+    // Create text for status button
     widget::Text::new(&status_label)
         .with_style(status_button_text_style)
         .mid_top_with_margin_on(config.status_enabled_button_widget, 4.0)
@@ -90,30 +104,40 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerWidgetConfig) -
         .down_from(config.status_container_widget, 0.0)
         .set(config.inspiratory_offset_container_parent, &mut master.ui);
 
+    // Initialize text style for offset
     let mut offset_text_style = widget::text::Style::default();
 
     offset_text_style.font_id = Some(Some(master.fonts.regular));
     offset_text_style.color = Some(color::WHITE);
     offset_text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
 
+    // Create text for offset
     widget::Text::new(&APP_I18N.t("trigger-inspiratory-offset"))
         .with_style(offset_text_style)
         .top_left_of(config.inspiratory_offset_container_parent)
         .set(config.inspiratory_offset_text_widget, &mut master.ui);
 
+    // Initialize button style for less
     let less_button_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
 
+    // Create less button
     widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
-        .top_left_with_margins_on(config.inspiratory_offset_container_parent, -3.0, 300.0)
+        .top_left_with_margins_on(
+            config.inspiratory_offset_container_parent,
+            -3.0,
+            TRIGGER_SETTINGS_MODAL_FORM_PADDING_LEFT,
+        )
         .set(config.inspiratory_offset_less_button_widget, &mut master.ui);
 
+    // Initialize text style for buttons
     let mut more_less_buttons_text_style = widget::text::Style::default();
 
     more_less_buttons_text_style.font_id = Some(Some(master.fonts.bold));
     more_less_buttons_text_style.color = Some(color::BLACK);
     more_less_buttons_text_style.font_size = Some(MODAL_BUTTON_NAVIGATE_FONT_SIZE);
 
-    widget::Text::new("<")
+    // Create text for less button
+    widget::Text::new(MODAL_BUTTON_NAVIGATE_VALUE_DECREASE)
         .with_style(more_less_buttons_text_style)
         .mid_top_with_margin_on(config.inspiratory_offset_less_button_widget, 2.0)
         .set(
@@ -121,12 +145,14 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerWidgetConfig) -
             &mut master.ui,
         );
 
+    // Initialize text style for value
     let mut offset_value_style = widget::text::Style::default();
 
     offset_value_style.font_id = Some(Some(master.fonts.regular));
     offset_value_style.color = Some(color::WHITE);
     offset_value_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
 
+    // Create text for value
     widget::Text::new(
         format!(
             "{:.1} {}",
@@ -143,12 +169,14 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerWidgetConfig) -
     .y_relative(0.0)
     .set(config.inspiratory_offset_value_widget, &mut master.ui);
 
+    // Create more button
     widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
         .right_from(config.inspiratory_offset_value_widget, 20.0)
         .y_relative(-3.0)
         .set(config.inspiratory_offset_more_button_widget, &mut master.ui);
 
-    widget::Text::new(">")
+    // Create text for more button
+    widget::Text::new(MODAL_BUTTON_NAVIGATE_VALUE_INCREASE)
         .with_style(more_less_buttons_text_style)
         .mid_top_with_margin_on(config.inspiratory_offset_more_button_widget, 2.0)
         .set(

@@ -22,6 +22,7 @@ impl BackgroundWidgetConfig {
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: BackgroundWidgetConfig) -> f64 {
+    // Create canvas
     widget::Canvas::new()
         .color(config.color)
         .set(config.id, &mut master.ui);

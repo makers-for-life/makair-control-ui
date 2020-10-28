@@ -35,6 +35,7 @@ impl TelemetryWidgetContainerConfig {
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: TelemetryWidgetContainerConfig) -> f64 {
+    // Create rectangle for container
     widget::rectangle::Rectangle::fill_with([config.width, config.height], color::WHITE)
         .right_from(config.parent, 0.0)
         .set(config.id, &mut master.ui);
