@@ -9,6 +9,7 @@ use conrod_core::Ui;
 use glium::texture;
 use image::{buffer::ConvertBuffer, load_from_memory, RgbImage, RgbaImage};
 use plotters::prelude::*;
+use plotters::style::TextStyle;
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
@@ -67,6 +68,8 @@ lazy_static! {
             .unwrap()
             .into_rgba()
             .into_raw();
+    static ref GRAPH_AXIS_Y_FONT: TextStyle<'static> =
+        TextStyle::from(("sans-serif", 15).into_font());
 }
 
 #[allow(clippy::new_ret_no_self)]
@@ -545,7 +548,7 @@ impl DisplayRenderer {
         machine_snapshot: &MachineStateSnapshot,
         display: &GliumDisplayWinitWrapper,
     ) -> glium::texture::Texture2d {
-        let mut buffer = vec![0; (GRAPH_WIDTH * GRAPH_HEIGHT * 4) as usize];
+        let mut buffer = vec![0; (GRAPH_WIDTH * GRAPH_HEIGHT * 3) as usize];
 
         // Docs: https://docs.rs/plotters/0.2.12/plotters/drawing/struct.BitMapBackend.html
         let drawing = BitMapBackend::with_buffer(&mut buffer, (GRAPH_WIDTH, GRAPH_HEIGHT))
@@ -627,10 +630,7 @@ impl DisplayRenderer {
             .line_style_1(&plotters::style::colors::WHITE.mix(0.04))
             .line_style_2(&plotters::style::colors::BLACK)
             .y_labels(GRAPH_DRAW_LABEL_NUMBER_MAX)
-            .y_label_style(
-                plotters::style::TextStyle::from(("sans-serif", 15).into_font())
-                    .color(&WHITE.mix(0.65)),
-            )
+            .y_label_style(GRAPH_AXIS_Y_FONT.color(&WHITE.mix(0.65)))
             .y_label_formatter(&|y| {
                 // Convert high-precision point in mmH20 back to cmH20 (which measurements & \
                 //   targets both use)
@@ -659,13 +659,17 @@ impl DisplayRenderer {
         let rgba_image: RgbaImage = RgbImage::from_raw(GRAPH_WIDTH, GRAPH_HEIGHT, buffer)
             .unwrap()
             .convert();
+
         let image_dimensions = rgba_image.dimensions();
 
-        let raw_image = glium::texture::RawImage2d::from_raw_rgba_reversed(
-            &rgba_image.into_raw(),
-            image_dimensions,
-        );
+        let raw_image =
+            glium::texture::RawImage2d::from_raw_rgba(rgba_image.into_raw(), image_dimensions);
 
-        glium::texture::Texture2d::new(&display.0, raw_image).unwrap()
+        glium::texture::Texture2d::with_mipmaps(
+            &display.0,
+            raw_image,
+            glium::texture::MipmapsOption::NoMipmap,
+        )
+        .unwrap()
     }
 }
