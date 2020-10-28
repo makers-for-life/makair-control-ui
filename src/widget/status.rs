@@ -126,16 +126,21 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         .top_left_of(config.wrapper)
         .set(config.unit_box, &mut master.ui);
 
-    widget::text::Text::new(&unit_text_value)
-        .with_style(unit_text_style)
-        .mid_top_with_margin_on(config.unit_box, STATUS_BOX_TEXT_MARGIN_TOP)
-        .set(config.unit_text, &mut master.ui);
-
     if let Some(save_icon_id) = config.save_icon_id {
+        widget::text::Text::new(&unit_text_value)
+            .with_style(unit_text_style)
+            .top_left_with_margins_on(config.unit_box, STATUS_BOX_TEXT_MARGIN_TOP, STATUS_BOX_RECORDING_PADDING_LEFT)
+            .set(config.unit_text, &mut master.ui);
+
         widget::image::Image::new(save_icon_id)
             .w_h(15.0, 15.0)
-            .right_from(config.unit_text, 3.0)
+            .mid_right_with_margin_on(config.unit_box, STATUS_BOX_RECORDING_PADDING_RIGHT)
             .set(config.save_icon, &mut master.ui);
+    } else {
+        widget::text::Text::new(&unit_text_value)
+            .with_style(unit_text_style)
+            .mid_top_with_margin_on(config.unit_box, STATUS_BOX_TEXT_MARGIN_TOP)
+            .set(config.unit_text, &mut master.ui);
     }
 
     // Compute power box & text style properties
