@@ -19,11 +19,11 @@ pub enum ControlWidgetType<'a> {
     Modal(modal::ModalWidgetConfig),
     NoData(no_data::NoDataWidgetConfig),
     Stop(stop::StopWidgetConfig),
-    TelemetryContainer(telemetry_container::TelemetryWidgetContainerConfig),
-    Telemetry(telemetry_view::TelemetryWidgetConfig),
-    Layout(layout::LayoutConfig),
-    TriggerSettings(trigger_settings::TriggerWidgetConfig<'a>),
-    TriggerOverview(trigger_overview::TriggerOverview<'a>),
+    TelemetryContainer(telemetry_container::TelemetryContainerWidgetConfig),
+    TelemetryView(telemetry_view::TelemetryViewWidgetConfig),
+    Layout(layout::LayoutWidgetConfig),
+    TriggerSettings(trigger_settings::TriggerSettingsWidgetConfig<'a>),
+    TriggerOverview(trigger_overview::TriggerOverviewWidgetConfig<'a>),
     ExpirationTermSettings(expiration_term_settings::ExpirationTermSettingsWidgetConfig<'a>),
 }
 
@@ -53,7 +53,7 @@ impl<'a> ControlWidget<'a> {
             ControlWidgetType::TelemetryContainer(config) => {
                 telemetry_container::render(self, config)
             }
-            ControlWidgetType::Telemetry(config) => telemetry_view::render(self, config),
+            ControlWidgetType::TelemetryView(config) => telemetry_view::render(self, config),
             ControlWidgetType::Layout(config) => layout::render(self, config),
             ControlWidgetType::TriggerSettings(config) => trigger_settings::render(self, config),
             ControlWidgetType::TriggerOverview(config) => trigger_overview::render(self, config),

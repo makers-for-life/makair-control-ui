@@ -125,20 +125,20 @@ impl<'a> Screen<'a> {
 
     pub fn render_layout(&mut self) {
         self.widgets
-            .render(ControlWidgetType::Layout(layout::LayoutConfig::new(
-                layout::LayoutWidgetConfig::new(
+            .render(ControlWidgetType::Layout(layout::LayoutWidgetConfig::new(
+                layout::LayoutWidgetSliceConfig::new(
                     self.ids.background,
                     0.0,
                     LAYOUT_HEADER_SIZE_FULL_HEIGHT,
                     self.ids.layout_header,
                 ),
-                layout::LayoutWidgetConfig::new(
+                layout::LayoutWidgetSliceConfig::new(
                     self.ids.background,
                     LAYOUT_HEADER_SIZE_HEIGHT,
                     LAYOUT_BODY_SIZE_HEIGHT,
                     self.ids.layout_body,
                 ),
-                layout::LayoutWidgetConfig::new(
+                layout::LayoutWidgetSliceConfig::new(
                     self.ids.layout_body,
                     0.0,
                     LAYOUT_FOOTER_SIZE_HEIGHT,
@@ -310,7 +310,7 @@ impl<'a> Screen<'a> {
 
         // Initialize the pressure graph widget
         self.widgets.render(ControlWidgetType::TelemetryContainer(
-            telemetry_container::TelemetryWidgetContainerConfig::new(
+            telemetry_container::TelemetryContainerWidgetConfig::new(
                 widgets_right_width,
                 DISPLAY_WINDOW_SIZE_HEIGHT as f64 - LAYOUT_HEADER_SIZE_HEIGHT,
                 self.ids.pressure_graph,
@@ -319,8 +319,8 @@ impl<'a> Screen<'a> {
         ));
 
         // Initialize the peak widget
-        self.widgets.render(ControlWidgetType::Telemetry(
-            telemetry_view::TelemetryWidgetConfig {
+        self.widgets.render(ControlWidgetType::TelemetryView(
+            telemetry_view::TelemetryViewWidgetConfig {
                 title: APP_I18N.t("telemetry-label-peak"),
                 value_measured: Some(
                     convert_mmh2o_to_cmh2o(
@@ -350,8 +350,8 @@ impl<'a> Screen<'a> {
         ));
 
         // Initialize the plateau widget
-        self.widgets.render(ControlWidgetType::Telemetry(
-            telemetry_view::TelemetryWidgetConfig {
+        self.widgets.render(ControlWidgetType::TelemetryView(
+            telemetry_view::TelemetryViewWidgetConfig {
                 title: APP_I18N.t("telemetry-label-plateau"),
                 value_measured: Some(
                     convert_mmh2o_to_cmh2o(
@@ -382,8 +382,8 @@ impl<'a> Screen<'a> {
         ));
 
         // Initialize the PEEP widget
-        self.widgets.render(ControlWidgetType::Telemetry(
-            telemetry_view::TelemetryWidgetConfig {
+        self.widgets.render(ControlWidgetType::TelemetryView(
+            telemetry_view::TelemetryViewWidgetConfig {
                 title: APP_I18N.t("telemetry-label-expiratory"),
                 value_measured: Some(
                     convert_mmh2o_to_cmh2o(
@@ -414,8 +414,8 @@ impl<'a> Screen<'a> {
         ));
 
         // Initialize the cycles widget
-        self.widgets.render(ControlWidgetType::Telemetry(
-            telemetry_view::TelemetryWidgetConfig {
+        self.widgets.render(ControlWidgetType::TelemetryView(
+            telemetry_view::TelemetryViewWidgetConfig {
                 title: APP_I18N.t("telemetry-label-cycles"),
                 value_measured: None,
                 value_target: Some(machine_snapshot.cpm_command.to_string()),
@@ -444,8 +444,8 @@ impl<'a> Screen<'a> {
             .map(|v| format!("{}", v))
             .unwrap_or_else(|| APP_I18N.t("telemetry-value-empty"));
 
-        self.widgets.render(ControlWidgetType::Telemetry(
-            telemetry_view::TelemetryWidgetConfig {
+        self.widgets.render(ControlWidgetType::TelemetryView(
+            telemetry_view::TelemetryViewWidgetConfig {
                 title: APP_I18N.t("telemetry-label-tidal"),
                 value_measured: Some(previous_volume),
                 value_target: None,
@@ -476,8 +476,8 @@ impl<'a> Screen<'a> {
             machine_snapshot.expiratory_term as f64,
         );
 
-        self.widgets.render(ControlWidgetType::Telemetry(
-            telemetry_view::TelemetryWidgetConfig {
+        self.widgets.render(ControlWidgetType::TelemetryView(
+            telemetry_view::TelemetryViewWidgetConfig {
                 title: APP_I18N.t("telemetry-label-ratio"),
                 value_measured: Some(if expiratory_term_value.fract() == 0.0 {
                     format!("{}:{}", CYCLE_RATIO_INSPIRATION, expiratory_term_value,)
@@ -511,7 +511,7 @@ impl<'a> Screen<'a> {
 
         // Initialize the trigger widget
         self.widgets.render(ControlWidgetType::TriggerOverview(
-            trigger_overview::TriggerOverview {
+            trigger_overview::TriggerOverviewWidgetConfig {
                 parent: self.ids.ratio_parent,
                 container: self.ids.trigger_overview_container,
                 border: self.ids.trigger_overview_border,
@@ -560,7 +560,7 @@ impl<'a> Screen<'a> {
         );
 
         self.widgets.render(ControlWidgetType::TriggerSettings(
-            trigger_settings::TriggerWidgetConfig {
+            trigger_settings::TriggerSettingsWidgetConfig {
                 width: TRIGGER_SETTINGS_MODAL_WIDTH,
                 height: TRIGGER_SETTINGS_MODAL_HEIGTH
                     - MODAL_VALIDATE_BUTTON_HEIGHT

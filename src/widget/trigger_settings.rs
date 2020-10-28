@@ -15,7 +15,7 @@ use crate::display::widget::ControlWidget;
 use crate::physics::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::APP_I18N;
 
-pub struct TriggerWidgetConfig<'a> {
+pub struct TriggerSettingsWidgetConfig<'a> {
     pub width: f64,
     pub height: f64,
 
@@ -35,7 +35,7 @@ pub struct TriggerWidgetConfig<'a> {
     pub inspiratory_offset_value_widget: WidgetId,
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerWidgetConfig) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerSettingsWidgetConfig) -> f64 {
     // Initialize canvas style
     let mut canvas_style = widget::canvas::Style::default();
 
@@ -56,13 +56,13 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerWidgetConfig) -
     0 as _
 }
 
-pub fn status<'a>(master: &mut ControlWidget<'a>, config: &TriggerWidgetConfig) {
+pub fn status<'a>(master: &mut ControlWidget<'a>, config: &TriggerSettingsWidgetConfig) {
     // Append sub-contents
     status_label(master, &config);
     status_form(master, &config);
 }
 
-pub fn status_label<'a>(master: &mut ControlWidget<'a>, config: &TriggerWidgetConfig) {
+pub fn status_label<'a>(master: &mut ControlWidget<'a>, config: &TriggerSettingsWidgetConfig) {
     // Initialize text style for status
     let mut status_text_style = widget::text::Style::default();
 
@@ -77,7 +77,7 @@ pub fn status_label<'a>(master: &mut ControlWidget<'a>, config: &TriggerWidgetCo
         .set(config.status_enabled_text_widget, &mut master.ui);
 }
 
-pub fn status_form<'a>(master: &mut ControlWidget<'a>, config: &TriggerWidgetConfig) {
+pub fn status_form<'a>(master: &mut ControlWidget<'a>, config: &TriggerSettingsWidgetConfig) {
     // Acquire status button label
     let status_label = match config.trigger_settings.state {
         TriggerState::Enabled => APP_I18N.t("trigger-state-enabled"),
@@ -113,7 +113,7 @@ pub fn status_form<'a>(master: &mut ControlWidget<'a>, config: &TriggerWidgetCon
         .set(config.status_enabled_button_text_widget, &mut master.ui);
 }
 
-pub fn offset<'a>(master: &mut ControlWidget<'a>, config: &TriggerWidgetConfig) {
+pub fn offset<'a>(master: &mut ControlWidget<'a>, config: &TriggerSettingsWidgetConfig) {
     // Initialize offset canvas style
     let mut offset_canvas_style = widget::canvas::Style::default();
 
@@ -132,7 +132,7 @@ pub fn offset<'a>(master: &mut ControlWidget<'a>, config: &TriggerWidgetConfig) 
     offset_form(master, &config);
 }
 
-pub fn offset_label<'a>(master: &mut ControlWidget<'a>, config: &TriggerWidgetConfig) {
+pub fn offset_label<'a>(master: &mut ControlWidget<'a>, config: &TriggerSettingsWidgetConfig) {
     // Initialize text style for offset
     let mut offset_text_style = widget::text::Style::default();
 
@@ -147,7 +147,7 @@ pub fn offset_label<'a>(master: &mut ControlWidget<'a>, config: &TriggerWidgetCo
         .set(config.inspiratory_offset_text_widget, &mut master.ui);
 }
 
-pub fn offset_form<'a>(master: &mut ControlWidget<'a>, config: &TriggerWidgetConfig) {
+pub fn offset_form<'a>(master: &mut ControlWidget<'a>, config: &TriggerSettingsWidgetConfig) {
     // Initialize button style for less
     let less_button_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
 

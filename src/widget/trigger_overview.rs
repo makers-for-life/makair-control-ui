@@ -15,7 +15,7 @@ use crate::display::widget::ControlWidget;
 use crate::physics::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::APP_I18N;
 
-pub struct TriggerOverview<'a> {
+pub struct TriggerOverviewWidgetConfig<'a> {
     pub parent: WidgetId,
     pub container: WidgetId,
     pub border: WidgetId,
@@ -33,7 +33,7 @@ pub struct TriggerOverview<'a> {
     pub trigger_settings: &'a Trigger,
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerOverview) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerOverviewWidgetConfig) -> f64 {
     // Create container
     widget::rectangle::Rectangle::fill_with([config.width, config.height], config.background_color)
         .bottom_left_with_margins_on(config.parent, config.y_position, config.x_position)
@@ -53,7 +53,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: TriggerOverview) -> f6
     0 as _
 }
 
-fn title<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverview) {
+fn title<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverviewWidgetConfig) {
     // Initialize text style
     let mut text_style = widget::text::Style::default();
 
@@ -72,7 +72,7 @@ fn title<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverview) {
         .set(config.title_widget, &mut master.ui);
 }
 
-fn status<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverview) {
+fn status<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverviewWidgetConfig) {
     // Initialize text style
     let mut text_style = widget::text::Style::default();
 
@@ -93,7 +93,7 @@ fn status<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverview) {
         .set(config.status_widget, &mut master.ui);
 }
 
-fn offset<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverview) {
+fn offset<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverviewWidgetConfig) {
     // Initialize text style
     let mut text_style = widget::text::Style::default();
 
@@ -116,7 +116,7 @@ fn offset<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverview) {
     .set(config.inspiration_trigger_offset_widget, &mut master.ui);
 }
 
-fn configure<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverview) {
+fn configure<'a>(master: &mut ControlWidget<'a>, config: &TriggerOverviewWidgetConfig) {
     // Initialize text style
     let mut text_style = widget::text::Style::default();
 

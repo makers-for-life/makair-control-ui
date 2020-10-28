@@ -11,21 +11,21 @@ use conrod_core::{
 
 use crate::display::widget::ControlWidget;
 
-pub struct TelemetryWidgetContainerConfig {
+pub struct TelemetryContainerWidgetConfig {
     width: f64,
     height: f64,
     parent: WidgetId,
     id: WidgetId,
 }
 
-impl TelemetryWidgetContainerConfig {
+impl TelemetryContainerWidgetConfig {
     pub fn new(
         width: f64,
         height: f64,
         parent: WidgetId,
         id: WidgetId,
-    ) -> TelemetryWidgetContainerConfig {
-        TelemetryWidgetContainerConfig {
+    ) -> TelemetryContainerWidgetConfig {
+        TelemetryContainerWidgetConfig {
             width,
             height,
             parent,
@@ -34,7 +34,7 @@ impl TelemetryWidgetContainerConfig {
     }
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: TelemetryWidgetContainerConfig) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, config: TelemetryContainerWidgetConfig) -> f64 {
     // Create rectangle for container
     widget::rectangle::Rectangle::fill_with([config.width, config.height], color::WHITE)
         .right_from(config.parent, 0.0)
