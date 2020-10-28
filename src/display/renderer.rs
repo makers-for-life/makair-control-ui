@@ -548,7 +548,7 @@ impl DisplayRenderer {
         let mut buffer = vec![0; (GRAPH_WIDTH * GRAPH_HEIGHT * 4) as usize];
 
         // Docs: https://docs.rs/plotters/0.2.12/plotters/drawing/struct.BitMapBackend.html
-        let root = BitMapBackend::with_buffer(&mut buffer, (GRAPH_WIDTH, GRAPH_HEIGHT))
+        let drawing = BitMapBackend::with_buffer(&mut buffer, (GRAPH_WIDTH, GRAPH_HEIGHT))
             .into_drawing_area();
 
         let newest_time = data_pressure
@@ -611,7 +611,7 @@ impl DisplayRenderer {
             range_high
         };
 
-        let mut chart = ChartBuilder::on(&root)
+        let mut chart = ChartBuilder::on(&drawing)
             .margin_top(GRAPH_DRAW_MARGIN_TOP)
             .margin_bottom(GRAPH_DRAW_MARGIN_BOTTOM)
             .margin_left(GRAPH_DRAW_MARGIN_LEFT)
@@ -652,7 +652,7 @@ impl DisplayRenderer {
             .unwrap();
 
         drop(chart);
-        drop(root);
+        drop(drawing);
 
         // Convert chart to an image
         let rgba_image: RgbaImage = RgbImage::from_raw(GRAPH_WIDTH, GRAPH_HEIGHT, buffer)
