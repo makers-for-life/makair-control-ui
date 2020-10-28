@@ -123,8 +123,10 @@ impl DisplayRenderer {
         let trigger_settings_iters = vec![
             self.ids.trigger_overview_container,
             self.ids.trigger_overview_title,
-            self.ids.trigger_overview_status,
-            self.ids.trigger_overview_offset,
+            self.ids.trigger_overview_status_label,
+            self.ids.trigger_overview_status_value,
+            self.ids.trigger_overview_offset_label,
+            self.ids.trigger_overview_offset_value,
         ];
 
         let expiration_term_settings_iters = vec![

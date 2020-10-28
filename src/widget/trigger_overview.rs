@@ -20,8 +20,10 @@ pub struct Config<'a> {
     pub container: WidgetId,
     pub border: WidgetId,
     pub title_widget: WidgetId,
-    pub status_widget: WidgetId,
-    pub inspiration_trigger_offset_widget: WidgetId,
+    pub status_label_widget: WidgetId,
+    pub status_value_widget: WidgetId,
+    pub offset_label_widget: WidgetId,
+    pub offset_value_widget: WidgetId,
     pub configure_widget: WidgetId,
     pub expiratory_term_widget: WidgetId,
     pub plateau_duration_widget: WidgetId,
@@ -73,47 +75,84 @@ fn title<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 }
 
 fn status<'a>(master: &mut ControlWidget<'a>, config: &Config) {
-    // Initialize text style
-    let mut text_style = widget::text::Style::default();
+    // Initialize label text style
+    let mut label_text_style = widget::text::Style::default();
 
-    text_style.font_id = Some(Some(master.fonts.regular));
-    text_style.color = Some(color::WHITE);
-    text_style.font_size = Some(TELEMETRY_WIDGET_LABELS_FONT_SIZE);
+    label_text_style.font_id = Some(Some(master.fonts.regular));
+    label_text_style.color = Some(color::WHITE);
+    label_text_style.font_size = Some(TELEMETRY_WIDGET_LABELS_FONT_SIZE);
 
-    let status = if config.trigger_settings.state == TriggerState::Enabled {
+    // Create label text
+    widget::Text::new(&APP_I18N.t("trigger-label-state"))
+        .with_style(label_text_style)
+        .down_from(config.title_widget, 13.0)
+        .set(config.status_label_widget, &mut master.ui);
+
+    // Generate value text
+    let value_text_status = if config.trigger_settings.state == TriggerState::Enabled {
         APP_I18N.t("trigger-state-enabled")
     } else {
         APP_I18N.t("trigger-state-disabled")
     };
 
-    // Create text
-    widget::Text::new(&format!("{} {}", APP_I18N.t("trigger-label-state"), status))
-        .with_style(text_style)
-        .down_from(config.title_widget, 13.0)
-        .set(config.status_widget, &mut master.ui);
+    // Initialize value text style
+    let mut value_text_style = widget::text::Style::default();
+
+    value_text_style.font_id = Some(Some(master.fonts.bold));
+    value_text_style.font_size = Some(TELEMETRY_WIDGET_LABELS_FONT_SIZE);
+
+    value_text_style.color = Some(if config.trigger_settings.state == TriggerState::Enabled {
+        color::WHITE
+    } else {
+        color::BLACK.with_alpha(0.8)
+    });
+
+    // Create value text
+    widget::Text::new(&value_text_status)
+        .with_style(value_text_style)
+        .mid_left_with_margin_on(
+            config.status_label_widget,
+            TELEMETRY_WIDGET_LABELS_LABEL_WIDTH,
+        )
+        .set(config.status_value_widget, &mut master.ui);
 }
 
 fn offset<'a>(master: &mut ControlWidget<'a>, config: &Config) {
-    // Initialize text style
-    let mut text_style = widget::text::Style::default();
+    // Initialize label text style
+    let mut label_text_style = widget::text::Style::default();
 
-    text_style.font_id = Some(Some(master.fonts.regular));
-    text_style.color = Some(color::WHITE);
-    text_style.font_size = Some(TELEMETRY_WIDGET_LABELS_FONT_SIZE);
+    label_text_style.font_id = Some(Some(master.fonts.regular));
+    label_text_style.color = Some(color::WHITE);
+    label_text_style.font_size = Some(TELEMETRY_WIDGET_LABELS_FONT_SIZE);
 
     // Create text
+    widget::Text::new(&APP_I18N.t("trigger-label-offset"))
+        .with_style(label_text_style)
+        .down_from(config.status_label_widget, 5.0)
+        .set(config.offset_label_widget, &mut master.ui);
+
+    // Initialize value text style
+    let mut value_text_style = widget::text::Style::default();
+
+    value_text_style.font_id = Some(Some(master.fonts.regular));
+    value_text_style.color = Some(color::WHITE);
+    value_text_style.font_size = Some(TELEMETRY_WIDGET_LABELS_FONT_SIZE);
+
+    // Create value text
     widget::Text::new(&format!(
-        "{} {:.1} {}",
-        APP_I18N.t("trigger-label-offset"),
+        "{:.1} {}",
         convert_mmh2o_to_cmh2o(
             ConvertMode::Rounded,
             config.trigger_settings.inspiratory_trigger_offset as f64
         ),
         APP_I18N.t("telemetry-unit-cmh2o")
     ))
-    .with_style(text_style)
-    .down_from(config.status_widget, 5.0)
-    .set(config.inspiration_trigger_offset_widget, &mut master.ui);
+    .with_style(value_text_style)
+    .mid_left_with_margin_on(
+        config.offset_label_widget,
+        TELEMETRY_WIDGET_LABELS_LABEL_WIDTH,
+    )
+    .set(config.offset_value_widget, &mut master.ui);
 }
 
 fn configure<'a>(master: &mut ControlWidget<'a>, config: &Config) {
