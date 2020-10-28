@@ -7,7 +7,7 @@ use chrono::{DateTime, NaiveDateTime, Utc};
 use conrod_core::widget::Id as WidgetId;
 use conrod_core::Ui;
 use glium::texture;
-use image::{buffer::ConvertBuffer, load_from_memory, RgbImage, RgbaImage};
+use image::load_from_memory;
 use plotters::prelude::*;
 use plotters::style::TextStyle;
 use telemetry::alarm::AlarmCode;
@@ -140,7 +140,6 @@ impl DisplayRenderer {
         ];
 
         let trigger_settings_clicks = trigger_settings_iters.iter().flat_map(|widget| {
-            // TODO: Can we use the get_widget_clicks method?
             interface
                 .widget_input(*widget)
                 .clicks()
@@ -548,10 +547,10 @@ impl DisplayRenderer {
         machine_snapshot: &MachineStateSnapshot,
         display: &GliumDisplayWinitWrapper,
     ) -> glium::texture::Texture2d {
-        let mut buffer = vec![0; (GRAPH_WIDTH * GRAPH_HEIGHT * 3) as usize];
+        let mut buffer_rgb: Vec<u8> = vec![0; (GRAPH_WIDTH * GRAPH_HEIGHT * 3) as usize];
 
         // Docs: https://docs.rs/plotters/0.2.12/plotters/drawing/struct.BitMapBackend.html
-        let drawing = BitMapBackend::with_buffer(&mut buffer, (GRAPH_WIDTH, GRAPH_HEIGHT))
+        let drawing = BitMapBackend::with_buffer(&mut buffer_rgb, (GRAPH_WIDTH, GRAPH_HEIGHT))
             .into_drawing_area();
 
         // Acquire time range
@@ -655,16 +654,31 @@ impl DisplayRenderer {
         drop(chart);
         drop(drawing);
 
-        // Convert chart to an image
-        let rgba_image: RgbaImage = RgbImage::from_raw(GRAPH_WIDTH, GRAPH_HEIGHT, buffer)
-            .unwrap()
-            .convert();
+        // Convert chart from an RGB to an RGBA image buffer
+        let (width_value, height_value) = (GRAPH_WIDTH as usize, GRAPH_HEIGHT as usize);
 
-        let image_dimensions = rgba_image.dimensions();
+        let mut buffer_rgba: Vec<u8> = vec![0; width_value * height_value * 4];
 
+        for row in 0..(height_value - 1) {
+            let (row_start_rgb, row_start_rgba) =
+                (row * width_value, (height_value - row - 1) * width_value);
+
+            for column in 0..(width_value - 1) {
+                let (rgb_index, rgba_index) =
+                    ((row_start_rgb + column) * 3, (row_start_rgba + column) * 4);
+
+                buffer_rgba[rgba_index] = buffer_rgb[rgb_index];
+                buffer_rgba[rgba_index + 1] = buffer_rgb[rgb_index + 1];
+                buffer_rgba[rgba_index + 2] = buffer_rgb[rgb_index + 2];
+                buffer_rgba[rgba_index + 3] = 255;
+            }
+        }
+
+        // Instantiate a raw image in a 2D space
         let raw_image =
-            glium::texture::RawImage2d::from_raw_rgba(rgba_image.into_raw(), image_dimensions);
+            glium::texture::RawImage2d::from_raw_rgba(buffer_rgba, (GRAPH_WIDTH, GRAPH_HEIGHT));
 
+        // Build the final 2D texture from the raw image buffer in a 2D space
         glium::texture::Texture2d::with_mipmaps(
             &display.0,
             raw_image,
