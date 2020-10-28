@@ -18,6 +18,14 @@ use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::locale::alarms::description_to_locale as alarm_description_to_locale;
 
+const ALARM_HIGH_CODE_COLOR: Color = Color::Rgba(1.0, 0.0 / 255.0, 3.0 / 255.0, 1.0);
+const ALARM_MEDIUM_CODE_COLOR: Color = Color::Rgba(1.0, 135.0 / 255.0, 0.0, 1.0);
+const ALARM_LOW_CODE_COLOR: Color = Color::Rgba(1.0, 195.0 / 255.0, 0.0, 1.0);
+
+const ALARM_HIGH_MESSAGE_COLOR: Color = Color::Rgba(180.0 / 255.0, 24.0 / 255.0, 28.0 / 255.0, 1.0);
+const ALARM_MEDIUM_MESSAGE_COLOR: Color = Color::Rgba(189.0 / 255.0, 93.0 / 255.0, 0.0, 1.0);
+const ALARM_LOW_MESSAGE_COLOR: Color = Color::Rgba(174.0 / 255.0, 133.0 / 255.0, 0.0, 1.0);
+
 pub fn render<'a>(
     master: &mut ControlWidget<'a>,
     config: &alarms::Config,
@@ -59,18 +67,18 @@ pub fn render<'a>(
 fn code_color(alarm_priority: &AlarmPriority) -> Color {
     // Map alarm code colors
     match alarm_priority {
-        AlarmPriority::High => Color::Rgba(1.0, 0.0 / 255.0, 3.0 / 255.0, 1.0),
-        AlarmPriority::Medium => Color::Rgba(1.0, 135.0 / 255.0, 0.0, 1.0),
-        AlarmPriority::Low => Color::Rgba(1.0, 195.0 / 255.0, 0.0, 1.0),
+        AlarmPriority::High => ALARM_HIGH_CODE_COLOR,
+        AlarmPriority::Medium => ALARM_MEDIUM_CODE_COLOR,
+        AlarmPriority::Low => ALARM_LOW_CODE_COLOR,
     }
 }
 
 fn message_color(alarm_priority: &AlarmPriority) -> Color {
     // Map alarm message colors
     match alarm_priority {
-        AlarmPriority::High => Color::Rgba(180.0 / 255.0, 24.0 / 255.0, 28.0 / 255.0, 1.0),
-        AlarmPriority::Medium => Color::Rgba(189.0 / 255.0, 93.0 / 255.0, 0.0, 1.0),
-        AlarmPriority::Low => Color::Rgba(174.0 / 255.0, 133.0 / 255.0, 0.0, 1.0),
+        AlarmPriority::High => ALARM_HIGH_MESSAGE_COLOR,
+        AlarmPriority::Medium => ALARM_MEDIUM_MESSAGE_COLOR,
+        AlarmPriority::Low => ALARM_LOW_MESSAGE_COLOR,
     }
 }
 

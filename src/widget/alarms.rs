@@ -22,6 +22,11 @@ use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::APP_I18N;
 
+const CONTAINER_WITH_ALARMS_BACKGROUND_COLOR: Color =
+    Color::Rgba(42.0 / 255.0, 42.0 / 255.0, 42.0 / 255.0, 0.96);
+const CONTAINER_WITHOUT_ALARMS_BACKGROUND_COLOR: Color =
+    Color::Rgba(17.0 / 255.0, 17.0 / 255.0, 17.0 / 255.0, 0.96);
+
 pub struct Config<'a> {
     pub parent: WidgetId,
     pub container: WidgetId,
@@ -72,9 +77,9 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
     // Acquire container background color (based on alarms count)
     let container_background_color = if alarms_count > 0 {
-        Color::Rgba(42.0 / 255.0, 42.0 / 255.0, 42.0 / 255.0, 0.96)
+        CONTAINER_WITH_ALARMS_BACKGROUND_COLOR
     } else {
-        Color::Rgba(17.0 / 255.0, 17.0 / 255.0, 17.0 / 255.0, 0.96)
+        CONTAINER_WITHOUT_ALARMS_BACKGROUND_COLOR
     };
 
     // Draw container box

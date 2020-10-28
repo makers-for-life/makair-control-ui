@@ -35,23 +35,11 @@ lazy_static! {
             .into_rgba()
             .into_raw();
     static ref FONT_DEFAULT_NOTOSANS_REGULAR: conrod_core::text::Font =
-        conrod_core::text::Font::from_bytes(
-            inflate_bytes_zlib(&EmbeddedFonts::get("default/notosans_regular.ttf.zz").unwrap())
-                .unwrap()
-        )
-        .unwrap();
+        gen_load_font!("notosans_regular");
     static ref FONT_DEFAULT_NOTOSANS_BOLD: conrod_core::text::Font =
-        conrod_core::text::Font::from_bytes(
-            inflate_bytes_zlib(&EmbeddedFonts::get("default/notosans_bold.ttf.zz").unwrap())
-                .unwrap()
-        )
-        .unwrap();
+        gen_load_font!("notosans_bold");
     static ref FONT_CJK_NOTOSANS_ALL: conrod_core::text::Font =
-        conrod_core::text::Font::from_bytes(
-            inflate_bytes_zlib(&EmbeddedFonts::get("cjk/notosans_cjk_regular.ttf.zz").unwrap())
-                .unwrap()
-        )
-        .unwrap();
+        gen_load_font!("notosans_cjk_regular");
 }
 
 impl DisplayWindow {

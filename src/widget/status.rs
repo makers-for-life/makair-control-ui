@@ -129,7 +129,11 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     if let Some(save_icon_id) = config.save_icon_id {
         widget::text::Text::new(&unit_text_value)
             .with_style(unit_text_style)
-            .top_left_with_margins_on(config.unit_box, STATUS_BOX_TEXT_MARGIN_TOP, STATUS_BOX_RECORDING_PADDING_LEFT)
+            .top_left_with_margins_on(
+                config.unit_box,
+                STATUS_BOX_TEXT_MARGIN_TOP,
+                STATUS_BOX_RECORDING_PADDING_LEFT,
+            )
             .set(config.unit_text, &mut master.ui);
 
         widget::image::Image::new(save_icon_id)

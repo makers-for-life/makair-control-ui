@@ -15,6 +15,8 @@ pub const DISPLAY_FRAMERATE: u64 = 30;
 pub const BOOTLOADER_LOGO_WIDTH: u32 = 98;
 pub const BOOTLOADER_LOGO_HEIGHT: u32 = 96;
 
+pub const SPLASH_MESSAGE_FONT_SIZE: u32 = 30;
+
 pub const BRANDING_WIDTH: u32 = 121;
 pub const BRANDING_HEIGHT: u32 = 45;
 pub const BRANDING_IMAGE_MARGIN_TOP: f64 = 3.0;

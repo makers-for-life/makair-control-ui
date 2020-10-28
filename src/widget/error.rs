@@ -9,6 +9,7 @@ use conrod_core::{
     Colorable, Positionable, Widget,
 };
 
+use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::APP_I18N;
 
@@ -29,7 +30,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
     text_style.font_id = Some(Some(master.fonts.bold));
     text_style.color = Some(color::WHITE);
-    text_style.font_size = Some(30);
+    text_style.font_size = Some(SPLASH_MESSAGE_FONT_SIZE);
 
     // Create text
     // Notice: using '\n' instead of the wrap methods because I could not make them work
