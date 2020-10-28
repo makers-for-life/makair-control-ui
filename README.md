@@ -1,7 +1,7 @@
 # MakAir Control UI
 
 <p align="center">
-  <img alt="Normal Respiratory Cycle" src="./doc/screens/normal-cycle.gif">
+  <img alt="Respiratory Cycle With An Alarm" src="./doc/screens/cycle-alarm.gif">
 </p>
 
 ## Versions
