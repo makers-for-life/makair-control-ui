@@ -398,7 +398,7 @@ impl<'a> Screen<'a> {
                 ),
                 x_position: 0.0,
                 y_position: 0.0,
-                background_color: Color::Rgba(457.0 / 255.0, 143.0 / 255.0, 114.0 / 255.0, 1.0),
+                background_color: Color::Rgba(57.0 / 255.0, 143.0 / 255.0, 114.0 / 255.0, 1.0),
                 width: TELEMETRY_WIDGET_SIZE_WIDTH,
                 height: LAYOUT_FOOTER_SIZE_HEIGHT,
             }));
