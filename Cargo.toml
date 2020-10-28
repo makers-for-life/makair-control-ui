@@ -51,6 +51,7 @@ opt-level = "s"
 lto = true
 debug = false
 debug-assertions = false
+panic = "abort"
 
 [profile.bench]
 opt-level = 3
