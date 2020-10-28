@@ -16,6 +16,17 @@ use crate::display::widget::ControlWidget;
 use crate::utilities::pressure::process_max_allowed_pressure;
 use crate::utilities::types::DataPressure;
 
+const SURROUND_CIRCLE_COLOR: Color = Color::Rgba(153.0 / 255.0, 153.0 / 255.0, 153.0 / 255.0, 1.0);
+
+const INNER_CIRCLE_COLOR_DEFAULT: Color = color::WHITE;
+const INNER_CIRCLE_COLOR_OVERFLOW: Color =
+    Color::Rgba(184.0 / 255.0, 1.0 / 255.0, 24.0 / 255.0, 1.0);
+
+const GROUND_CIRCLE_COLOR_DEFAULT: Color =
+    Color::Rgba(116.0 / 255.0, 116.0 / 255.0, 116.0 / 255.0, 1.0);
+const GROUND_CIRCLE_COLOR_OVERFLOW: Color =
+    Color::Rgba(204.0 / 255.0, 204.0 / 255.0, 204.0 / 255.0, 1.0);
+
 pub struct Config<'a> {
     data_pressure: &'a DataPressure,
     peak_command: u8,
@@ -54,12 +65,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
     // #1: Create surround circle
     let surround_line_style = widget::primitive::line::Style::solid()
-        .color(Color::Rgba(
-            153.0 / 255.0,
-            153.0 / 255.0,
-            153.0 / 255.0,
-            1.0,
-        ))
+        .color(SURROUND_CIRCLE_COLOR)
         .thickness(HEARTBEAT_SURROUND_THICKNESS);
 
     widget::primitive::shape::circle::Circle::outline_styled(surround_radius, surround_line_style)
@@ -91,9 +97,9 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     ) as f64;
 
     let inner_color = if last_pressure_radius >= surround_radius {
-        Color::Rgba(184.0 / 255.0, 1.0 / 255.0, 24.0 / 255.0, 1.0)
+        INNER_CIRCLE_COLOR_OVERFLOW
     } else {
-        color::WHITE
+        INNER_CIRCLE_COLOR_DEFAULT
     };
 
     // Draw circle for the current pressure (normal, or exceeding alert threshold)
@@ -103,9 +109,9 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
     // #3: Create ground circle
     let ground_color = if last_pressure_radius >= surround_radius {
-        Color::Rgba(204.0 / 255.0, 204.0 / 255.0, 204.0 / 255.0, 1.0)
+        GROUND_CIRCLE_COLOR_OVERFLOW
     } else {
-        Color::Rgba(116.0 / 255.0, 116.0 / 255.0, 116.0 / 255.0, 1.0)
+        GROUND_CIRCLE_COLOR_DEFAULT
     };
 
     widget::primitive::shape::circle::Circle::fill_with(ground_radius, ground_color)

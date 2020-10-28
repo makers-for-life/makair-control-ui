@@ -15,6 +15,11 @@ use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::APP_I18N;
 
+const CANVAS_COLOR: Color = Color::Rgba(0.0, 0.0, 0.0, 0.75);
+
+const CONTAINER_BORDER_COLOR: Color = Color::Rgba(81.0 / 255.0, 81.0 / 255.0, 81.0 / 255.0, 1.0);
+const CONTAINER_COLOR: Color = Color::Rgba(26.0 / 255.0, 26.0 / 255.0, 26.0 / 255.0, 1.0);
+
 pub struct Config {
     pub parent: WidgetId,
     pub background: WidgetId,
@@ -30,7 +35,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Initialize canvas style
     let mut style = canvas::Style::default();
 
-    style.color = Some(Color::Rgba(0.0, 0.0, 0.0, 0.75));
+    style.color = Some(CANVAS_COLOR);
     style.border = Some(0.0);
     style.border_color = Some(color::TRANSPARENT);
 
@@ -45,12 +50,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         .set(config.background, &mut master.ui);
 
     // Initialize container style for borders
-    let container_borders_style = Style::Fill(Some(Color::Rgba(
-        81.0 / 255.0,
-        81.0 / 255.0,
-        81.0 / 255.0,
-        1.0,
-    )));
+    let container_borders_style = Style::Fill(Some(CONTAINER_BORDER_COLOR));
 
     // Create rectangle for borders
     RoundedRectangle::styled(
@@ -64,7 +64,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Initialize container style
     let mut container_style = canvas::Style::default();
 
-    container_style.color = Some(Color::Rgba(26.0 / 255.0, 26.0 / 255.0, 26.0 / 255.0, 1.0));
+    container_style.color = Some(CONTAINER_COLOR);
     container_style.border = Some(0.0);
     container_style.border_color = Some(color::TRANSPARENT);
 

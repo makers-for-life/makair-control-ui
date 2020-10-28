@@ -17,6 +17,13 @@ use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::APP_I18N;
 
+const WRAPPER_COLOR: Color = Color::Rgba(52.0 / 255.0, 52.0 / 255.0, 52.0 / 255.0, 1.0);
+
+const UNIT_STOPPED_COLOR: Color = Color::Rgba(180.0 / 255.0, 24.0 / 255.0, 28.0 / 255.0, 1.0);
+const UNIT_ACTIVE_COLOR: Color = Color::Rgba(50.0 / 255.0, 186.0 / 255.0, 0.0, 1.0);
+
+const POWER_BOX_BATTERY_COLOR: Color = Color::Rgba(208.0 / 255.0, 92.0 / 255.0, 0.0, 1.0);
+
 pub struct Config<'a> {
     container: WidgetId,
     wrapper: WidgetId,
@@ -79,7 +86,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Initialize wrapper canvas style
     let mut wrapper_style = canvas::Style::default();
 
-    wrapper_style.color = Some(Color::Rgba(52.0 / 255.0, 52.0 / 255.0, 52.0 / 255.0, 1.0));
+    wrapper_style.color = Some(WRAPPER_COLOR);
     wrapper_style.border = Some(0.0);
     wrapper_style.border_color = Some(color::TRANSPARENT);
 
@@ -105,9 +112,9 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     unit_text_style.font_size = Some(11);
 
     if is_unit_stopped {
-        unit_box_style.color = Some(Color::Rgba(180.0 / 255.0, 24.0 / 255.0, 28.0 / 255.0, 1.0));
+        unit_box_style.color = Some(UNIT_STOPPED_COLOR);
     } else {
-        unit_box_style.color = Some(Color::Rgba(50.0 / 255.0, 186.0 / 255.0, 0.0, 1.0));
+        unit_box_style.color = Some(UNIT_ACTIVE_COLOR);
     }
 
     unit_box_style.border = Some(0.0);
@@ -158,7 +165,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     power_text_style.font_size = Some(11);
 
     if is_battery_powered {
-        power_box_style.color = Some(Color::Rgba(208.0 / 255.0, 92.0 / 255.0, 0.0, 1.0));
+        power_box_style.color = Some(POWER_BOX_BATTERY_COLOR);
     } else {
         power_box_style.color = Some(color::TRANSPARENT);
     }

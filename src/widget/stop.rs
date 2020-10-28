@@ -13,6 +13,8 @@ use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::APP_I18N;
 
+const MESSAGE_COLOR: Color = Color::Rgba(1.0, 1.0, 1.0, 0.75);
+
 pub struct Config {
     pub container: WidgetId,
     pub title: WidgetId,
@@ -36,7 +38,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Initialize message style
     let mut message_style = widget::text::Style::default();
 
-    message_style.color = Some(Color::Rgba(1.0, 1.0, 1.0, 0.75));
+    message_style.color = Some(MESSAGE_COLOR);
     message_style.font_size = Some(14);
     message_style.font_id = Some(Some(master.fonts.regular));
 
