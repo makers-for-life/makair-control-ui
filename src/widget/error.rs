@@ -12,18 +12,18 @@ use conrod_core::{
 use crate::display::widget::ControlWidget;
 use crate::APP_I18N;
 
-pub struct ErrorWidgetConfig {
+pub struct Config {
     error: String,
     id: WidgetId,
 }
 
-impl ErrorWidgetConfig {
-    pub fn new(error: String, id: WidgetId) -> ErrorWidgetConfig {
-        ErrorWidgetConfig { error, id }
+impl Config {
+    pub fn new(error: String, id: WidgetId) -> Config {
+        Config { error, id }
     }
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: ErrorWidgetConfig) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Initialize style
     let mut text_style = conrod_core::widget::primitive::text::Style::default();
 

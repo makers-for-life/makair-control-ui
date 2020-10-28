@@ -12,7 +12,7 @@ use conrod_core::{
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 
-pub struct TelemetryViewWidgetConfig {
+pub struct Config {
     pub title: String,
     pub value_measured: Option<String>,
     pub value_target: Option<String>,
@@ -34,7 +34,7 @@ pub struct TelemetryViewWidgetConfig {
     pub height: f64,
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: TelemetryViewWidgetConfig) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create rounded rectangle
     widget::rectangle::Rectangle::fill_with([config.width, config.height], config.background_color)
         .bottom_left_with_margins_on(config.ids.0, config.y_position, config.x_position)

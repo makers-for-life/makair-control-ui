@@ -20,7 +20,7 @@ use crate::locale::alarms::description_to_locale as alarm_description_to_locale;
 
 pub fn render<'a>(
     master: &mut ControlWidget<'a>,
-    config: &alarms::AlarmsWidgetConfig,
+    config: &alarms::Config,
     alarm_code: AlarmCode,
     alarm_priority: &AlarmPriority,
     index: usize,
@@ -76,7 +76,7 @@ fn message_color(alarm_priority: &AlarmPriority) -> Color {
 
 fn code<'a>(
     master: &mut ControlWidget<'a>,
-    config: &alarms::AlarmsWidgetConfig,
+    config: &alarms::Config,
     alarm_code: AlarmCode,
     alarm_priority: &AlarmPriority,
     index: usize,
@@ -113,7 +113,7 @@ fn code<'a>(
 
 fn message<'a>(
     master: &mut ControlWidget<'a>,
-    config: &alarms::AlarmsWidgetConfig,
+    config: &alarms::Config,
     alarm_code: AlarmCode,
     alarm_priority: &AlarmPriority,
     index: usize,

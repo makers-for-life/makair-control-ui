@@ -17,7 +17,7 @@ use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::APP_I18N;
 
-pub struct StatusWidgetConfig<'a> {
+pub struct Config<'a> {
     container: WidgetId,
     wrapper: WidgetId,
     unit_box: WidgetId,
@@ -32,7 +32,7 @@ pub struct StatusWidgetConfig<'a> {
 }
 
 #[allow(clippy::too_many_arguments)]
-impl<'a> StatusWidgetConfig<'a> {
+impl<'a> Config<'a> {
     pub fn new(
         container: WidgetId,
         wrapper: WidgetId,
@@ -45,8 +45,8 @@ impl<'a> StatusWidgetConfig<'a> {
         chip_state: &'a ChipState,
         alarms: &'a [(AlarmCode, AlarmPriority)],
         save_icon_id: Option<conrod_core::image::Id>,
-    ) -> StatusWidgetConfig<'a> {
-        StatusWidgetConfig {
+    ) -> Config<'a> {
+        Config {
             container,
             wrapper,
             unit_box,
@@ -62,7 +62,7 @@ impl<'a> StatusWidgetConfig<'a> {
     }
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: StatusWidgetConfig) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Compute status box height and width
     let (box_height, box_width) = (STATUS_WRAPPER_HEIGHT / 2.0, STATUS_WRAPPER_WIDTH);
 

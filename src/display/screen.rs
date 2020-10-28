@@ -118,27 +118,29 @@ impl<'a> Screen<'a> {
     }
 
     pub fn render_background(&mut self) {
-        self.widgets.render(ControlWidgetType::Background(
-            background::BackgroundWidgetConfig::new(color::BLACK, self.ids.background),
-        ));
+        self.widgets
+            .render(ControlWidgetType::Background(background::Config::new(
+                color::BLACK,
+                self.ids.background,
+            )));
     }
 
     pub fn render_layout(&mut self) {
         self.widgets
-            .render(ControlWidgetType::Layout(layout::LayoutWidgetConfig::new(
-                layout::LayoutWidgetSliceConfig::new(
+            .render(ControlWidgetType::Layout(layout::Config::new(
+                layout::Slice::new(
                     self.ids.background,
                     0.0,
                     LAYOUT_HEADER_SIZE_FULL_HEIGHT,
                     self.ids.layout_header,
                 ),
-                layout::LayoutWidgetSliceConfig::new(
+                layout::Slice::new(
                     self.ids.background,
                     LAYOUT_HEADER_SIZE_HEIGHT,
                     LAYOUT_BODY_SIZE_HEIGHT,
                     self.ids.layout_body,
                 ),
-                layout::LayoutWidgetSliceConfig::new(
+                layout::Slice::new(
                     self.ids.layout_body,
                     0.0,
                     LAYOUT_FOOTER_SIZE_HEIGHT,
@@ -155,8 +157,8 @@ impl<'a> Screen<'a> {
         width: f64,
         height: f64,
     ) {
-        self.widgets.render(ControlWidgetType::Branding(
-            branding::BrandingWidgetConfig::new(
+        self.widgets
+            .render(ControlWidgetType::Branding(branding::Config::new(
                 self.ids.layout_header,
                 version_firmware,
                 version_control,
@@ -168,13 +170,12 @@ impl<'a> Screen<'a> {
                     self.ids.branding_image,
                     self.ids.branding_text,
                 ),
-            ),
-        ));
+            )));
     }
 
     pub fn render_alarms(&mut self) {
         self.widgets
-            .render(ControlWidgetType::Alarms(alarms::AlarmsWidgetConfig {
+            .render(ControlWidgetType::Alarms(alarms::Config {
                 parent: self.ids.branding_container,
                 container: self.ids.alarm_container,
                 title: self.ids.alarm_title,
@@ -190,7 +191,7 @@ impl<'a> Screen<'a> {
 
     pub fn render_status(&mut self, status_data: ScreenDataStatus<'a>) {
         self.widgets
-            .render(ControlWidgetType::Status(status::StatusWidgetConfig::new(
+            .render(ControlWidgetType::Status(status::Config::new(
                 self.ids.layout_header,
                 self.ids.status_wrapper,
                 self.ids.status_unit_box,
@@ -206,21 +207,20 @@ impl<'a> Screen<'a> {
     }
 
     pub fn render_heartbeat(&mut self, heartbeat_data: ScreenDataHeartbeat<'a>) {
-        self.widgets.render(ControlWidgetType::Heartbeat(
-            heartbeat::HeartbeatWidgetConfig::new(
+        self.widgets
+            .render(ControlWidgetType::Heartbeat(heartbeat::Config::new(
                 heartbeat_data.data_pressure,
                 self.machine_snapshot.unwrap().peak_command,
                 self.ids.layout_header,
                 self.ids.heartbeat_ground,
                 self.ids.heartbeat_surround,
                 self.ids.heartbeat_inner,
-            ),
-        ));
+            )));
     }
 
     pub fn render_graph(&mut self, image_id: conrod_core::image::Id, width: f64, height: f64) {
         self.widgets
-            .render(ControlWidgetType::Graph(graph::GraphWidgetConfig::new(
+            .render(ControlWidgetType::Graph(graph::Config::new(
                 width,
                 height,
                 image_id,
@@ -262,18 +262,17 @@ impl<'a> Screen<'a> {
             );
 
             // Render stop layer
-            self.widgets
-                .render(ControlWidgetType::Stop(stop::StopWidgetConfig {
-                    container: self.ids.modal_container,
-                    title: self.ids.stopped_title,
-                    message: self.ids.stopped_message,
-                }));
+            self.widgets.render(ControlWidgetType::Stop(stop::Config {
+                container: self.ids.modal_container,
+                title: self.ids.stopped_title,
+                message: self.ids.stopped_message,
+            }));
         }
     }
 
     pub fn render_no_data(&mut self) {
         self.widgets
-            .render(ControlWidgetType::NoData(no_data::NoDataWidgetConfig::new(
+            .render(ControlWidgetType::NoData(no_data::Config::new(
                 self.ids.no_data,
             )));
     }
@@ -282,7 +281,7 @@ impl<'a> Screen<'a> {
         self.render_background();
 
         self.widgets
-            .render(ControlWidgetType::Error(error::ErrorWidgetConfig::new(
+            .render(ControlWidgetType::Error(error::Config::new(
                 error,
                 self.ids.error,
             )));
@@ -291,14 +290,13 @@ impl<'a> Screen<'a> {
     pub fn render_initializing(&mut self, config: ScreenBootLoader) {
         self.render_background();
 
-        self.widgets.render(ControlWidgetType::Initializing(
-            initializing::InitializingWidgetConfig::new(
+        self.widgets
+            .render(ControlWidgetType::Initializing(initializing::Config::new(
                 self.ids.initializing_logo,
                 config.width,
                 config.height,
                 config.image_id,
-            ),
-        ));
+            )));
     }
 
     pub fn render_telemetry(&mut self, telemetry_data: ScreenDataTelemetry, trigger: &'a Trigger) {
@@ -310,7 +308,7 @@ impl<'a> Screen<'a> {
 
         // Initialize the pressure graph widget
         self.widgets.render(ControlWidgetType::TelemetryContainer(
-            telemetry_container::TelemetryContainerWidgetConfig::new(
+            telemetry_container::Config::new(
                 widgets_right_width,
                 DISPLAY_WINDOW_SIZE_HEIGHT as f64 - LAYOUT_HEADER_SIZE_HEIGHT,
                 self.ids.pressure_graph,
@@ -319,8 +317,8 @@ impl<'a> Screen<'a> {
         ));
 
         // Initialize the peak widget
-        self.widgets.render(ControlWidgetType::TelemetryView(
-            telemetry_view::TelemetryViewWidgetConfig {
+        self.widgets
+            .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-peak"),
                 value_measured: Some(
                     convert_mmh2o_to_cmh2o(
@@ -346,12 +344,11 @@ impl<'a> Screen<'a> {
                 background_color: Color::Rgba(39.0 / 255.0, 66.0 / 255.0, 100.0 / 255.0, 1.0),
                 width: widgets_right_width,
                 height: widgets_right_height,
-            },
-        ));
+            }));
 
         // Initialize the plateau widget
-        self.widgets.render(ControlWidgetType::TelemetryView(
-            telemetry_view::TelemetryViewWidgetConfig {
+        self.widgets
+            .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-plateau"),
                 value_measured: Some(
                     convert_mmh2o_to_cmh2o(
@@ -378,12 +375,11 @@ impl<'a> Screen<'a> {
                 background_color: Color::Rgba(66.0 / 255.0, 44.0 / 255.0, 85.0 / 255.0, 1.0),
                 width: widgets_right_width,
                 height: widgets_right_height,
-            },
-        ));
+            }));
 
         // Initialize the PEEP widget
-        self.widgets.render(ControlWidgetType::TelemetryView(
-            telemetry_view::TelemetryViewWidgetConfig {
+        self.widgets
+            .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-expiratory"),
                 value_measured: Some(
                     convert_mmh2o_to_cmh2o(
@@ -410,12 +406,11 @@ impl<'a> Screen<'a> {
                 background_color: Color::Rgba(76.0 / 255.0, 73.0 / 255.0, 25.0 / 255.0, 1.0),
                 width: widgets_right_width,
                 height: widgets_right_height,
-            },
-        ));
+            }));
 
         // Initialize the cycles widget
-        self.widgets.render(ControlWidgetType::TelemetryView(
-            telemetry_view::TelemetryViewWidgetConfig {
+        self.widgets
+            .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-cycles"),
                 value_measured: None,
                 value_target: Some(machine_snapshot.cpm_command.to_string()),
@@ -435,8 +430,7 @@ impl<'a> Screen<'a> {
                 background_color: Color::Rgba(47.0 / 255.0, 74.0 / 255.0, 16.0 / 255.0, 1.0),
                 width: TELEMETRY_WIDGET_SIZE_WIDTH,
                 height: LAYOUT_FOOTER_SIZE_HEIGHT,
-            },
-        ));
+            }));
 
         // Initialize the tidal widget
         let previous_volume = machine_snapshot
@@ -444,8 +438,8 @@ impl<'a> Screen<'a> {
             .map(|v| format!("{}", v))
             .unwrap_or_else(|| APP_I18N.t("telemetry-value-empty"));
 
-        self.widgets.render(ControlWidgetType::TelemetryView(
-            telemetry_view::TelemetryViewWidgetConfig {
+        self.widgets
+            .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-tidal"),
                 value_measured: Some(previous_volume),
                 value_target: None,
@@ -465,8 +459,7 @@ impl<'a> Screen<'a> {
                 background_color: Color::Rgba(52.0 / 255.0, 52.0 / 255.0, 52.0 / 255.0, 1.0),
                 width: TELEMETRY_WIDGET_SIZE_WIDTH,
                 height: LAYOUT_FOOTER_SIZE_HEIGHT,
-            },
-        ));
+            }));
 
         // Initialize the ratio widget
         // Important: if the ratio has decimals, then show them (to the first decimal). If it \
@@ -476,8 +469,8 @@ impl<'a> Screen<'a> {
             machine_snapshot.expiratory_term as f64,
         );
 
-        self.widgets.render(ControlWidgetType::TelemetryView(
-            telemetry_view::TelemetryViewWidgetConfig {
+        self.widgets
+            .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-ratio"),
                 value_measured: Some(if expiratory_term_value.fract() == 0.0 {
                     format!("{}:{}", CYCLE_RATIO_INSPIRATION, expiratory_term_value,)
@@ -506,12 +499,11 @@ impl<'a> Screen<'a> {
                 background_color: color::BLUE,
                 width: TELEMETRY_WIDGET_SIZE_WIDTH,
                 height: LAYOUT_FOOTER_SIZE_HEIGHT,
-            },
-        ));
+            }));
 
         // Initialize the trigger widget
         self.widgets.render(ControlWidgetType::TriggerOverview(
-            trigger_overview::TriggerOverviewWidgetConfig {
+            trigger_overview::Config {
                 parent: self.ids.ratio_parent,
                 container: self.ids.trigger_overview_container,
                 border: self.ids.trigger_overview_border,
@@ -538,17 +530,16 @@ impl<'a> Screen<'a> {
         padding: Option<f64>,
         validate: Option<(WidgetId, WidgetId)>,
     ) {
-        self.widgets
-            .render(ControlWidgetType::Modal(modal::ModalWidgetConfig {
-                parent: self.ids.background,
-                background: self.ids.modal_background,
-                container_borders: self.ids.modal_container_borders,
-                container: self.ids.modal_container,
-                validate,
-                width,
-                height,
-                padding,
-            }));
+        self.widgets.render(ControlWidgetType::Modal(modal::Config {
+            parent: self.ids.background,
+            background: self.ids.modal_background,
+            container_borders: self.ids.modal_container_borders,
+            container: self.ids.modal_container,
+            validate,
+            width,
+            height,
+            padding,
+        }));
     }
 
     fn render_trigger_settings(&mut self, settings: &'a Trigger) {
@@ -560,7 +551,7 @@ impl<'a> Screen<'a> {
         );
 
         self.widgets.render(ControlWidgetType::TriggerSettings(
-            trigger_settings::TriggerSettingsWidgetConfig {
+            trigger_settings::Config {
                 width: TRIGGER_SETTINGS_MODAL_WIDTH,
                 height: TRIGGER_SETTINGS_MODAL_HEIGTH
                     - MODAL_VALIDATE_BUTTON_HEIGHT
@@ -598,7 +589,7 @@ impl<'a> Screen<'a> {
 
         self.widgets
             .render(ControlWidgetType::ExpirationTermSettings(
-                expiration_term_settings::ExpirationTermSettingsWidgetConfig {
+                expiration_term_settings::Config {
                     width: EXPIRATION_TERM_SETTINGS_MODAL_WIDTH,
                     height: EXPIRATION_TERM_SETTINGS_MODAL_HEIGTH
                         - MODAL_VALIDATE_BUTTON_HEIGHT

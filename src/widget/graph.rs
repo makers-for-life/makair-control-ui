@@ -10,7 +10,7 @@ use conrod_core::{
 
 use crate::display::widget::ControlWidget;
 
-pub struct GraphWidgetConfig {
+pub struct Config {
     width: f64,
     height: f64,
     image: conrod_core::image::Id,
@@ -18,15 +18,15 @@ pub struct GraphWidgetConfig {
     id: WidgetId,
 }
 
-impl GraphWidgetConfig {
+impl Config {
     pub fn new(
         width: f64,
         height: f64,
         image: conrod_core::image::Id,
         parent: WidgetId,
         id: WidgetId,
-    ) -> GraphWidgetConfig {
-        GraphWidgetConfig {
+    ) -> Config {
+        Config {
             width,
             height,
             image,
@@ -36,7 +36,7 @@ impl GraphWidgetConfig {
     }
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: GraphWidgetConfig) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create image
     widget::Image::new(config.image)
         .w_h(config.width, config.height)

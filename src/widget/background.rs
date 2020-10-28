@@ -10,18 +10,18 @@ use conrod_core::{
 
 use crate::display::widget::ControlWidget;
 
-pub struct BackgroundWidgetConfig {
+pub struct Config {
     color: conrod_core::color::Color,
     id: WidgetId,
 }
 
-impl BackgroundWidgetConfig {
-    pub fn new(color: conrod_core::color::Color, id: WidgetId) -> BackgroundWidgetConfig {
-        BackgroundWidgetConfig { color, id }
+impl Config {
+    pub fn new(color: conrod_core::color::Color, id: WidgetId) -> Config {
+        Config { color, id }
     }
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: BackgroundWidgetConfig) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create canvas
     widget::Canvas::new()
         .color(config.color)

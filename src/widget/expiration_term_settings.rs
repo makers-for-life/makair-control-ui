@@ -15,7 +15,7 @@ use crate::display::widget::ControlWidget;
 use crate::physics::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::APP_I18N;
 
-pub struct ExpirationTermSettingsWidgetConfig<'a> {
+pub struct Config<'a> {
     pub width: f64,
     pub height: f64,
     pub trigger_settings: &'a Trigger,
@@ -29,10 +29,7 @@ pub struct ExpirationTermSettingsWidgetConfig<'a> {
     pub expiration_term_value_widget: WidgetId,
 }
 
-pub fn render<'a>(
-    master: &mut ControlWidget<'a>,
-    config: ExpirationTermSettingsWidgetConfig,
-) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Initialize canvas style
     let mut canvas_style = widget::canvas::Style::default();
 
@@ -52,7 +49,7 @@ pub fn render<'a>(
     0 as _
 }
 
-pub fn term<'a>(master: &mut ControlWidget<'a>, config: &ExpirationTermSettingsWidgetConfig) {
+pub fn term<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Initialize text style for label
     let mut label_text_style = widget::text::Style::default();
 

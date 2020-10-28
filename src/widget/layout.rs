@@ -12,27 +12,22 @@ use conrod_core::{
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 
-pub struct LayoutWidgetSliceConfig {
+pub struct Slice {
     parent: WidgetId,
     top: f64,
     height: f64,
     layout: WidgetId,
 }
 
-pub struct LayoutWidgetConfig {
-    header: LayoutWidgetSliceConfig,
-    body: LayoutWidgetSliceConfig,
-    footer: LayoutWidgetSliceConfig,
+pub struct Config {
+    header: Slice,
+    body: Slice,
+    footer: Slice,
 }
 
-impl LayoutWidgetSliceConfig {
-    pub fn new(
-        parent: WidgetId,
-        top: f64,
-        height: f64,
-        layout: WidgetId,
-    ) -> LayoutWidgetSliceConfig {
-        LayoutWidgetSliceConfig {
+impl Slice {
+    pub fn new(parent: WidgetId, top: f64, height: f64, layout: WidgetId) -> Slice {
+        Slice {
             parent,
             top,
             height,
@@ -41,13 +36,9 @@ impl LayoutWidgetSliceConfig {
     }
 }
 
-impl LayoutWidgetConfig {
-    pub fn new(
-        header: LayoutWidgetSliceConfig,
-        body: LayoutWidgetSliceConfig,
-        footer: LayoutWidgetSliceConfig,
-    ) -> LayoutWidgetConfig {
-        LayoutWidgetConfig {
+impl Config {
+    pub fn new(header: Slice, body: Slice, footer: Slice) -> Config {
+        Config {
             header,
             body,
             footer,
@@ -55,7 +46,7 @@ impl LayoutWidgetConfig {
     }
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: LayoutWidgetConfig) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create body layout rectangle
     widget::Rectangle::fill_with(
         [DISPLAY_WINDOW_SIZE_WIDTH as _, config.body.height],

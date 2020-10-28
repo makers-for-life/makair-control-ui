@@ -22,7 +22,7 @@ use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::APP_I18N;
 
-pub struct AlarmsWidgetConfig<'a> {
+pub struct Config<'a> {
     pub parent: WidgetId,
     pub container: WidgetId,
     pub title: WidgetId,
@@ -35,7 +35,7 @@ pub struct AlarmsWidgetConfig<'a> {
     pub alarms: &'a [(AlarmCode, AlarmPriority)],
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: AlarmsWidgetConfig) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Rebuild alarms that should go for display, and count their total
     // Notice: ignored alarm codes are used in other more specific places, eg. code \
     //   31 for battery power usage indicator.

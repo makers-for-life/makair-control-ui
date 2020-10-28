@@ -16,7 +16,7 @@ use crate::display::widget::ControlWidget;
 use crate::physics::pressure::process_max_allowed_pressure;
 use crate::physics::types::DataPressure;
 
-pub struct HeartbeatWidgetConfig<'a> {
+pub struct Config<'a> {
     data_pressure: &'a DataPressure,
     peak_command: u8,
     container: WidgetId,
@@ -25,7 +25,7 @@ pub struct HeartbeatWidgetConfig<'a> {
     inner: WidgetId,
 }
 
-impl<'a> HeartbeatWidgetConfig<'a> {
+impl<'a> Config<'a> {
     pub fn new(
         data_pressure: &'a DataPressure,
         peak_command: u8,
@@ -33,8 +33,8 @@ impl<'a> HeartbeatWidgetConfig<'a> {
         ground: WidgetId,
         surround: WidgetId,
         inner: WidgetId,
-    ) -> HeartbeatWidgetConfig<'a> {
-        HeartbeatWidgetConfig {
+    ) -> Config<'a> {
+        Config {
             data_pressure,
             peak_command,
             container,
@@ -45,7 +45,7 @@ impl<'a> HeartbeatWidgetConfig<'a> {
     }
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: HeartbeatWidgetConfig) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Convert diameters to radius
     let (ground_radius, surround_radius) = (
         HEARTBEAT_GROUND_DIAMETER / 2.0,

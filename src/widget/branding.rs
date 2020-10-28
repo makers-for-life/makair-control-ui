@@ -12,7 +12,7 @@ use conrod_core::{
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 
-pub struct BrandingWidgetConfig<'a> {
+pub struct Config<'a> {
     parent: WidgetId,
     version_firmware: &'a str,
     version_control: &'a str,
@@ -22,7 +22,7 @@ pub struct BrandingWidgetConfig<'a> {
     ids: (WidgetId, WidgetId, WidgetId),
 }
 
-impl<'a> BrandingWidgetConfig<'a> {
+impl<'a> Config<'a> {
     pub fn new(
         parent: WidgetId,
         version_firmware: &'a str,
@@ -31,8 +31,8 @@ impl<'a> BrandingWidgetConfig<'a> {
         height: f64,
         image: conrod_core::image::Id,
         ids: (WidgetId, WidgetId, WidgetId),
-    ) -> BrandingWidgetConfig<'a> {
-        BrandingWidgetConfig {
+    ) -> Config<'a> {
+        Config {
             parent,
             version_firmware,
             version_control,
@@ -44,7 +44,7 @@ impl<'a> BrandingWidgetConfig<'a> {
     }
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: BrandingWidgetConfig) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create rectangle
     widget::rectangle::Rectangle::fill_with([config.width, config.height], color::TRANSPARENT)
         .top_left_with_margins_on(

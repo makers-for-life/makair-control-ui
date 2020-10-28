@@ -10,21 +10,16 @@ use conrod_core::{
 
 use crate::display::widget::ControlWidget;
 
-pub struct InitializingWidgetConfig {
+pub struct Config {
     id: WidgetId,
     width: f64,
     height: f64,
     image: conrod_core::image::Id,
 }
 
-impl InitializingWidgetConfig {
-    pub fn new(
-        id: WidgetId,
-        width: f64,
-        height: f64,
-        image: conrod_core::image::Id,
-    ) -> InitializingWidgetConfig {
-        InitializingWidgetConfig {
+impl Config {
+    pub fn new(id: WidgetId, width: f64, height: f64, image: conrod_core::image::Id) -> Config {
+        Config {
             id,
             width,
             height,
@@ -33,7 +28,7 @@ impl InitializingWidgetConfig {
     }
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: InitializingWidgetConfig) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create image
     widget::Image::new(config.image)
         .w_h(config.width, config.height)

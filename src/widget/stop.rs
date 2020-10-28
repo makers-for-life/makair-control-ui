@@ -13,13 +13,13 @@ use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::APP_I18N;
 
-pub struct StopWidgetConfig {
+pub struct Config {
     pub container: WidgetId,
     pub title: WidgetId,
     pub message: WidgetId,
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: StopWidgetConfig) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Initialize title style
     let mut title_style = widget::text::Style::default();
 

@@ -15,7 +15,7 @@ use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::APP_I18N;
 
-pub struct ModalWidgetConfig {
+pub struct Config {
     pub parent: WidgetId,
     pub background: WidgetId,
     pub container_borders: WidgetId,
@@ -26,7 +26,7 @@ pub struct ModalWidgetConfig {
     pub padding: Option<f64>,
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: ModalWidgetConfig) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Initialize canvas style
     let mut style = canvas::Style::default();
 

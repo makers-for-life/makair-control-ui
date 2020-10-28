@@ -12,17 +12,17 @@ use conrod_core::{
 use crate::display::widget::ControlWidget;
 use crate::APP_I18N;
 
-pub struct NoDataWidgetConfig {
+pub struct Config {
     id: WidgetId,
 }
 
-impl NoDataWidgetConfig {
-    pub fn new(id: WidgetId) -> NoDataWidgetConfig {
-        NoDataWidgetConfig { id }
+impl Config {
+    pub fn new(id: WidgetId) -> Config {
+        Config { id }
     }
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: NoDataWidgetConfig) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Initialize text style
     let mut text_style = conrod_core::widget::primitive::text::Style::default();
 
