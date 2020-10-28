@@ -45,3 +45,23 @@ macro_rules! gen_draw_cached_image {
         .unwrap()
     };
 }
+
+macro_rules! gen_widget_impls {
+    ($($control:tt -> $widget:ident $([$lifetime:lifetime])*),+,) => {
+        pub enum ControlWidgetType<'a> {
+            $(
+                $control($widget::Config<$($lifetime)*>),
+            )+
+        }
+
+        impl<'a> ControlWidget<'a> {
+            pub fn render(&mut self, widget_type: ControlWidgetType<'a>) -> f64 {
+                match widget_type {
+                    $(
+                        ControlWidgetType::$control(config) => $widget::render(self, config),
+                    )+
+                }
+            }
+        }
+    }
+}
