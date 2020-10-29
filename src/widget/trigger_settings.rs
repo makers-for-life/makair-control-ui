@@ -188,7 +188,7 @@ pub fn offset_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         format!(
             "{:.1} {}",
             convert_mmh2o_to_cmh2o(
-                ConvertMode::Rounded,
+                ConvertMode::WithDecimals,
                 config.trigger_settings.inspiratory_trigger_offset as f64
             ),
             APP_I18N.t("telemetry-unit-cmh2o")
