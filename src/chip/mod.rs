@@ -64,16 +64,18 @@ impl Chip {
     }
 
     pub fn new_event(&mut self, event: TelemetryMessage) {
-        // send to LORA - can be moved if usefull
+        // Send to LORA
         if let Some(tx_for_lora) = &self.tx_for_lora {
             if let Err(e) = tx_for_lora.send(event.clone()) {
                 error!("problem while sending data to lora: {:?}", e);
             }
         };
 
+        // Handle actual event
         match event {
             TelemetryMessage::AlarmTrap(alarm) => {
                 self.update_tick(alarm.systick);
+
                 self.new_alarm(
                     alarm.alarm_code.into(),
                     alarm.alarm_priority,
@@ -89,8 +91,8 @@ impl Chip {
 
             TelemetryMessage::DataSnapshot(snapshot) => {
                 self.clean_if_stopped();
-                self.update_tick(snapshot.systick);
 
+                self.update_tick(snapshot.systick);
                 self.add_pressure(&snapshot);
 
                 self.battery_level = Some(snapshot.battery_level);
@@ -99,6 +101,7 @@ impl Chip {
 
             TelemetryMessage::MachineStateSnapshot(snapshot) => {
                 self.clean_if_stopped();
+
                 self.update_tick(snapshot.systick);
                 self.update_cycles_per_minute(snapshot.cpm_command as usize);
                 self.update_settings_values(&snapshot);
