@@ -69,8 +69,8 @@ impl<'a> DisplayDrawerBuilder<'a> {
 impl<'a> DisplayDrawer<'a> {
     pub fn run(&mut self) {
         // Create handlers
-        let mut serial_poller = SerialPollerBuilder::new();
-        let mut events_handler = DisplayEventsBuilder::new();
+        let (mut serial_poller, mut events_handler) =
+            (SerialPollerBuilder::new(), DisplayEventsBuilder::new());
 
         // Start gathering telemetry
         let rx = self.telemetry();
