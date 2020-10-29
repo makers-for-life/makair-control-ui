@@ -323,7 +323,6 @@ impl Chip {
         self.settings.inspiratory_trigger.expiratory_term = snapshot.expiratory_term as usize;
     }
 
-    // TODO: Mutate the last_machine_snapshot is not great, need to be reworked
     fn update_on_ack(&mut self, ack: ControlAck) {
         match ack.setting {
             ControlSetting::PeakPressure => {
@@ -342,17 +341,21 @@ impl Chip {
                 self.last_machine_snapshot.cpm_command = ack.value as u8
             }
             ControlSetting::TriggerEnabled => {
-                self.settings.inspiratory_trigger.state = if ack.value == 0 {
-                    TriggerState::Disabled
+                if ack.value == 0 {
+                    self.settings.inspiratory_trigger.state = TriggerState::Disabled;
+                    self.last_machine_snapshot.trigger_enabled = false;
                 } else {
-                    TriggerState::Enabled
+                    self.settings.inspiratory_trigger.state = TriggerState::Enabled;
+                    self.last_machine_snapshot.trigger_enabled = true;
                 }
             }
             ControlSetting::TriggerOffset => {
-                self.settings.inspiratory_trigger.inspiratory_trigger_offset = ack.value as usize
+                self.settings.inspiratory_trigger.inspiratory_trigger_offset = ack.value as usize;
+                self.last_machine_snapshot.trigger_offset = ack.value as u8;
             }
             ControlSetting::ExpiratoryTerm => {
-                self.settings.inspiratory_trigger.expiratory_term = ack.value as usize
+                self.settings.inspiratory_trigger.expiratory_term = ack.value as usize;
+                self.last_machine_snapshot.expiratory_term = ack.value as u8;
             }
         }
     }
