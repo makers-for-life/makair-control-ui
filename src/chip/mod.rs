@@ -288,6 +288,7 @@ impl Chip {
 
     pub fn ongoing_alarms_sorted(&self) -> Vec<(AlarmCode, AlarmPriority)> {
         let mut ongoing_alarms = self.ongoing_alarms.clone();
+
         Chip::deduplicate_alarms(&mut ongoing_alarms);
 
         let mut vec_alarms: Vec<(AlarmCode, AlarmPriority)> = ongoing_alarms
@@ -313,14 +314,18 @@ impl Chip {
     }
 
     fn update_settings_values(&mut self, snapshot: &MachineStateSnapshot) {
+        // Update expiratory term values
+        self.settings.inspiratory_trigger.expiratory_term = snapshot.expiratory_term as usize;
+
+        // Update trigger values
         self.settings.inspiratory_trigger.state = if snapshot.trigger_enabled {
             TriggerState::Enabled
         } else {
             TriggerState::Disabled
         };
+
         self.settings.inspiratory_trigger.inspiratory_trigger_offset =
             snapshot.trigger_offset as usize;
-        self.settings.inspiratory_trigger.expiratory_term = snapshot.expiratory_term as usize;
     }
 
     fn update_on_ack(&mut self, ack: ControlAck) {
@@ -329,17 +334,21 @@ impl Chip {
                 self.last_machine_snapshot.peak_command =
                     convert_mmh2o_to_cmh2o(ConvertMode::Rounded, ack.value as f64) as u8
             }
+
             ControlSetting::PlateauPressure => {
                 self.last_machine_snapshot.plateau_command =
                     convert_mmh2o_to_cmh2o(ConvertMode::Rounded, ack.value as f64) as u8
             }
+
             ControlSetting::PEEP => {
                 self.last_machine_snapshot.peep_command =
                     convert_mmh2o_to_cmh2o(ConvertMode::Rounded, ack.value as f64) as u8
             }
+
             ControlSetting::CyclesPerMinute => {
                 self.last_machine_snapshot.cpm_command = ack.value as u8
             }
+
             ControlSetting::TriggerEnabled => {
                 if ack.value == 0 {
                     self.settings.inspiratory_trigger.state = TriggerState::Disabled;
@@ -349,10 +358,12 @@ impl Chip {
                     self.last_machine_snapshot.trigger_enabled = true;
                 }
             }
+
             ControlSetting::TriggerOffset => {
                 self.settings.inspiratory_trigger.inspiratory_trigger_offset = ack.value as usize;
                 self.last_machine_snapshot.trigger_offset = ack.value as u8;
             }
+
             ControlSetting::ExpiratoryTerm => {
                 self.settings.inspiratory_trigger.expiratory_term = ack.value as usize;
                 self.last_machine_snapshot.expiratory_term = ack.value as u8;
