@@ -40,12 +40,12 @@ pub struct Chip {
     pub battery_level: Option<u8>,
     pub settings: ChipSettings,
     state: ChipState,
-    tx_for_lora: Option<Sender<TelemetryMessage>>,
+    lora_tx: Option<Sender<TelemetryMessage>>,
     channel_for_settings: Option<Sender<ControlMessage>>,
 }
 
 impl Chip {
-    pub fn new(tx_for_lora: Option<Sender<TelemetryMessage>>) -> Chip {
+    pub fn new(lora_sender: Option<Sender<TelemetryMessage>>) -> Chip {
         let last_machine_snapshot = MachineStateSnapshot::default();
         let cycles_per_minute = last_machine_snapshot.cpm_command;
 
@@ -58,16 +58,16 @@ impl Chip {
             battery_level: None,
             settings: ChipSettings::new(cycles_per_minute as usize),
             state: ChipState::WaitingData,
-            tx_for_lora,
+            lora_tx: lora_sender,
             channel_for_settings: None,
         }
     }
 
     pub fn new_event(&mut self, event: TelemetryMessage) {
-        // Send to LORA
-        if let Some(tx_for_lora) = &self.tx_for_lora {
-            if let Err(e) = tx_for_lora.send(event.clone()) {
-                error!("problem while sending data to lora: {:?}", e);
+        // Send to LORA?
+        if let Some(lora_tx) = &self.lora_tx {
+            if let Err(e) = lora_tx.send(event.clone()) {
+                error!("an issue occured while sending data to lora: {:?}", e);
             }
         };
 
