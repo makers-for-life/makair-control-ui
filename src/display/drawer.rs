@@ -78,14 +78,20 @@ impl<'a> DisplayDrawer<'a> {
         // Start drawer loop
         // Flow: cycles through telemetry events, and refreshes the view every time there is an \
         //   update on the machines state.
-        let mut last_render = Utc::now();
+        let (mut last_render, mut is_first_frame) = (Utc::now(), true);
 
         'main: loop {
+            let mut has_poll_events = false;
+
             // Receive telemetry data (from the input serial from the motherboard)
             // Empty the events queue before doing anything else
             'poll_serial: loop {
                 match serial_poller.poll(&rx) {
-                    Ok(PollEvent::Ready(event)) => self.chip.new_event(event),
+                    Ok(PollEvent::Ready(event)) => {
+                        self.chip.new_event(event);
+
+                        has_poll_events = true;
+                    }
                     Ok(PollEvent::Pending) => break 'poll_serial,
                     Err(error) => {
                         self.chip.new_error(error);
@@ -118,14 +124,21 @@ impl<'a> DisplayDrawer<'a> {
 
                 last_render = now;
 
-                // Get UI events since the last render
+                // Run UI events since the last render
                 let ui_events = self.renderer.run_ui_events(&mut self.interface);
 
-                if ui_events.len() > 0 {
+                // Refresh UI? (if any event occured, either user-based or poll-based)
+                // Notice: if this is the first frame, do not wait for an event to occur, refresh \
+                //   immediately.
+                if is_first_frame || has_poll_events || !ui_events.is_empty() {
+                    // Proceed UI refresh
                     self.chip.new_settings_events(ui_events);
-                }
 
-                self.refresh();
+                    self.refresh();
+
+                    // This is not the first frame anymore
+                    is_first_frame = false;
+                }
             } else {
                 std::thread::sleep(std::time::Duration::from_millis(10));
             }
