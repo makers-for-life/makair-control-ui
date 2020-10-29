@@ -10,7 +10,7 @@ use std::collections::{HashMap, VecDeque};
 use std::convert::TryFrom;
 use std::sync::mpsc::{self, Receiver, Sender};
 
-use settings::{trigger::TriggerState, ChipSettings, ChipSettingsEvent};
+use settings::{trigger::SettingsTriggerState, ChipSettings, ChipSettingsEvent};
 use telemetry::alarm::{AlarmCode, RMC_SW_1, RMC_SW_11, RMC_SW_12, RMC_SW_14, RMC_SW_15, RMC_SW_3};
 use telemetry::control::{ControlMessage, ControlSetting};
 use telemetry::serial::core;
@@ -309,23 +309,22 @@ impl Chip {
 
     fn update_cycles_per_minute(&mut self, cycles_per_minute: usize) {
         self.settings
-            .inspiratory_trigger
+            .expiration_term
             .set_cycles_per_minute(cycles_per_minute);
     }
 
     fn update_settings_values(&mut self, snapshot: &MachineStateSnapshot) {
         // Update expiratory term values
-        self.settings.inspiratory_trigger.expiratory_term = snapshot.expiratory_term as usize;
+        self.settings.expiration_term.expiratory_term = snapshot.expiratory_term as usize;
 
         // Update trigger values
-        self.settings.inspiratory_trigger.state = if snapshot.trigger_enabled {
-            TriggerState::Enabled
+        self.settings.trigger.state = if snapshot.trigger_enabled {
+            SettingsTriggerState::Enabled
         } else {
-            TriggerState::Disabled
+            SettingsTriggerState::Disabled
         };
 
-        self.settings.inspiratory_trigger.inspiratory_trigger_offset =
-            snapshot.trigger_offset as usize;
+        self.settings.trigger.inspiratory_trigger_offset = snapshot.trigger_offset as usize;
     }
 
     fn update_on_ack(&mut self, ack: ControlAck) {
@@ -351,21 +350,21 @@ impl Chip {
 
             ControlSetting::TriggerEnabled => {
                 if ack.value == 0 {
-                    self.settings.inspiratory_trigger.state = TriggerState::Disabled;
+                    self.settings.trigger.state = SettingsTriggerState::Disabled;
                     self.last_machine_snapshot.trigger_enabled = false;
                 } else {
-                    self.settings.inspiratory_trigger.state = TriggerState::Enabled;
+                    self.settings.trigger.state = SettingsTriggerState::Enabled;
                     self.last_machine_snapshot.trigger_enabled = true;
                 }
             }
 
             ControlSetting::TriggerOffset => {
-                self.settings.inspiratory_trigger.inspiratory_trigger_offset = ack.value as usize;
+                self.settings.trigger.inspiratory_trigger_offset = ack.value as usize;
                 self.last_machine_snapshot.trigger_offset = ack.value as u8;
             }
 
             ControlSetting::ExpiratoryTerm => {
-                self.settings.inspiratory_trigger.expiratory_term = ack.value as usize;
+                self.settings.expiration_term.expiratory_term = ack.value as usize;
                 self.last_machine_snapshot.expiratory_term = ack.value as u8;
             }
         }

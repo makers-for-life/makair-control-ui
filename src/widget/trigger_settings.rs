@@ -9,7 +9,7 @@ use conrod_core::{
     Positionable, Sizeable, Widget,
 };
 
-use crate::chip::settings::trigger::{Trigger, TriggerState};
+use crate::chip::settings::trigger::{SettingsTrigger, SettingsTriggerState};
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
@@ -19,7 +19,7 @@ pub struct Config<'a> {
     pub width: f64,
     pub height: f64,
 
-    pub trigger_settings: &'a Trigger,
+    pub trigger_settings: &'a SettingsTrigger,
     pub status_container_parent: WidgetId,
     pub status_container_widget: WidgetId,
     pub status_enabled_text_widget: WidgetId,
@@ -80,8 +80,8 @@ pub fn status_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 pub fn status_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Acquire status button label
     let status_label = match config.trigger_settings.state {
-        TriggerState::Enabled => APP_I18N.t("trigger-state-enabled"),
-        TriggerState::Disabled => APP_I18N.t("trigger-state-disabled"),
+        SettingsTriggerState::Enabled => APP_I18N.t("trigger-state-enabled"),
+        SettingsTriggerState::Disabled => APP_I18N.t("trigger-state-disabled"),
     };
 
     // Initialize button style for status
@@ -101,8 +101,8 @@ pub fn status_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 
     status_button_text_style.font_id = Some(Some(master.fonts.bold));
     status_button_text_style.color = Some(match config.trigger_settings.state {
-        TriggerState::Enabled => color::DARK_GREEN,
-        TriggerState::Disabled => color::DARK_RED,
+        SettingsTriggerState::Enabled => color::DARK_GREEN,
+        SettingsTriggerState::Disabled => color::DARK_RED,
     });
     status_button_text_style.font_size = Some(16);
 

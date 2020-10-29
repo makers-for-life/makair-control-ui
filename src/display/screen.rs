@@ -9,7 +9,7 @@ use conrod_core::widget::Id as WidgetId;
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
-use crate::chip::settings::trigger::Trigger;
+use crate::chip::settings::{expiration_term::SettingsExpirationTerm, trigger::SettingsTrigger};
 use crate::config::environment::*;
 use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::widget::*;
@@ -51,7 +51,8 @@ impl<'a> Screen<'a> {
         heartbeat_data: DisplayDataHeartbeat<'a>,
         graph_data: DisplayDataGraph,
         telemetry_data: DisplayDataTelemetry,
-        trigger: &'a Trigger,
+        trigger: &'a SettingsTrigger,
+        expiration_term: &'a SettingsExpirationTerm,
         trigger_open: bool,
         expiration_term_open: bool,
     ) {
@@ -75,12 +76,12 @@ impl<'a> Screen<'a> {
         self.render_graph(graph_data.image_id, graph_data.width, graph_data.height);
 
         // Render bottom elements
-        self.render_telemetry(telemetry_data, trigger);
+        self.render_telemetry(telemetry_data, trigger, expiration_term);
 
         if trigger_open {
             self.render_trigger_settings(trigger);
         } else if expiration_term_open {
-            self.render_expiration_term_settings(trigger);
+            self.render_expiration_term_settings(expiration_term);
         }
     }
 
@@ -204,7 +205,8 @@ impl<'a> Screen<'a> {
         heartbeat_data: DisplayDataHeartbeat<'a>,
         graph_data: DisplayDataGraph,
         telemetry_data: DisplayDataTelemetry,
-        trigger: &'a Trigger,
+        trigger: &'a SettingsTrigger,
+        expiration_term: &'a SettingsExpirationTerm,
         trigger_open: bool,
         expiration_term_open: bool,
     ) {
@@ -216,6 +218,7 @@ impl<'a> Screen<'a> {
             graph_data,
             telemetry_data,
             trigger,
+            expiration_term,
             trigger_open,
             expiration_term_open,
         );
@@ -266,7 +269,12 @@ impl<'a> Screen<'a> {
             )));
     }
 
-    pub fn render_telemetry(&mut self, telemetry_data: DisplayDataTelemetry, trigger: &'a Trigger) {
+    pub fn render_telemetry(
+        &mut self,
+        telemetry_data: DisplayDataTelemetry,
+        trigger: &'a SettingsTrigger,
+        expiration_term: &'a SettingsExpirationTerm,
+    ) {
         let machine_snapshot = self.machine_snapshot.unwrap();
 
         // Process shared values
@@ -457,7 +465,7 @@ impl<'a> Screen<'a> {
                 unit: format!(
                     "{} {}",
                     APP_I18N.t("telemetry-label-ratio-plateau"),
-                    if let Some(plateau_duration) = trigger.get_plateau_duration() {
+                    if let Some(plateau_duration) = expiration_term.get_plateau_duration() {
                         format!(
                             "{}{}",
                             plateau_duration,
@@ -526,7 +534,7 @@ impl<'a> Screen<'a> {
         }));
     }
 
-    fn render_trigger_settings(&mut self, settings: &'a Trigger) {
+    fn render_trigger_settings(&mut self, settings: &'a SettingsTrigger) {
         self.render_modal(
             TRIGGER_SETTINGS_MODAL_WIDTH,
             TRIGGER_SETTINGS_MODAL_HEIGTH,
@@ -563,7 +571,7 @@ impl<'a> Screen<'a> {
         ));
     }
 
-    fn render_expiration_term_settings(&mut self, settings: &'a Trigger) {
+    fn render_expiration_term_settings(&mut self, settings: &'a SettingsExpirationTerm) {
         self.render_modal(
             EXPIRATION_TERM_SETTINGS_MODAL_WIDTH,
             EXPIRATION_TERM_SETTINGS_MODAL_HEIGTH,
@@ -578,7 +586,7 @@ impl<'a> Screen<'a> {
                     height: EXPIRATION_TERM_SETTINGS_MODAL_HEIGTH
                         - MODAL_VALIDATE_BUTTON_HEIGHT
                         - (EXPIRATION_TERM_SETTINGS_MODAL_PADDING * 2.0),
-                    trigger_settings: settings,
+                    expiration_term_settings: settings,
 
                     expiration_term_container_parent: self.ids.modal_container,
                     expiration_term_container_widget: self.ids.expiration_term_term_container,

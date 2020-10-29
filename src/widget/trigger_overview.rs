@@ -9,7 +9,7 @@ use conrod_core::{
     Positionable, Widget,
 };
 
-use crate::chip::settings::trigger::{Trigger, TriggerState};
+use crate::chip::settings::trigger::{SettingsTrigger, SettingsTriggerState};
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
@@ -32,7 +32,7 @@ pub struct Config<'a> {
     pub x_position: f64,
     pub y_position: f64,
     pub background_color: Color,
-    pub trigger_settings: &'a Trigger,
+    pub trigger_settings: &'a SettingsTrigger,
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
@@ -89,7 +89,7 @@ fn status<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         .set(config.status_label_widget, &mut master.ui);
 
     // Generate value text
-    let value_text_status = if config.trigger_settings.state == TriggerState::Enabled {
+    let value_text_status = if config.trigger_settings.state == SettingsTriggerState::Enabled {
         APP_I18N.t("trigger-state-enabled")
     } else {
         APP_I18N.t("trigger-state-disabled")
@@ -101,11 +101,13 @@ fn status<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     value_text_style.font_id = Some(Some(master.fonts.bold));
     value_text_style.font_size = Some(TELEMETRY_WIDGET_LABELS_FONT_SIZE);
 
-    value_text_style.color = Some(if config.trigger_settings.state == TriggerState::Enabled {
-        color::WHITE
-    } else {
-        color::BLACK.with_alpha(0.8)
-    });
+    value_text_style.color = Some(
+        if config.trigger_settings.state == SettingsTriggerState::Enabled {
+            color::WHITE
+        } else {
+            color::BLACK.with_alpha(0.8)
+        },
+    );
 
     // Create value text
     widget::Text::new(&value_text_status)

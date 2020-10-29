@@ -16,7 +16,8 @@ use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
 use crate::chip::settings::{
-    trigger::{Trigger, TriggerEvent},
+    expiration_term::{SettingsExpirationTerm, SettingsExpirationTermEvent},
+    trigger::{SettingsTrigger, SettingsTriggerEvent},
     ChipSettingsEvent, SettingAction,
 };
 use crate::chip::ChipState;
@@ -86,7 +87,8 @@ impl DisplayRenderer {
         interface: &mut Ui,
         battery_level: Option<u8>,
         chip_state: &ChipState,
-        trigger_settings: &Trigger,
+        trigger_settings: &SettingsTrigger,
+        expiration_term_settings: &SettingsExpirationTerm,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let image_map = conrod_core::image::Map::<texture::Texture2d>::new();
 
@@ -103,6 +105,7 @@ impl DisplayRenderer {
                 battery_level,
                 chip_state,
                 trigger_settings,
+                expiration_term_settings,
             ),
             ChipState::Error(e) => self.error(interface, image_map, e.clone()),
         }
@@ -195,15 +198,17 @@ impl DisplayRenderer {
                 .get_widget_clicks(self.ids.trigger_status_button, interface)
                 .chain(self.get_widget_clicks(self.ids.trigger_status_button_text, interface))
             {
-                all_events.push(ChipSettingsEvent::InspiratoryTrigger(TriggerEvent::Toggle));
+                all_events.push(ChipSettingsEvent::Trigger(
+                    SettingsTriggerEvent::TriggerToggle,
+                ));
             }
 
             for _ in self
                 .get_widget_clicks(self.ids.trigger_offset_less_button, interface)
                 .chain(self.get_widget_clicks(self.ids.trigger_offset_less_button_text, interface))
             {
-                all_events.push(ChipSettingsEvent::InspiratoryTrigger(
-                    TriggerEvent::InspiratoryTriggerOffset(SettingAction::Less),
+                all_events.push(ChipSettingsEvent::Trigger(
+                    SettingsTriggerEvent::TriggerOffset(SettingAction::Less),
                 ));
             }
 
@@ -211,8 +216,8 @@ impl DisplayRenderer {
                 .get_widget_clicks(self.ids.trigger_offset_more_button, interface)
                 .chain(self.get_widget_clicks(self.ids.trigger_offset_more_button_text, interface))
             {
-                all_events.push(ChipSettingsEvent::InspiratoryTrigger(
-                    TriggerEvent::InspiratoryTriggerOffset(SettingAction::More),
+                all_events.push(ChipSettingsEvent::Trigger(
+                    SettingsTriggerEvent::TriggerOffset(SettingAction::More),
                 ));
             }
         }
@@ -225,8 +230,8 @@ impl DisplayRenderer {
                         interface,
                     ))
             {
-                all_events.push(ChipSettingsEvent::InspiratoryTrigger(
-                    TriggerEvent::ExpiratoryTerm(SettingAction::Less),
+                all_events.push(ChipSettingsEvent::ExpirationTerm(
+                    SettingsExpirationTermEvent::ExpiratoryTerm(SettingAction::Less),
                 ));
             }
 
@@ -237,8 +242,8 @@ impl DisplayRenderer {
                         interface,
                     ))
             {
-                all_events.push(ChipSettingsEvent::InspiratoryTrigger(
-                    TriggerEvent::ExpiratoryTerm(SettingAction::More),
+                all_events.push(ChipSettingsEvent::ExpirationTerm(
+                    SettingsExpirationTermEvent::ExpiratoryTerm(SettingAction::More),
                 ));
             }
         }
@@ -342,7 +347,8 @@ impl DisplayRenderer {
         ongoing_alarms: &[(AlarmCode, AlarmPriority)],
         battery_level: Option<u8>,
         chip_state: &ChipState,
-        trigger_settings: &Trigger,
+        trigger_settings: &SettingsTrigger,
+        expiration_term_settings: &SettingsExpirationTerm,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         // Create branding
         let branding_image_texture = self.draw_branding(display);
@@ -463,6 +469,7 @@ impl DisplayRenderer {
                 screen_data_graph,
                 screen_data_telemetry,
                 trigger_settings,
+                expiration_term_settings,
                 self.trigger_settings_state == DisplayRendererSettingsState::Opened,
                 self.expiration_term_settings_state == DisplayRendererSettingsState::Opened,
             ),
@@ -474,6 +481,7 @@ impl DisplayRenderer {
                 screen_data_graph,
                 screen_data_telemetry,
                 trigger_settings,
+                expiration_term_settings,
                 self.trigger_settings_state == DisplayRendererSettingsState::Opened,
                 self.expiration_term_settings_state == DisplayRendererSettingsState::Opened,
             ),

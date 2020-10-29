@@ -9,7 +9,7 @@ use conrod_core::{
     Positionable, Sizeable, Widget,
 };
 
-use crate::chip::settings::trigger::Trigger;
+use crate::chip::settings::expiration_term::SettingsExpirationTerm;
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
@@ -18,7 +18,7 @@ use crate::APP_I18N;
 pub struct Config<'a> {
     pub width: f64,
     pub height: f64,
-    pub trigger_settings: &'a Trigger,
+    pub expiration_term_settings: &'a SettingsExpirationTerm,
     pub expiration_term_container_parent: WidgetId,
     pub expiration_term_container_widget: WidgetId,
     pub expiration_term_text_widget: WidgetId,
@@ -104,7 +104,7 @@ pub fn term<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             "{:.1}",
             convert_mmh2o_to_cmh2o(
                 ConvertMode::WithDecimals,
-                config.trigger_settings.expiratory_term as f64,
+                config.expiration_term_settings.expiratory_term as f64,
             )
         )
         .as_str(),

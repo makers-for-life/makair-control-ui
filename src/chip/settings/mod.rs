@@ -3,28 +3,32 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+pub mod expiration_term;
 pub mod trigger;
 
 use telemetry::control::ControlMessage;
-use trigger::{Trigger, TriggerEvent};
+
+use expiration_term::*;
+use trigger::*;
 
 #[derive(Debug)]
 pub struct ChipSettings {
-    pub inspiratory_trigger: Trigger,
+    pub trigger: SettingsTrigger,
+    pub expiration_term: SettingsExpirationTerm,
 }
 
 impl ChipSettings {
     pub fn new(cycles_per_minute: usize) -> ChipSettings {
         ChipSettings {
-            inspiratory_trigger: Trigger::new(cycles_per_minute),
+            trigger: SettingsTrigger::new(),
+            expiration_term: SettingsExpirationTerm::new(cycles_per_minute),
         }
     }
 
     pub fn new_settings_event(&mut self, event: ChipSettingsEvent) -> ControlMessage {
         match event {
-            ChipSettingsEvent::InspiratoryTrigger(event) => {
-                self.inspiratory_trigger.new_event(event)
-            }
+            ChipSettingsEvent::Trigger(event) => self.trigger.new_event(event),
+            ChipSettingsEvent::ExpirationTerm(event) => self.expiration_term.new_event(event),
         }
     }
 }
@@ -37,5 +41,6 @@ pub enum SettingAction {
 
 #[derive(Debug)]
 pub enum ChipSettingsEvent {
-    InspiratoryTrigger(TriggerEvent),
+    Trigger(SettingsTriggerEvent),
+    ExpirationTerm(SettingsExpirationTermEvent),
 }
