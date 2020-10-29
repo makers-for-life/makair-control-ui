@@ -95,22 +95,24 @@ impl<'a> DisplayDrawer<'a> {
                 };
             }
 
-            // Handle incoming events
+            // Handle incoming UI events (ie. from the window, eg. 'ESC' key is pressed)
             match events_handler.handle(&self.display, &mut self.interface, &mut self.events_loop) {
                 DisplayEventsHandleOutcome::Break => break 'main,
                 DisplayEventsHandleOutcome::Continue => {}
             }
 
-            // Refresh the pressure data interface, if we have any data in the buffer
+            // Refresh the data as shown in the UI (if we have any data in the buffer)
             let now = Utc::now();
 
             if (now - last_render) > Duration::milliseconds((1000 / DISPLAY_FRAMERATE) as _) {
                 if self.chip.get_state() != &ChipState::Stopped {
-                    self.chip.clean_events();
+                    // Clean expired pressure (this allows the graph from sliding from right to \
+                    //   left)
+                    self.chip.clean_expired_pressure();
 
                     // Force redraw if we are not stopped
-                    // For some reason, with a "shared" Ids struct, conrod won't detect we need to redraw
-                    // even though we know we have a different graph each new frame
+                    // For some reason, with a "shared" Ids struct, conrod won't detect we need to \
+                    //   redraw even though we know we have a different graph each new frame
                     self.interface.needs_redraw();
                 }
 
@@ -119,7 +121,9 @@ impl<'a> DisplayDrawer<'a> {
                 // Get UI events since the last render
                 let ui_events = self.renderer.run_ui_events(&mut self.interface);
 
-                self.chip.new_settings_events(ui_events);
+                if ui_events.len() > 0 {
+                    self.chip.new_settings_events(ui_events);
+                }
 
                 self.refresh();
             } else {
