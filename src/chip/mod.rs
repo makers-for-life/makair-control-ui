@@ -22,7 +22,7 @@ use crate::config::environment::*;
 use crate::utilities::types::DataPressure;
 use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ChipState {
     Initializing,
     Running,

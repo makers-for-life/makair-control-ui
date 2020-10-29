@@ -78,10 +78,11 @@ impl<'a> DisplayDrawer<'a> {
         // Start drawer loop
         // Flow: cycles through telemetry events, and refreshes the view every time there is an \
         //   update on the machines state.
-        let (mut last_render, mut is_first_frame) = (Utc::now(), true);
+        let (mut last_render, mut last_chip_state, mut is_first_frame) =
+            (Utc::now(), ChipState::Initializing, true);
 
         'main: loop {
-            let mut has_poll_events = false;
+            let (mut has_poll_events, mut has_chip_state_change) = (false, false);
 
             // Receive telemetry data (from the input serial from the motherboard)
             // Empty the events queue before doing anything else
@@ -111,7 +112,14 @@ impl<'a> DisplayDrawer<'a> {
             let now = Utc::now();
 
             if (now - last_render) > Duration::milliseconds((1000 / DISPLAY_FRAMERATE) as _) {
-                if self.chip.get_state() != &ChipState::Stopped {
+                // Catch chip state changes
+                if self.chip.get_state() != &last_chip_state {
+                    last_chip_state = self.chip.get_state().to_owned();
+
+                    has_chip_state_change = true;
+                }
+
+                if last_chip_state != ChipState::Stopped {
                     // Clean expired pressure (this allows the graph from sliding from right to \
                     //   left)
                     self.chip.clean_expired_pressure();
@@ -129,8 +137,14 @@ impl<'a> DisplayDrawer<'a> {
 
                 // Refresh UI? (if any event occured, either user-based or poll-based)
                 // Notice: if this is the first frame, do not wait for an event to occur, refresh \
-                //   immediately.
-                if is_first_frame || has_poll_events || !ui_events.is_empty() {
+                //   immediately. Only check those if the chip state is stopped, as to minimize \
+                //   CPU usage when no graph needs to be drawn and animated.
+                if last_chip_state == ChipState::Running
+                    || has_chip_state_change
+                    || is_first_frame
+                    || has_poll_events
+                    || !ui_events.is_empty()
+                {
                     // Proceed UI refresh
                     self.chip.new_settings_events(ui_events);
 
