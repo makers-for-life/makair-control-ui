@@ -79,7 +79,7 @@ impl<'a> DisplayDrawer<'a> {
         // Flow: cycles through telemetry events, and refreshes the view every time there is an \
         //   update on the machines state.
         let (mut last_render, mut last_chip_state, mut is_first_frame) =
-            (Utc::now(), ChipState::Initializing, true);
+            (Utc::now(), ChipState::WaitingData, true);
 
         'main: loop {
             let (mut has_poll_events, mut has_chip_state_change) = (false, false);
@@ -119,7 +119,7 @@ impl<'a> DisplayDrawer<'a> {
                     has_chip_state_change = true;
                 }
 
-                if last_chip_state != ChipState::Stopped {
+                if last_chip_state == ChipState::Running {
                     // Clean expired pressure (this allows the graph from sliding from right to \
                     //   left)
                     self.chip.clean_expired_pressure();
