@@ -74,7 +74,7 @@ impl DisplayWindow {
         };
 
         // Create context
-        let context = ContextBuilder::new();
+        let context = ContextBuilder::new().with_multisampling(4);
 
         // Create the interface
         let mut interface = UiBuilder::new([
