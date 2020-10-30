@@ -43,6 +43,12 @@ modal-trigger-inspiratory-offset = Niveau du trigger inspiratoire :
 
 modal-expiration-term-expiratory-term = Temps expiratoire :
 
+modal-cycles-cycles-per-minute = Cycles par minute :
+
+modal-pressure-peak = Pression de crête :
+modal-pressure-plateau = Pression de plateau :
+modal-pressure-expiratory = Pression d'expiration :
+
 error-title = Une erreur est survenue :
 
 modal-close = Fermer

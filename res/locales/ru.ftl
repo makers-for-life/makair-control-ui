@@ -43,6 +43,12 @@ modal-trigger-inspiratory-offset = Смещение триггера:
 
 modal-expiration-term-expiratory-term = Срок выдоха:
 
+modal-cycles-cycles-per-minute = Циклов в минуту:
+
+modal-pressure-peak = Пиковое давление:
+modal-pressure-plateau = Давление плато:
+modal-pressure-expiratory = Давление на выдохе:
+
 error-title = Произошла ошибка
 
 modal-close = в порядке

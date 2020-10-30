@@ -43,6 +43,12 @@ modal-trigger-inspiratory-offset = Inspiratorischer Trigger-Offset:
 
 modal-expiration-term-expiratory-term = Exspiratorischer Begriff:
 
+modal-cycles-cycles-per-minute = Zyklen pro Minute:
+
+modal-pressure-peak = Spitzendruck:
+modal-pressure-plateau = Plateaudruck:
+modal-pressure-expiratory = Ausatmungsdruck:
+
 error-title = Ein Fehler ist aufgetreten:
 
 modal-close = OK
