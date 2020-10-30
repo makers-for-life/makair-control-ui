@@ -26,9 +26,9 @@ pub struct SettingsPressure {
 impl SettingsPressure {
     pub fn new() -> SettingsPressure {
         SettingsPressure {
-            peak: 0,
-            plateau: 0,
-            peep: 0,
+            peak: ControlSetting::PeakPressure.default(),
+            plateau: ControlSetting::PlateauPressure.default(),
+            peep: ControlSetting::PEEP.default(),
         }
     }
 

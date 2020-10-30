@@ -22,7 +22,7 @@ pub struct SettingsCycles {
 impl SettingsCycles {
     pub fn new() -> SettingsCycles {
         SettingsCycles {
-            cycles_per_minute: 20,
+            cycles_per_minute: ControlSetting::CyclesPerMinute.default(),
         }
     }
 

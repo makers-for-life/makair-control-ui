@@ -26,7 +26,7 @@ impl SettingsExpirationTerm {
     pub fn new(cycles_per_minute: usize) -> SettingsExpirationTerm {
         SettingsExpirationTerm {
             plateau_duration: Duration::from_millis(1000),
-            expiratory_term: 20,
+            expiratory_term: ControlSetting::ExpiratoryTerm.default(),
             cycles_per_minute,
         }
     }

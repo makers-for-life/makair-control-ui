@@ -27,11 +27,21 @@ pub struct SettingsTrigger {
     pub inspiratory_trigger_offset: usize,
 }
 
+impl SettingsTriggerState {
+    fn from_value(value: usize) -> Self {
+        if value > 0 {
+            Self::Enabled
+        } else {
+            Self::Disabled
+        }
+    }
+}
+
 impl SettingsTrigger {
     pub fn new() -> SettingsTrigger {
         SettingsTrigger {
-            state: SettingsTriggerState::Disabled,
-            inspiratory_trigger_offset: 20,
+            state: SettingsTriggerState::from_value(ControlSetting::TriggerEnabled.default()),
+            inspiratory_trigger_offset: ControlSetting::TriggerOffset.default(),
         }
     }
 
