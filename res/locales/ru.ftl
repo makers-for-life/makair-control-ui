@@ -32,14 +32,16 @@ status-power-battery = Батарея
 status-power-ac = Кабель
 
 trigger-label-title = Вызывать
-trigger-label-state = Высказывать:
-trigger-label-offset = Смещение:
+trigger-label-state = Статус:
+trigger-label-offset = Уровень:
 trigger-label-configure = Нажмите, чтобы настроить
-trigger-inspiratory-status = Статус триггера:
-trigger-inspiratory-offset = Смещение триггера:
-trigger-expiratory-term = Срок выдоха:
 trigger-state-enabled = Включено
 trigger-state-disabled = инвалид
+
+modal-trigger-inspiratory-status = Статус триггера:
+modal-trigger-inspiratory-offset = Смещение триггера:
+
+modal-expiration-term-expiratory-term = Срок выдоха:
 
 error-title = Произошла ошибка
 

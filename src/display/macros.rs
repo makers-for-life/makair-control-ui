@@ -4,9 +4,9 @@
 // License: Public Domain License
 
 macro_rules! gen_load_font {
-    ($name:expr) => {
+    ($family:expr, $name:expr) => {
         conrod_core::text::Font::from_bytes(
-            inflate_bytes_zlib(&EmbeddedFonts::get(&format!("default/{}.ttf.zz", $name)).unwrap())
+            inflate_bytes_zlib(&EmbeddedFonts::get(&format!("{}/{}.ttf.zz", $family, $name)).unwrap())
                 .unwrap(),
         )
         .unwrap()

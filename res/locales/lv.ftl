@@ -33,13 +33,15 @@ status-power-ac = Maiņstrāvas avots
 
 trigger-label-title = Trigeris
 trigger-label-state = Valsts:
-trigger-label-offset = Kompensācija:
+trigger-label-offset = Līmenis:
 trigger-label-configure = Pieskarieties, lai atvērtu
-trigger-inspiratory-status = Iedvesmojošā stāvokļa izraisītājs:
-trigger-inspiratory-offset = Ieelpošanas trigera nobīde:
-trigger-expiratory-term = Derīguma termiņš:
 trigger-state-enabled = Iespējots
 trigger-state-disabled = Atspējots
+
+modal-trigger-inspiratory-status = Iedvesmojošā stāvokļa izraisītājs:
+modal-trigger-inspiratory-offset = Ieelpošanas trigera nobīde:
+
+modal-expiration-term-expiratory-term = Derīguma termiņš:
 
 error-title = Notika kļūda:
 

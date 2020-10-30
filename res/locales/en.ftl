@@ -35,11 +35,13 @@ trigger-label-title = Trigger
 trigger-label-state = State:
 trigger-label-offset = Offset:
 trigger-label-configure = Tap to configure
-trigger-inspiratory-status = Inspiratory trigger status:
-trigger-inspiratory-offset = Inspiratory trigger offset:
-trigger-expiratory-term = Expiratory term:
 trigger-state-enabled = Enabled
 trigger-state-disabled = Disabled
+
+modal-trigger-inspiratory-status = Inspiratory trigger status:
+modal-trigger-inspiratory-offset = Inspiratory trigger offset:
+
+modal-expiration-term-expiratory-term = Expiratory term:
 
 error-title = An error happened:
 

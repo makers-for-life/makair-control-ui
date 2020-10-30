@@ -58,7 +58,7 @@ pub fn term<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     label_text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
 
     // Create text for label
-    widget::Text::new(&APP_I18N.t("trigger-expiratory-term"))
+    widget::Text::new(&APP_I18N.t("modal-expiration-term-expiratory-term"))
         .with_style(label_text_style)
         .top_left_of(config.expiration_term_container_widget)
         .set(config.expiration_term_text_widget, &mut master.ui);

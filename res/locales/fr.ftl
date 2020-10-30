@@ -35,11 +35,13 @@ trigger-label-title = Trigger
 trigger-label-state = Statut :
 trigger-label-offset = Niveau :
 trigger-label-configure = Touchez pour configurer
-trigger-inspiratory-status = État du trigger inspiratoire :
-trigger-inspiratory-offset = Niveau du trigger inspiratoire :
-trigger-expiratory-term = Temps expiratoire :
 trigger-state-enabled = Activé
 trigger-state-disabled = Désactivé
+
+modal-trigger-inspiratory-status = État du trigger inspiratoire :
+modal-trigger-inspiratory-offset = Niveau du trigger inspiratoire :
+
+modal-expiration-term-expiratory-term = Temps expiratoire :
 
 error-title = Une erreur est survenue :
 

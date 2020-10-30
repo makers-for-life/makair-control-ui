@@ -33,13 +33,15 @@ status-power-ac = Alimentação
 
 trigger-label-title = Desencadear
 trigger-label-state = Estado:
-trigger-label-offset = Deslocamento:
+trigger-label-offset = Nível:
 trigger-label-configure = Toque para configurar
-trigger-inspiratory-status = Status inspiratório do gatilho:
-trigger-inspiratory-offset = Deslocamento do gatilho:
-trigger-expiratory-term = Termo expiratório:
 trigger-state-enabled = ativado
 trigger-state-disabled = Desativado
+
+modal-trigger-inspiratory-status = Status inspiratório do gatilho:
+modal-trigger-inspiratory-offset = Deslocamento do gatilho:
+
+modal-expiration-term-expiratory-term = Termo expiratório:
 
 error-title = Ocorreu um erro:
 

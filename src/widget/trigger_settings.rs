@@ -71,7 +71,7 @@ pub fn status_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     status_text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
 
     // Create text for status
-    widget::Text::new(&APP_I18N.t("trigger-inspiratory-status"))
+    widget::Text::new(&APP_I18N.t("modal-trigger-inspiratory-status"))
         .with_style(status_text_style)
         .top_left_of(config.status_container_widget)
         .set(config.status_enabled_text_widget, &mut master.ui);
@@ -141,7 +141,7 @@ pub fn offset_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     offset_text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
 
     // Create text for offset
-    widget::Text::new(&APP_I18N.t("trigger-inspiratory-offset"))
+    widget::Text::new(&APP_I18N.t("modal-trigger-inspiratory-offset"))
         .with_style(offset_text_style)
         .top_left_of(config.inspiratory_offset_container_parent)
         .set(config.inspiratory_offset_text_widget, &mut master.ui);

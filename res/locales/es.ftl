@@ -33,15 +33,17 @@ status-power-ac = Corriente alterna
 
 trigger-label-title = Desencadenar
 trigger-label-state = Estado:
-trigger-label-offset = Compensar:
+trigger-label-offset = Nivel:
 trigger-label-configure = Toque para configurar
-trigger-inspiratory-status = Activar el estado inspiratorio:
-trigger-inspiratory-offset = Desplazamiento del disparador:
-trigger-expiratory-term = Término expiratorio:
 trigger-state-enabled = Habilitado
 trigger-state-disabled = Discapacitado
 
-error-title = Ocurrió un error:
+modal-trigger-inspiratory-status = Activar el estado inspiratorio:
+modal-trigger-inspiratory-offset = Desplazamiento del disparador:
+
+modal-expiration-term-expiratory-term = Término expiratorio:
+
+error-title = Error:
 
 modal-close = OK
 

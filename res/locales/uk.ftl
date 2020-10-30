@@ -35,11 +35,13 @@ trigger-label-title = Тригер
 trigger-label-state = Штат:
 trigger-label-offset = Зсув:
 trigger-label-configure = Налаштуйте
-trigger-inspiratory-status = Стан тригера:
-trigger-inspiratory-offset = Зсув тригера:
-trigger-expiratory-term = Термін видиху:
 trigger-state-enabled = Увімкнено
 trigger-state-disabled = Інваліди
+
+modal-trigger-inspiratory-status = Стан тригера:
+modal-trigger-inspiratory-offset = Зсув тригера:
+
+modal-expiration-term-expiratory-term = Термін видиху:
 
 error-title = Виникла помилка
 

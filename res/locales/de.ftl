@@ -35,11 +35,13 @@ trigger-label-title = Auslösen
 trigger-label-state = Zustand:
 trigger-label-offset = Offset:
 trigger-label-configure = Antippen zum Öffnen
-trigger-inspiratory-status = Inspirationsstatus auslösen:
-trigger-inspiratory-offset = Inspiratorischer Trigger-Offset:
-trigger-expiratory-term = Exspiratorischer Begriff:
 trigger-state-enabled = aktiviert
 trigger-state-disabled = Behindert
+
+modal-trigger-inspiratory-status = Inspirationsstatus auslösen:
+modal-trigger-inspiratory-offset = Inspiratorischer Trigger-Offset:
+
+modal-expiration-term-expiratory-term = Exspiratorischer Begriff:
 
 error-title = Ein Fehler ist aufgetreten:
 
@@ -48,4 +50,4 @@ modal-close = OK
 stop-title = Das Beatmungsgerät ist nicht aktiv
 stop-description = Bitte aktivieren Sie es wieder, um zu lüften
 
-no-data-title = Das Gerät ist nicht verbunden oder es werden keine Daten empfangen
+no-data-title = Gerät getrennt oder keine Daten empfangen
