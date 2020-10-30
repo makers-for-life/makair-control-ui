@@ -88,7 +88,12 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Acquire maximum allowed pressure
     let pressure_alert_threshold = process_max_allowed_pressure(config.peak_command) as f64;
 
-    let last_pressure_ratio = last_pressure as f64 / pressure_alert_threshold;
+    let last_pressure_ratio = if pressure_alert_threshold > 0.0 {
+        last_pressure as f64 / pressure_alert_threshold
+    } else {
+        0.0
+    };
+
     let last_pressure_radius = surround_radius * last_pressure_ratio;
 
     let inner_radius = min(
