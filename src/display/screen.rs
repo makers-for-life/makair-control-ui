@@ -323,7 +323,7 @@ impl<'a> Screen<'a> {
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-peak"),
-                value_measured: Some(if has_target_pressure == false {
+                value_measured: Some(if !has_target_pressure {
                     APP_I18N.t("telemetry-value-empty")
                 } else {
                     convert_mmh2o_to_cmh2o(
@@ -332,7 +332,7 @@ impl<'a> Screen<'a> {
                     )
                     .to_string()
                 }),
-                value_target: if has_target_pressure == false {
+                value_target: if !has_target_pressure {
                     None
                 } else {
                     Some(machine_snapshot.peak_command.to_string())
@@ -359,7 +359,7 @@ impl<'a> Screen<'a> {
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-plateau"),
-                value_measured: Some(if has_target_pressure == false {
+                value_measured: Some(if !has_target_pressure {
                     APP_I18N.t("telemetry-value-empty")
                 } else {
                     convert_mmh2o_to_cmh2o(
@@ -368,7 +368,7 @@ impl<'a> Screen<'a> {
                     )
                     .to_string()
                 }),
-                value_target: if has_target_pressure == false {
+                value_target: if !has_target_pressure {
                     None
                 } else {
                     Some(machine_snapshot.plateau_command.to_string())
@@ -396,7 +396,7 @@ impl<'a> Screen<'a> {
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-expiratory"),
-                value_measured: Some(if has_target_pressure == false {
+                value_measured: Some(if !has_target_pressure {
                     APP_I18N.t("telemetry-value-empty")
                 } else {
                     convert_mmh2o_to_cmh2o(
@@ -405,7 +405,7 @@ impl<'a> Screen<'a> {
                     )
                     .to_string()
                 }),
-                value_target: if has_target_pressure == false {
+                value_target: if !has_target_pressure {
                     None
                 } else {
                     Some(machine_snapshot.peep_command.to_string())
