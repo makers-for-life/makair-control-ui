@@ -323,6 +323,11 @@ impl Chip {
         };
 
         self.settings.trigger.inspiratory_trigger_offset = snapshot.trigger_offset as usize;
+
+        // Update cycle values
+        self.settings.cycles.cycles_per_minute = snapshot.cpm_command as usize;
+
+        // TODO: update pressure values
     }
 
     fn update_on_ack(&mut self, ack: ControlAck) {
