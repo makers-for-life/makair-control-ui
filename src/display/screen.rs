@@ -674,6 +674,22 @@ impl<'a> Screen<'a> {
                 pressure_peak_less_button_text_widget: self.ids.pressure_peak_less_button_text,
                 pressure_peak_text_widget: self.ids.pressure_peak_text,
                 pressure_peak_value_widget: self.ids.pressure_peak_value,
+                pressure_plateau_more_button_widget: self.ids.pressure_plateau_more_button,
+                pressure_plateau_more_button_text_widget: self
+                    .ids
+                    .pressure_plateau_more_button_text,
+                pressure_plateau_less_button_widget: self.ids.pressure_plateau_less_button,
+                pressure_plateau_less_button_text_widget: self
+                    .ids
+                    .pressure_plateau_less_button_text,
+                pressure_plateau_text_widget: self.ids.pressure_plateau_text,
+                pressure_plateau_value_widget: self.ids.pressure_plateau_value,
+                pressure_peep_more_button_widget: self.ids.pressure_peep_more_button,
+                pressure_peep_more_button_text_widget: self.ids.pressure_peep_more_button_text,
+                pressure_peep_less_button_widget: self.ids.pressure_peep_less_button,
+                pressure_peep_less_button_text_widget: self.ids.pressure_peep_less_button_text,
+                pressure_peep_text_widget: self.ids.pressure_peep_text,
+                pressure_peep_value_widget: self.ids.pressure_peep_value,
             },
         ));
     }
