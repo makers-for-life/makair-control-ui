@@ -7,8 +7,6 @@ use telemetry::control::{ControlMessage, ControlSetting};
 
 use crate::chip::settings::SettingAction;
 
-const CYCLES_PER_MINUTE_MAX: usize = 35;
-const CYCLES_PER_MINUTE_MIN: usize = 5;
 const CYCLES_PER_MINUTE_STEP: usize = 1;
 
 #[derive(Debug)]
@@ -35,11 +33,13 @@ impl SettingsCycles {
     }
 
     fn set_cycles_per_minute(&self, action: SettingAction) -> ControlMessage {
+        let setting = ControlSetting::CyclesPerMinute;
+
         let new_value = match action {
             SettingAction::More => {
                 let new_value = self.cycles_per_minute + CYCLES_PER_MINUTE_STEP;
 
-                if new_value <= CYCLES_PER_MINUTE_MAX {
+                if setting.bounds().contains(&new_value) {
                     new_value
                 } else {
                     self.cycles_per_minute
@@ -49,7 +49,7 @@ impl SettingsCycles {
                 if self.cycles_per_minute >= CYCLES_PER_MINUTE_STEP {
                     let new_value = self.cycles_per_minute - CYCLES_PER_MINUTE_STEP;
 
-                    if new_value >= CYCLES_PER_MINUTE_MIN {
+                    if setting.bounds().contains(&new_value) {
                         new_value
                     } else {
                         self.cycles_per_minute
@@ -61,7 +61,7 @@ impl SettingsCycles {
         };
 
         ControlMessage {
-            setting: ControlSetting::CyclesPerMinute,
+            setting: setting,
             value: new_value as u16,
         }
     }

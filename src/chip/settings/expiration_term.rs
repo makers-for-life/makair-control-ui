@@ -8,8 +8,6 @@ use telemetry::control::{ControlMessage, ControlSetting};
 
 use crate::chip::settings::SettingAction;
 
-const EXPIRATORY_TERM_MAX: usize = 60;
-const EXPIRATORY_TERM_MIN: usize = 10;
 const EXPIRATORY_TERM_STEP: usize = 1;
 
 #[derive(Debug)]
@@ -56,11 +54,13 @@ impl SettingsExpirationTerm {
     }
 
     fn set_expiratory_term(&self, action: SettingAction) -> ControlMessage {
+        let setting = ControlSetting::ExpiratoryTerm;
+
         let new_value = match action {
             SettingAction::More => {
                 let new_value = self.expiratory_term + EXPIRATORY_TERM_STEP;
 
-                if new_value <= EXPIRATORY_TERM_MAX {
+                if setting.bounds().contains(&new_value) {
                     new_value
                 } else {
                     self.expiratory_term
@@ -70,7 +70,7 @@ impl SettingsExpirationTerm {
                 if self.expiratory_term >= EXPIRATORY_TERM_STEP {
                     let new_value = self.expiratory_term - EXPIRATORY_TERM_STEP;
 
-                    if new_value >= EXPIRATORY_TERM_MIN {
+                    if setting.bounds().contains(&new_value) {
                         new_value
                     } else {
                         self.expiratory_term
@@ -82,7 +82,7 @@ impl SettingsExpirationTerm {
         };
 
         ControlMessage {
-            setting: ControlSetting::ExpiratoryTerm,
+            setting: setting,
             value: new_value as u16,
         }
     }

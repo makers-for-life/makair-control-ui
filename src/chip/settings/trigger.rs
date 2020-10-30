@@ -7,7 +7,6 @@ use telemetry::control::{ControlMessage, ControlSetting};
 
 use crate::chip::settings::SettingAction;
 
-const TRIGGER_OFFSET_MAX: usize = 100;
 const TRIGGER_OFFSET_STEP: usize = 1;
 
 #[derive(Debug)]
@@ -58,11 +57,13 @@ impl SettingsTrigger {
     }
 
     fn set_inspiratory_trigger_offset(&self, action: SettingAction) -> ControlMessage {
+        let setting = ControlSetting::TriggerOffset;
+
         let new_value = match action {
             SettingAction::More => {
                 let new_value = self.inspiratory_trigger_offset + TRIGGER_OFFSET_STEP;
 
-                if new_value <= TRIGGER_OFFSET_MAX {
+                if setting.bounds().contains(&new_value) {
                     new_value
                 } else {
                     self.inspiratory_trigger_offset
@@ -70,7 +71,13 @@ impl SettingsTrigger {
             }
             SettingAction::Less => {
                 if self.inspiratory_trigger_offset >= TRIGGER_OFFSET_STEP {
-                    self.inspiratory_trigger_offset - TRIGGER_OFFSET_STEP
+                    let new_value = self.inspiratory_trigger_offset - TRIGGER_OFFSET_STEP;
+
+                    if setting.bounds().contains(&new_value) {
+                        new_value
+                    } else {
+                        self.inspiratory_trigger_offset
+                    }
                 } else {
                     self.inspiratory_trigger_offset
                 }
@@ -78,7 +85,7 @@ impl SettingsTrigger {
         };
 
         ControlMessage {
-            setting: ControlSetting::TriggerOffset,
+            setting: setting,
             value: new_value as u16,
         }
     }

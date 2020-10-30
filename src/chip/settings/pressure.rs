@@ -9,15 +9,6 @@ use crate::chip::settings::SettingAction;
 
 const PRESSURE_STEP: usize = 10;
 
-const PRESSURE_PEAK_MAX: usize = 700;
-const PRESSURE_PEAK_MIN: usize = 0;
-
-const PRESSURE_PLATEAU_MAX: usize = 400;
-const PRESSURE_PLATEAU_MIN: usize = 100;
-
-const PRESSURE_PEEP_MAX: usize = 300;
-const PRESSURE_PEEP_MIN: usize = 0;
-
 #[derive(Debug)]
 pub enum SettingsPressureEvent {
     Peak(SettingAction),
@@ -50,45 +41,43 @@ impl SettingsPressure {
     }
 
     fn set_peak(&self, action: SettingAction) -> ControlMessage {
+        let control = ControlSetting::PeakPressure;
+
         ControlMessage {
-            setting: ControlSetting::PeakPressure,
-            value: self.acquire_new_value(action, self.peak, PRESSURE_PEAK_MAX, PRESSURE_PEAK_MIN)
-                as u16,
+            setting: control,
+            value: self.acquire_new_value(&control, action, self.peak) as u16,
         }
     }
 
     fn set_plateau(&self, action: SettingAction) -> ControlMessage {
+        let control = ControlSetting::PlateauPressure;
+
         ControlMessage {
-            setting: ControlSetting::PlateauPressure,
-            value: self.acquire_new_value(
-                action,
-                self.plateau,
-                PRESSURE_PLATEAU_MAX,
-                PRESSURE_PLATEAU_MIN,
-            ) as u16,
+            setting: control,
+            value: self.acquire_new_value(&control, action, self.plateau) as u16,
         }
     }
 
     fn set_peep(&self, action: SettingAction) -> ControlMessage {
+        let control = ControlSetting::PEEP;
+
         ControlMessage {
-            setting: ControlSetting::PEEP,
-            value: self.acquire_new_value(action, self.peep, PRESSURE_PEEP_MAX, PRESSURE_PEEP_MIN)
-                as u16,
+            setting: control,
+            value: self.acquire_new_value(&control, action, self.peep) as u16,
         }
     }
 
     fn acquire_new_value(
         &self,
+        control: &ControlSetting,
         action: SettingAction,
         previous_value: usize,
-        maximum: usize,
-        minimum: usize,
     ) -> usize {
         match action {
             SettingAction::More => {
                 let new_value = previous_value + PRESSURE_STEP;
 
-                if new_value <= maximum {
+                if control.bounds().contains(&new_value) {
                     new_value
                 } else {
                     previous_value
@@ -99,7 +88,7 @@ impl SettingsPressure {
                 if previous_value >= PRESSURE_STEP {
                     let new_value = previous_value - PRESSURE_STEP;
 
-                    if new_value >= minimum {
+                    if control.bounds().contains(&new_value) {
                         new_value
                     } else {
                         previous_value
