@@ -6,8 +6,6 @@ telemetry-label-ratio = Taxa de insp-exp.
 telemetry-label-ratio-plateau = Duração do platô:
 telemetry-label-tidal = Volume corr.
 
-telemetry-value-empty = n/D
-
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-mmh2o = mmH2O
 telemetry-unit-per-minute = /minuto

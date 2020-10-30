@@ -111,8 +111,12 @@ pub fn peak<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 
     // Create text for value
     widget::Text::new(
-        &convert_mmh2o_to_cmh2o(ConvertMode::Rounded, config.pressure_settings.peak as f64)
-            .to_string(),
+        format!(
+            "{} {}",
+            convert_mmh2o_to_cmh2o(ConvertMode::Rounded, config.pressure_settings.peak as f64),
+            APP_I18N.t("telemetry-unit-cmh2o")
+        )
+        .as_str(),
     )
     .with_style(value_text_style)
     .right_from(config.pressure_peak_less_button_widget, 20.0)
@@ -186,11 +190,15 @@ pub fn plateau<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 
     // Create text for value
     widget::Text::new(
-        &convert_mmh2o_to_cmh2o(
-            ConvertMode::Rounded,
-            config.pressure_settings.plateau as f64,
+        format!(
+            "{} {}",
+            convert_mmh2o_to_cmh2o(
+                ConvertMode::Rounded,
+                config.pressure_settings.plateau as f64
+            ),
+            APP_I18N.t("telemetry-unit-cmh2o")
         )
-        .to_string(),
+        .as_str(),
     )
     .with_style(value_text_style)
     .right_from(config.pressure_plateau_less_button_widget, 20.0)
@@ -264,8 +272,12 @@ pub fn peep<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 
     // Create text for value
     widget::Text::new(
-        &convert_mmh2o_to_cmh2o(ConvertMode::Rounded, config.pressure_settings.peep as f64)
-            .to_string(),
+        format!(
+            "{} {}",
+            convert_mmh2o_to_cmh2o(ConvertMode::Rounded, config.pressure_settings.peep as f64),
+            APP_I18N.t("telemetry-unit-cmh2o")
+        )
+        .as_str(),
     )
     .with_style(value_text_style)
     .right_from(config.pressure_peep_less_button_widget, 20.0)

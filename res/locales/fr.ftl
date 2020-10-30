@@ -6,8 +6,6 @@ telemetry-label-ratio = Ratio insp-exp
 telemetry-label-ratio-plateau = Durée du plateau :
 telemetry-label-tidal = Vol. courant
 
-telemetry-value-empty = n/a
-
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-mmh2o = mmH2O
 telemetry-unit-per-minute = /minute

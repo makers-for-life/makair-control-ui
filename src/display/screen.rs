@@ -324,7 +324,7 @@ impl<'a> Screen<'a> {
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-peak"),
                 value_measured: Some(if !has_target_pressure {
-                    APP_I18N.t("telemetry-value-empty")
+                    TELEMETRY_WIDGET_VALUE_EMPTY.to_owned()
                 } else {
                     convert_mmh2o_to_cmh2o(
                         ConvertMode::Rounded,
@@ -360,7 +360,7 @@ impl<'a> Screen<'a> {
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-plateau"),
                 value_measured: Some(if !has_target_pressure {
-                    APP_I18N.t("telemetry-value-empty")
+                    TELEMETRY_WIDGET_VALUE_EMPTY.to_owned()
                 } else {
                     convert_mmh2o_to_cmh2o(
                         ConvertMode::Rounded,
@@ -397,7 +397,7 @@ impl<'a> Screen<'a> {
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-expiratory"),
                 value_measured: Some(if !has_target_pressure {
-                    APP_I18N.t("telemetry-value-empty")
+                    TELEMETRY_WIDGET_VALUE_EMPTY.to_owned()
                 } else {
                     convert_mmh2o_to_cmh2o(
                         ConvertMode::Rounded,
@@ -435,7 +435,7 @@ impl<'a> Screen<'a> {
                 title: APP_I18N.t("telemetry-label-cycles"),
                 value_measured: None,
                 value_target: Some(if machine_snapshot.cpm_command == 0 {
-                    APP_I18N.t("telemetry-value-empty")
+                    TELEMETRY_WIDGET_VALUE_EMPTY.to_owned()
                 } else {
                     machine_snapshot.cpm_command.to_string()
                 }),
@@ -461,7 +461,7 @@ impl<'a> Screen<'a> {
         let previous_volume = machine_snapshot
             .previous_volume
             .map(|v| format!("{}", v))
-            .unwrap_or_else(|| APP_I18N.t("telemetry-value-empty"));
+            .unwrap_or_else(|| TELEMETRY_WIDGET_VALUE_EMPTY.to_owned());
 
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
@@ -493,7 +493,7 @@ impl<'a> Screen<'a> {
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-ratio"),
                 value_measured: Some(if machine_snapshot.expiratory_term == 0 {
-                    APP_I18N.t("telemetry-value-empty")
+                    TELEMETRY_WIDGET_VALUE_EMPTY.to_owned()
                 } else {
                     let expiratory_term_value = convert_mmh2o_to_cmh2o(
                         ConvertMode::WithDecimals,
@@ -518,7 +518,7 @@ impl<'a> Screen<'a> {
                             APP_I18N.t("telemetry-unit-milliseconds")
                         )
                     } else {
-                        APP_I18N.t("telemetry-value-empty")
+                        TELEMETRY_WIDGET_VALUE_EMPTY.to_owned()
                     }
                 ),
                 ids: (

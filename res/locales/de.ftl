@@ -6,8 +6,6 @@ telemetry-label-ratio = Ein.-Aus. Verhältnis
 telemetry-label-ratio-plateau = Plateaudauer:
 telemetry-label-tidal = Atemzugvolumen
 
-telemetry-value-empty = n/a
-
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-mmh2o = mmH2O
 telemetry-unit-per-minute = /minute

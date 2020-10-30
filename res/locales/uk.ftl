@@ -6,8 +6,6 @@ telemetry-label-ratio = Співвідн. Вдих-Видих
 telemetry-label-ratio-plateau = Тривалість плато:
 telemetry-label-tidal = Дихальний обсяг
 
-telemetry-value-empty = н/д
-
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-mmh2o = mmH2O
 telemetry-unit-per-minute = /хвилина

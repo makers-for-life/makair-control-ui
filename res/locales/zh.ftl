@@ -6,8 +6,6 @@ telemetry-label-ratio = 吸气呼气比
 telemetry-label-ratio-plateau = 高原持续时间：
 telemetry-label-tidal = 潮量
 
-telemetry-value-empty = 不适用
-
 telemetry-unit-cmh2o = 厘米水
 telemetry-unit-mmh2o = 毫米水柱
 telemetry-unit-per-minute = /分钟

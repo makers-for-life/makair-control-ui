@@ -6,8 +6,6 @@ telemetry-label-ratio = Ieel.-izel. attiecība
 telemetry-label-ratio-plateau = Plato ilgums:
 telemetry-label-tidal = Plūdmaiņas tilpums
 
-telemetry-value-empty = n/a
-
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-mmh2o = mmH2O
 telemetry-unit-per-minute = /minutē
