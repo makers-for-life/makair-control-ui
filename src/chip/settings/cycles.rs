@@ -61,7 +61,7 @@ impl SettingsCycles {
         };
 
         ControlMessage {
-            setting: setting,
+            setting,
             value: new_value as u16,
         }
     }
