@@ -309,18 +309,30 @@ impl<'a> Screen<'a> {
             ),
         ));
 
+        // Check if at least a pressure value is known (otherwise, all pressure widgets should \
+        //   show as empty)
+        let has_target_pressure = machine_snapshot.peak_command > 0
+            || machine_snapshot.plateau_command > 0
+            || machine_snapshot.peep_command > 0;
+
         // Initialize the peak widget
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-peak"),
-                value_measured: Some(
+                value_measured: Some(if has_target_pressure == false {
+                    APP_I18N.t("telemetry-value-empty")
+                } else {
                     convert_mmh2o_to_cmh2o(
                         ConvertMode::Rounded,
                         machine_snapshot.previous_peak_pressure as f64,
                     )
-                    .to_string(),
-                ),
-                value_target: Some(machine_snapshot.peak_command.to_string()),
+                    .to_string()
+                }),
+                value_target: if has_target_pressure == false {
+                    None
+                } else {
+                    Some(machine_snapshot.peak_command.to_string())
+                },
                 value_arrow: telemetry_data.arrow_image_id,
                 unit: APP_I18N.t("telemetry-unit-cmh2o"),
                 ids: (
@@ -343,14 +355,20 @@ impl<'a> Screen<'a> {
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-plateau"),
-                value_measured: Some(
+                value_measured: Some(if has_target_pressure == false {
+                    APP_I18N.t("telemetry-value-empty")
+                } else {
                     convert_mmh2o_to_cmh2o(
                         ConvertMode::Rounded,
                         machine_snapshot.previous_plateau_pressure as f64,
                     )
-                    .to_string(),
-                ),
-                value_target: Some(machine_snapshot.plateau_command.to_string()),
+                    .to_string()
+                }),
+                value_target: if has_target_pressure == false {
+                    None
+                } else {
+                    Some(machine_snapshot.plateau_command.to_string())
+                },
                 value_arrow: telemetry_data.arrow_image_id,
                 unit: APP_I18N.t("telemetry-unit-cmh2o"),
                 ids: (
@@ -374,14 +392,20 @@ impl<'a> Screen<'a> {
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-expiratory"),
-                value_measured: Some(
+                value_measured: Some(if has_target_pressure == false {
+                    APP_I18N.t("telemetry-value-empty")
+                } else {
                     convert_mmh2o_to_cmh2o(
                         ConvertMode::Rounded,
                         machine_snapshot.previous_peep_pressure as f64,
                     )
-                    .to_string(),
-                ),
-                value_target: Some(machine_snapshot.peep_command.to_string()),
+                    .to_string()
+                }),
+                value_target: if has_target_pressure == false {
+                    None
+                } else {
+                    Some(machine_snapshot.peep_command.to_string())
+                },
                 value_arrow: telemetry_data.arrow_image_id,
                 unit: APP_I18N.t("telemetry-unit-cmh2o"),
                 ids: (
