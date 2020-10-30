@@ -18,6 +18,7 @@ use crate::APP_I18N;
 use super::data::*;
 use super::fonts::Fonts;
 use super::identifiers::Ids;
+use super::renderer::DisplayRendererSettingsState;
 use super::widget::{ControlWidget, ControlWidgetType};
 
 pub struct Screen<'a> {
@@ -25,6 +26,13 @@ pub struct Screen<'a> {
     machine_snapshot: Option<&'a MachineStateSnapshot>,
     ongoing_alarms: Option<&'a [(AlarmCode, AlarmPriority)]>,
     widgets: ControlWidget<'a>,
+}
+
+pub struct ScreenModalsOpen {
+    trigger: bool,
+    expiration_term: bool,
+    pressure: bool,
+    cycles: bool,
 }
 
 impl<'a> Screen<'a> {
@@ -53,8 +61,7 @@ impl<'a> Screen<'a> {
         telemetry_data: DisplayDataTelemetry,
         trigger: &'a SettingsTrigger,
         expiration_term: &'a SettingsExpirationTerm,
-        trigger_open: bool,
-        expiration_term_open: bool,
+        modals_open: &ScreenModalsOpen,
     ) {
         // Render common background
         self.render_background();
@@ -78,10 +85,14 @@ impl<'a> Screen<'a> {
         // Render bottom elements
         self.render_telemetry(telemetry_data, trigger, expiration_term);
 
-        if trigger_open {
+        if modals_open.trigger {
             self.render_trigger_settings(trigger);
-        } else if expiration_term_open {
+        } else if modals_open.expiration_term {
             self.render_expiration_term_settings(expiration_term);
+        } else if modals_open.pressure {
+            self.render_pressure_settings();
+        } else if modals_open.cycles {
+            self.render_cycles_settings();
         }
     }
 
@@ -207,8 +218,7 @@ impl<'a> Screen<'a> {
         telemetry_data: DisplayDataTelemetry,
         trigger: &'a SettingsTrigger,
         expiration_term: &'a SettingsExpirationTerm,
-        trigger_open: bool,
-        expiration_term_open: bool,
+        modals_open: &ScreenModalsOpen,
     ) {
         // Render regular data as background
         self.render_with_data(
@@ -219,11 +229,10 @@ impl<'a> Screen<'a> {
             telemetry_data,
             trigger,
             expiration_term,
-            trigger_open,
-            expiration_term_open,
+            modals_open,
         );
 
-        if !trigger_open && !expiration_term_open {
+        if !modals_open.trigger && !modals_open.expiration_term {
             self.render_modal(
                 DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH,
                 DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT,
@@ -589,18 +598,75 @@ impl<'a> Screen<'a> {
                     expiration_term_settings: settings,
 
                     expiration_term_container_parent: self.ids.modal_container,
-                    expiration_term_container_widget: self.ids.expiration_term_term_container,
-                    expiration_term_more_button_widget: self.ids.expiration_term_term_more_button,
+                    expiration_term_container_widget: self.ids.expiration_term_container,
+                    expiration_term_more_button_widget: self.ids.expiration_term_more_button,
                     expiration_term_more_button_text_widget: self
                         .ids
-                        .expiration_term_term_more_button_text,
-                    expiration_term_less_button_widget: self.ids.expiration_term_term_less_button,
+                        .expiration_term_more_button_text,
+                    expiration_term_less_button_widget: self.ids.expiration_term_less_button,
                     expiration_term_less_button_text_widget: self
                         .ids
-                        .expiration_term_term_less_button_text,
-                    expiration_term_text_widget: self.ids.expiration_term_term_text,
-                    expiration_term_value_widget: self.ids.expiration_term_term_value,
+                        .expiration_term_less_button_text,
+                    expiration_term_text_widget: self.ids.expiration_term_text,
+                    expiration_term_value_widget: self.ids.expiration_term_value,
                 },
             ));
+    }
+
+    fn render_pressure_settings(&mut self) {
+        self.render_modal(
+            PRESSURE_SETTINGS_MODAL_WIDTH,
+            PRESSURE_SETTINGS_MODAL_HEIGTH,
+            Some(PRESSURE_SETTINGS_MODAL_PADDING),
+            Some((self.ids.modal_validate, self.ids.modal_validate_text)),
+        );
+
+        self.widgets.render(ControlWidgetType::PressureSettings(
+            pressure_settings::Config {
+                width: PRESSURE_SETTINGS_MODAL_WIDTH,
+                height: PRESSURE_SETTINGS_MODAL_HEIGTH
+                    - MODAL_VALIDATE_BUTTON_HEIGHT
+                    - (PRESSURE_SETTINGS_MODAL_PADDING * 2.0),
+
+                pressure_container_parent: self.ids.modal_container,
+                pressure_container_widget: self.ids.pressure_container,
+            },
+        ));
+    }
+
+    fn render_cycles_settings(&mut self) {
+        self.render_modal(
+            CYCLES_SETTINGS_MODAL_WIDTH,
+            CYCLES_SETTINGS_MODAL_HEIGTH,
+            Some(CYCLES_SETTINGS_MODAL_PADDING),
+            Some((self.ids.modal_validate, self.ids.modal_validate_text)),
+        );
+
+        self.widgets
+            .render(ControlWidgetType::CyclesSettings(cycles_settings::Config {
+                width: CYCLES_SETTINGS_MODAL_WIDTH,
+                height: CYCLES_SETTINGS_MODAL_HEIGTH
+                    - MODAL_VALIDATE_BUTTON_HEIGHT
+                    - (CYCLES_SETTINGS_MODAL_PADDING * 2.0),
+
+                cycles_container_parent: self.ids.modal_container,
+                cycles_container_widget: self.ids.cycles_container,
+            }));
+    }
+}
+
+impl ScreenModalsOpen {
+    pub fn from_states(
+        trigger_open: &DisplayRendererSettingsState,
+        expiration_term_open: &DisplayRendererSettingsState,
+        pressure_open: &DisplayRendererSettingsState,
+        cycles_open: &DisplayRendererSettingsState,
+    ) -> Self {
+        ScreenModalsOpen {
+            trigger: trigger_open == &DisplayRendererSettingsState::Opened,
+            expiration_term: expiration_term_open == &DisplayRendererSettingsState::Opened,
+            pressure: pressure_open == &DisplayRendererSettingsState::Opened,
+            cycles: cycles_open == &DisplayRendererSettingsState::Opened,
+        }
     }
 }

@@ -74,13 +74,17 @@ widget_ids!(pub struct Ids {
   ratio_value_target,
   ratio_unit,
 
-  expiration_term_term_container,
-  expiration_term_term_more_button,
-  expiration_term_term_more_button_text,
-  expiration_term_term_less_button,
-  expiration_term_term_less_button_text,
-  expiration_term_term_text,
-  expiration_term_term_value,
+  expiration_term_container,
+  expiration_term_more_button,
+  expiration_term_more_button_text,
+  expiration_term_less_button,
+  expiration_term_less_button_text,
+  expiration_term_text,
+  expiration_term_value,
+
+  pressure_container,
+
+  cycles_container,
 
   tidal_parent,
   tidal_title,

@@ -33,7 +33,7 @@ use crate::APP_ARGS;
 use super::data::*;
 use super::fonts::Fonts;
 use super::identifiers::Ids;
-use super::screen::Screen;
+use super::screen::{Screen, ScreenModalsOpen};
 use super::support::GliumDisplayWinitWrapper;
 
 #[derive(Debug, PartialEq, Eq)]
@@ -49,6 +49,8 @@ pub struct DisplayRenderer {
     ids: Ids,
     trigger_settings_state: DisplayRendererSettingsState,
     expiration_term_settings_state: DisplayRendererSettingsState,
+    pressure_settings_state: DisplayRendererSettingsState,
+    cycles_settings_state: DisplayRendererSettingsState,
 }
 
 lazy_static! {
@@ -64,14 +66,31 @@ lazy_static! {
         TextStyle::from(("sans-serif", 15).into_font());
 }
 
+impl DisplayRendererSettingsState {
+    fn toggle(&mut self) {
+        *self = match self {
+            Self::Closed => Self::Opened,
+            Self::Opened => Self::Closed,
+        };
+    }
+}
+
+impl Default for DisplayRendererSettingsState {
+    fn default() -> Self {
+        Self::Closed
+    }
+}
+
 #[allow(clippy::new_ret_no_self)]
 impl DisplayRendererBuilder {
     pub fn new(fonts: Fonts, ids: Ids) -> DisplayRenderer {
         DisplayRenderer {
             fonts,
             ids,
-            trigger_settings_state: DisplayRendererSettingsState::Closed,
-            expiration_term_settings_state: DisplayRendererSettingsState::Closed,
+            trigger_settings_state: DisplayRendererSettingsState::default(),
+            expiration_term_settings_state: DisplayRendererSettingsState::default(),
+            pressure_settings_state: DisplayRendererSettingsState::default(),
+            cycles_settings_state: DisplayRendererSettingsState::default(),
         }
     }
 }
@@ -133,6 +152,39 @@ impl DisplayRenderer {
             self.ids.ratio_unit,
         ];
 
+        let cycles_settings_iters = vec![
+            self.ids.cycles_parent,
+            self.ids.cycles_title,
+            self.ids.cycles_value_measured,
+            self.ids.cycles_value_arrow,
+            self.ids.cycles_value_target,
+            self.ids.cycles_unit,
+        ];
+
+        let pressure_settings_iters = vec![
+            self.ids.peak_parent,
+            self.ids.peak_title,
+            self.ids.peak_value_measured,
+            self.ids.peak_value_arrow,
+            self.ids.peak_value_target,
+            self.ids.peak_unit,
+
+            self.ids.plateau_parent,
+            self.ids.plateau_title,
+            self.ids.plateau_value_measured,
+            self.ids.plateau_value_arrow,
+            self.ids.plateau_value_target,
+            self.ids.plateau_unit,
+
+            self.ids.peep_parent,
+            self.ids.peep_title,
+            self.ids.peep_value_measured,
+            self.ids.peep_value_arrow,
+            self.ids.peep_value_target,
+            self.ids.peep_unit,
+        ];
+
+        // Handle modal open clicks
         let trigger_settings_clicks = trigger_settings_iters.iter().flat_map(|widget| {
             interface
                 .widget_input(*widget)
@@ -150,45 +202,69 @@ impl DisplayRenderer {
                     .chain(interface.widget_input(*widget).taps().map(|_| ()))
             });
 
+        let cycles_settings_clicks = cycles_settings_iters.iter().flat_map(|widget| {
+            interface
+                .widget_input(*widget)
+                .clicks()
+                .map(|_| ())
+                .chain(interface.widget_input(*widget).taps().map(|_| ()))
+        });
+
+        let pressure_settings_clicks =
+            pressure_settings_iters.iter().flat_map(|widget| {
+                interface
+                    .widget_input(*widget)
+                    .clicks()
+                    .map(|_| ())
+                    .chain(interface.widget_input(*widget).taps().map(|_| ()))
+            });
+
         for _ in trigger_settings_clicks {
-            self.toggle_trigger_settings();
+            debug!("pressed the trigger widget once");
+
+            self.trigger_settings_state.toggle();
         }
 
         for _ in expiration_term_settings_clicks {
-            self.toggle_expiration_term_settings();
+            debug!("pressed the expiratory term widget once");
+
+            self.expiration_term_settings_state.toggle();
         }
 
+        for _ in cycles_settings_clicks {
+            debug!("pressed the cycles widget once");
+
+            self.cycles_settings_state.toggle();
+        }
+
+        for _ in pressure_settings_clicks {
+            debug!("pressed a pressure widget once");
+
+            self.pressure_settings_state.toggle();
+        }
+
+        // Handle modal inner clicks
         if self.trigger_settings_state == DisplayRendererSettingsState::Opened
             || self.expiration_term_settings_state == DisplayRendererSettingsState::Opened
+            || self.cycles_settings_state == DisplayRendererSettingsState::Opened
+            || self.pressure_settings_state == DisplayRendererSettingsState::Opened
         {
             for _ in self
                 .get_widget_clicks(self.ids.modal_validate, interface)
                 .chain(self.get_widget_clicks(self.ids.modal_validate_text, interface))
             {
+                debug!("pressed a modal close button once");
+
                 if self.trigger_settings_state == DisplayRendererSettingsState::Opened {
-                    self.toggle_trigger_settings();
+                    self.trigger_settings_state.toggle();
                 } else if self.expiration_term_settings_state
                     == DisplayRendererSettingsState::Opened
                 {
-                    self.toggle_expiration_term_settings();
-                }
-            }
-        }
-
-        if self.trigger_settings_state == DisplayRendererSettingsState::Closed
-            && self.expiration_term_settings_state == DisplayRendererSettingsState::Closed
-        {
-            for xy in self.get_widget_clicks(self.ids.modal_background, interface) {
-                if let Some(rect_of) = interface.rect_of(self.ids.trigger_overview_container) {
-                    if rect_of.is_over(xy) {
-                        self.toggle_trigger_settings();
-                    }
-                }
-
-                if let Some(rect_of) = interface.rect_of(self.ids.ratio_parent) {
-                    if rect_of.is_over(xy) {
-                        self.toggle_expiration_term_settings();
-                    }
+                    self.expiration_term_settings_state.toggle();
+                } else if self.cycles_settings_state == DisplayRendererSettingsState::Opened {
+                    self.cycles_settings_state.toggle();
+                } else if self.pressure_settings_state == DisplayRendererSettingsState::Opened {
+                    self.pressure_settings_state.toggle();
                 }
             }
         }
@@ -198,6 +274,8 @@ impl DisplayRenderer {
                 .get_widget_clicks(self.ids.trigger_status_button, interface)
                 .chain(self.get_widget_clicks(self.ids.trigger_status_button_text, interface))
             {
+                debug!("pressed the trigger settings toggle button once");
+
                 all_events.push(ChipSettingsEvent::Trigger(
                     SettingsTriggerEvent::TriggerToggle,
                 ));
@@ -207,6 +285,8 @@ impl DisplayRenderer {
                 .get_widget_clicks(self.ids.trigger_offset_less_button, interface)
                 .chain(self.get_widget_clicks(self.ids.trigger_offset_less_button_text, interface))
             {
+                debug!("pressed the trigger settings offset less button once");
+
                 all_events.push(ChipSettingsEvent::Trigger(
                     SettingsTriggerEvent::TriggerOffset(SettingAction::Less),
                 ));
@@ -216,6 +296,8 @@ impl DisplayRenderer {
                 .get_widget_clicks(self.ids.trigger_offset_more_button, interface)
                 .chain(self.get_widget_clicks(self.ids.trigger_offset_more_button_text, interface))
             {
+                debug!("pressed the trigger settings offset more button once");
+
                 all_events.push(ChipSettingsEvent::Trigger(
                     SettingsTriggerEvent::TriggerOffset(SettingAction::More),
                 ));
@@ -223,25 +305,23 @@ impl DisplayRenderer {
         }
 
         if self.expiration_term_settings_state == DisplayRendererSettingsState::Opened {
-            for _ in
-                self.get_widget_clicks(self.ids.expiration_term_term_less_button, interface)
-                    .chain(self.get_widget_clicks(
-                        self.ids.expiration_term_term_less_button_text,
-                        interface,
-                    ))
+            for _ in self
+                .get_widget_clicks(self.ids.expiration_term_less_button, interface)
+                .chain(self.get_widget_clicks(self.ids.expiration_term_less_button_text, interface))
             {
+                debug!("pressed the expiration term settings less button once");
+
                 all_events.push(ChipSettingsEvent::ExpirationTerm(
                     SettingsExpirationTermEvent::ExpiratoryTerm(SettingAction::Less),
                 ));
             }
 
-            for _ in
-                self.get_widget_clicks(self.ids.expiration_term_term_more_button, interface)
-                    .chain(self.get_widget_clicks(
-                        self.ids.expiration_term_term_more_button_text,
-                        interface,
-                    ))
+            for _ in self
+                .get_widget_clicks(self.ids.expiration_term_more_button, interface)
+                .chain(self.get_widget_clicks(self.ids.expiration_term_more_button_text, interface))
             {
+                debug!("pressed the expiration term settings more button once");
+
                 all_events.push(ChipSettingsEvent::ExpirationTerm(
                     SettingsExpirationTermEvent::ExpiratoryTerm(SettingAction::More),
                 ));
@@ -261,20 +341,6 @@ impl DisplayRenderer {
             .clicks()
             .map(|c| c.xy)
             .chain(interface.widget_input(widget).taps().map(|t| t.xy))
-    }
-
-    fn toggle_trigger_settings(&mut self) {
-        self.trigger_settings_state = match self.trigger_settings_state {
-            DisplayRendererSettingsState::Closed => DisplayRendererSettingsState::Opened,
-            DisplayRendererSettingsState::Opened => DisplayRendererSettingsState::Closed,
-        };
-    }
-
-    fn toggle_expiration_term_settings(&mut self) {
-        self.expiration_term_settings_state = match self.expiration_term_settings_state {
-            DisplayRendererSettingsState::Closed => DisplayRendererSettingsState::Opened,
-            DisplayRendererSettingsState::Opened => DisplayRendererSettingsState::Closed,
-        };
     }
 
     fn empty(
@@ -470,8 +536,12 @@ impl DisplayRenderer {
                 screen_data_telemetry,
                 trigger_settings,
                 expiration_term_settings,
-                self.trigger_settings_state == DisplayRendererSettingsState::Opened,
-                self.expiration_term_settings_state == DisplayRendererSettingsState::Opened,
+                &ScreenModalsOpen::from_states(
+                    &self.trigger_settings_state,
+                    &self.expiration_term_settings_state,
+                    &self.pressure_settings_state,
+                    &self.cycles_settings_state,
+                ),
             ),
 
             ChipState::Stopped => screen.render_stop(
@@ -482,8 +552,12 @@ impl DisplayRenderer {
                 screen_data_telemetry,
                 trigger_settings,
                 expiration_term_settings,
-                self.trigger_settings_state == DisplayRendererSettingsState::Opened,
-                self.expiration_term_settings_state == DisplayRendererSettingsState::Opened,
+                &ScreenModalsOpen::from_states(
+                    &self.trigger_settings_state,
+                    &self.expiration_term_settings_state,
+                    &self.pressure_settings_state,
+                    &self.cycles_settings_state,
+                ),
             ),
 
             _ => unreachable!(),

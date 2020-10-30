@@ -146,7 +146,7 @@ impl<'a> DisplayDrawer<'a> {
                     || !ui_events.is_empty()
                 {
                     // Proceed UI refresh
-                    self.chip.new_settings_events(ui_events);
+                    self.chip.handle_settings_events(ui_events);
 
                     self.refresh();
 

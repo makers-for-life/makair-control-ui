@@ -133,25 +133,23 @@ impl Chip {
         };
     }
 
-    pub fn new_settings_events(&mut self, events: Vec<ChipSettingsEvent>) {
+    pub fn handle_settings_events(&mut self, events: Vec<ChipSettingsEvent>) {
         for event in events {
             let message = self.settings.new_settings_event(event);
 
             debug!(
-                "new event: {:?}, sender: {:?}",
+                "handled setting event: {:?}, sender: {:?}",
                 message, self.channel_for_settings
             );
 
             if let Some(tx) = &self.channel_for_settings {
-                if let Err(e) = tx.send(message.clone()) {
-                    // TODO: Maybe we could add an alarm with this problem
-                    // TODO2: Revert the value if it can't be sent?
+                if let Err(err) = tx.send(message.clone()) {
                     error!(
                         "error sending message {:?} to the control unit: {:?}",
-                        message, e
+                        message, err
                     );
                 } else {
-                    debug!("setting message {:?} sent!", message);
+                    debug!("setting message {:?} sent", message);
                 }
             }
         }
