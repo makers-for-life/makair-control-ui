@@ -31,13 +31,13 @@ status-power-ac = Branché sur AC
 
 trigger-label-title = Trigger
 trigger-label-state = Statut :
-trigger-label-offset = Niveau :
+trigger-label-offset = Seuil :
 trigger-label-configure = Touchez pour configurer
 trigger-state-enabled = Activé
 trigger-state-disabled = Désactivé
 
 modal-trigger-inspiratory-status = État du trigger inspiratoire :
-modal-trigger-inspiratory-offset = Niveau du trigger inspiratoire :
+modal-trigger-inspiratory-offset = Seuil de déclenchement :
 
 modal-expiration-term-expiratory-term = Temps expiratoire :
 
