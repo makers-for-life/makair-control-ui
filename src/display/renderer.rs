@@ -18,6 +18,7 @@ use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 use crate::chip::settings::{
     cycles::{SettingsCycles, SettingsCyclesEvent},
     expiration_term::{SettingsExpirationTerm, SettingsExpirationTermEvent},
+    pressure::SettingsPressure,
     trigger::{SettingsTrigger, SettingsTriggerEvent},
     ChipSettingsEvent, SettingAction,
 };
@@ -110,6 +111,7 @@ impl DisplayRenderer {
         trigger_settings: &SettingsTrigger,
         expiration_term_settings: &SettingsExpirationTerm,
         cycles_settings: &SettingsCycles,
+        pressure_settings: &SettingsPressure,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let image_map = conrod_core::image::Map::<texture::Texture2d>::new();
 
@@ -128,6 +130,7 @@ impl DisplayRenderer {
                 trigger_settings,
                 expiration_term_settings,
                 cycles_settings,
+                pressure_settings,
             ),
             ChipState::Error(e) => self.error(interface, image_map, e.clone()),
         }
@@ -165,6 +168,9 @@ impl DisplayRenderer {
         ];
 
         let pressure_settings_iters = vec![
+            // TODO: need to remove this identifier, as this is not correct. the current click \
+            //   event on right widgets seems to cascade up to layout_header, which is invalid.
+            self.ids.layout_header,
             self.ids.peak_parent,
             self.ids.peak_title,
             self.ids.peak_value_measured,
@@ -440,6 +446,7 @@ impl DisplayRenderer {
         trigger_settings: &SettingsTrigger,
         expiration_term_settings: &SettingsExpirationTerm,
         cycles_settings: &SettingsCycles,
+        pressure_settings: &SettingsPressure,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         // Create branding
         let branding_image_texture = self.draw_branding(display);
@@ -562,6 +569,7 @@ impl DisplayRenderer {
                 trigger_settings,
                 expiration_term_settings,
                 cycles_settings,
+                pressure_settings,
                 &ScreenModalsOpen::from_states(
                     &self.trigger_settings_state,
                     &self.expiration_term_settings_state,
@@ -579,6 +587,7 @@ impl DisplayRenderer {
                 trigger_settings,
                 expiration_term_settings,
                 cycles_settings,
+                pressure_settings,
                 &ScreenModalsOpen::from_states(
                     &self.trigger_settings_state,
                     &self.expiration_term_settings_state,

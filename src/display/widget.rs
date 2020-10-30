@@ -36,6 +36,6 @@ gen_widget_impls!(
     TriggerSettings -> trigger_settings['a],
     TriggerOverview -> trigger_overview['a],
     ExpirationTermSettings -> expiration_term_settings['a],
-    PressureSettings -> pressure_settings,
+    PressureSettings -> pressure_settings['a],
     CyclesSettings -> cycles_settings['a],
 );

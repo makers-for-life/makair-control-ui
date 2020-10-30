@@ -5,12 +5,14 @@
 
 pub mod cycles;
 pub mod expiration_term;
+pub mod pressure;
 pub mod trigger;
 
 use telemetry::control::ControlMessage;
 
 use cycles::*;
 use expiration_term::*;
+use pressure::*;
 use trigger::*;
 
 #[derive(Debug)]
@@ -18,6 +20,7 @@ pub struct ChipSettings {
     pub trigger: SettingsTrigger,
     pub expiration_term: SettingsExpirationTerm,
     pub cycles: SettingsCycles,
+    pub pressure: SettingsPressure,
 }
 
 impl ChipSettings {
@@ -26,6 +29,7 @@ impl ChipSettings {
             trigger: SettingsTrigger::new(),
             expiration_term: SettingsExpirationTerm::new(cycles_per_minute),
             cycles: SettingsCycles::new(),
+            pressure: SettingsPressure::new(),
         }
     }
 
@@ -34,6 +38,7 @@ impl ChipSettings {
             ChipSettingsEvent::Trigger(event) => self.trigger.new_event(event),
             ChipSettingsEvent::ExpirationTerm(event) => self.expiration_term.new_event(event),
             ChipSettingsEvent::Cycles(event) => self.cycles.new_event(event),
+            ChipSettingsEvent::Pressure(event) => self.pressure.new_event(event),
         }
     }
 }
@@ -49,4 +54,5 @@ pub enum ChipSettingsEvent {
     Trigger(SettingsTriggerEvent),
     ExpirationTerm(SettingsExpirationTermEvent),
     Cycles(SettingsCyclesEvent),
+    Pressure(SettingsPressureEvent),
 }

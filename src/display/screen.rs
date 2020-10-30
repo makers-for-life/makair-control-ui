@@ -10,7 +10,8 @@ use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
 use crate::chip::settings::{
-    cycles::SettingsCycles, expiration_term::SettingsExpirationTerm, trigger::SettingsTrigger,
+    cycles::SettingsCycles, expiration_term::SettingsExpirationTerm, pressure::SettingsPressure,
+    trigger::SettingsTrigger,
 };
 use crate::config::environment::*;
 use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
@@ -64,6 +65,7 @@ impl<'a> Screen<'a> {
         trigger: &'a SettingsTrigger,
         expiration_term: &'a SettingsExpirationTerm,
         cycles: &'a SettingsCycles,
+        pressure: &'a SettingsPressure,
         modals_open: &ScreenModalsOpen,
     ) {
         // Render common background
@@ -93,7 +95,7 @@ impl<'a> Screen<'a> {
         } else if modals_open.expiration_term {
             self.render_expiration_term_settings(expiration_term);
         } else if modals_open.pressure {
-            self.render_pressure_settings();
+            self.render_pressure_settings(pressure);
         } else if modals_open.cycles {
             self.render_cycles_settings(cycles);
         }
@@ -222,6 +224,7 @@ impl<'a> Screen<'a> {
         trigger: &'a SettingsTrigger,
         expiration_term: &'a SettingsExpirationTerm,
         cycles: &'a SettingsCycles,
+        pressure: &'a SettingsPressure,
         modals_open: &ScreenModalsOpen,
     ) {
         // Render regular data as background
@@ -234,6 +237,7 @@ impl<'a> Screen<'a> {
             trigger,
             expiration_term,
             cycles,
+            pressure,
             modals_open,
         );
 
@@ -646,7 +650,7 @@ impl<'a> Screen<'a> {
             ));
     }
 
-    fn render_pressure_settings(&mut self) {
+    fn render_pressure_settings(&mut self, settings: &'a SettingsPressure) {
         self.render_modal(
             PRESSURE_SETTINGS_MODAL_WIDTH,
             PRESSURE_SETTINGS_MODAL_HEIGTH,
@@ -660,6 +664,7 @@ impl<'a> Screen<'a> {
                 height: PRESSURE_SETTINGS_MODAL_HEIGTH
                     - MODAL_VALIDATE_BUTTON_HEIGHT
                     - (PRESSURE_SETTINGS_MODAL_PADDING * 2.0),
+                pressure_settings: settings,
 
                 pressure_container_parent: self.ids.modal_container,
                 pressure_container_widget: self.ids.pressure_container,

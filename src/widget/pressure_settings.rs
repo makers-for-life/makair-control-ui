@@ -9,13 +9,15 @@ use conrod_core::{
     Positionable, Sizeable, Widget,
 };
 
+use crate::chip::settings::pressure::SettingsPressure;
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::APP_I18N;
 
-pub struct Config {
+pub struct Config<'a> {
     pub width: f64,
     pub height: f64,
+    pub pressure_settings: &'a SettingsPressure,
     pub pressure_container_parent: WidgetId,
     pub pressure_container_widget: WidgetId,
     pub pressure_peak_text_widget: WidgetId,
@@ -95,14 +97,11 @@ pub fn peak<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     value_text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
 
     // Create text for value
-    widget::Text::new(
-        // TODO
-        "TODO",
-    )
-    .with_style(value_text_style)
-    .right_from(config.pressure_peak_less_button_widget, 20.0)
-    .y_relative(0.0)
-    .set(config.pressure_peak_value_widget, &mut master.ui);
+    widget::Text::new(&config.pressure_settings.peak.to_string())
+        .with_style(value_text_style)
+        .right_from(config.pressure_peak_less_button_widget, 20.0)
+        .y_relative(0.0)
+        .set(config.pressure_peak_value_widget, &mut master.ui);
 
     // Create more button
     widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
