@@ -61,6 +61,7 @@ impl SettingsTrigger {
         let new_value = match action {
             SettingAction::More => {
                 let new_value = self.inspiratory_trigger_offset + TRIGGER_OFFSET_STEP;
+
                 if new_value <= TRIGGER_OFFSET_MAX {
                     new_value
                 } else {

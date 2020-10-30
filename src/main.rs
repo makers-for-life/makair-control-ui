@@ -3,6 +3,9 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+// Notice: increasing the recursion limit is required for all display identifiers to be used
+#![recursion_limit = "256"]
+
 #[macro_use]
 extern crate log;
 #[macro_use]

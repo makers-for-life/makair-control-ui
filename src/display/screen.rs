@@ -9,7 +9,9 @@ use conrod_core::widget::Id as WidgetId;
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
-use crate::chip::settings::{expiration_term::SettingsExpirationTerm, trigger::SettingsTrigger};
+use crate::chip::settings::{
+    cycles::SettingsCycles, expiration_term::SettingsExpirationTerm, trigger::SettingsTrigger,
+};
 use crate::config::environment::*;
 use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::widget::*;
@@ -61,6 +63,7 @@ impl<'a> Screen<'a> {
         telemetry_data: DisplayDataTelemetry,
         trigger: &'a SettingsTrigger,
         expiration_term: &'a SettingsExpirationTerm,
+        cycles: &'a SettingsCycles,
         modals_open: &ScreenModalsOpen,
     ) {
         // Render common background
@@ -92,7 +95,7 @@ impl<'a> Screen<'a> {
         } else if modals_open.pressure {
             self.render_pressure_settings();
         } else if modals_open.cycles {
-            self.render_cycles_settings();
+            self.render_cycles_settings(cycles);
         }
     }
 
@@ -218,6 +221,7 @@ impl<'a> Screen<'a> {
         telemetry_data: DisplayDataTelemetry,
         trigger: &'a SettingsTrigger,
         expiration_term: &'a SettingsExpirationTerm,
+        cycles: &'a SettingsCycles,
         modals_open: &ScreenModalsOpen,
     ) {
         // Render regular data as background
@@ -229,10 +233,15 @@ impl<'a> Screen<'a> {
             telemetry_data,
             trigger,
             expiration_term,
+            cycles,
             modals_open,
         );
 
-        if !modals_open.trigger && !modals_open.expiration_term {
+        if !modals_open.trigger
+            && !modals_open.expiration_term
+            && !modals_open.cycles
+            && !modals_open.pressure
+        {
             self.render_modal(
                 DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH,
                 DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT,
@@ -630,11 +639,17 @@ impl<'a> Screen<'a> {
 
                 pressure_container_parent: self.ids.modal_container,
                 pressure_container_widget: self.ids.pressure_container,
+                pressure_peak_more_button_widget: self.ids.pressure_peak_more_button,
+                pressure_peak_more_button_text_widget: self.ids.pressure_peak_more_button_text,
+                pressure_peak_less_button_widget: self.ids.pressure_peak_less_button,
+                pressure_peak_less_button_text_widget: self.ids.pressure_peak_less_button_text,
+                pressure_peak_text_widget: self.ids.pressure_peak_text,
+                pressure_peak_value_widget: self.ids.pressure_peak_value,
             },
         ));
     }
 
-    fn render_cycles_settings(&mut self) {
+    fn render_cycles_settings(&mut self, settings: &'a SettingsCycles) {
         self.render_modal(
             CYCLES_SETTINGS_MODAL_WIDTH,
             CYCLES_SETTINGS_MODAL_HEIGTH,
@@ -648,9 +663,16 @@ impl<'a> Screen<'a> {
                 height: CYCLES_SETTINGS_MODAL_HEIGTH
                     - MODAL_VALIDATE_BUTTON_HEIGHT
                     - (CYCLES_SETTINGS_MODAL_PADDING * 2.0),
+                cycles_settings: settings,
 
                 cycles_container_parent: self.ids.modal_container,
                 cycles_container_widget: self.ids.cycles_container,
+                cycles_more_button_widget: self.ids.cycles_more_button,
+                cycles_more_button_text_widget: self.ids.cycles_more_button_text,
+                cycles_less_button_widget: self.ids.cycles_less_button,
+                cycles_less_button_text_widget: self.ids.cycles_less_button_text,
+                cycles_text_widget: self.ids.cycles_text,
+                cycles_value_widget: self.ids.cycles_value,
             }));
     }
 }

@@ -16,6 +16,7 @@ use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
 use crate::chip::settings::{
+    cycles::{SettingsCycles, SettingsCyclesEvent},
     expiration_term::{SettingsExpirationTerm, SettingsExpirationTermEvent},
     trigger::{SettingsTrigger, SettingsTriggerEvent},
     ChipSettingsEvent, SettingAction,
@@ -108,6 +109,7 @@ impl DisplayRenderer {
         chip_state: &ChipState,
         trigger_settings: &SettingsTrigger,
         expiration_term_settings: &SettingsExpirationTerm,
+        cycles_settings: &SettingsCycles,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let image_map = conrod_core::image::Map::<texture::Texture2d>::new();
 
@@ -125,6 +127,7 @@ impl DisplayRenderer {
                 chip_state,
                 trigger_settings,
                 expiration_term_settings,
+                cycles_settings,
             ),
             ChipState::Error(e) => self.error(interface, image_map, e.clone()),
         }
@@ -168,14 +171,12 @@ impl DisplayRenderer {
             self.ids.peak_value_arrow,
             self.ids.peak_value_target,
             self.ids.peak_unit,
-
             self.ids.plateau_parent,
             self.ids.plateau_title,
             self.ids.plateau_value_measured,
             self.ids.plateau_value_arrow,
             self.ids.plateau_value_target,
             self.ids.plateau_unit,
-
             self.ids.peep_parent,
             self.ids.peep_title,
             self.ids.peep_value_measured,
@@ -210,14 +211,13 @@ impl DisplayRenderer {
                 .chain(interface.widget_input(*widget).taps().map(|_| ()))
         });
 
-        let pressure_settings_clicks =
-            pressure_settings_iters.iter().flat_map(|widget| {
-                interface
-                    .widget_input(*widget)
-                    .clicks()
-                    .map(|_| ())
-                    .chain(interface.widget_input(*widget).taps().map(|_| ()))
-            });
+        let pressure_settings_clicks = pressure_settings_iters.iter().flat_map(|widget| {
+            interface
+                .widget_input(*widget)
+                .clicks()
+                .map(|_| ())
+                .chain(interface.widget_input(*widget).taps().map(|_| ()))
+        });
 
         for _ in trigger_settings_clicks {
             debug!("pressed the trigger widget once");
@@ -328,6 +328,30 @@ impl DisplayRenderer {
             }
         }
 
+        if self.cycles_settings_state == DisplayRendererSettingsState::Opened {
+            for _ in self
+                .get_widget_clicks(self.ids.cycles_less_button, interface)
+                .chain(self.get_widget_clicks(self.ids.cycles_less_button_text, interface))
+            {
+                debug!("pressed the cycles settings less button once");
+
+                all_events.push(ChipSettingsEvent::Cycles(
+                    SettingsCyclesEvent::CyclesPerMinute(SettingAction::Less),
+                ));
+            }
+
+            for _ in self
+                .get_widget_clicks(self.ids.cycles_more_button, interface)
+                .chain(self.get_widget_clicks(self.ids.cycles_more_button_text, interface))
+            {
+                debug!("pressed the cycles settings more button once");
+
+                all_events.push(ChipSettingsEvent::Cycles(
+                    SettingsCyclesEvent::CyclesPerMinute(SettingAction::More),
+                ));
+            }
+        }
+
         all_events
     }
 
@@ -415,6 +439,7 @@ impl DisplayRenderer {
         chip_state: &ChipState,
         trigger_settings: &SettingsTrigger,
         expiration_term_settings: &SettingsExpirationTerm,
+        cycles_settings: &SettingsCycles,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         // Create branding
         let branding_image_texture = self.draw_branding(display);
@@ -536,6 +561,7 @@ impl DisplayRenderer {
                 screen_data_telemetry,
                 trigger_settings,
                 expiration_term_settings,
+                cycles_settings,
                 &ScreenModalsOpen::from_states(
                     &self.trigger_settings_state,
                     &self.expiration_term_settings_state,
@@ -552,6 +578,7 @@ impl DisplayRenderer {
                 screen_data_telemetry,
                 trigger_settings,
                 expiration_term_settings,
+                cycles_settings,
                 &ScreenModalsOpen::from_states(
                     &self.trigger_settings_state,
                     &self.expiration_term_settings_state,

@@ -220,6 +220,7 @@ impl<'a> DisplayDrawer<'a> {
             &self.chip.get_state(),
             &self.chip.settings.trigger,
             &self.chip.settings.expiration_term,
+            &self.chip.settings.cycles,
         );
 
         if let Some(primitives) = self.interface.draw_if_changed() {

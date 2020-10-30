@@ -59,6 +59,7 @@ impl SettingsExpirationTerm {
         let new_value = match action {
             SettingAction::More => {
                 let new_value = self.expiratory_term + EXPIRATORY_TERM_STEP;
+
                 if new_value <= EXPIRATORY_TERM_MAX {
                     new_value
                 } else {
@@ -67,6 +68,7 @@ impl SettingsExpirationTerm {
             }
             SettingAction::Less => {
                 let new_value = self.expiratory_term - EXPIRATORY_TERM_STEP;
+
                 if new_value >= EXPIRATORY_TERM_MIN {
                     new_value
                 } else {
