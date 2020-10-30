@@ -69,7 +69,7 @@ impl SettingsTrigger {
                 }
             }
             SettingAction::Less => {
-                if self.inspiratory_trigger_offset != 0 {
+                if self.inspiratory_trigger_offset >= TRIGGER_OFFSET_STEP {
                     self.inspiratory_trigger_offset - TRIGGER_OFFSET_STEP
                 } else {
                     self.inspiratory_trigger_offset

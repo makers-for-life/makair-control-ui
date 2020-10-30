@@ -50,32 +50,64 @@ impl SettingsPressure {
     }
 
     fn set_peak(&self, action: SettingAction) -> ControlMessage {
-        // TODO: call generic
-        let new_value = 0;
-
         ControlMessage {
             setting: ControlSetting::PeakPressure,
-            value: new_value as u16,
+            value: self.acquire_new_value(action, self.peak, PRESSURE_PEAK_MAX, PRESSURE_PEAK_MIN)
+                as u16,
         }
     }
 
     fn set_plateau(&self, action: SettingAction) -> ControlMessage {
-        // TODO: call generic
-        let new_value = 0;
-
         ControlMessage {
             setting: ControlSetting::PlateauPressure,
-            value: new_value as u16,
+            value: self.acquire_new_value(
+                action,
+                self.plateau,
+                PRESSURE_PLATEAU_MAX,
+                PRESSURE_PLATEAU_MIN,
+            ) as u16,
         }
     }
 
     fn set_peep(&self, action: SettingAction) -> ControlMessage {
-        // TODO: call generic
-        let new_value = 0;
-
         ControlMessage {
             setting: ControlSetting::PEEP,
-            value: new_value as u16,
+            value: self.acquire_new_value(action, self.peep, PRESSURE_PEEP_MAX, PRESSURE_PEEP_MIN)
+                as u16,
+        }
+    }
+
+    fn acquire_new_value(
+        &self,
+        action: SettingAction,
+        previous_value: usize,
+        maximum: usize,
+        minimum: usize,
+    ) -> usize {
+        match action {
+            SettingAction::More => {
+                let new_value = previous_value + PRESSURE_STEP;
+
+                if new_value <= maximum {
+                    new_value
+                } else {
+                    previous_value
+                }
+            }
+
+            SettingAction::Less => {
+                if previous_value >= PRESSURE_STEP {
+                    let new_value = previous_value - PRESSURE_STEP;
+
+                    if new_value >= minimum {
+                        new_value
+                    } else {
+                        previous_value
+                    }
+                } else {
+                    previous_value
+                }
+            }
         }
     }
 }

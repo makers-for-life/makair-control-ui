@@ -46,10 +46,14 @@ impl SettingsCycles {
                 }
             }
             SettingAction::Less => {
-                let new_value = self.cycles_per_minute - CYCLES_PER_MINUTE_STEP;
+                if self.cycles_per_minute >= CYCLES_PER_MINUTE_STEP {
+                    let new_value = self.cycles_per_minute - CYCLES_PER_MINUTE_STEP;
 
-                if new_value >= CYCLES_PER_MINUTE_MIN {
-                    new_value
+                    if new_value >= CYCLES_PER_MINUTE_MIN {
+                        new_value
+                    } else {
+                        self.cycles_per_minute
+                    }
                 } else {
                     self.cycles_per_minute
                 }

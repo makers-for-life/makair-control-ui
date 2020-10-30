@@ -18,7 +18,7 @@ use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 use crate::chip::settings::{
     cycles::{SettingsCycles, SettingsCyclesEvent},
     expiration_term::{SettingsExpirationTerm, SettingsExpirationTermEvent},
-    pressure::SettingsPressure,
+    pressure::{SettingsPressure, SettingsPressureEvent},
     trigger::{SettingsTrigger, SettingsTriggerEvent},
     ChipSettingsEvent, SettingAction,
 };
@@ -355,6 +355,82 @@ impl DisplayRenderer {
                 all_events.push(ChipSettingsEvent::Cycles(
                     SettingsCyclesEvent::CyclesPerMinute(SettingAction::More),
                 ));
+            }
+        }
+
+        if self.pressure_settings_state == DisplayRendererSettingsState::Opened {
+            for _ in self
+                .get_widget_clicks(self.ids.pressure_peak_less_button, interface)
+                .chain(self.get_widget_clicks(self.ids.pressure_peak_less_button_text, interface))
+            {
+                debug!("pressed the pressure settings less button once (for peak)");
+
+                all_events.push(ChipSettingsEvent::Pressure(SettingsPressureEvent::Peak(
+                    SettingAction::Less,
+                )));
+            }
+
+            for _ in self
+                .get_widget_clicks(self.ids.pressure_peak_more_button, interface)
+                .chain(self.get_widget_clicks(self.ids.pressure_peak_more_button_text, interface))
+            {
+                debug!("pressed the pressure settings more button once (for peak)");
+
+                all_events.push(ChipSettingsEvent::Pressure(SettingsPressureEvent::Peak(
+                    SettingAction::More,
+                )));
+            }
+        }
+
+        if self.pressure_settings_state == DisplayRendererSettingsState::Opened {
+            for _ in self
+                .get_widget_clicks(self.ids.pressure_plateau_less_button, interface)
+                .chain(
+                    self.get_widget_clicks(self.ids.pressure_plateau_less_button_text, interface),
+                )
+            {
+                debug!("pressed the pressure settings less button once (for plateau)");
+
+                all_events.push(ChipSettingsEvent::Pressure(SettingsPressureEvent::Plateau(
+                    SettingAction::Less,
+                )));
+            }
+
+            for _ in self
+                .get_widget_clicks(self.ids.pressure_plateau_more_button, interface)
+                .chain(
+                    self.get_widget_clicks(self.ids.pressure_plateau_more_button_text, interface),
+                )
+            {
+                debug!("pressed the pressure settings more button once (for plateau)");
+
+                all_events.push(ChipSettingsEvent::Pressure(SettingsPressureEvent::Plateau(
+                    SettingAction::More,
+                )));
+            }
+        }
+
+        if self.pressure_settings_state == DisplayRendererSettingsState::Opened {
+            for _ in self
+                .get_widget_clicks(self.ids.pressure_peep_less_button, interface)
+                .chain(self.get_widget_clicks(self.ids.pressure_peep_less_button_text, interface))
+            {
+                debug!("pressed the pressure settings less button once (for peep)");
+
+                all_events.push(ChipSettingsEvent::Pressure(SettingsPressureEvent::PEEP(
+                    SettingAction::Less,
+                )));
+            }
+
+            for _ in self
+                .get_widget_clicks(self.ids.pressure_peep_more_button, interface)
+                .chain(self.get_widget_clicks(self.ids.pressure_peep_more_button_text, interface))
+            {
+                debug!("pressed the pressure settings more button once (for peep)");
+
+                all_events.push(ChipSettingsEvent::Pressure(SettingsPressureEvent::PEEP(
+                    SettingAction::More,
+                )));
             }
         }
 
