@@ -20,7 +20,7 @@ use telemetry::structures::{
 
 use crate::config::environment::*;
 use crate::utilities::types::DataPressure;
-use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
+use crate::utilities::units::{convert_cmh2o_to_mmh2o, convert_mmh2o_to_cmh2o, ConvertMode};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ChipState {
@@ -328,9 +328,9 @@ impl Chip {
         self.settings.cycles.cycles_per_minute = snapshot.cpm_command as usize;
 
         // Update pressure values
-        self.settings.pressure.peak = snapshot.peak_command as usize;
-        self.settings.pressure.plateau = snapshot.plateau_command as usize;
-        self.settings.pressure.peep = snapshot.peep_command as usize;
+        self.settings.pressure.peak = convert_cmh2o_to_mmh2o(snapshot.peak_command);
+        self.settings.pressure.plateau = convert_cmh2o_to_mmh2o(snapshot.plateau_command);
+        self.settings.pressure.peep = convert_cmh2o_to_mmh2o(snapshot.peep_command);
     }
 
     fn update_on_ack(&mut self, ack: ControlAck) {

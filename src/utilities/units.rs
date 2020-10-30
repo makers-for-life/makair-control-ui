@@ -14,3 +14,7 @@ pub fn convert_mmh2o_to_cmh2o(mode: ConvertMode, value: f64) -> f64 {
         ConvertMode::Rounded => (value / 10.0).round(),
     }
 }
+
+pub fn convert_cmh2o_to_mmh2o(value: u8) -> usize {
+    (value as usize) * 10
+}
