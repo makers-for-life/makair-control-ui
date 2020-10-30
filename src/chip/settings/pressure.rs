@@ -7,7 +7,7 @@ use telemetry::control::{ControlMessage, ControlSetting};
 
 use crate::chip::settings::SettingAction;
 
-const PRESSURE_STEP: usize = 1;
+const PRESSURE_STEP: usize = 10;
 
 const PRESSURE_PEAK_MAX: usize = 700;
 const PRESSURE_PEAK_MIN: usize = 0;
