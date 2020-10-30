@@ -328,21 +328,25 @@ impl Chip {
     fn update_on_ack(&mut self, ack: ControlAck) {
         match ack.setting {
             ControlSetting::PeakPressure => {
+                // TODO: update chip setting from there
                 self.last_machine_snapshot.peak_command =
                     convert_mmh2o_to_cmh2o(ConvertMode::Rounded, ack.value as f64) as u8
             }
 
             ControlSetting::PlateauPressure => {
+                // TODO: update chip setting from there
                 self.last_machine_snapshot.plateau_command =
                     convert_mmh2o_to_cmh2o(ConvertMode::Rounded, ack.value as f64) as u8
             }
 
             ControlSetting::PEEP => {
+                // TODO: update chip setting from there
                 self.last_machine_snapshot.peep_command =
                     convert_mmh2o_to_cmh2o(ConvertMode::Rounded, ack.value as f64) as u8
             }
 
             ControlSetting::CyclesPerMinute => {
+                self.settings.cycles.cycles_per_minute = ack.value as usize;
                 self.last_machine_snapshot.cpm_command = ack.value as u8
             }
 
