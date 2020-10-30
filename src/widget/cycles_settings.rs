@@ -95,11 +95,18 @@ pub fn cycles<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     value_text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
 
     // Create text for value
-    widget::Text::new(&config.cycles_settings.cycles_per_minute.to_string())
-        .with_style(value_text_style)
-        .right_from(config.cycles_less_button_widget, 20.0)
-        .y_relative(0.0)
-        .set(config.cycles_value_widget, &mut master.ui);
+    widget::Text::new(
+        format!(
+            "{}{}",
+            config.cycles_settings.cycles_per_minute,
+            APP_I18N.t("telemetry-unit-per-minute")
+        )
+        .as_str(),
+    )
+    .with_style(value_text_style)
+    .right_from(config.cycles_less_button_widget, 20.0)
+    .y_relative(0.0)
+    .set(config.cycles_value_widget, &mut master.ui);
 
     // Create more button
     widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
