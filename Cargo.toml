@@ -20,15 +20,15 @@ doc = false
 log = "0.4"
 clap = { version = "2.33", default-features = false }
 lazy_static = "1.4"
-rust-embed = { version = "5.5.1", features = ["compression"] }
-chrono = "0.4.11"
-fluent = "0.12"
+rust-embed = { version = "5.6", features = ["compression"] }
+chrono = "0.4"
+fluent = "0.13"
 unic-langid = "0.9"
 inflate = "0.4"
 winit = "0.19"
-image = "0.23.3"
+image = "0.23"
 glium = "0.24"
-plotters = {version = "0.2.12", default_features = false, features = ["image_encoder", "chrono", "line_series", "palette", "ttf"]}
+plotters = {version = "0.3", default_features = false, features = ["chrono", "bitmap_backend", "line_series", "ttf"]}
 conrod_glium = "0.69"
 conrod_winit = "0.69"
 conrod_core = "0.69"

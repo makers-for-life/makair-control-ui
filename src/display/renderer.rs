@@ -792,13 +792,13 @@ impl DisplayRenderer {
             .margin_right(GRAPH_DRAW_MARGIN_RIGHT)
             .x_label_area_size(0)
             .y_label_area_size(GRAPH_DRAW_LABEL_WIDTH)
-            .build_ranged(oldest_time..newest_time, GRAPH_DRAW_RANGE_LOW..range_high)
+            .build_cartesian_2d(oldest_time..newest_time, GRAPH_DRAW_RANGE_LOW..range_high)
             .expect("failed to build chart");
 
         chart
             .configure_mesh()
-            .line_style_1(&plotters::style::colors::WHITE.mix(0.04))
-            .line_style_2(&plotters::style::colors::BLACK)
+            .bold_line_style(&plotters::style::colors::WHITE.mix(0.04))
+            .light_line_style(&plotters::style::colors::BLACK)
             .y_labels(GRAPH_DRAW_LABEL_NUMBER_MAX)
             .y_label_style(GRAPH_AXIS_Y_FONT.color(&WHITE.mix(0.65)))
             .y_label_formatter(&|y| {
