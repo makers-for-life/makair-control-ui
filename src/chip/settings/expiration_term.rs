@@ -3,7 +3,6 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-use std::time::Duration;
 use telemetry::control::{ControlMessage, ControlSetting};
 
 use crate::chip::settings::SettingAction;
@@ -17,7 +16,6 @@ pub enum SettingsExpirationTermEvent {
 
 #[derive(Debug)]
 pub struct SettingsExpirationTerm {
-    pub plateau_duration: Duration,
     pub expiratory_term: usize,
     cycles_per_minute: usize,
 }
@@ -25,7 +23,6 @@ pub struct SettingsExpirationTerm {
 impl SettingsExpirationTerm {
     pub fn new(cycles_per_minute: usize) -> SettingsExpirationTerm {
         SettingsExpirationTerm {
-            plateau_duration: Duration::from_millis(1000),
             expiratory_term: ControlSetting::ExpiratoryTerm.default(),
             cycles_per_minute,
         }
