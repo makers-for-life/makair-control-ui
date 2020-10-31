@@ -125,8 +125,8 @@ impl<'a> Screen<'a> {
                     self.ids.layout_body,
                 ),
                 layout::Slice::new(
-                    self.ids.layout_body,
-                    0.0,
+                    self.ids.background,
+                    LAYOUT_HEADER_SIZE_HEIGHT + LAYOUT_BODY_SIZE_HEIGHT,
                     LAYOUT_FOOTER_SIZE_HEIGHT,
                     self.ids.layout_footer,
                 ),
