@@ -15,7 +15,7 @@ use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::APP_I18N;
 
-const CANVAS_COLOR: Color = Color::Rgba(0.0, 0.0, 0.0, 0.75);
+const CANVAS_COLOR: Color = Color::Rgba(0.0, 0.0, 0.0, 0.8);
 
 const CONTAINER_BORDER_COLOR: Color = Color::Rgba(81.0 / 255.0, 81.0 / 255.0, 81.0 / 255.0, 1.0);
 const CONTAINER_COLOR: Color = Color::Rgba(26.0 / 255.0, 26.0 / 255.0, 26.0 / 255.0, 1.0);
