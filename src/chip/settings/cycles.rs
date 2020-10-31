@@ -34,31 +34,8 @@ impl SettingsCycles {
 
     fn set_cycles_per_minute(&self, action: SettingAction) -> ControlMessage {
         let setting = ControlSetting::CyclesPerMinute;
-
-        let new_value = match action {
-            SettingAction::More => {
-                let new_value = self.cycles_per_minute + CYCLES_PER_MINUTE_STEP;
-
-                if setting.bounds().contains(&new_value) {
-                    new_value
-                } else {
-                    self.cycles_per_minute
-                }
-            }
-            SettingAction::Less => {
-                if self.cycles_per_minute >= CYCLES_PER_MINUTE_STEP {
-                    let new_value = self.cycles_per_minute - CYCLES_PER_MINUTE_STEP;
-
-                    if setting.bounds().contains(&new_value) {
-                        new_value
-                    } else {
-                        self.cycles_per_minute
-                    }
-                } else {
-                    self.cycles_per_minute
-                }
-            }
-        };
+        let new_value =
+            action.to_new_value(&setting, self.cycles_per_minute, CYCLES_PER_MINUTE_STEP);
 
         ControlMessage {
             setting,

@@ -73,30 +73,6 @@ impl SettingsPressure {
         action: SettingAction,
         previous_value: usize,
     ) -> usize {
-        match action {
-            SettingAction::More => {
-                let new_value = previous_value + PRESSURE_STEP;
-
-                if control.bounds().contains(&new_value) {
-                    new_value
-                } else {
-                    previous_value
-                }
-            }
-
-            SettingAction::Less => {
-                if previous_value >= PRESSURE_STEP {
-                    let new_value = previous_value - PRESSURE_STEP;
-
-                    if control.bounds().contains(&new_value) {
-                        new_value
-                    } else {
-                        previous_value
-                    }
-                } else {
-                    previous_value
-                }
-            }
-        }
+        action.to_new_value(control, previous_value, PRESSURE_STEP)
     }
 }

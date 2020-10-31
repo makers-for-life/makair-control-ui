@@ -68,31 +68,11 @@ impl SettingsTrigger {
 
     fn set_inspiratory_trigger_offset(&self, action: SettingAction) -> ControlMessage {
         let setting = ControlSetting::TriggerOffset;
-
-        let new_value = match action {
-            SettingAction::More => {
-                let new_value = self.inspiratory_trigger_offset + TRIGGER_OFFSET_STEP;
-
-                if setting.bounds().contains(&new_value) {
-                    new_value
-                } else {
-                    self.inspiratory_trigger_offset
-                }
-            }
-            SettingAction::Less => {
-                if self.inspiratory_trigger_offset >= TRIGGER_OFFSET_STEP {
-                    let new_value = self.inspiratory_trigger_offset - TRIGGER_OFFSET_STEP;
-
-                    if setting.bounds().contains(&new_value) {
-                        new_value
-                    } else {
-                        self.inspiratory_trigger_offset
-                    }
-                } else {
-                    self.inspiratory_trigger_offset
-                }
-            }
-        };
+        let new_value = action.to_new_value(
+            &setting,
+            self.inspiratory_trigger_offset,
+            TRIGGER_OFFSET_STEP,
+        );
 
         ControlMessage {
             setting,

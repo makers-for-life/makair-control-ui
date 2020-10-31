@@ -8,7 +8,7 @@ pub mod expiration_term;
 pub mod pressure;
 pub mod trigger;
 
-use telemetry::control::ControlMessage;
+use telemetry::control::{ControlMessage, ControlSetting};
 
 use cycles::*;
 use expiration_term::*;
@@ -47,6 +47,35 @@ impl ChipSettings {
 pub enum SettingAction {
     More,
     Less,
+}
+
+impl SettingAction {
+    fn to_new_value(&self, setting: &ControlSetting, value: usize, step: usize) -> usize {
+        match self {
+            SettingAction::More => {
+                let new_value = value + step;
+
+                if setting.bounds().contains(&new_value) {
+                    new_value
+                } else {
+                    value
+                }
+            }
+            SettingAction::Less => {
+                if value >= step {
+                    let new_value = value - step;
+
+                    if setting.bounds().contains(&new_value) {
+                        new_value
+                    } else {
+                        value
+                    }
+                } else {
+                    value
+                }
+            }
+        }
+    }
 }
 
 #[derive(Debug)]

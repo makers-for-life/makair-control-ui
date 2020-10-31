@@ -55,31 +55,7 @@ impl SettingsExpirationTerm {
 
     fn set_expiratory_term(&self, action: SettingAction) -> ControlMessage {
         let setting = ControlSetting::ExpiratoryTerm;
-
-        let new_value = match action {
-            SettingAction::More => {
-                let new_value = self.expiratory_term + EXPIRATORY_TERM_STEP;
-
-                if setting.bounds().contains(&new_value) {
-                    new_value
-                } else {
-                    self.expiratory_term
-                }
-            }
-            SettingAction::Less => {
-                if self.expiratory_term >= EXPIRATORY_TERM_STEP {
-                    let new_value = self.expiratory_term - EXPIRATORY_TERM_STEP;
-
-                    if setting.bounds().contains(&new_value) {
-                        new_value
-                    } else {
-                        self.expiratory_term
-                    }
-                } else {
-                    self.expiratory_term
-                }
-            }
-        };
+        let new_value = action.to_new_value(&setting, self.expiratory_term, EXPIRATORY_TERM_STEP);
 
         ControlMessage {
             setting,
