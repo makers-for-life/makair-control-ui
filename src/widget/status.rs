@@ -87,11 +87,11 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create wrapper canvas
     gen_widget_container!(
         master,
-        config.wrapper,
-        WRAPPER_COLOR,
-        STATUS_WRAPPER_WIDTH,
-        STATUS_WRAPPER_HEIGHT,
-        top_right_with_margins_on[
+        container_id: config.wrapper,
+        color: WRAPPER_COLOR,
+        width: STATUS_WRAPPER_WIDTH,
+        height: STATUS_WRAPPER_HEIGHT,
+        positions: top_right_with_margins_on[
             config.container,
             STATUS_WRAPPER_MARGIN_TOP,
             STATUS_WRAPPER_MARGIN_RIGHT,
@@ -101,15 +101,15 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create unit canvas
     gen_widget_container!(
         master,
-        config.unit_box,
-        if is_unit_stopped {
+        container_id: config.unit_box,
+        color: if is_unit_stopped {
             UNIT_STOPPED_COLOR
         } else {
             UNIT_ACTIVE_COLOR
         },
-        box_width,
-        box_height,
-        top_left_of[
+        width: box_width,
+        height: box_height,
+        positions: top_left_of[
             config.wrapper,
         ]
     );
@@ -152,15 +152,15 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create power box canvas
     gen_widget_container!(
         master,
-        config.power_box,
-        if is_battery_powered {
+        container_id: config.power_box,
+        color: if is_battery_powered {
             POWER_BOX_BATTERY_COLOR
         } else {
             color::TRANSPARENT
         },
-        box_width,
-        box_height,
-        bottom_left_of[
+        width: box_width,
+        height: box_height,
+        positions: bottom_left_of[
             config.wrapper,
         ]
     );

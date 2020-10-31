@@ -49,11 +49,11 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create canvas
     gen_widget_container!(
         master,
-        config.pressure_container_widget,
-        color::TRANSPARENT,
-        config.width,
-        config.height,
-        top_left_of[
+        container_id: config.pressure_container_widget,
+        color: color::TRANSPARENT,
+        width: config.width,
+        height: config.height,
+        positions: top_left_of[
             config.pressure_container_parent,
         ]
     );
@@ -70,9 +70,9 @@ pub fn peak<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate peak label
     gen_widget_label!(
         master,
-        config.pressure_peak_text_widget,
-        &APP_I18N.t("modal-pressure-peak"),
-        top_left_of[
+        text_id: config.pressure_peak_text_widget,
+        value: &APP_I18N.t("modal-pressure-peak"),
+        positions: top_left_of[
             config.pressure_container_widget,
         ]
     );
@@ -80,17 +80,17 @@ pub fn peak<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate peak navigation buttons
     gen_widget_button_navigate!(
         master,
-        config.pressure_peak_less_button_widget,
-        config.pressure_peak_less_button_text_widget,
-        config.pressure_peak_more_button_widget,
-        config.pressure_peak_more_button_text_widget,
-        config.pressure_peak_value_widget,
-        &format!(
+        button_less_id: config.pressure_peak_less_button_widget,
+        button_less_text_id: config.pressure_peak_less_button_text_widget,
+        button_more_id: config.pressure_peak_more_button_widget,
+        button_more_text_id: config.pressure_peak_more_button_text_widget,
+        value_id: config.pressure_peak_value_widget,
+        value: &format!(
             "{} {}",
             convert_mmh2o_to_cmh2o(ConvertMode::Rounded, config.pressure_settings.peak as f64),
             APP_I18N.t("telemetry-unit-cmh2o")
         ),
-        top_left_with_margins_on[
+        positions: top_left_with_margins_on[
             config.pressure_peak_text_widget,
             -2.0,
             PRESSURE_SETTINGS_MODAL_FORM_PADDING_LEFT,
@@ -102,9 +102,9 @@ pub fn plateau<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate plateau label
     gen_widget_label!(
         master,
-        config.pressure_plateau_text_widget,
-        &APP_I18N.t("modal-pressure-plateau"),
-        down_from[
+        text_id: config.pressure_plateau_text_widget,
+        value: &APP_I18N.t("modal-pressure-plateau"),
+        positions: down_from[
             config.pressure_peak_text_widget,
             PRESSURE_SETTINGS_MODAL_FORM_ROW_MARGIN_TOP,
         ]
@@ -113,12 +113,12 @@ pub fn plateau<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate plateau navigation buttons
     gen_widget_button_navigate!(
         master,
-        config.pressure_plateau_less_button_widget,
-        config.pressure_plateau_less_button_text_widget,
-        config.pressure_plateau_more_button_widget,
-        config.pressure_plateau_more_button_text_widget,
-        config.pressure_plateau_value_widget,
-        &format!(
+        button_less_id: config.pressure_plateau_less_button_widget,
+        button_less_text_id: config.pressure_plateau_less_button_text_widget,
+        button_more_id: config.pressure_plateau_more_button_widget,
+        button_more_text_id: config.pressure_plateau_more_button_text_widget,
+        value_id: config.pressure_plateau_value_widget,
+        value: &format!(
             "{} {}",
             convert_mmh2o_to_cmh2o(
                 ConvertMode::Rounded,
@@ -126,7 +126,7 @@ pub fn plateau<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             ),
             APP_I18N.t("telemetry-unit-cmh2o")
         ),
-        top_left_with_margins_on[
+        positions: top_left_with_margins_on[
             config.pressure_plateau_text_widget,
             -2.0,
             PRESSURE_SETTINGS_MODAL_FORM_PADDING_LEFT,
@@ -138,9 +138,9 @@ pub fn peep<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate PEEP label
     gen_widget_label!(
         master,
-        config.pressure_peep_text_widget,
-        &APP_I18N.t("modal-pressure-expiratory"),
-        down_from[
+        text_id: config.pressure_peep_text_widget,
+        value: &APP_I18N.t("modal-pressure-expiratory"),
+        positions: down_from[
             config.pressure_plateau_text_widget,
             PRESSURE_SETTINGS_MODAL_FORM_ROW_MARGIN_TOP,
         ]
@@ -149,17 +149,17 @@ pub fn peep<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate PEEP navigation buttons
     gen_widget_button_navigate!(
         master,
-        config.pressure_peep_less_button_widget,
-        config.pressure_peep_less_button_text_widget,
-        config.pressure_peep_more_button_widget,
-        config.pressure_peep_more_button_text_widget,
-        config.pressure_peep_value_widget,
-        &format!(
+        button_less_id: config.pressure_peep_less_button_widget,
+        button_less_text_id: config.pressure_peep_less_button_text_widget,
+        button_more_id: config.pressure_peep_more_button_widget,
+        button_more_text_id: config.pressure_peep_more_button_text_widget,
+        value_id: config.pressure_peep_value_widget,
+        value: &format!(
             "{} {}",
             convert_mmh2o_to_cmh2o(ConvertMode::Rounded, config.pressure_settings.peep as f64),
             APP_I18N.t("telemetry-unit-cmh2o")
         ),
-        top_left_with_margins_on[
+        positions: top_left_with_margins_on[
             config.pressure_peep_text_widget,
             -2.0,
             PRESSURE_SETTINGS_MODAL_FORM_PADDING_LEFT,

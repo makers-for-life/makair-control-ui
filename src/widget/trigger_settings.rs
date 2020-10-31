@@ -39,11 +39,11 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create container
     gen_widget_container!(
         master,
-        config.status_container_widget,
-        color::TRANSPARENT,
-        config.width,
-        config.height / 2.0,
-        top_left_of[
+        container_id: config.status_container_widget,
+        color: color::TRANSPARENT,
+        width: config.width,
+        height: config.height / 2.0,
+        positions: top_left_of[
             config.status_container_parent,
         ]
     );
@@ -65,9 +65,9 @@ pub fn status_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate status label
     gen_widget_label!(
         master,
-        config.status_enabled_text_widget,
-        &APP_I18N.t("modal-trigger-inspiratory-status"),
-        top_left_of[
+        text_id: config.status_enabled_text_widget,
+        value: &APP_I18N.t("modal-trigger-inspiratory-status"),
+        positions: top_left_of[
             config.status_container_widget,
         ]
     );
@@ -87,18 +87,21 @@ pub fn status_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Append status button
     gen_widget_button!(
         master,
-        config.status_enabled_button_widget,
-        config.status_enabled_button_text_widget,
-        button_color,
-        16,
-        200.0,
-        4.0,
-        &status_label,
-        (top_left_with_margins_on[
-            config.status_container_widget,
-            -3.0,
-            TRIGGER_SETTINGS_MODAL_FORM_PADDING_LEFT,
-        ])
+        button_id: config.status_enabled_button_widget,
+        text_id: config.status_enabled_button_text_widget,
+        text_color: button_color,
+        text_font_size: 16,
+        width: 200.0,
+        value_top: 4.0,
+        value: &status_label,
+
+        positions: (
+            top_left_with_margins_on[
+                config.status_container_widget,
+                -3.0,
+                TRIGGER_SETTINGS_MODAL_FORM_PADDING_LEFT,
+            ]
+        )
     );
 }
 
@@ -106,11 +109,11 @@ pub fn offset<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Create container
     gen_widget_container!(
         master,
-        config.inspiratory_offset_container_parent,
-        color::TRANSPARENT,
-        config.width,
-        config.height / 2.0,
-        down_from[
+        container_id: config.inspiratory_offset_container_parent,
+        color: color::TRANSPARENT,
+        width: config.width,
+        height: config.height / 2.0,
+        positions: down_from[
             config.status_container_widget,
             0.0,
         ]
@@ -125,9 +128,9 @@ pub fn offset_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate offset label
     gen_widget_label!(
         master,
-        config.inspiratory_offset_text_widget,
-        &APP_I18N.t("modal-trigger-inspiratory-offset"),
-        top_left_of[
+        text_id: config.inspiratory_offset_text_widget,
+        value: &APP_I18N.t("modal-trigger-inspiratory-offset"),
+        positions: top_left_of[
             config.inspiratory_offset_container_parent,
         ]
     );
@@ -137,12 +140,12 @@ pub fn offset_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate offset navigation buttons
     gen_widget_button_navigate!(
         master,
-        config.inspiratory_offset_less_button_widget,
-        config.inspiratory_offset_less_button_text_widget,
-        config.inspiratory_offset_more_button_widget,
-        config.inspiratory_offset_more_button_text_widget,
-        config.inspiratory_offset_value_widget,
-        &format!(
+        button_less_id: config.inspiratory_offset_less_button_widget,
+        button_less_text_id: config.inspiratory_offset_less_button_text_widget,
+        button_more_id: config.inspiratory_offset_more_button_widget,
+        button_more_text_id: config.inspiratory_offset_more_button_text_widget,
+        value_id: config.inspiratory_offset_value_widget,
+        value: &format!(
             "{:.1} {}",
             convert_mmh2o_to_cmh2o(
                 ConvertMode::WithDecimals,
@@ -150,7 +153,7 @@ pub fn offset_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             ),
             APP_I18N.t("telemetry-unit-cmh2o")
         ),
-        top_left_with_margins_on[
+        positions: top_left_with_margins_on[
             config.inspiratory_offset_text_widget,
             -2.0,
             TRIGGER_SETTINGS_MODAL_FORM_PADDING_LEFT,

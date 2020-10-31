@@ -36,11 +36,11 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create background
     gen_widget_container!(
         master,
-        config.background,
-        CANVAS_COLOR,
-        DISPLAY_WINDOW_SIZE_WIDTH as _,
-        DISPLAY_WINDOW_SIZE_HEIGHT as _,
-        x_y[
+        container_id: config.background,
+        color: CANVAS_COLOR,
+        width: DISPLAY_WINDOW_SIZE_WIDTH as _,
+        height: DISPLAY_WINDOW_SIZE_HEIGHT as _,
+        positions: x_y[
             0.0,
             0.0,
         ]
@@ -81,16 +81,19 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     if let Some((validate_button, validate_text)) = config.validate {
         gen_widget_button!(
             master,
-            validate_button,
-            validate_text,
-            color::BLACK,
-            16,
-            MODAL_VALIDATE_BUTTON_WIDTH,
-            4.0,
-            &APP_I18N.t("modal-close"),
-            (bottom_right_of[
-                config.container,
-            ])
+            button_id: validate_button,
+            text_id: validate_text,
+            text_color: color::BLACK,
+            text_font_size: 16,
+            width: MODAL_VALIDATE_BUTTON_WIDTH,
+            value_top: 4.0,
+            value: &APP_I18N.t("modal-close"),
+
+            positions: (
+                bottom_right_of[
+                    config.container,
+                ]
+            )
         );
     }
 

@@ -4,7 +4,14 @@
 // License: Public Domain License
 
 macro_rules! gen_widget_container {
-    ($master:ident, $container_id:expr, $color:expr, $width:expr, $height:expr, $position_call:tt[$($position_arguments:expr,)*]) => {
+    (
+        $master:ident,
+        container_id: $container_id:expr,
+        color: $color:expr,
+        width: $width:expr,
+        height: $height:expr,
+        positions: $position_call:tt[$($position_arguments:expr,)*]
+    ) => {
         // Initialize container style
         let mut container_style = widget::canvas::Style::default();
 
@@ -22,7 +29,17 @@ macro_rules! gen_widget_container {
 }
 
 macro_rules! gen_widget_button {
-    ($master:ident, $button_id:expr, $text_id:expr, $text_color:expr, $text_font_size:expr, $width:expr, $value_top:expr, $value:expr, ($($position_call:tt[$($position_arguments:expr,)*]),+)) => {
+    (
+        $master:ident,
+        button_id: $button_id:expr,
+        text_id: $text_id:expr,
+        text_color: $text_color:expr,
+        text_font_size: $text_font_size:expr,
+        width: $width:expr,
+        value_top: $value_top:expr,
+        value: $value:expr,
+        positions: ($($position_call:tt[$($position_arguments:expr,)*]),+)
+    ) => {
         // Initialize button style
         let button_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
 
@@ -47,35 +64,49 @@ macro_rules! gen_widget_button {
 }
 
 macro_rules! gen_widget_label {
-    ($master:ident, $text_id:expr, $value:expr, $position_call:tt[$($position_arguments:expr,)*]) => {
-    // Initialize text style
-    let mut text_style = widget::text::Style::default();
+    (
+        $master:ident,
+        text_id: $text_id:expr,
+        value: $value:expr,
+        positions: $position_call:tt[$($position_arguments:expr,)*]
+    ) => {
+        // Initialize text style
+        let mut text_style = widget::text::Style::default();
 
-    text_style.font_id = Some(Some($master.fonts.regular));
-    text_style.color = Some(color::WHITE);
-    text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
+        text_style.font_id = Some(Some($master.fonts.regular));
+        text_style.color = Some(color::WHITE);
+        text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
 
-    // Create text
-    widget::Text::new($value)
-        .with_style(text_style)
-        .$position_call($($position_arguments,)*)
-        .set($text_id, &mut $master.ui);
+        // Create text
+        widget::Text::new($value)
+            .with_style(text_style)
+            .$position_call($($position_arguments,)*)
+            .set($text_id, &mut $master.ui);
     };
 }
 
 macro_rules! gen_widget_button_navigate {
-    ($master:ident, $button_less_id:expr, $button_less_text_id:expr, $button_more_id:expr, $button_more_text_id:expr, $value_id:expr, $value:expr, $position_call:tt[$($position_arguments:expr,)*]) => {
+    (
+        $master:ident,
+        button_less_id: $button_less_id:expr,
+        button_less_text_id: $button_less_text_id:expr,
+        button_more_id: $button_more_id:expr,
+        button_more_text_id: $button_more_text_id:expr,
+        value_id: $value_id:expr,
+        value: $value:expr,
+        positions: $position_call:tt[$($position_arguments:expr,)*]
+    ) => {
         // Create less button
         gen_widget_button!(
             $master,
-            $button_less_id,
-            $button_less_text_id,
-            color::BLACK,
-            MODAL_BUTTON_NAVIGATE_FONT_SIZE,
-            MODAL_BUTTON_NAVIGATE_WIDTH,
-            MODAL_BUTTON_NAVIGATE_VALUE_MARGIN_TOP,
-            MODAL_BUTTON_NAVIGATE_VALUE_DECREASE,
-            ($position_call[$($position_arguments,)*])
+            button_id: $button_less_id,
+            text_id: $button_less_text_id,
+            text_color: color::BLACK,
+            text_font_size: MODAL_BUTTON_NAVIGATE_FONT_SIZE,
+            width: MODAL_BUTTON_NAVIGATE_WIDTH,
+            value_top: MODAL_BUTTON_NAVIGATE_VALUE_MARGIN_TOP,
+            value: MODAL_BUTTON_NAVIGATE_VALUE_DECREASE,
+            positions: ($position_call[$($position_arguments,)*])
         );
 
         // Initialize text style for value
@@ -95,15 +126,15 @@ macro_rules! gen_widget_button_navigate {
         // Create more button
         gen_widget_button!(
             $master,
-            $button_more_id,
-            $button_more_text_id,
-            color::BLACK,
-            MODAL_BUTTON_NAVIGATE_FONT_SIZE,
-            MODAL_BUTTON_NAVIGATE_WIDTH,
-            MODAL_BUTTON_NAVIGATE_VALUE_MARGIN_TOP,
-            MODAL_BUTTON_NAVIGATE_VALUE_INCREASE,
+            button_id: $button_more_id,
+            text_id: $button_more_text_id,
+            text_color: color::BLACK,
+            text_font_size: MODAL_BUTTON_NAVIGATE_FONT_SIZE,
+            width: MODAL_BUTTON_NAVIGATE_WIDTH,
+            value_top: MODAL_BUTTON_NAVIGATE_VALUE_MARGIN_TOP,
+            value: MODAL_BUTTON_NAVIGATE_VALUE_INCREASE,
 
-            (
+            positions: (
                 right_from[
                     $value_id,
                     MODAL_BUTTON_NAVIGATE_PADDING_INNER,

@@ -95,11 +95,11 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create title wrapper canvas
     gen_widget_container!(
         master,
-        config.title_wrapper,
-        color::TRANSPARENT,
-        DISPLAY_ALARM_TITLE_WRAPPER_WIDTH,
-        DISPLAY_ALARM_TITLE_WRAPPER_HEIGHT,
-        top_left_with_margins_on[
+        container_id: config.title_wrapper,
+        color: color::TRANSPARENT,
+        width: DISPLAY_ALARM_TITLE_WRAPPER_WIDTH,
+        height: DISPLAY_ALARM_TITLE_WRAPPER_HEIGHT,
+        positions: top_left_with_margins_on[
             config.container,
             DISPLAY_ALARM_CONTAINER_PADDING_TOP,
             if alarms_count > 0 {

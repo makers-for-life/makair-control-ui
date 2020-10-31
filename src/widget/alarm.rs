@@ -97,11 +97,11 @@ fn code<'a>(
     // Create canvas
     gen_widget_container!(
         master,
-        config.alarm_codes_containers[index],
-        code_color(alarm_priority),
-        DISPLAY_ALARM_CODE_WIDTH,
-        DISPLAY_ALARM_CODE_HEIGHT,
-        x_place_on[
+        container_id: config.alarm_codes_containers[index],
+        color: code_color(alarm_priority),
+        width: DISPLAY_ALARM_CODE_WIDTH,
+        height: DISPLAY_ALARM_CODE_HEIGHT,
+        positions: x_place_on[
             config.alarm_widgets[index],
             conrod_core::position::Place::Start(None),
         ]
@@ -130,11 +130,11 @@ fn message<'a>(
     // Create canvas
     gen_widget_container!(
         master,
-        config.alarm_messages_containers[index],
-        message_color(alarm_priority),
-        DISPLAY_ALARM_MESSAGE_WIDTH,
-        DISPLAY_ALARM_MESSAGE_HEIGHT,
-        x_place_on[
+        container_id: config.alarm_messages_containers[index],
+        color: message_color(alarm_priority),
+        width: DISPLAY_ALARM_MESSAGE_WIDTH,
+        height: DISPLAY_ALARM_MESSAGE_HEIGHT,
+        positions: x_place_on[
             config.alarm_widgets[index],
             conrod_core::position::Place::Start(Some(DISPLAY_ALARM_CODE_WIDTH)),
         ]
