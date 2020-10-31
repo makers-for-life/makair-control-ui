@@ -168,9 +168,6 @@ impl DisplayRenderer {
         ];
 
         let pressure_settings_iters = vec![
-            // TODO: need to remove this identifier, as this is not correct. the current click \
-            //   event on right widgets seems to cascade up to layout_header, which is invalid.
-            self.ids.layout_header,
             self.ids.peak_parent,
             self.ids.peak_title,
             self.ids.peak_value_measured,

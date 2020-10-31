@@ -115,7 +115,8 @@ impl<'a> Screen<'a> {
                 layout::Slice::new(
                     self.ids.background,
                     0.0,
-                    LAYOUT_HEADER_SIZE_FULL_HEIGHT,
+                    LAYOUT_HEADER_SIZE_HEIGHT,
+                    // TODO: LAYOUT_HEADER_SIZE_FULL_HEIGHT, <-- if alarms then use this?
                     self.ids.layout_header,
                 ),
                 layout::Slice::new(
