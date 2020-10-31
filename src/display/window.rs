@@ -5,7 +5,7 @@
 
 use conrod_core::UiBuilder;
 use glium::glutin::Icon;
-use glium::glutin::{ContextBuilder, EventsLoop, WindowBuilder};
+use glium::glutin::{ContextBuilder, EventsLoop, GlProfile, WindowBuilder};
 use image::load_from_memory;
 use inflate::inflate_bytes_zlib;
 
@@ -74,7 +74,13 @@ impl DisplayWindow {
         };
 
         // Create context
-        let context = ContextBuilder::new().with_multisampling(4);
+        // Notice: a multisampling of 4 enables minimum anti-aliasing (it uses a square of 4 \
+        //   pixels to anti-alias 1 pixel)
+        let context = ContextBuilder::new()
+            .with_gl_profile(GlProfile::Core)
+            .with_gl_debug_flag(false)
+            .with_vsync(false)
+            .with_multisampling(4);
 
         // Create the interface
         let mut interface = UiBuilder::new([
