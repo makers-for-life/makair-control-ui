@@ -1085,8 +1085,8 @@ dependencies = [
 
 [[package]]
 name = "makair-telemetry"
-version = "1.2.2"
-source = "git+https://github.com/makers-for-life/makair-telemetry?tag=v1.2.2#53d0a5884455b8aa4514be7ceccd28bffdbac799"
+version = "1.2.5"
+source = "git+https://github.com/makers-for-life/makair-telemetry?tag=v1.2.5#7fb6fe57676adf93e096a5116d55c4e4239ec7dc"
 dependencies = [
  "base64 0.13.0",
  "crc32fast",

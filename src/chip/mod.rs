@@ -11,9 +11,7 @@ use std::convert::TryFrom;
 use std::sync::mpsc::{self, Receiver, Sender};
 
 use settings::{trigger::SettingsTriggerState, ChipSettings, ChipSettingsEvent};
-use telemetry::alarm::{
-    AlarmCode, RMC_SW_1, RMC_SW_11, RMC_SW_12, RMC_SW_14, RMC_SW_15, RMC_SW_19, RMC_SW_2, RMC_SW_3,
-};
+use telemetry::alarm::AlarmCode;
 use telemetry::control::{ControlMessage, ControlSetting};
 use telemetry::serial::core;
 use telemetry::structures::{
@@ -267,36 +265,22 @@ impl Chip {
     }
 
     fn deduplicate_alarms(alarms: &mut HashMap<AlarmCode, AlarmPriority>) {
-        // 'Battery very low' high-priority alarm takes precedence over 'battery low' \
-        //   medium-priority alarm
-        if alarms.contains_key(&AlarmCode::from(RMC_SW_11))
-            && alarms.contains_key(&AlarmCode::from(RMC_SW_12))
-        {
-            alarms.remove(&AlarmCode::from(RMC_SW_11));
+        // Map adjacent alarm codes
+        let mut adjacent_codes = Vec::new();
+
+        for (alarm_code, _) in alarms.iter() {
+            // Is this alarm related to a lower-priority alarm? Attempt to remove it from the list \
+            //   of alarms, if it exists.
+            if let Some(alarm_adjacent_code) = alarm_code.adjacent() {
+                if alarms.contains_key(&alarm_adjacent_code) {
+                    adjacent_codes.push(alarm_adjacent_code);
+                }
+            }
         }
 
-        // 'Plateau pressure not reached' high-priority alarm takes precedence over its \
-        //   medium-priority counterpart
-        if alarms.contains_key(&AlarmCode::from(RMC_SW_1))
-            && alarms.contains_key(&AlarmCode::from(RMC_SW_14))
-        {
-            alarms.remove(&AlarmCode::from(RMC_SW_14));
-        }
-
-        // 'Patient unplugged' high-priority alarm takes precedence over its medium-priority \
-        //   counterpart
-        if alarms.contains_key(&AlarmCode::from(RMC_SW_2))
-            && alarms.contains_key(&AlarmCode::from(RMC_SW_19))
-        {
-            alarms.remove(&AlarmCode::from(RMC_SW_19));
-        }
-
-        // 'PEEP pressure not reached' high-priority alarm takes precedence over its \
-        //   medium-priority counterpart
-        if alarms.contains_key(&AlarmCode::from(RMC_SW_3))
-            && alarms.contains_key(&AlarmCode::from(RMC_SW_15))
-        {
-            alarms.remove(&AlarmCode::from(RMC_SW_15));
+        // Remove found adjacent alarms (if any)
+        for adjacent_code in adjacent_codes {
+            alarms.remove(&adjacent_code);
         }
     }
 
