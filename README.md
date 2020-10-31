@@ -27,7 +27,7 @@ In order to setup your environment and build the code, please follow these steps
 
 Wayland support may be available but it hasn't been tested. You need a working X11 server.
 
-_Tested with Rust version: `rustc 1.43.0 (4fb7144ed 2020-04-20)`_
+_Tested with Rust version: `rustc 1.47.0 (18bf6b4f0 2020-10-07)`_
 
 ### Building on a ventilator
 
