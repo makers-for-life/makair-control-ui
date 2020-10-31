@@ -33,22 +33,18 @@ pub struct Config {
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
-    // Initialize canvas style
-    let mut style = canvas::Style::default();
-
-    style.color = Some(CANVAS_COLOR);
-    style.border = Some(0.0);
-    style.border_color = Some(color::TRANSPARENT);
-
-    // Create canvas
-    canvas::Canvas::new()
-        .with_style(style)
-        .w_h(
-            DISPLAY_WINDOW_SIZE_WIDTH as _,
-            DISPLAY_WINDOW_SIZE_HEIGHT as _,
-        )
-        .x_y(0.0, 0.0)
-        .set(config.background, &mut master.ui);
+    // Create background
+    gen_widget_container!(
+        master,
+        config.background,
+        CANVAS_COLOR,
+        DISPLAY_WINDOW_SIZE_WIDTH as _,
+        DISPLAY_WINDOW_SIZE_HEIGHT as _,
+        x_y[
+            0.0,
+            0.0,
+        ]
+    );
 
     // Initialize container style for borders
     let container_borders_style = Style::Fill(Some(CONTAINER_BORDER_COLOR));
@@ -83,29 +79,19 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
     // Append validation button? (if any set)
     if let Some((validate_button, validate_text)) = config.validate {
-        let button_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
-
-        // Create rectangle for button
-        widget::RoundedRectangle::styled(
-            [MODAL_VALIDATE_BUTTON_WIDTH, MODAL_VALIDATE_BUTTON_HEIGHT],
-            15.0,
-            button_style,
-        )
-        .bottom_right_of(config.container)
-        .set(validate_button, &mut master.ui);
-
-        // Create text style for button text
-        let mut validate_text_style = widget::text::Style::default();
-
-        validate_text_style.font_id = Some(Some(master.fonts.bold));
-        validate_text_style.color = Some(color::BLACK);
-        validate_text_style.font_size = Some(16);
-
-        // Append button text
-        widget::Text::new(&APP_I18N.t("modal-close"))
-            .with_style(validate_text_style)
-            .mid_top_with_margin_on(validate_button, 4.0)
-            .set(validate_text, &mut master.ui);
+        gen_widget_button!(
+            master,
+            validate_button,
+            validate_text,
+            color::BLACK,
+            16,
+            MODAL_VALIDATE_BUTTON_WIDTH,
+            4.0,
+            &APP_I18N.t("modal-close"),
+            (bottom_right_of[
+                config.container,
+            ])
+        );
     }
 
     0 as _

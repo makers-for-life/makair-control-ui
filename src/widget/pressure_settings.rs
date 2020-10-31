@@ -46,18 +46,17 @@ pub struct Config<'a> {
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
-    // Initialize canvas style
-    let mut canvas_style = widget::canvas::Style::default();
-
-    canvas_style.color = Some(color::TRANSPARENT);
-    canvas_style.border = Some(0.0);
-
     // Create canvas
-    widget::Canvas::new()
-        .with_style(canvas_style)
-        .w_h(config.width, config.height)
-        .top_left_of(config.pressure_container_parent)
-        .set(config.pressure_container_widget, &mut master.ui);
+    gen_widget_container!(
+        master,
+        config.pressure_container_widget,
+        color::TRANSPARENT,
+        config.width,
+        config.height,
+        top_left_of[
+            config.pressure_container_parent,
+        ]
+    );
 
     // Append contents
     peak(master, &config);
@@ -68,235 +67,102 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 }
 
 pub fn peak<'a>(master: &mut ControlWidget<'a>, config: &Config) {
-    // Initialize text style for label
-    let mut label_text_style = widget::text::Style::default();
+    // Generate peak label
+    gen_widget_label!(
+        master,
+        config.pressure_peak_text_widget,
+        &APP_I18N.t("modal-pressure-peak"),
+        top_left_of[
+            config.pressure_container_widget,
+        ]
+    );
 
-    label_text_style.font_id = Some(Some(master.fonts.regular));
-    label_text_style.color = Some(color::WHITE);
-    label_text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
-
-    // Create text for label
-    widget::Text::new(&APP_I18N.t("modal-pressure-peak"))
-        .with_style(label_text_style)
-        .top_left_of(config.pressure_container_widget)
-        .set(config.pressure_peak_text_widget, &mut master.ui);
-
-    // Initialize button style for less
-    let less_button_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
-
-    // Create less button
-    widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
-        .top_left_with_margins_on(
-            config.pressure_peak_text_widget,
-            -2.0,
-            PRESSURE_SETTINGS_MODAL_FORM_PADDING_LEFT,
-        )
-        .set(config.pressure_peak_less_button_widget, &mut master.ui);
-
-    // Initialize text style for buttons
-    let mut more_less_buttons_text_style = widget::text::Style::default();
-
-    more_less_buttons_text_style.font_id = Some(Some(master.fonts.bold));
-    more_less_buttons_text_style.color = Some(color::BLACK);
-    more_less_buttons_text_style.font_size = Some(MODAL_BUTTON_NAVIGATE_FONT_SIZE);
-
-    // Create text for less button
-    widget::Text::new(MODAL_BUTTON_NAVIGATE_VALUE_DECREASE)
-        .with_style(more_less_buttons_text_style)
-        .mid_top_with_margin_on(config.pressure_peak_less_button_widget, 2.0)
-        .set(config.pressure_peak_less_button_text_widget, &mut master.ui);
-
-    // Initialize text style for value
-    let mut value_text_style = widget::text::Style::default();
-
-    value_text_style.font_id = Some(Some(master.fonts.regular));
-    value_text_style.color = Some(color::WHITE);
-    value_text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
-
-    // Create text for value
-    widget::Text::new(
-        format!(
+    // Generate peak navigation buttons
+    gen_widget_button_navigate!(
+        master,
+        config.pressure_peak_less_button_widget,
+        config.pressure_peak_less_button_text_widget,
+        config.pressure_peak_more_button_widget,
+        config.pressure_peak_more_button_text_widget,
+        config.pressure_peak_value_widget,
+        &format!(
             "{} {}",
             convert_mmh2o_to_cmh2o(ConvertMode::Rounded, config.pressure_settings.peak as f64),
             APP_I18N.t("telemetry-unit-cmh2o")
-        )
-        .as_str(),
-    )
-    .with_style(value_text_style)
-    .right_from(config.pressure_peak_less_button_widget, 20.0)
-    .y_relative(0.0)
-    .set(config.pressure_peak_value_widget, &mut master.ui);
-
-    // Create more button
-    widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
-        .right_from(config.pressure_peak_value_widget, 20.0)
-        .y_relative(-3.0)
-        .set(config.pressure_peak_more_button_widget, &mut master.ui);
-
-    // Create text for more button
-    widget::Text::new(MODAL_BUTTON_NAVIGATE_VALUE_INCREASE)
-        .with_style(more_less_buttons_text_style)
-        .mid_top_with_margin_on(config.pressure_peak_more_button_widget, 2.0)
-        .set(config.pressure_peak_more_button_text_widget, &mut master.ui);
+        ),
+        top_left_with_margins_on[
+            config.pressure_peak_text_widget,
+            -2.0,
+            PRESSURE_SETTINGS_MODAL_FORM_PADDING_LEFT,
+        ]
+    );
 }
 
 pub fn plateau<'a>(master: &mut ControlWidget<'a>, config: &Config) {
-    // Initialize text style for label
-    let mut label_text_style = widget::text::Style::default();
-
-    label_text_style.font_id = Some(Some(master.fonts.regular));
-    label_text_style.color = Some(color::WHITE);
-    label_text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
-
-    // Create text for label
-    widget::Text::new(&APP_I18N.t("modal-pressure-plateau"))
-        .with_style(label_text_style)
-        .down_from(
+    // Generate plateau label
+    gen_widget_label!(
+        master,
+        config.pressure_plateau_text_widget,
+        &APP_I18N.t("modal-pressure-plateau"),
+        down_from[
             config.pressure_peak_text_widget,
             PRESSURE_SETTINGS_MODAL_FORM_ROW_MARGIN_TOP,
-        )
-        .set(config.pressure_plateau_text_widget, &mut master.ui);
+        ]
+    );
 
-    // Initialize button style for less
-    let less_button_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
-
-    // Create less button
-    widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
-        .top_left_with_margins_on(
-            config.pressure_plateau_text_widget,
-            -2.0,
-            PRESSURE_SETTINGS_MODAL_FORM_PADDING_LEFT,
-        )
-        .set(config.pressure_plateau_less_button_widget, &mut master.ui);
-
-    // Initialize text style for buttons
-    let mut more_less_buttons_text_style = widget::text::Style::default();
-
-    more_less_buttons_text_style.font_id = Some(Some(master.fonts.bold));
-    more_less_buttons_text_style.color = Some(color::BLACK);
-    more_less_buttons_text_style.font_size = Some(MODAL_BUTTON_NAVIGATE_FONT_SIZE);
-
-    // Create text for less button
-    widget::Text::new(MODAL_BUTTON_NAVIGATE_VALUE_DECREASE)
-        .with_style(more_less_buttons_text_style)
-        .mid_top_with_margin_on(config.pressure_plateau_less_button_widget, 2.0)
-        .set(
-            config.pressure_plateau_less_button_text_widget,
-            &mut master.ui,
-        );
-
-    // Initialize text style for value
-    let mut value_text_style = widget::text::Style::default();
-
-    value_text_style.font_id = Some(Some(master.fonts.regular));
-    value_text_style.color = Some(color::WHITE);
-    value_text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
-
-    // Create text for value
-    widget::Text::new(
-        format!(
+    // Generate plateau navigation buttons
+    gen_widget_button_navigate!(
+        master,
+        config.pressure_plateau_less_button_widget,
+        config.pressure_plateau_less_button_text_widget,
+        config.pressure_plateau_more_button_widget,
+        config.pressure_plateau_more_button_text_widget,
+        config.pressure_plateau_value_widget,
+        &format!(
             "{} {}",
             convert_mmh2o_to_cmh2o(
                 ConvertMode::Rounded,
                 config.pressure_settings.plateau as f64
             ),
             APP_I18N.t("telemetry-unit-cmh2o")
-        )
-        .as_str(),
-    )
-    .with_style(value_text_style)
-    .right_from(config.pressure_plateau_less_button_widget, 20.0)
-    .y_relative(0.0)
-    .set(config.pressure_plateau_value_widget, &mut master.ui);
-
-    // Create more button
-    widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
-        .right_from(config.pressure_plateau_value_widget, 20.0)
-        .y_relative(-3.0)
-        .set(config.pressure_plateau_more_button_widget, &mut master.ui);
-
-    // Create text for more button
-    widget::Text::new(MODAL_BUTTON_NAVIGATE_VALUE_INCREASE)
-        .with_style(more_less_buttons_text_style)
-        .mid_top_with_margin_on(config.pressure_plateau_more_button_widget, 2.0)
-        .set(
-            config.pressure_plateau_more_button_text_widget,
-            &mut master.ui,
-        );
+        ),
+        top_left_with_margins_on[
+            config.pressure_plateau_text_widget,
+            -2.0,
+            PRESSURE_SETTINGS_MODAL_FORM_PADDING_LEFT,
+        ]
+    );
 }
 
 pub fn peep<'a>(master: &mut ControlWidget<'a>, config: &Config) {
-    // Initialize text style for label
-    let mut label_text_style = widget::text::Style::default();
-
-    label_text_style.font_id = Some(Some(master.fonts.regular));
-    label_text_style.color = Some(color::WHITE);
-    label_text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
-
-    // Create text for label
-    widget::Text::new(&APP_I18N.t("modal-pressure-expiratory"))
-        .with_style(label_text_style)
-        .down_from(
+    // Generate PEEP label
+    gen_widget_label!(
+        master,
+        config.pressure_peep_text_widget,
+        &APP_I18N.t("modal-pressure-expiratory"),
+        down_from[
             config.pressure_plateau_text_widget,
             PRESSURE_SETTINGS_MODAL_FORM_ROW_MARGIN_TOP,
-        )
-        .set(config.pressure_peep_text_widget, &mut master.ui);
+        ]
+    );
 
-    // Initialize button style for less
-    let less_button_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
-
-    // Create less button
-    widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
-        .top_left_with_margins_on(
-            config.pressure_peep_text_widget,
-            -2.0,
-            PRESSURE_SETTINGS_MODAL_FORM_PADDING_LEFT,
-        )
-        .set(config.pressure_peep_less_button_widget, &mut master.ui);
-
-    // Initialize text style for buttons
-    let mut more_less_buttons_text_style = widget::text::Style::default();
-
-    more_less_buttons_text_style.font_id = Some(Some(master.fonts.bold));
-    more_less_buttons_text_style.color = Some(color::BLACK);
-    more_less_buttons_text_style.font_size = Some(MODAL_BUTTON_NAVIGATE_FONT_SIZE);
-
-    // Create text for less button
-    widget::Text::new(MODAL_BUTTON_NAVIGATE_VALUE_DECREASE)
-        .with_style(more_less_buttons_text_style)
-        .mid_top_with_margin_on(config.pressure_peep_less_button_widget, 2.0)
-        .set(config.pressure_peep_less_button_text_widget, &mut master.ui);
-
-    // Initialize text style for value
-    let mut value_text_style = widget::text::Style::default();
-
-    value_text_style.font_id = Some(Some(master.fonts.regular));
-    value_text_style.color = Some(color::WHITE);
-    value_text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
-
-    // Create text for value
-    widget::Text::new(
-        format!(
+    // Generate PEEP navigation buttons
+    gen_widget_button_navigate!(
+        master,
+        config.pressure_peep_less_button_widget,
+        config.pressure_peep_less_button_text_widget,
+        config.pressure_peep_more_button_widget,
+        config.pressure_peep_more_button_text_widget,
+        config.pressure_peep_value_widget,
+        &format!(
             "{} {}",
             convert_mmh2o_to_cmh2o(ConvertMode::Rounded, config.pressure_settings.peep as f64),
             APP_I18N.t("telemetry-unit-cmh2o")
-        )
-        .as_str(),
-    )
-    .with_style(value_text_style)
-    .right_from(config.pressure_peep_less_button_widget, 20.0)
-    .y_relative(0.0)
-    .set(config.pressure_peep_value_widget, &mut master.ui);
-
-    // Create more button
-    widget::RoundedRectangle::styled([50.0, 30.0], 15.0, less_button_style)
-        .right_from(config.pressure_peep_value_widget, 20.0)
-        .y_relative(-3.0)
-        .set(config.pressure_peep_more_button_widget, &mut master.ui);
-
-    // Create text for more button
-    widget::Text::new(MODAL_BUTTON_NAVIGATE_VALUE_INCREASE)
-        .with_style(more_less_buttons_text_style)
-        .mid_top_with_margin_on(config.pressure_peep_more_button_widget, 2.0)
-        .set(config.pressure_peep_more_button_text_widget, &mut master.ui);
+        ),
+        top_left_with_margins_on[
+            config.pressure_peep_text_widget,
+            -2.0,
+            PRESSURE_SETTINGS_MODAL_FORM_PADDING_LEFT,
+        ]
+    );
 }

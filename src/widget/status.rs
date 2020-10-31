@@ -5,7 +5,7 @@
 
 use conrod_core::{
     color::{self, Color},
-    widget::{self, canvas, Id as WidgetId},
+    widget::{self, Id as WidgetId},
     Positionable, Sizeable, Widget,
 };
 
@@ -84,42 +84,42 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         .iter()
         .any(|alarm| alarm.0.code() == RMC_SW_16);
 
-    // Initialize wrapper canvas style
-    let mut wrapper_style = canvas::Style::default();
-
-    wrapper_style.color = Some(WRAPPER_COLOR);
-    wrapper_style.border = Some(0.0);
-    wrapper_style.border_color = Some(color::TRANSPARENT);
-
     // Create wrapper canvas
-    canvas::Canvas::new()
-        .with_style(wrapper_style)
-        .w_h(STATUS_WRAPPER_WIDTH, STATUS_WRAPPER_HEIGHT)
-        .top_right_with_margins_on(
+    gen_widget_container!(
+        master,
+        config.wrapper,
+        WRAPPER_COLOR,
+        STATUS_WRAPPER_WIDTH,
+        STATUS_WRAPPER_HEIGHT,
+        top_right_with_margins_on[
             config.container,
             STATUS_WRAPPER_MARGIN_TOP,
             STATUS_WRAPPER_MARGIN_RIGHT,
-        )
-        .set(config.wrapper, &mut master.ui);
-
-    // Compute unit status style & text properties
-    let (mut unit_box_style, mut unit_text_style) = (
-        canvas::Style::default(),
-        conrod_core::widget::primitive::text::Style::default(),
+        ]
     );
+
+    // Create unit canvas
+    gen_widget_container!(
+        master,
+        config.unit_box,
+        if is_unit_stopped {
+            UNIT_STOPPED_COLOR
+        } else {
+            UNIT_ACTIVE_COLOR
+        },
+        box_width,
+        box_height,
+        top_left_of[
+            config.wrapper,
+        ]
+    );
+
+    // Compute unit text value & style
+    let mut unit_text_style = conrod_core::widget::primitive::text::Style::default();
 
     unit_text_style.font_id = Some(Some(master.fonts.bold));
     unit_text_style.color = Some(color::WHITE);
     unit_text_style.font_size = Some(11);
-
-    if is_unit_stopped {
-        unit_box_style.color = Some(UNIT_STOPPED_COLOR);
-    } else {
-        unit_box_style.color = Some(UNIT_ACTIVE_COLOR);
-    }
-
-    unit_box_style.border = Some(0.0);
-    unit_box_style.border_color = Some(color::TRANSPARENT);
 
     let unit_text_value = if is_unit_stopped {
         APP_I18N.t("status-unit-stopped")
@@ -127,13 +127,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         APP_I18N.t("status-unit-active")
     };
 
-    // Create unit status canvas & text
-    canvas::Canvas::new()
-        .with_style(unit_box_style)
-        .w_h(box_width, box_height)
-        .top_left_of(config.wrapper)
-        .set(config.unit_box, &mut master.ui);
-
+    // Create unit status text
     if let Some(save_icon_id) = config.save_icon_id {
         widget::text::Text::new(&unit_text_value)
             .with_style(unit_text_style)
@@ -155,31 +149,28 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
             .set(config.unit_text, &mut master.ui);
     }
 
-    // Compute power box & text style properties
-    let (mut power_box_style, mut power_text_style) = (
-        canvas::Style::default(),
-        conrod_core::widget::primitive::text::Style::default(),
+    // Create power box canvas
+    gen_widget_container!(
+        master,
+        config.power_box,
+        if is_battery_powered {
+            POWER_BOX_BATTERY_COLOR
+        } else {
+            color::TRANSPARENT
+        },
+        box_width,
+        box_height,
+        bottom_left_of[
+            config.wrapper,
+        ]
     );
+
+    // Create power box text
+    let mut power_text_style = conrod_core::widget::primitive::text::Style::default();
 
     power_text_style.font_id = Some(Some(master.fonts.bold));
     power_text_style.color = Some(color::WHITE);
     power_text_style.font_size = Some(11);
-
-    if is_battery_powered {
-        power_box_style.color = Some(POWER_BOX_BATTERY_COLOR);
-    } else {
-        power_box_style.color = Some(color::TRANSPARENT);
-    }
-
-    power_box_style.border = Some(0.0);
-    power_box_style.border_color = Some(color::TRANSPARENT);
-
-    // Create power box canvas & text
-    canvas::Canvas::new()
-        .with_style(power_box_style)
-        .w_h(box_width, box_height)
-        .bottom_left_of(config.wrapper)
-        .set(config.power_box, &mut master.ui);
 
     let power_text_value = if is_battery_powered {
         let mut value = APP_I18N.t("status-power-battery");

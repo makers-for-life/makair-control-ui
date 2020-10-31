@@ -3,6 +3,9 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+#[macro_use]
+mod macros;
+
 pub mod alarm;
 pub mod alarms;
 pub mod background;

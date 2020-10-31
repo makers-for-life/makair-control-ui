@@ -9,7 +9,7 @@ use conrod_core::widget::id::List;
 use conrod_core::widget::Id as WidgetId;
 use conrod_core::{
     color::{self, Color},
-    widget::{self, canvas, rounded_rectangle::RoundedRectangle},
+    widget::{self, rounded_rectangle::RoundedRectangle},
     Colorable, Positionable, Sizeable, Widget,
 };
 
@@ -92,21 +92,14 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     .down_from(config.parent, -1.0 * BRANDING_HEIGHT as f64)
     .set(config.container, &mut master.ui);
 
-    // Initialize title wrapper canvas style
-    let mut title_wrapper_style = canvas::Style::default();
-
-    title_wrapper_style.border = Some(0.0);
-    title_wrapper_style.border_color = Some(color::TRANSPARENT);
-    title_wrapper_style.color = Some(color::TRANSPARENT);
-
     // Create title wrapper canvas
-    canvas::Canvas::new()
-        .with_style(title_wrapper_style)
-        .w_h(
-            DISPLAY_ALARM_TITLE_WRAPPER_WIDTH,
-            DISPLAY_ALARM_TITLE_WRAPPER_HEIGHT,
-        )
-        .top_left_with_margins_on(
+    gen_widget_container!(
+        master,
+        config.title_wrapper,
+        color::TRANSPARENT,
+        DISPLAY_ALARM_TITLE_WRAPPER_WIDTH,
+        DISPLAY_ALARM_TITLE_WRAPPER_HEIGHT,
+        top_left_with_margins_on[
             config.container,
             DISPLAY_ALARM_CONTAINER_PADDING_TOP,
             if alarms_count > 0 {
@@ -114,8 +107,8 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
             } else {
                 DISPLAY_ALARM_CONTAINER_EMPTY_PADDING_LEFT
             },
-        )
-        .set(config.title_wrapper, &mut master.ui);
+        ]
+    );
 
     // Initialize title text style
     // Notice: the first text layer needs to be positionned using relative coordinates, and \

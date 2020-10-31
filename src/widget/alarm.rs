@@ -94,22 +94,18 @@ fn code<'a>(
     alarm_priority: &AlarmPriority,
     index: usize,
 ) {
-    // Initialize style
-    let mut style = canvas::Style::default();
-
-    style.border = Some(0.0);
-    style.border_color = Some(color::TRANSPARENT);
-    style.color = Some(code_color(alarm_priority));
-
     // Create canvas
-    widget::Canvas::new()
-        .with_style(style)
-        .w_h(DISPLAY_ALARM_CODE_WIDTH, DISPLAY_ALARM_CODE_HEIGHT)
-        .x_place_on(
+    gen_widget_container!(
+        master,
+        config.alarm_codes_containers[index],
+        code_color(alarm_priority),
+        DISPLAY_ALARM_CODE_WIDTH,
+        DISPLAY_ALARM_CODE_HEIGHT,
+        x_place_on[
             config.alarm_widgets[index],
             conrod_core::position::Place::Start(None),
-        )
-        .set(config.alarm_codes_containers[index], &mut master.ui);
+        ]
+    );
 
     // Insert text in canvas
     let mut text_style = conrod_core::widget::primitive::text::Style::default();
@@ -131,22 +127,18 @@ fn message<'a>(
     alarm_priority: &AlarmPriority,
     index: usize,
 ) {
-    // Initialize style
-    let mut style = canvas::Style::default();
-
-    style.border = Some(0.0);
-    style.border_color = Some(color::TRANSPARENT);
-    style.color = Some(message_color(alarm_priority));
-
     // Create canvas
-    widget::Canvas::new()
-        .with_style(style)
-        .w_h(DISPLAY_ALARM_MESSAGE_WIDTH, DISPLAY_ALARM_MESSAGE_HEIGHT)
-        .x_place_on(
+    gen_widget_container!(
+        master,
+        config.alarm_messages_containers[index],
+        message_color(alarm_priority),
+        DISPLAY_ALARM_MESSAGE_WIDTH,
+        DISPLAY_ALARM_MESSAGE_HEIGHT,
+        x_place_on[
             config.alarm_widgets[index],
             conrod_core::position::Place::Start(Some(DISPLAY_ALARM_CODE_WIDTH)),
-        )
-        .set(config.alarm_messages_containers[index], &mut master.ui);
+        ]
+    );
 
     // Insert text in canvas
     widget::text::Text::new(&alarm_description_to_locale(alarm_code.description()))
