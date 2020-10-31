@@ -30,6 +30,7 @@ const GROUND_CIRCLE_COLOR_OVERFLOW: Color =
 pub struct Config<'a> {
     data_pressure: &'a DataPressure,
     peak_command: u8,
+
     container: WidgetId,
     ground: WidgetId,
     surround: WidgetId,

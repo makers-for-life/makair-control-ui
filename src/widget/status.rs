@@ -32,6 +32,7 @@ pub struct Config<'a> {
     power_box: WidgetId,
     power_text: WidgetId,
     save_icon: WidgetId,
+
     battery_level: Option<u8>,
     chip_state: &'a ChipState,
     alarms: &'a [(AlarmCode, AlarmPriority)],

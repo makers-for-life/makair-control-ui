@@ -26,6 +26,7 @@ pub struct Config {
     pub container_borders: WidgetId,
     pub container: WidgetId,
     pub validate: Option<(WidgetId, WidgetId)>,
+
     pub width: f64,
     pub height: f64,
     pub padding: Option<f64>,

@@ -14,9 +14,10 @@ use crate::display::widget::ControlWidget;
 
 pub struct Slice {
     parent: WidgetId,
+    layout: WidgetId,
+
     top: f64,
     height: f64,
-    layout: WidgetId,
 }
 
 pub struct Config {

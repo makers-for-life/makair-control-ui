@@ -18,7 +18,9 @@ use crate::APP_I18N;
 pub struct Config<'a> {
     pub width: f64,
     pub height: f64,
+
     pub expiration_term_settings: &'a SettingsExpirationTerm,
+
     pub expiration_term_container_parent: WidgetId,
     pub expiration_term_container_widget: WidgetId,
     pub expiration_term_text_widget: WidgetId,

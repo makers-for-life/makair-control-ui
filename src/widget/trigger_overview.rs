@@ -27,11 +27,14 @@ pub struct Config<'a> {
     pub configure_widget: WidgetId,
     pub expiratory_term_widget: WidgetId,
     pub plateau_duration_widget: WidgetId,
+
     pub width: f64,
     pub height: f64,
     pub x_position: f64,
     pub y_position: f64,
+
     pub background_color: Color,
+
     pub trigger_settings: &'a SettingsTrigger,
 }
 

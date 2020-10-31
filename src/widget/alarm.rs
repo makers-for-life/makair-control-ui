@@ -29,8 +29,10 @@ const ALARM_LOW_MESSAGE_COLOR: Color = Color::Rgba(174.0 / 255.0, 133.0 / 255.0,
 pub fn render<'a>(
     master: &mut ControlWidget<'a>,
     config: &alarms::Config,
+
     alarm_code: AlarmCode,
     alarm_priority: &AlarmPriority,
+
     index: usize,
 ) {
     // Initialize style

@@ -14,6 +14,7 @@ use crate::display::widget::ControlWidget;
 pub struct Config {
     width: f64,
     height: f64,
+
     parent: WidgetId,
     id: WidgetId,
 }

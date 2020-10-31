@@ -18,6 +18,7 @@ pub struct Config {
     pub value_target: Option<String>,
     pub value_arrow: conrod_core::image::Id,
     pub unit: String,
+
     pub ids: (
         WidgetId,
         WidgetId,
@@ -27,6 +28,7 @@ pub struct Config {
         WidgetId,
         Option<WidgetId>,
     ),
+
     pub x_position: f64,
     pub y_position: f64,
     pub background_color: Color,

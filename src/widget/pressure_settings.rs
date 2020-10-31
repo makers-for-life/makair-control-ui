@@ -18,7 +18,9 @@ use crate::APP_I18N;
 pub struct Config<'a> {
     pub width: f64,
     pub height: f64,
+
     pub pressure_settings: &'a SettingsPressure,
+
     pub pressure_container_parent: WidgetId,
     pub pressure_container_widget: WidgetId,
     pub pressure_peak_text_widget: WidgetId,
@@ -27,12 +29,14 @@ pub struct Config<'a> {
     pub pressure_peak_more_button_widget: WidgetId,
     pub pressure_peak_more_button_text_widget: WidgetId,
     pub pressure_peak_value_widget: WidgetId,
+
     pub pressure_plateau_text_widget: WidgetId,
     pub pressure_plateau_less_button_widget: WidgetId,
     pub pressure_plateau_less_button_text_widget: WidgetId,
     pub pressure_plateau_more_button_widget: WidgetId,
     pub pressure_plateau_more_button_text_widget: WidgetId,
     pub pressure_plateau_value_widget: WidgetId,
+
     pub pressure_peep_text_widget: WidgetId,
     pub pressure_peep_less_button_widget: WidgetId,
     pub pressure_peep_less_button_text_widget: WidgetId,

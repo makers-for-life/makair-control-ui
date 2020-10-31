@@ -30,14 +30,18 @@ const CONTAINER_WITHOUT_ALARMS_BACKGROUND_COLOR: Color =
 pub struct Config<'a> {
     pub parent: WidgetId,
     pub container: WidgetId,
+
     pub title_wrapper: WidgetId,
     pub title: WidgetId,
+
     pub empty: WidgetId,
+
     pub alarm_widgets: &'a List,
     pub alarm_codes_containers: &'a List,
     pub alarm_codes: &'a List,
     pub alarm_messages_containers: &'a List,
     pub alarm_messages: &'a List,
+
     pub alarms: &'a [(AlarmCode, AlarmPriority)],
 }
 

@@ -17,7 +17,9 @@ use crate::APP_I18N;
 pub struct Config<'a> {
     pub width: f64,
     pub height: f64,
+
     pub cycles_settings: &'a SettingsCycles,
+
     pub cycles_container_parent: WidgetId,
     pub cycles_container_widget: WidgetId,
     pub cycles_text_widget: WidgetId,

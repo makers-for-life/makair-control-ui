@@ -14,10 +14,13 @@ use crate::display::widget::ControlWidget;
 
 pub struct Config<'a> {
     parent: WidgetId,
+
     version_firmware: &'a str,
     version_control: &'a str,
+
     width: f64,
     height: f64,
+
     image: conrod_core::image::Id,
     ids: (WidgetId, WidgetId, WidgetId),
 }
