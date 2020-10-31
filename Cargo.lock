@@ -278,9 +278,9 @@ checksum = "3d7b894f5411737b7867f4827955924d7c254fc9f4d91a6aad6b097804b1018b"
 
 [[package]]
 name = "conrod_core"
-version = "0.69.0"
+version = "0.70.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e1aab7eec9304529930c9a7d91890e1304038ef2a75e10e524eed8c6c836ee15"
+checksum = "a079920382700ee474e118991a4bc866039e0a0537ca2308d82b9b47976c4a99"
 dependencies = [
  "conrod_derive",
  "copypasta",
@@ -294,9 +294,9 @@ dependencies = [
 
 [[package]]
 name = "conrod_derive"
-version = "0.69.0"
+version = "0.70.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6dc5bc274991254246bea0d0ad20e77b1ac17c38fff0e5e3de070be6fd73d561"
+checksum = "f3608c2b51dfdd85355b113113d35118d9b0629bafc72b0d3e163239e5576728"
 dependencies = [
  "proc-macro2 1.0.24",
  "quote 1.0.7",
@@ -305,9 +305,9 @@ dependencies = [
 
 [[package]]
 name = "conrod_glium"
-version = "0.69.0"
+version = "0.70.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fc7d4d50ece9eac6d96eef900cd963b19c01c07710fcf034b4e18d8332443eac"
+checksum = "2d3b264ca85076f5f888c5f9de39b088c4cd4e778352d74d04cf872992dd8cfd"
 dependencies = [
  "conrod_core",
  "glium",
@@ -315,15 +315,9 @@ dependencies = [
 
 [[package]]
 name = "conrod_winit"
-version = "0.69.0"
+version = "0.70.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "efd588b214393f86533303b8322562afb50c7ab7a406e541909c6afb7fb3337a"
-
-[[package]]
-name = "const_fn"
-version = "0.4.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ce90df4c658c62f12d78f7508cf92f9173e5184a539c10bfe54a3107b3ffd0f2"
+checksum = "4d12a5620cd3d4540565e32e6f322fb8bcf58c20bf3c3ccfdbf0a0c2201b8fba"
 
 [[package]]
 name = "constant_time_eq"
@@ -424,35 +418,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "crossbeam-channel"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dca26ee1f8d361640700bde38b2c37d8c22b3ce2d360e1fc1c74ea4b0aa7d775"
-dependencies = [
- "cfg-if 1.0.0",
- "crossbeam-utils 0.8.0",
-]
-
-[[package]]
 name = "crossbeam-deque"
 version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9f02af974daeee82218205558e51ec8768b48cf524bd01d550abe5573a608285"
 dependencies = [
- "crossbeam-epoch 0.8.2",
- "crossbeam-utils 0.7.2",
+ "crossbeam-epoch",
+ "crossbeam-utils",
  "maybe-uninit",
-]
-
-[[package]]
-name = "crossbeam-deque"
-version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "94af6efb46fef72616855b036a624cf27ba656ffc9be1b9a3c931cfc7749a9a9"
-dependencies = [
- "cfg-if 1.0.0",
- "crossbeam-epoch 0.9.0",
- "crossbeam-utils 0.8.0",
 ]
 
 [[package]]
@@ -463,23 +436,9 @@ checksum = "058ed274caafc1f60c4997b5fc07bf7dc7cca454af7c6e81edffe5f33f70dace"
 dependencies = [
  "autocfg",
  "cfg-if 0.1.10",
- "crossbeam-utils 0.7.2",
+ "crossbeam-utils",
  "lazy_static",
  "maybe-uninit",
- "memoffset",
- "scopeguard",
-]
-
-[[package]]
-name = "crossbeam-epoch"
-version = "0.9.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ec0f606a85340376eef0d6d8fec399e6d4a544d648386c6645eb6d0653b27d9f"
-dependencies = [
- "cfg-if 1.0.0",
- "const_fn",
- "crossbeam-utils 0.8.0",
- "lazy_static",
  "memoffset",
  "scopeguard",
 ]
@@ -492,18 +451,6 @@ checksum = "c3c7c73a2d1e9fc0886a08b93e98eb643461230d5f1925e4036204d5f2e261a8"
 dependencies = [
  "autocfg",
  "cfg-if 0.1.10",
- "lazy_static",
-]
-
-[[package]]
-name = "crossbeam-utils"
-version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ec91540d98355f690a86367e566ecad2e9e579f230230eb7c21398372be73ea5"
-dependencies = [
- "autocfg",
- "cfg-if 1.0.0",
- "const_fn",
  "lazy_static",
 ]
 
@@ -573,12 +520,6 @@ dependencies = [
  "winapi",
  "wio",
 ]
-
-[[package]]
-name = "either"
-version = "1.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e78d4f1cc4ae33bbfc157ed5d5a5ef3bc29227303d595861deb238fcec4e9457"
 
 [[package]]
 name = "env_logger"
@@ -729,16 +670,6 @@ dependencies = [
  "cfg-if 0.1.10",
  "libc",
  "wasi 0.9.0+wasi-snapshot-preview1",
-]
-
-[[package]]
-name = "gif"
-version = "0.11.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "02efba560f227847cb41463a7395c514d127d4f74fff12ef0137fff1b84b96c4"
-dependencies = [
- "color_quant",
- "weezl",
 ]
 
 [[package]]
@@ -898,14 +829,10 @@ dependencies = [
  "bytemuck",
  "byteorder",
  "color_quant",
- "gif",
- "jpeg-decoder",
  "num-iter",
  "num-rational 0.3.1",
  "num-traits",
  "png",
- "scoped_threadpool",
- "tiff",
 ]
 
 [[package]]
@@ -987,16 +914,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f7970510895cee30b3e9128319f2cefd4bde883a39f38baa279567ba3a7eb97d"
 dependencies = [
  "libc",
-]
-
-[[package]]
-name = "jpeg-decoder"
-version = "0.1.20"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cc797adac5f083b8ff0ca6f6294a999393d76e197c36488e2ef732c4715f6fa3"
-dependencies = [
- "byteorder",
- "rayon",
 ]
 
 [[package]]
@@ -1656,31 +1573,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "rayon"
-version = "1.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8b0d8e0819fadc20c74ea8373106ead0600e3a67ef1fe8da56e39b9ae7275674"
-dependencies = [
- "autocfg",
- "crossbeam-deque 0.8.0",
- "either",
- "rayon-core",
-]
-
-[[package]]
-name = "rayon-core"
-version = "1.9.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9ab346ac5921dc62ffa9f89b7a773907511cdfa5490c572ae9be1be33e8afa4a"
-dependencies = [
- "crossbeam-channel",
- "crossbeam-deque 0.8.0",
- "crossbeam-utils 0.8.0",
- "lazy_static",
- "num_cpus",
-]
-
-[[package]]
 name = "redox_syscall"
 version = "0.1.57"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1761,7 +1653,7 @@ dependencies = [
  "base64 0.12.3",
  "blake2b_simd",
  "constant_time_eq",
- "crossbeam-utils 0.7.2",
+ "crossbeam-utils",
 ]
 
 [[package]]
@@ -1834,8 +1726,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9f61411055101f7b60ecf1041d87fb74205fb20b0c7a723f07ef39174cf6b4c0"
 dependencies = [
  "approx",
- "crossbeam-deque 0.7.3",
- "crossbeam-utils 0.7.2",
+ "crossbeam-deque",
+ "crossbeam-utils",
  "linked-hash-map",
  "num_cpus",
  "ordered-float",
@@ -1857,12 +1749,6 @@ checksum = "93fc1dc3aaa9bfed95e02e6eadabb4baf7e3078b0bd1b4d7b6b0b68378900502"
 dependencies = [
  "winapi-util",
 ]
-
-[[package]]
-name = "scoped_threadpool"
-version = "0.1.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1d51f5df5af43ab3f1360b429fa5e0152ac5ce8c0bd6485cae490332e96846a8"
 
 [[package]]
 name = "scopeguard"
@@ -2155,17 +2041,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tiff"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "abeb4e3f32a8973722c0254189e6890358e72b1bf11becb287ee0b23c595a41d"
-dependencies = [
- "jpeg-decoder",
- "miniz_oxide 0.4.3",
- "weezl",
-]
-
-[[package]]
 name = "time"
 version = "0.1.44"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2442,12 +2317,6 @@ dependencies = [
  "js-sys",
  "wasm-bindgen",
 ]
-
-[[package]]
-name = "weezl"
-version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8795d6e0e17485803cc10ef126bb8c0d59b7c61b219d66cfe0b3216dd0e8580a"
 
 [[package]]
 name = "winapi"

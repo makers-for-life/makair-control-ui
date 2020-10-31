@@ -20,21 +20,21 @@ doc = false
 log = "0.4"
 clap = { version = "2.33", default-features = false }
 lazy_static = "1.4"
-rust-embed = { version = "5.6", features = ["compression"] }
-chrono = "0.4"
+rust-embed = { version = "5.6", default-features = false, features = ["compression"] }
+chrono = { version = "0.4", default-features = false }
 fluent = "0.13"
 unic-langid = "0.9"
 inflate = "0.4"
 winit = "0.19"
-image = "0.23"
+image = { version = "0.23", default-features = false, features = ["png"] }
 glium = "0.24"
 plotters = {version = "0.3", default_features = false, features = ["chrono", "bitmap_backend", "line_series", "ttf"]}
-conrod_glium = "0.69"
-conrod_winit = "0.69"
-conrod_core = "0.69"
+conrod_glium = "0.70"
+conrod_winit = "0.70"
+conrod_core = "0.70"
 sysfs_gpio = { version = "0.5", optional = true }
 rn2903 = { git = "https://github.com/waxzce/lora-rust-rn2903-rn2483.git", rev = "b086057ba096920abef3870ad0cefa2c80a343e2", optional = true }
-makair-telemetry = { git = "https://github.com/makers-for-life/makair-telemetry", tag = "v1.2.2", features = ["env_logger"] }
+makair-telemetry = { git = "https://github.com/makers-for-life/makair-telemetry", tag = "v1.2.2", default-features = false, features = ["env_logger"] }
 
 [features]
 default = []
