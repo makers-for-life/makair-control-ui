@@ -9,6 +9,7 @@ widget_ids!(pub struct Ids {
   layout_footer,
 
   alarm_container,
+  alarm_title_wrapper,
   alarm_title,
   alarm_empty,
   alarm_alarms[],

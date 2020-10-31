@@ -57,7 +57,7 @@ pub fn render<'a>(
             conrod_core::position::Place::End(Some(from_top)),
         )
         .right_from(
-            config.title,
+            config.title_wrapper,
             DISPLAY_ALARM_CONTAINER_TITLE_TO_ALARM_HAS_ALARMS_SPACING,
         )
         .set(config.alarm_widgets[index], &mut master.ui);

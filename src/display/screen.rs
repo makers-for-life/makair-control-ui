@@ -162,6 +162,7 @@ impl<'a> Screen<'a> {
             .render(ControlWidgetType::Alarms(alarms::Config {
                 parent: self.ids.branding_container,
                 container: self.ids.alarm_container,
+                title_wrapper: self.ids.alarm_title_wrapper,
                 title: self.ids.alarm_title,
                 empty: self.ids.alarm_empty,
                 alarm_widgets: &self.ids.alarm_alarms,

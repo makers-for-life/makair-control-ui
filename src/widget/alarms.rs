@@ -9,8 +9,8 @@ use conrod_core::widget::id::List;
 use conrod_core::widget::Id as WidgetId;
 use conrod_core::{
     color::{self, Color},
-    widget::{self, rounded_rectangle::RoundedRectangle},
-    Colorable, Positionable, Widget,
+    widget::{self, canvas, rounded_rectangle::RoundedRectangle},
+    Colorable, Positionable, Sizeable, Widget,
 };
 
 use telemetry::alarm::AlarmCode;
@@ -30,6 +30,7 @@ const CONTAINER_WITHOUT_ALARMS_BACKGROUND_COLOR: Color =
 pub struct Config<'a> {
     pub parent: WidgetId,
     pub container: WidgetId,
+    pub title_wrapper: WidgetId,
     pub title: WidgetId,
     pub empty: WidgetId,
     pub alarm_widgets: &'a List,
@@ -94,20 +95,20 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     .down_from(config.parent, -1.0 * BRANDING_HEIGHT as f64)
     .set(config.container, &mut master.ui);
 
-    // Initialize text style
-    // Notice: the first text layer needs to be positionned using relative coordinates, and \
-    //   cannot be positionned using a 'mid' auto coordinate, as this has been seen to center \
-    //   vertically with a slight offset, which would make the text look uncentered to the \
-    //   human eye.
-    let mut text_style = conrod_core::widget::primitive::text::Style::default();
+    // Initialize title wrapper canvas style
+    let mut title_wrapper_style = canvas::Style::default();
 
-    text_style.font_id = Some(Some(master.fonts.bold));
-    text_style.color = Some(color::WHITE);
-    text_style.font_size = Some(14);
+    title_wrapper_style.border = Some(0.0);
+    title_wrapper_style.border_color = Some(color::TRANSPARENT);
+    title_wrapper_style.color = Some(color::TRANSPARENT);
 
-    // Insert text in canvas
-    widget::text::Text::new(&APP_I18N.t("alarms-title"))
-        .with_style(text_style)
+    // Create title wrapper canvas
+    canvas::Canvas::new()
+        .with_style(title_wrapper_style)
+        .w_h(
+            DISPLAY_ALARM_TITLE_WRAPPER_WIDTH,
+            DISPLAY_ALARM_TITLE_WRAPPER_HEIGHT,
+        )
         .top_left_with_margins_on(
             config.container,
             DISPLAY_ALARM_CONTAINER_PADDING_TOP,
@@ -117,6 +118,23 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
                 DISPLAY_ALARM_CONTAINER_EMPTY_PADDING_LEFT
             },
         )
+        .set(config.title_wrapper, &mut master.ui);
+
+    // Initialize title text style
+    // Notice: the first text layer needs to be positionned using relative coordinates, and \
+    //   cannot be positionned using a 'mid' auto coordinate, as this has been seen to center \
+    //   vertically with a slight offset, which would make the text look uncentered to the \
+    //   human eye.
+    let mut title_text_style = conrod_core::widget::primitive::text::Style::default();
+
+    title_text_style.font_id = Some(Some(master.fonts.bold));
+    title_text_style.color = Some(color::WHITE);
+    title_text_style.font_size = Some(14);
+
+    // Insert text in canvas
+    widget::text::Text::new(&APP_I18N.t("alarms-title"))
+        .with_style(title_text_style)
+        .top_left_of(config.title_wrapper)
         .set(config.title, &mut master.ui);
 
     // Append all alarms?
@@ -132,7 +150,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
             .color(Color::Rgba(1.0, 1.0, 1.0, 0.5))
             .font_size(12)
             .right_from(
-                config.title,
+                config.title_wrapper,
                 DISPLAY_ALARM_CONTAINER_TITLE_TO_ALARM_EMPTY_SPACING,
             )
             .y_relative(0.0)
