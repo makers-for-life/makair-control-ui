@@ -11,7 +11,9 @@ use std::convert::TryFrom;
 use std::sync::mpsc::{self, Receiver, Sender};
 
 use settings::{trigger::SettingsTriggerState, ChipSettings, ChipSettingsEvent};
-use telemetry::alarm::{AlarmCode, RMC_SW_1, RMC_SW_11, RMC_SW_12, RMC_SW_14, RMC_SW_15, RMC_SW_3};
+use telemetry::alarm::{
+    AlarmCode, RMC_SW_1, RMC_SW_11, RMC_SW_12, RMC_SW_14, RMC_SW_15, RMC_SW_19, RMC_SW_2, RMC_SW_3,
+};
 use telemetry::control::{ControlMessage, ControlSetting};
 use telemetry::serial::core;
 use telemetry::structures::{
@@ -265,18 +267,32 @@ impl Chip {
     }
 
     fn deduplicate_alarms(alarms: &mut HashMap<AlarmCode, AlarmPriority>) {
+        // 'Battery very low' high-priority alarm takes precedence over 'battery low' \
+        //   medium-priority alarm
         if alarms.contains_key(&AlarmCode::from(RMC_SW_11))
             && alarms.contains_key(&AlarmCode::from(RMC_SW_12))
         {
             alarms.remove(&AlarmCode::from(RMC_SW_11));
         }
 
+        // 'Plateau pressure not reached' high-priority alarm takes precedence over its \
+        //   medium-priority counterpart
         if alarms.contains_key(&AlarmCode::from(RMC_SW_1))
             && alarms.contains_key(&AlarmCode::from(RMC_SW_14))
         {
             alarms.remove(&AlarmCode::from(RMC_SW_14));
         }
 
+        // 'Patient unplugged' high-priority alarm takes precedence over its medium-priority \
+        //   counterpart
+        if alarms.contains_key(&AlarmCode::from(RMC_SW_2))
+            && alarms.contains_key(&AlarmCode::from(RMC_SW_19))
+        {
+            alarms.remove(&AlarmCode::from(RMC_SW_19));
+        }
+
+        // 'PEEP pressure not reached' high-priority alarm takes precedence over its \
+        //   medium-priority counterpart
         if alarms.contains_key(&AlarmCode::from(RMC_SW_3))
             && alarms.contains_key(&AlarmCode::from(RMC_SW_15))
         {

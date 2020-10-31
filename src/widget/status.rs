@@ -9,7 +9,7 @@ use conrod_core::{
     Positionable, Sizeable, Widget,
 };
 
-use telemetry::alarm::AlarmCode;
+use telemetry::alarm::{AlarmCode, RMC_SW_16};
 use telemetry::structures::AlarmPriority;
 
 use crate::chip::ChipState;
@@ -81,7 +81,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     let is_battery_powered = config
         .alarms
         .iter()
-        .any(|alarm| alarm.0.code() == STATUS_ALARM_CODE_POWER_BATTERY);
+        .any(|alarm| alarm.0.code() == RMC_SW_16);
 
     // Initialize wrapper canvas style
     let mut wrapper_style = canvas::Style::default();
