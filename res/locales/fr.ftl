@@ -2,9 +2,9 @@ telemetry-label-peak = P(crête)
 telemetry-label-plateau = P(plateau)
 telemetry-label-expiratory = P(expiration)
 telemetry-label-cycles = Cycles/minute
-telemetry-label-ratio = Ratio insp-exp
+telemetry-label-ratio = Ratio insp-exp.
 telemetry-label-ratio-plateau = Durée du plateau :
-telemetry-label-tidal = Vol. courant
+telemetry-label-tidal = Volume courant
 
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-mmh2o = mmH2O
