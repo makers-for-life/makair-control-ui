@@ -56,7 +56,9 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     let container_width = if alarms_count == 0 {
         DISPLAY_ALARM_CONTAINER_WIDTH_BASE
     } else {
-        DISPLAY_ALARM_CONTAINER_WIDTH_BASE + (BRANDING_WIDTH as f64) + 44.0
+        DISPLAY_ALARM_CONTAINER_WIDTH_BASE
+            + (BRANDING_WIDTH as f64)
+            + DISPLAY_ALARM_CONTAINER_WIDTH_HAS_ALARMS_OFFSET
     };
 
     // Compute container left margin (based on alarms count)
@@ -109,7 +111,11 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         .top_left_with_margins_on(
             config.container,
             DISPLAY_ALARM_CONTAINER_PADDING_TOP,
-            DISPLAY_ALARM_CONTAINER_PADDING_LEFT,
+            if alarms_count > 0 {
+                DISPLAY_ALARM_CONTAINER_HAS_ALARMS_PADDING_LEFT
+            } else {
+                DISPLAY_ALARM_CONTAINER_EMPTY_PADDING_LEFT
+            },
         )
         .set(config.title, &mut master.ui);
 
@@ -125,7 +131,10 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         widget::text::Text::new(&APP_I18N.t("alarms-empty"))
             .color(Color::Rgba(1.0, 1.0, 1.0, 0.5))
             .font_size(12)
-            .right_from(config.title, 42.0)
+            .right_from(
+                config.title,
+                DISPLAY_ALARM_CONTAINER_TITLE_TO_ALARM_EMPTY_SPACING,
+            )
             .y_relative(0.0)
             .set(config.empty, &mut master.ui);
     }

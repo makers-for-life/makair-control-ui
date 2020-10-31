@@ -56,7 +56,10 @@ pub fn render<'a>(
             config.container,
             conrod_core::position::Place::End(Some(from_top)),
         )
-        .right_from(config.title, 15.0)
+        .right_from(
+            config.title,
+            DISPLAY_ALARM_CONTAINER_TITLE_TO_ALARM_HAS_ALARMS_SPACING,
+        )
         .set(config.alarm_widgets[index], &mut master.ui);
 
     // Draw code & message

@@ -30,7 +30,7 @@ status-power-battery = Batterie
 status-power-ac = Branché sur AC
 
 trigger-label-title = Trigger
-trigger-label-state = Statut :
+trigger-label-state = État :
 trigger-label-offset = Seuil :
 trigger-label-configure = Touchez pour configurer
 trigger-state-enabled = Activé

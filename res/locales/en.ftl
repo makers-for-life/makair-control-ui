@@ -24,7 +24,7 @@ alarms-message-power-cable-unplugged = Power cable is unplugged
 alarms-message-pressure-too-high = Pressure is too high
 alarms-message-unknown = Unknown alarm (check code)
 
-status-unit-stopped = Unit paused
+status-unit-stopped = Unit stopped
 status-unit-active = Unit active
 status-power-battery = Battery
 status-power-ac = AC power
