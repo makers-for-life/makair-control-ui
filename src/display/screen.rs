@@ -250,13 +250,6 @@ impl<'a> Screen<'a> {
         }
     }
 
-    pub fn render_no_data(&mut self) {
-        self.widgets
-            .render(ControlWidgetType::NoData(no_data::Config::new(
-                self.ids.no_data,
-            )));
-    }
-
     pub fn render_error(&mut self, error: String) {
         self.render_background();
 
@@ -276,6 +269,7 @@ impl<'a> Screen<'a> {
                 config.width,
                 config.height,
                 config.image_id,
+                config.connecting,
             )));
     }
 

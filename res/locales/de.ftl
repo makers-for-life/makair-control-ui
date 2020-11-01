@@ -53,5 +53,3 @@ modal-close = OK
 
 stop-title = Das Beatmungsgerät ist nicht aktiv
 stop-description = Bitte aktivieren Sie es wieder, um zu lüften
-
-no-data-title = Gerät getrennt oder keine Daten empfangen

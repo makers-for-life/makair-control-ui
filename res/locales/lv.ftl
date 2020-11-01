@@ -53,5 +53,3 @@ modal-close = OK
 
 stop-title = Ventilatora ierīce neaktīva
 stop-description = Lūdzu, atkārtoti ieslēdziet to, lai atsāktu elpošanu
-
-no-data-title = Ierīce ir atvienota vai dati nav saņemti

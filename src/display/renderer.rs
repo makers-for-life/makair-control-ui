@@ -107,8 +107,8 @@ impl DisplayRenderer {
         let image_map = conrod_core::image::Map::<texture::Texture2d>::new();
 
         match chip_state {
-            ChipState::Initializing => self.initializing(display, interface, image_map),
-            ChipState::WaitingData => self.empty(interface, image_map),
+            ChipState::Initializing => self.initializing(display, interface, image_map, false),
+            ChipState::WaitingData => self.initializing(display, interface, image_map, true),
             ChipState::Running | ChipState::Stopped => self.data(
                 display,
                 interface,
@@ -136,25 +136,12 @@ impl DisplayRenderer {
         )
     }
 
-    fn empty(
-        &mut self,
-        interface: &mut Ui,
-        image_map: conrod_core::image::Map<texture::Texture2d>,
-    ) -> conrod_core::image::Map<texture::Texture2d> {
-        let ui = interface.set_widgets();
-
-        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None);
-
-        screen.render_no_data();
-
-        image_map
-    }
-
     fn initializing(
         &mut self,
         display: &GliumDisplayWinitWrapper,
         interface: &mut Ui,
         mut image_map: conrod_core::image::Map<texture::Texture2d>,
+        is_connecting: bool,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let bootloader_logo_image_texture = self.draw_bootloader_logo(display);
 
@@ -171,6 +158,7 @@ impl DisplayRenderer {
             image_id,
             width: bootloader_logo_width as _,
             height: bootloader_logo_height as _,
+            connecting: is_connecting,
         };
 
         let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None);

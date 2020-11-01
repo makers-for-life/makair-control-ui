@@ -28,7 +28,6 @@ gen_widget_impls!(
     Initializing -> initializing,
     Graph -> graph,
     Modal -> modal,
-    NoData -> no_data,
     Stop -> stop,
     TelemetryContainer -> telemetry_container,
     TelemetryView -> telemetry_view,

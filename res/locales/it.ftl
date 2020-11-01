@@ -53,5 +53,3 @@ modal-close = OK
 
 stop-title = Ventilatore inattivo
 stop-description = Riattivalo per riprendere la respirazione
-
-no-data-title = Dispositivo disconnesso o nessun dato ricevuto

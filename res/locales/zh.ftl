@@ -53,5 +53,3 @@ modal-close = 好
 
 stop-title = 呼吸机单元无效
 stop-description = 请重新启用它以恢复呼吸
-
-no-data-title = 设备已断开连接或未接收到数据

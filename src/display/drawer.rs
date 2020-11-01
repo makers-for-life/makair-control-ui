@@ -11,7 +11,7 @@ use glium::glutin::{ContextBuilder, EventsLoop, WindowBuilder};
 use glium::Surface;
 use telemetry::{self, TelemetryChannelType};
 
-use crate::chip::{Chip, ChipState, ChipEventUpdate};
+use crate::chip::{Chip, ChipEventUpdate, ChipState};
 use crate::config::arguments::RunMode;
 use crate::config::environment::*;
 use crate::serial::poller::{PollEvent, SerialPollerBuilder};
@@ -23,8 +23,10 @@ use super::identifiers::Ids;
 use super::renderer::{DisplayRenderer, DisplayRendererBuilder};
 use super::support::GliumDisplayWinitWrapper;
 
-const FRAMERATE_SLEEP_THROTTLE_RUNNING: Duration = Duration::from_millis(1000 / DISPLAY_FRAMERATE_RUNNING);
-const FRAMERATE_SLEEP_THROTTLE_STOPPED: Duration = Duration::from_millis(1000 / DISPLAY_FRAMERATE_STOPPED);
+const FRAMERATE_SLEEP_THROTTLE_RUNNING: Duration =
+    Duration::from_millis(1000 / DISPLAY_FRAMERATE_RUNNING);
+const FRAMERATE_SLEEP_THROTTLE_STOPPED: Duration =
+    Duration::from_millis(1000 / DISPLAY_FRAMERATE_STOPPED);
 
 pub struct DisplayDrawerBuilder<'a> {
     _phantom: &'a std::marker::PhantomData<u8>,

@@ -37,4 +37,5 @@ pub struct DisplayDataBootloader {
     pub image_id: conrod_core::image::Id,
     pub width: f64,
     pub height: f64,
+    pub connecting: bool,
 }

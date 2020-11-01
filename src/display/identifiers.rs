@@ -150,7 +150,6 @@ widget_ids!(pub struct Ids {
   stopped_title,
   stopped_message,
 
-  no_data,
   error,
 
   initializing_logo,

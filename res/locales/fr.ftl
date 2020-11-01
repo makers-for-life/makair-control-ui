@@ -53,5 +53,3 @@ modal-close = Fermer
 
 stop-title = Unité de ventilation inactive
 stop-description = Réactivez-la pour reprendre la ventilation
-
-no-data-title = La carte mère serait-elle déconnectée ?

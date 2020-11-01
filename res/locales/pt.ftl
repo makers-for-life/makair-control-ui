@@ -53,5 +53,3 @@ modal-close = OK
 
 stop-title = Unidade de ventilação inativa
 stop-description = Por favor, reative-o para retomar a respiração
-
-no-data-title = Dispositivo desconectado
