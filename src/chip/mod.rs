@@ -224,7 +224,8 @@ impl Chip {
                 self.battery_level = Some(snapshot.battery_level);
                 self.state = ChipState::Running;
 
-                // A data snapshot should always trigger an UI refresh
+                // A data snapshot should always trigger an UI refresh (ie. instantaneous graph \
+                //   update)
                 ChipEventUpdate::May
             }
 
