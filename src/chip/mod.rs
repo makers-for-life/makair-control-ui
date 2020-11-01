@@ -31,6 +31,12 @@ pub enum ChipState {
     Error(String),
 }
 
+#[derive(PartialEq)]
+pub enum ChipEventUpdate {
+    May,
+    MayNot,
+}
+
 pub struct Chip {
     pub boot_time: Option<DateTime<Utc>>,
     pub last_tick: u64,
@@ -173,7 +179,7 @@ impl Chip {
         };
     }
 
-    pub fn new_event(&mut self, event: TelemetryMessage) {
+    pub fn new_event(&mut self, event: TelemetryMessage) -> ChipEventUpdate {
         // Send to LORA? (the 'lora' feature might be disabled, so this would be 'None')
         if let Some(lora_tx) = &self.lora_tx {
             if let Err(err) = lora_tx.send(event.clone()) {
@@ -191,12 +197,22 @@ impl Chip {
                     alarm.alarm_priority,
                     alarm.triggered,
                 );
+
+                // An alarm trap should always trigger an UI refresh
+                ChipEventUpdate::May
             }
 
             TelemetryMessage::BootMessage(snapshot) => {
                 self.reset(snapshot.systick);
 
-                self.state = ChipState::Initializing;
+                // A boot message should only trigger an UI refresh when changed
+                if self.state != ChipState::Initializing {
+                    self.state = ChipState::Initializing;
+
+                    ChipEventUpdate::May
+                } else {
+                    ChipEventUpdate::MayNot
+                }
             }
 
             TelemetryMessage::DataSnapshot(snapshot) => {
@@ -207,6 +223,9 @@ impl Chip {
 
                 self.battery_level = Some(snapshot.battery_level);
                 self.state = ChipState::Running;
+
+                // A data snapshot should always trigger an UI refresh
+                ChipEventUpdate::May
             }
 
             TelemetryMessage::MachineStateSnapshot(snapshot) => {
@@ -228,18 +247,33 @@ impl Chip {
                 self.last_machine_snapshot = snapshot;
 
                 self.state = ChipState::Running;
+
+                // A machine state snapshot should always trigger an UI refresh, as those are sent \
+                //   at the end of each ventilation cycle, and thus are not super spammy.
+                ChipEventUpdate::May
             }
 
             TelemetryMessage::StoppedMessage(message) => {
                 self.update_tick(message.systick);
 
-                self.state = ChipState::Stopped;
+                // A stopped message should only trigger an UI refresh when changed
+                if self.state != ChipState::Stopped {
+                    self.state = ChipState::Stopped;
+
+                    ChipEventUpdate::May
+                } else {
+                    ChipEventUpdate::MayNot
+                }
             }
 
             TelemetryMessage::ControlAck(ack) => {
                 self.update_settings_and_snapshot_from_control(ack);
+
+                // A control acknowledgement should always trigger an UI refresh (as the user \
+                //   interacted w/ the UI)
+                ChipEventUpdate::May
             }
-        };
+        }
     }
 
     fn new_alarm(&mut self, code: AlarmCode, priority: AlarmPriority, triggered: bool) {

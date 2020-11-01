@@ -11,7 +11,7 @@ use glium::glutin::{ContextBuilder, EventsLoop, WindowBuilder};
 use glium::Surface;
 use telemetry::{self, TelemetryChannelType};
 
-use crate::chip::{Chip, ChipState};
+use crate::chip::{Chip, ChipState, ChipEventUpdate};
 use crate::config::arguments::RunMode;
 use crate::config::environment::*;
 use crate::serial::poller::{PollEvent, SerialPollerBuilder};
@@ -90,9 +90,11 @@ impl<'a> DisplayDrawer<'a> {
             'poll_serial: loop {
                 match serial_poller.poll(&rx) {
                     Ok(PollEvent::Ready(event)) => {
-                        self.chip.new_event(event);
-
-                        has_poll_events = true;
+                        // Do we need to mark this event as resulting in an UI update? (due to an \
+                        //   internal data point having been updated)
+                        if self.chip.new_event(event) == ChipEventUpdate::May {
+                            has_poll_events = true;
+                        }
                     }
                     Ok(PollEvent::Pending) => break 'poll_serial,
                     Err(error) => {
@@ -150,9 +152,11 @@ impl<'a> DisplayDrawer<'a> {
             }
 
             // Limit framerate to 'FRAMERATE_SLEEP_THROTTLE_RUNNING' or \
-            //   'DISPLAY_FRAMERATE_STOPPED' (depending on current chip state)
+            //   'DISPLAY_FRAMERATE_STOPPED' (depending on current chip state, as we do not need \
+            //   as many frames in stopped states; this way we can guarantee the CPU usage will be \
+            //   minimal, even if something asks for frequent UI refreshes while in stopped state)
             // Notice: limit the speed at the drawer loop is called. If this is not limited, \
-            //   CPU usage can grow as high as 5% residual under release mode, and 20% residual \
+            //   CPU usage can grow as high as 5% residual under release mode, and 40% residual \
             //   under debug mode.
             if last_chip_state == ChipState::Running {
                 std::thread::sleep(FRAMERATE_SLEEP_THROTTLE_RUNNING);
