@@ -132,8 +132,8 @@ impl<'a> DisplayDrawer<'a> {
 
                 last_render = now;
 
-                // Run UI events since the last render
-                let ui_events = self.renderer.run_ui_events(&mut self.interface);
+                // Run events since the last render
+                let events = self.renderer.run_events(&mut self.interface);
 
                 // Refresh UI? (if any event occured, either user-based or poll-based)
                 // Notice: if this is the first frame, do not wait for an event to occur, refresh \
@@ -143,10 +143,10 @@ impl<'a> DisplayDrawer<'a> {
                     || has_chip_state_change
                     || is_first_frame
                     || has_poll_events
-                    || !ui_events.is_empty()
+                    || !events.is_empty()
                 {
                     // Proceed UI refresh
-                    self.chip.handle_settings_events(ui_events);
+                    self.chip.handle_settings_events(events);
 
                     self.refresh();
 

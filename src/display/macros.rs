@@ -67,3 +67,71 @@ macro_rules! gen_widget_impls {
         }
     }
 }
+
+macro_rules! gen_ui_events_telemetry_settings_clicks {
+    ($interface:ident, $({$name:expr, $settings_state:expr, $widget_ids:expr}),+,) => {
+        $(
+            let clicks = DisplayUIEvents::count_clicks(
+                $interface,
+                &$widget_ids,
+            );
+
+            for _ in 0..clicks {
+                debug!("pressed the {} widget once", $name);
+
+                $settings_state.toggle();
+            }
+        )+
+    }
+}
+
+macro_rules! gen_ui_events_modal_settings_clicks {
+    (
+        $interface:ident,
+        $ids:ident,
+        $events:ident,
+
+        $({
+            $name:expr,
+            $type:tt,
+            $settings_state:expr,
+
+            $({
+                $action:expr,
+                $field_name:expr,
+                $widget_ids:expr
+            }),*
+        }),+,
+    ) => {
+        $(
+            if $settings_state == &DisplayRendererSettingsState::Opened {
+                // Handle clicks on the close button
+                for _ in 0..DisplayUIEvents::count_clicks(
+                    $interface,
+                    &[
+                        $ids.modal_validate,
+                        $ids.modal_validate_text,
+                    ],
+                ) {
+                    debug!("pressed the {} settings close button once", $name);
+
+                    $settings_state.toggle();
+                }
+
+                // Handle clicks on dynamic form elements
+                $(
+                    for _ in 0..DisplayUIEvents::count_clicks(
+                        $interface,
+                        &$widget_ids,
+                    ) {
+                        debug!("pressed the {} settings {} field button once", $name, $field_name);
+
+                        $events.push(ChipSettingsEvent::$type(
+                            $action,
+                        ));
+                    }
+                )*
+            }
+        )+
+    }
+}

@@ -6,7 +6,6 @@
 use std::borrow::Cow;
 
 use chrono::{DateTime, NaiveDateTime, Utc};
-use conrod_core::widget::Id as WidgetId;
 use conrod_core::Ui;
 use glium::texture;
 use image::load_from_memory;
@@ -15,11 +14,7 @@ use plotters::style::TextStyle;
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
-use crate::chip::settings::{
-    cycles::SettingsCyclesEvent, expiration_term::SettingsExpirationTermEvent,
-    pressure::SettingsPressureEvent, trigger::SettingsTriggerEvent, ChipSettings,
-    ChipSettingsEvent, SettingAction,
-};
+use crate::chip::settings::{ChipSettings, ChipSettingsEvent};
 use crate::chip::ChipState;
 use crate::config::environment::*;
 use crate::utilities::image::reverse_rgba;
@@ -31,6 +26,7 @@ use crate::EmbeddedImages;
 use crate::APP_ARGS;
 
 use super::data::*;
+use super::events::DisplayUIEvents;
 use super::fonts::Fonts;
 use super::identifiers::Ids;
 use super::screen::{Screen, ScreenModalsOpen};
@@ -67,7 +63,7 @@ lazy_static! {
 }
 
 impl DisplayRendererSettingsState {
-    fn toggle(&mut self) {
+    pub fn toggle(&mut self) {
         *self = match self {
             Self::Closed => Self::Opened,
             Self::Opened => Self::Closed,
@@ -128,314 +124,16 @@ impl DisplayRenderer {
         }
     }
 
-    pub fn run_ui_events(&mut self, interface: &mut Ui) -> Vec<ChipSettingsEvent> {
-        let mut all_events = Vec::new();
-
-        // If you click on a text, the text element will receive the click, not its parent
-        // Maybe there is a way to listen on a parent for childs clicks but I couldn't find one.
-        // So we chain each iterator of every childs to be sure to capture the click
-        let trigger_settings_iters = vec![
-            self.ids.trigger_overview_container,
-            self.ids.trigger_overview_title,
-            self.ids.trigger_overview_status_label,
-            self.ids.trigger_overview_status_value,
-            self.ids.trigger_overview_offset_label,
-            self.ids.trigger_overview_offset_value,
-        ];
-
-        let expiration_term_settings_iters = vec![
-            self.ids.ratio_parent,
-            self.ids.ratio_title,
-            self.ids.ratio_value_measured,
-            self.ids.ratio_unit,
-        ];
-
-        let cycles_settings_iters = vec![
-            self.ids.cycles_parent,
-            self.ids.cycles_title,
-            self.ids.cycles_value_measured,
-            self.ids.cycles_value_arrow,
-            self.ids.cycles_value_target,
-            self.ids.cycles_unit,
-        ];
-
-        let pressure_settings_iters = vec![
-            self.ids.peak_parent,
-            self.ids.peak_title,
-            self.ids.peak_value_measured,
-            self.ids.peak_value_arrow,
-            self.ids.peak_value_target,
-            self.ids.peak_unit,
-            self.ids.plateau_parent,
-            self.ids.plateau_title,
-            self.ids.plateau_value_measured,
-            self.ids.plateau_value_arrow,
-            self.ids.plateau_value_target,
-            self.ids.plateau_unit,
-            self.ids.peep_parent,
-            self.ids.peep_title,
-            self.ids.peep_value_measured,
-            self.ids.peep_value_arrow,
-            self.ids.peep_value_target,
-            self.ids.peep_unit,
-        ];
-
-        // Handle modal open clicks
-        let trigger_settings_clicks = trigger_settings_iters.iter().flat_map(|widget| {
-            interface
-                .widget_input(*widget)
-                .clicks()
-                .map(|_| ())
-                .chain(interface.widget_input(*widget).taps().map(|_| ()))
-        });
-
-        let expiration_term_settings_clicks =
-            expiration_term_settings_iters.iter().flat_map(|widget| {
-                interface
-                    .widget_input(*widget)
-                    .clicks()
-                    .map(|_| ())
-                    .chain(interface.widget_input(*widget).taps().map(|_| ()))
-            });
-
-        let cycles_settings_clicks = cycles_settings_iters.iter().flat_map(|widget| {
-            interface
-                .widget_input(*widget)
-                .clicks()
-                .map(|_| ())
-                .chain(interface.widget_input(*widget).taps().map(|_| ()))
-        });
-
-        let pressure_settings_clicks = pressure_settings_iters.iter().flat_map(|widget| {
-            interface
-                .widget_input(*widget)
-                .clicks()
-                .map(|_| ())
-                .chain(interface.widget_input(*widget).taps().map(|_| ()))
-        });
-
-        for _ in trigger_settings_clicks {
-            debug!("pressed the trigger widget once");
-
-            self.trigger_settings_state.toggle();
-        }
-
-        for _ in expiration_term_settings_clicks {
-            debug!("pressed the expiratory term widget once");
-
-            self.expiration_term_settings_state.toggle();
-        }
-
-        for _ in cycles_settings_clicks {
-            debug!("pressed the cycles widget once");
-
-            self.cycles_settings_state.toggle();
-        }
-
-        for _ in pressure_settings_clicks {
-            debug!("pressed a pressure widget once");
-
-            self.pressure_settings_state.toggle();
-        }
-
-        // Handle modal inner clicks
-        if self.trigger_settings_state == DisplayRendererSettingsState::Opened
-            || self.expiration_term_settings_state == DisplayRendererSettingsState::Opened
-            || self.cycles_settings_state == DisplayRendererSettingsState::Opened
-            || self.pressure_settings_state == DisplayRendererSettingsState::Opened
-        {
-            for _ in self
-                .get_widget_clicks(self.ids.modal_validate, interface)
-                .chain(self.get_widget_clicks(self.ids.modal_validate_text, interface))
-            {
-                debug!("pressed a modal close button once");
-
-                if self.trigger_settings_state == DisplayRendererSettingsState::Opened {
-                    self.trigger_settings_state.toggle();
-                } else if self.expiration_term_settings_state
-                    == DisplayRendererSettingsState::Opened
-                {
-                    self.expiration_term_settings_state.toggle();
-                } else if self.cycles_settings_state == DisplayRendererSettingsState::Opened {
-                    self.cycles_settings_state.toggle();
-                } else if self.pressure_settings_state == DisplayRendererSettingsState::Opened {
-                    self.pressure_settings_state.toggle();
-                }
-            }
-        }
-
-        if self.trigger_settings_state == DisplayRendererSettingsState::Opened {
-            for _ in self
-                .get_widget_clicks(self.ids.trigger_status_button, interface)
-                .chain(self.get_widget_clicks(self.ids.trigger_status_button_text, interface))
-            {
-                debug!("pressed the trigger settings toggle button once");
-
-                all_events.push(ChipSettingsEvent::Trigger(
-                    SettingsTriggerEvent::TriggerToggle,
-                ));
-            }
-
-            for _ in self
-                .get_widget_clicks(self.ids.trigger_offset_less_button, interface)
-                .chain(self.get_widget_clicks(self.ids.trigger_offset_less_button_text, interface))
-            {
-                debug!("pressed the trigger settings offset less button once");
-
-                all_events.push(ChipSettingsEvent::Trigger(
-                    SettingsTriggerEvent::TriggerOffset(SettingAction::Less),
-                ));
-            }
-
-            for _ in self
-                .get_widget_clicks(self.ids.trigger_offset_more_button, interface)
-                .chain(self.get_widget_clicks(self.ids.trigger_offset_more_button_text, interface))
-            {
-                debug!("pressed the trigger settings offset more button once");
-
-                all_events.push(ChipSettingsEvent::Trigger(
-                    SettingsTriggerEvent::TriggerOffset(SettingAction::More),
-                ));
-            }
-        }
-
-        if self.expiration_term_settings_state == DisplayRendererSettingsState::Opened {
-            for _ in self
-                .get_widget_clicks(self.ids.expiration_term_less_button, interface)
-                .chain(self.get_widget_clicks(self.ids.expiration_term_less_button_text, interface))
-            {
-                debug!("pressed the expiration term settings less button once");
-
-                all_events.push(ChipSettingsEvent::ExpirationTerm(
-                    SettingsExpirationTermEvent::ExpiratoryTerm(SettingAction::Less),
-                ));
-            }
-
-            for _ in self
-                .get_widget_clicks(self.ids.expiration_term_more_button, interface)
-                .chain(self.get_widget_clicks(self.ids.expiration_term_more_button_text, interface))
-            {
-                debug!("pressed the expiration term settings more button once");
-
-                all_events.push(ChipSettingsEvent::ExpirationTerm(
-                    SettingsExpirationTermEvent::ExpiratoryTerm(SettingAction::More),
-                ));
-            }
-        }
-
-        if self.cycles_settings_state == DisplayRendererSettingsState::Opened {
-            for _ in self
-                .get_widget_clicks(self.ids.cycles_less_button, interface)
-                .chain(self.get_widget_clicks(self.ids.cycles_less_button_text, interface))
-            {
-                debug!("pressed the cycles settings less button once");
-
-                all_events.push(ChipSettingsEvent::Cycles(
-                    SettingsCyclesEvent::CyclesPerMinute(SettingAction::Less),
-                ));
-            }
-
-            for _ in self
-                .get_widget_clicks(self.ids.cycles_more_button, interface)
-                .chain(self.get_widget_clicks(self.ids.cycles_more_button_text, interface))
-            {
-                debug!("pressed the cycles settings more button once");
-
-                all_events.push(ChipSettingsEvent::Cycles(
-                    SettingsCyclesEvent::CyclesPerMinute(SettingAction::More),
-                ));
-            }
-        }
-
-        if self.pressure_settings_state == DisplayRendererSettingsState::Opened {
-            for _ in self
-                .get_widget_clicks(self.ids.pressure_peak_less_button, interface)
-                .chain(self.get_widget_clicks(self.ids.pressure_peak_less_button_text, interface))
-            {
-                debug!("pressed the pressure settings less button once (for peak)");
-
-                all_events.push(ChipSettingsEvent::Pressure(SettingsPressureEvent::Peak(
-                    SettingAction::Less,
-                )));
-            }
-
-            for _ in self
-                .get_widget_clicks(self.ids.pressure_peak_more_button, interface)
-                .chain(self.get_widget_clicks(self.ids.pressure_peak_more_button_text, interface))
-            {
-                debug!("pressed the pressure settings more button once (for peak)");
-
-                all_events.push(ChipSettingsEvent::Pressure(SettingsPressureEvent::Peak(
-                    SettingAction::More,
-                )));
-            }
-        }
-
-        if self.pressure_settings_state == DisplayRendererSettingsState::Opened {
-            for _ in self
-                .get_widget_clicks(self.ids.pressure_plateau_less_button, interface)
-                .chain(
-                    self.get_widget_clicks(self.ids.pressure_plateau_less_button_text, interface),
-                )
-            {
-                debug!("pressed the pressure settings less button once (for plateau)");
-
-                all_events.push(ChipSettingsEvent::Pressure(SettingsPressureEvent::Plateau(
-                    SettingAction::Less,
-                )));
-            }
-
-            for _ in self
-                .get_widget_clicks(self.ids.pressure_plateau_more_button, interface)
-                .chain(
-                    self.get_widget_clicks(self.ids.pressure_plateau_more_button_text, interface),
-                )
-            {
-                debug!("pressed the pressure settings more button once (for plateau)");
-
-                all_events.push(ChipSettingsEvent::Pressure(SettingsPressureEvent::Plateau(
-                    SettingAction::More,
-                )));
-            }
-        }
-
-        if self.pressure_settings_state == DisplayRendererSettingsState::Opened {
-            for _ in self
-                .get_widget_clicks(self.ids.pressure_peep_less_button, interface)
-                .chain(self.get_widget_clicks(self.ids.pressure_peep_less_button_text, interface))
-            {
-                debug!("pressed the pressure settings less button once (for peep)");
-
-                all_events.push(ChipSettingsEvent::Pressure(SettingsPressureEvent::PEEP(
-                    SettingAction::Less,
-                )));
-            }
-
-            for _ in self
-                .get_widget_clicks(self.ids.pressure_peep_more_button, interface)
-                .chain(self.get_widget_clicks(self.ids.pressure_peep_more_button_text, interface))
-            {
-                debug!("pressed the pressure settings more button once (for peep)");
-
-                all_events.push(ChipSettingsEvent::Pressure(SettingsPressureEvent::PEEP(
-                    SettingAction::More,
-                )));
-            }
-        }
-
-        all_events
-    }
-
-    fn get_widget_clicks<'a>(
-        &self,
-        widget: WidgetId,
-        interface: &'a Ui,
-    ) -> impl Iterator<Item = conrod_core::position::Point> + 'a {
-        interface
-            .widget_input(widget)
-            .clicks()
-            .map(|c| c.xy)
-            .chain(interface.widget_input(widget).taps().map(|t| t.xy))
+    pub fn run_events(&mut self, interface: &mut Ui) -> Vec<ChipSettingsEvent> {
+        // Run all UI events (defer to sub-handler)
+        DisplayUIEvents::run(
+            interface,
+            &self.ids,
+            &mut self.trigger_settings_state,
+            &mut self.expiration_term_settings_state,
+            &mut self.pressure_settings_state,
+            &mut self.cycles_settings_state,
+        )
     }
 
     fn empty(
