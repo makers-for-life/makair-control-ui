@@ -176,8 +176,8 @@ impl Chip {
     pub fn new_event(&mut self, event: TelemetryMessage) {
         // Send to LORA? (the 'lora' feature might be disabled, so this would be 'None')
         if let Some(lora_tx) = &self.lora_tx {
-            if let Err(e) = lora_tx.send(event.clone()) {
-                error!("an issue occured while sending data to lora: {:?}", e);
+            if let Err(err) = lora_tx.send(event.clone()) {
+                error!("an issue occured while sending data to lora: {:?}", err);
             }
         };
 

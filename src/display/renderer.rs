@@ -16,10 +16,8 @@ use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
 use crate::chip::settings::{
-    cycles::{SettingsCycles, SettingsCyclesEvent},
-    expiration_term::{SettingsExpirationTerm, SettingsExpirationTermEvent},
-    pressure::{SettingsPressure, SettingsPressureEvent},
-    trigger::{SettingsTrigger, SettingsTriggerEvent},
+    cycles::SettingsCyclesEvent, expiration_term::SettingsExpirationTermEvent,
+    pressure::SettingsPressureEvent, trigger::SettingsTriggerEvent, ChipSettings,
     ChipSettingsEvent, SettingAction,
 };
 use crate::chip::ChipState;
@@ -108,10 +106,7 @@ impl DisplayRenderer {
         interface: &mut Ui,
         battery_level: Option<u8>,
         chip_state: &ChipState,
-        trigger_settings: &SettingsTrigger,
-        expiration_term_settings: &SettingsExpirationTerm,
-        cycles_settings: &SettingsCycles,
-        pressure_settings: &SettingsPressure,
+        chip_settings: &ChipSettings,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let image_map = conrod_core::image::Map::<texture::Texture2d>::new();
 
@@ -127,12 +122,9 @@ impl DisplayRenderer {
                 ongoing_alarms,
                 battery_level,
                 chip_state,
-                trigger_settings,
-                expiration_term_settings,
-                cycles_settings,
-                pressure_settings,
+                chip_settings,
             ),
-            ChipState::Error(e) => self.error(interface, image_map, e.clone()),
+            ChipState::Error(err) => self.error(interface, image_map, err.clone()),
         }
     }
 
@@ -516,10 +508,7 @@ impl DisplayRenderer {
         ongoing_alarms: &[(AlarmCode, AlarmPriority)],
         battery_level: Option<u8>,
         chip_state: &ChipState,
-        trigger_settings: &SettingsTrigger,
-        expiration_term_settings: &SettingsExpirationTerm,
-        cycles_settings: &SettingsCycles,
-        pressure_settings: &SettingsPressure,
+        chip_settings: &ChipSettings,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         // Create branding
         let branding_image_texture = self.draw_branding(display);
@@ -639,10 +628,7 @@ impl DisplayRenderer {
                 screen_data_heartbeat,
                 screen_data_graph,
                 screen_data_telemetry,
-                trigger_settings,
-                expiration_term_settings,
-                cycles_settings,
-                pressure_settings,
+                chip_settings,
                 &ScreenModalsOpen::from_states(
                     &self.trigger_settings_state,
                     &self.expiration_term_settings_state,
@@ -657,10 +643,7 @@ impl DisplayRenderer {
                 screen_data_heartbeat,
                 screen_data_graph,
                 screen_data_telemetry,
-                trigger_settings,
-                expiration_term_settings,
-                cycles_settings,
-                pressure_settings,
+                chip_settings,
                 &ScreenModalsOpen::from_states(
                     &self.trigger_settings_state,
                     &self.expiration_term_settings_state,

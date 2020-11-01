@@ -11,7 +11,7 @@ use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
 use crate::chip::settings::{
     cycles::SettingsCycles, expiration_term::SettingsExpirationTerm, pressure::SettingsPressure,
-    trigger::SettingsTrigger,
+    trigger::SettingsTrigger, ChipSettings,
 };
 use crate::config::environment::*;
 use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
@@ -51,53 +51,6 @@ impl<'a> Screen<'a> {
             machine_snapshot,
             ongoing_alarms,
             widgets: ControlWidget::new(ui, fonts),
-        }
-    }
-
-    #[allow(clippy::too_many_arguments)]
-    pub fn render_with_data(
-        &mut self,
-        branding_data: DisplayDataBranding<'a>,
-        status_data: DisplayDataStatus<'a>,
-        heartbeat_data: DisplayDataHeartbeat<'a>,
-        graph_data: DisplayDataGraph,
-        telemetry_data: DisplayDataTelemetry,
-        trigger: &'a SettingsTrigger,
-        expiration_term: &'a SettingsExpirationTerm,
-        cycles: &'a SettingsCycles,
-        pressure: &'a SettingsPressure,
-        modals_open: &ScreenModalsOpen,
-    ) {
-        // Render common background
-        self.render_background();
-        self.render_layout();
-
-        // Render top elements
-        self.render_branding(
-            branding_data.firmware_version,
-            RUNTIME_VERSION,
-            branding_data.image_id,
-            branding_data.width,
-            branding_data.height,
-        );
-        self.render_alarms();
-        self.render_status(status_data);
-        self.render_heartbeat(heartbeat_data);
-
-        // Render middle elements
-        self.render_graph(graph_data.image_id, graph_data.width, graph_data.height);
-
-        // Render bottom elements
-        self.render_telemetry(telemetry_data, trigger, expiration_term);
-
-        if modals_open.trigger {
-            self.render_trigger_settings(trigger);
-        } else if modals_open.expiration_term {
-            self.render_expiration_term_settings(expiration_term);
-        } else if modals_open.pressure {
-            self.render_pressure_settings(pressure);
-        } else if modals_open.cycles {
-            self.render_cycles_settings(cycles);
         }
     }
 
@@ -215,6 +168,50 @@ impl<'a> Screen<'a> {
     }
 
     #[allow(clippy::too_many_arguments)]
+    pub fn render_with_data(
+        &mut self,
+        branding_data: DisplayDataBranding<'a>,
+        status_data: DisplayDataStatus<'a>,
+        heartbeat_data: DisplayDataHeartbeat<'a>,
+        graph_data: DisplayDataGraph,
+        telemetry_data: DisplayDataTelemetry,
+        settings: &'a ChipSettings,
+        modals: &ScreenModalsOpen,
+    ) {
+        // Render common background
+        self.render_background();
+        self.render_layout();
+
+        // Render top elements
+        self.render_branding(
+            branding_data.firmware_version,
+            RUNTIME_VERSION,
+            branding_data.image_id,
+            branding_data.width,
+            branding_data.height,
+        );
+        self.render_alarms();
+        self.render_status(status_data);
+        self.render_heartbeat(heartbeat_data);
+
+        // Render middle elements
+        self.render_graph(graph_data.image_id, graph_data.width, graph_data.height);
+
+        // Render bottom elements
+        self.render_telemetry(telemetry_data, &settings.trigger, &settings.expiration_term);
+
+        if modals.trigger {
+            self.render_trigger_settings(&settings.trigger);
+        } else if modals.expiration_term {
+            self.render_expiration_term_settings(&settings.expiration_term);
+        } else if modals.pressure {
+            self.render_pressure_settings(&settings.pressure);
+        } else if modals.cycles {
+            self.render_cycles_settings(&settings.cycles);
+        }
+    }
+
+    #[allow(clippy::too_many_arguments)]
     pub fn render_stop(
         &mut self,
         branding_data: DisplayDataBranding<'a>,
@@ -222,11 +219,8 @@ impl<'a> Screen<'a> {
         heartbeat_data: DisplayDataHeartbeat<'a>,
         graph_data: DisplayDataGraph,
         telemetry_data: DisplayDataTelemetry,
-        trigger: &'a SettingsTrigger,
-        expiration_term: &'a SettingsExpirationTerm,
-        cycles: &'a SettingsCycles,
-        pressure: &'a SettingsPressure,
-        modals_open: &ScreenModalsOpen,
+        settings: &'a ChipSettings,
+        modals: &ScreenModalsOpen,
     ) {
         // Render regular data as background
         self.render_with_data(
@@ -235,18 +229,11 @@ impl<'a> Screen<'a> {
             heartbeat_data,
             graph_data,
             telemetry_data,
-            trigger,
-            expiration_term,
-            cycles,
-            pressure,
-            modals_open,
+            settings,
+            modals,
         );
 
-        if !modals_open.trigger
-            && !modals_open.expiration_term
-            && !modals_open.cycles
-            && !modals_open.pressure
-        {
+        if !modals.trigger && !modals.expiration_term && !modals.cycles && !modals.pressure {
             self.render_modal(
                 DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH,
                 DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT,

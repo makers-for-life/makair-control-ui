@@ -27,20 +27,20 @@ impl LoraController {
             sleep(Duration::from_millis(2000));
 
             loop {
-                let mylora = Pin::new(LORA_GPIO_PIN_NUMBER); // number depends on chip, etc.
+                let lora_pin = Pin::new(LORA_GPIO_PIN_NUMBER);
 
-                let lora_setup = mylora.with_exported(|| {
+                let lora_setup = lora_pin.with_exported(|| {
                     println!("set the pin direction");
 
-                    mylora.set_direction(Direction::Out).unwrap();
+                    lora_pin.set_direction(Direction::Out).unwrap();
                     println!("set the pin low");
 
-                    mylora.set_value(0).unwrap();
+                    lora_pin.set_value(0).unwrap();
 
                     sleep(Duration::from_millis(1000));
                     println!("set the pin high");
 
-                    mylora.set_value(1).unwrap();
+                    lora_pin.set_value(1).unwrap();
                     sleep(Duration::from_millis(1000));
 
                     Ok(())
@@ -48,8 +48,8 @@ impl LoraController {
 
                 match lora_setup {
                     Ok(_) => {}
-                    Err(e) => {
-                        error!("error setting up lora because: {:?}. retrying in 1s.", e);
+                    Err(err) => {
+                        error!("error setting up lora because: {:?}. retrying in 1s.", err);
 
                         std::thread::sleep(Duration::from_secs(1));
 
@@ -94,10 +94,10 @@ impl LoraController {
                             }
                         }
 
-                        rn2903::Error::ConnectionFailed(e) => {
+                        rn2903::Error::ConnectionFailed(err) => {
                             error!(
                                     "lora device connection failed for this reason {:?}: {}. will empty receiver queue and try again in 15 seconds.",
-                                    e.kind, e.description
+                                    err.kind, err.description
                                 );
 
                             loop {
@@ -208,7 +208,7 @@ impl LoraController {
                                     }
                                 }
 
-                                Err(e) => match e {
+                                Err(err) => match err {
                                     mpsc::RecvError => {
                                         error!("channel on lora closed unexpectedly");
 

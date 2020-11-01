@@ -218,10 +218,7 @@ impl<'a> DisplayDrawer<'a> {
             &mut self.interface,
             self.chip.get_battery_level(),
             &self.chip.get_state(),
-            &self.chip.settings.trigger,
-            &self.chip.settings.expiration_term,
-            &self.chip.settings.cycles,
-            &self.chip.settings.pressure,
+            &self.chip.settings,
         );
 
         if let Some(primitives) = self.interface.draw_if_changed() {
