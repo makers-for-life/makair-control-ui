@@ -47,6 +47,9 @@ modal-pressure-peak = Pression de crête :
 modal-pressure-plateau = Pression de plateau :
 modal-pressure-expiratory = Pression d'expiration :
 
+initializing-connecting = Démarrage en cours...
+initializing-connected = Préparation en cours...
+
 error-title = Une erreur est survenue :
 
 modal-close = Fermer

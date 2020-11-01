@@ -152,5 +152,7 @@ widget_ids!(pub struct Ids {
 
   error,
 
+  initializing_container,
   initializing_logo,
+  initializing_text,
 });

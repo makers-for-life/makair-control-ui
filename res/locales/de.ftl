@@ -47,6 +47,9 @@ modal-pressure-peak = Spitzendruck:
 modal-pressure-plateau = Plateaudruck:
 modal-pressure-expiratory = Ausatmungsdruck:
 
+initializing-connecting = Inbetriebnahme...
+initializing-connected = Initialisierung...
+
 error-title = Ein Fehler ist aufgetreten:
 
 modal-close = OK

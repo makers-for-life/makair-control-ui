@@ -47,6 +47,9 @@ modal-pressure-peak = 峰值压力：
 modal-pressure-plateau = 高原压力：
 modal-pressure-expiratory = 呼气压力：
 
+initializing-connecting = 启动...
+initializing-connected = 初始化中...
+
 error-title = 发生错误：
 
 modal-close = 好

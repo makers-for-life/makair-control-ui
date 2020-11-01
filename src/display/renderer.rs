@@ -107,8 +107,11 @@ impl DisplayRenderer {
         let image_map = conrod_core::image::Map::<texture::Texture2d>::new();
 
         match chip_state {
-            ChipState::Initializing => self.initializing(display, interface, image_map, false),
+            // Waiting for data from the motherboard, treat it as a 'connecting...' state
             ChipState::WaitingData => self.initializing(display, interface, image_map, true),
+            // Initializing, treat it as a 'connected' state
+            ChipState::Initializing => self.initializing(display, interface, image_map, false),
+            // Running or stopped, handle data
             ChipState::Running | ChipState::Stopped => self.data(
                 display,
                 interface,
@@ -120,6 +123,7 @@ impl DisplayRenderer {
                 chip_state,
                 chip_settings,
             ),
+            // An error occured
             ChipState::Error(err) => self.error(interface, image_map, err.clone()),
         }
     }

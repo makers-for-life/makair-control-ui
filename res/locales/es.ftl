@@ -47,6 +47,9 @@ modal-pressure-peak = Presión pico:
 modal-pressure-plateau = Presión meseta:
 modal-pressure-expiratory = Presión espiratoria:
 
+initializing-connecting = Empezando...
+initializing-connected = Inicializando...
+
 error-title = Error:
 
 modal-close = OK

@@ -47,6 +47,9 @@ modal-pressure-peak = Pressão de pico:
 modal-pressure-plateau = Pressão de platô:
 modal-pressure-expiratory = Pressão expiratória:
 
+initializing-connecting = Começando...
+initializing-connected = Inicializando...
+
 error-title = Ocorreu um erro:
 
 modal-close = OK

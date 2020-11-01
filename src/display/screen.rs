@@ -265,7 +265,9 @@ impl<'a> Screen<'a> {
 
         self.widgets
             .render(ControlWidgetType::Initializing(initializing::Config::new(
+                self.ids.initializing_container,
                 self.ids.initializing_logo,
+                self.ids.initializing_text,
                 config.width,
                 config.height,
                 config.image_id,

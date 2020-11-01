@@ -47,6 +47,9 @@ modal-pressure-peak = Maksimālais spiediens:
 modal-pressure-plateau = Plato spiediens:
 modal-pressure-expiratory = Izelpas spiediens:
 
+initializing-connecting = Notiek palaišana...
+initializing-connected = Notiek inicializēšana...
+
 error-title = Notika kļūda:
 
 modal-close = OK

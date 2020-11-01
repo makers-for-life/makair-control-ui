@@ -47,6 +47,9 @@ modal-pressure-peak = Піковий тиск:
 modal-pressure-plateau = Тиск на плато:
 modal-pressure-expiratory = Тиск на видиху:
 
+initializing-connecting = Запуск...
+initializing-connected = Ініціалізація...
+
 error-title = Виникла помилка
 
 modal-close = в порядку
