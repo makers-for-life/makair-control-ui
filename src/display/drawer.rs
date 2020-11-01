@@ -208,7 +208,7 @@ impl<'a> DisplayDrawer<'a> {
 
             RunMode::Input(path) => {
                 std::thread::spawn(move || loop {
-                    let file = std::fs::File::open(path).unwrap();
+                    let file = std::fs::File::open(path).expect("input file not found");
 
                     telemetry::gather_telemetry_from_file(file, tx.clone(), true);
                 });
