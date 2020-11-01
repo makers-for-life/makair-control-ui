@@ -4,6 +4,7 @@
 // License: Public Domain License
 
 use std::sync::mpsc::{Receiver, Sender};
+use std::time::{Duration as TimeDuration};
 
 use chrono::offset::Utc;
 use chrono::Duration;
@@ -23,6 +24,8 @@ use super::fonts::Fonts;
 use super::identifiers::Ids;
 use super::renderer::{DisplayRenderer, DisplayRendererBuilder};
 use super::support::GliumDisplayWinitWrapper;
+
+const THREAD_SLEEP_THROTTLE: TimeDuration = TimeDuration::from_millis(10);
 
 pub struct DisplayDrawerBuilder<'a> {
     _phantom: &'a std::marker::PhantomData<u8>,
@@ -86,6 +89,10 @@ impl<'a> DisplayDrawer<'a> {
 
             // Receive telemetry data (from the input serial from the motherboard)
             // Empty the events queue before doing anything else
+            // Notice: limit the speed at which serial data may be polled. If this is not limited, \
+            //   CPU usage can grow as high as 5% residual under release mode, and 20% residual \
+            //   under debug mode. This is done only if an empty or disconnected message is \
+            //   received.
             'poll_serial: loop {
                 match serial_poller.poll(&rx) {
                     Ok(PollEvent::Ready(event)) => {
@@ -93,8 +100,14 @@ impl<'a> DisplayDrawer<'a> {
 
                         has_poll_events = true;
                     }
-                    Ok(PollEvent::Pending) => break 'poll_serial,
+                    Ok(PollEvent::Pending) => {
+                        std::thread::sleep(THREAD_SLEEP_THROTTLE);
+
+                        break 'poll_serial
+                    },
                     Err(error) => {
+                        std::thread::sleep(THREAD_SLEEP_THROTTLE);
+
                         self.chip.new_error(error);
 
                         break 'poll_serial;
@@ -154,7 +167,7 @@ impl<'a> DisplayDrawer<'a> {
                     is_first_frame = false;
                 }
             } else {
-                std::thread::sleep(std::time::Duration::from_millis(10));
+                std::thread::sleep(THREAD_SLEEP_THROTTLE);
             }
         }
     }
