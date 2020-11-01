@@ -6,7 +6,7 @@
 use conrod_core::{
     color,
     widget::{self, Id as WidgetId},
-    Colorable, Positionable, Widget,
+    Positionable, Widget,
 };
 
 use crate::config::environment::*;
@@ -30,15 +30,17 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
     text_style.font_id = Some(Some(master.fonts.bold));
     text_style.color = Some(color::WHITE);
-    text_style.font_size = Some(SPLASH_MESSAGE_FONT_SIZE);
+    text_style.font_size = Some(ERROR_MESSAGE_FONT_SIZE);
 
     // Create text
-    // Notice: using '\n' instead of the wrap methods because I could not make them work
-    widget::Text::new(&format!("{}\n{}", APP_I18N.t("error-title"), config.error))
-        .color(color::WHITE)
-        .align_top()
-        .with_style(text_style)
-        .set(config.id, &mut master.ui);
+    widget::Text::new(&format!(
+        "{}\n\n{}",
+        APP_I18N.t("error-title"),
+        config.error
+    ))
+    .top_left_with_margins(ERROR_PADDING_TOP, ERROR_PADDING_LEFT)
+    .with_style(text_style)
+    .set(config.id, &mut master.ui);
 
     0 as _
 }
