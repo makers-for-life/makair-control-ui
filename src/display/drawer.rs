@@ -184,7 +184,8 @@ impl<'a> DisplayDrawer<'a> {
 
             if throttle_sleep_duration > tick_spent_time {
                 throttle_sleep_duration = max(
-                    throttle_sleep_duration - tick_spent_time, FRAMERATE_SLEEP_THROTTLE_MINIMUM
+                    throttle_sleep_duration - tick_spent_time,
+                    FRAMERATE_SLEEP_THROTTLE_MINIMUM,
                 );
             } else {
                 throttle_sleep_duration = FRAMERATE_SLEEP_THROTTLE_MINIMUM;
