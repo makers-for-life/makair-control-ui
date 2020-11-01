@@ -3,8 +3,9 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+use std::cmp::max;
 use std::sync::mpsc::{Receiver, Sender};
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use conrod_core::Ui;
 use glium::glutin::{ContextBuilder, EventsLoop, WindowBuilder};
@@ -27,6 +28,7 @@ const FRAMERATE_SLEEP_THROTTLE_RUNNING: Duration =
     Duration::from_millis(1000 / DISPLAY_FRAMERATE_RUNNING);
 const FRAMERATE_SLEEP_THROTTLE_STOPPED: Duration =
     Duration::from_millis(1000 / DISPLAY_FRAMERATE_STOPPED);
+const FRAMERATE_SLEEP_THROTTLE_MINIMUM: Duration = Duration::from_millis(10);
 
 pub struct DisplayDrawerBuilder<'a> {
     _phantom: &'a std::marker::PhantomData<u8>,
@@ -86,6 +88,13 @@ impl<'a> DisplayDrawer<'a> {
 
         'main: loop {
             let (mut has_poll_events, mut has_chip_state_change) = (false, false);
+
+            // Measure loop tick start time
+            // Notice: this will be used to prevent the FPS throttler from skipping frames, as the \
+            //   methods called here may add a bit of overhead time to the final thread sleep \
+            //   time, so we need to substract this overhead time to the sleep time in order to \
+            //   guarantee the real on-screen FPS rate.
+            let tick_start_time = Instant::now();
 
             // Receive telemetry data (from the input serial from the motherboard)
             // Empty the events queue before doing anything else
@@ -153,18 +162,35 @@ impl<'a> DisplayDrawer<'a> {
                 is_first_frame = false;
             }
 
+            // Measure loop tick total elapsed time
+            let tick_spent_time = tick_start_time.elapsed();
+
             // Limit framerate to 'FRAMERATE_SLEEP_THROTTLE_RUNNING' or \
             //   'DISPLAY_FRAMERATE_STOPPED' (depending on current chip state, as we do not need \
             //   as many frames in stopped states; this way we can guarantee the CPU usage will be \
             //   minimal, even if something asks for frequent UI refreshes while in stopped state)
-            // Notice: limit the speed at the drawer loop is called. If this is not limited, \
+            // Notice #1: limit the speed at the drawer loop is called. If this is not limited, \
             //   CPU usage can grow as high as 5% residual under release mode, and 40% residual \
             //   under debug mode.
-            if last_chip_state == ChipState::Running {
-                std::thread::sleep(FRAMERATE_SLEEP_THROTTLE_RUNNING);
+            // Notice #2: substract the time it took to perform this loop tick, as to converge to \
+            //   the real on-screen FPS rate. If this tick took longer than the throttle sleep \
+            //   time, then fallback on a minimum guaranteed throttle time as to release the \
+            //   thread for some time.
+            let mut throttle_sleep_duration = if last_chip_state == ChipState::Running {
+                FRAMERATE_SLEEP_THROTTLE_RUNNING
             } else {
-                std::thread::sleep(FRAMERATE_SLEEP_THROTTLE_STOPPED);
+                FRAMERATE_SLEEP_THROTTLE_STOPPED
+            };
+
+            if throttle_sleep_duration > tick_spent_time {
+                throttle_sleep_duration = max(
+                    throttle_sleep_duration - tick_spent_time, FRAMERATE_SLEEP_THROTTLE_MINIMUM
+                );
+            } else {
+                throttle_sleep_duration = FRAMERATE_SLEEP_THROTTLE_MINIMUM;
             }
+
+            std::thread::sleep(throttle_sleep_duration);
         }
     }
 
