@@ -16,31 +16,11 @@ use pressure::*;
 use trigger::*;
 
 #[derive(Debug)]
-pub struct ChipSettings {
-    pub trigger: SettingsTrigger,
-    pub expiration_term: SettingsExpirationTerm,
-    pub cycles: SettingsCycles,
-    pub pressure: SettingsPressure,
-}
-
-impl ChipSettings {
-    pub fn new(cycles_per_minute: usize) -> ChipSettings {
-        ChipSettings {
-            trigger: SettingsTrigger::new(),
-            expiration_term: SettingsExpirationTerm::new(cycles_per_minute),
-            cycles: SettingsCycles::new(),
-            pressure: SettingsPressure::new(),
-        }
-    }
-
-    pub fn new_settings_event(&mut self, event: ChipSettingsEvent) -> ControlMessage {
-        match event {
-            ChipSettingsEvent::Trigger(event) => self.trigger.new_event(event),
-            ChipSettingsEvent::ExpirationTerm(event) => self.expiration_term.new_event(event),
-            ChipSettingsEvent::Cycles(event) => self.cycles.new_event(event),
-            ChipSettingsEvent::Pressure(event) => self.pressure.new_event(event),
-        }
-    }
+pub enum ChipSettingsEvent {
+    Trigger(SettingsTriggerEvent),
+    ExpirationTerm(SettingsExpirationTermEvent),
+    Cycles(SettingsCyclesEvent),
+    Pressure(SettingsPressureEvent),
 }
 
 #[derive(Debug)]
@@ -79,9 +59,29 @@ impl SettingAction {
 }
 
 #[derive(Debug)]
-pub enum ChipSettingsEvent {
-    Trigger(SettingsTriggerEvent),
-    ExpirationTerm(SettingsExpirationTermEvent),
-    Cycles(SettingsCyclesEvent),
-    Pressure(SettingsPressureEvent),
+pub struct ChipSettings {
+    pub trigger: SettingsTrigger,
+    pub expiration_term: SettingsExpirationTerm,
+    pub cycles: SettingsCycles,
+    pub pressure: SettingsPressure,
+}
+
+impl ChipSettings {
+    pub fn new(cycles_per_minute: usize) -> ChipSettings {
+        ChipSettings {
+            trigger: SettingsTrigger::new(),
+            expiration_term: SettingsExpirationTerm::new(cycles_per_minute),
+            cycles: SettingsCycles::new(),
+            pressure: SettingsPressure::new(),
+        }
+    }
+
+    pub fn new_settings_event(&mut self, event: ChipSettingsEvent) -> ControlMessage {
+        match event {
+            ChipSettingsEvent::Trigger(event) => self.trigger.new_event(event),
+            ChipSettingsEvent::ExpirationTerm(event) => self.expiration_term.new_event(event),
+            ChipSettingsEvent::Cycles(event) => self.cycles.new_event(event),
+            ChipSettingsEvent::Pressure(event) => self.pressure.new_event(event),
+        }
+    }
 }

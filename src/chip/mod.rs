@@ -47,7 +47,7 @@ pub struct Chip {
 impl Chip {
     pub fn new(lora_sender: Option<Sender<TelemetryMessage>>) -> Chip {
         let last_machine_snapshot = MachineStateSnapshot::default();
-        let cycles_per_minute = last_machine_snapshot.cpm_command;
+        let cycles_per_minute = last_machine_snapshot.cpm_command as usize;
 
         Chip {
             boot_time: None,
@@ -56,22 +56,132 @@ impl Chip {
             last_machine_snapshot,
             ongoing_alarms: HashMap::new(),
             battery_level: None,
-            settings: ChipSettings::new(cycles_per_minute as usize),
+            settings: ChipSettings::new(cycles_per_minute),
             state: ChipState::WaitingData,
             lora_tx: lora_sender,
             channel_for_settings: None,
         }
     }
 
+    pub fn reset(&mut self, new_tick: u64) {
+        self.last_tick = new_tick;
+        self.data_pressure.clear();
+
+        self.last_machine_snapshot = MachineStateSnapshot::default();
+        self.ongoing_alarms.clear();
+
+        self.update_boot_time();
+    }
+
+    pub fn clean_expired_pressure(&mut self) {
+        if !self.data_pressure.is_empty() {
+            let older = self.data_pressure.front().unwrap().0
+                - chrono::Duration::seconds(GRAPH_DRAW_SECONDS as _);
+
+            while self
+                .data_pressure
+                .back()
+                .map(|p| p.0 < older)
+                .unwrap_or(false)
+            {
+                self.data_pressure.pop_back();
+            }
+        }
+    }
+
+    pub fn handle_settings_events(&mut self, events: Vec<ChipSettingsEvent>) {
+        for event in events {
+            let message = self.settings.new_settings_event(event);
+
+            debug!(
+                "handled setting event: {:?}, sender: {:?}",
+                message, self.channel_for_settings
+            );
+
+            if let Some(tx) = &self.channel_for_settings {
+                if let Err(err) = tx.send(message.clone()) {
+                    error!(
+                        "error sending message {:?} to the control unit: {:?}",
+                        message, err
+                    );
+                } else {
+                    debug!("setting message {:?} sent", message);
+                }
+            }
+        }
+    }
+
+    pub fn get_battery_level(&self) -> Option<u8> {
+        self.battery_level
+    }
+
+    pub fn get_state(&self) -> &ChipState {
+        &self.state
+    }
+
+    pub fn ongoing_alarms_sorted(&self) -> Vec<(AlarmCode, AlarmPriority)> {
+        // This acquires a sorted list of ongoing alarms. It also clears out related alarms. In \
+        //   some cases, the list of alarms might contain the same alarm, at different priority \
+        //   levels (high and medium). In such cases, we should only retain the high level alarm \
+        //   in the list.
+
+        // Prepare ongoing alarms object clone
+        let mut ongoing_alarms = self.ongoing_alarms.clone();
+
+        // Map adjacent alarm codes
+        let mut adjacent_codes = Vec::new();
+
+        for (alarm_code, _) in ongoing_alarms.iter() {
+            // Is this alarm related to a lower-priority alarm? Attempt to remove it from the list \
+            //   of alarms, if it exists.
+            if let Some(alarm_adjacent_code) = alarm_code.adjacent() {
+                if ongoing_alarms.contains_key(&alarm_adjacent_code) {
+                    adjacent_codes.push(alarm_adjacent_code);
+                }
+            }
+        }
+
+        // Remove found adjacent alarms (if any)
+        for adjacent_code in adjacent_codes {
+            ongoing_alarms.remove(&adjacent_code);
+        }
+
+        // Map final alarm list
+        let mut alarm_list: Vec<(AlarmCode, AlarmPriority)> = ongoing_alarms
+            .iter()
+            .map(|(code, priority)| (*code, priority.clone()))
+            .collect();
+
+        // Sort final alarm list
+        alarm_list.sort_by(|(code1, _), (code2, _)| code1.cmp(&code2));
+
+        alarm_list
+    }
+
+    pub fn init_settings_receiver(&mut self) -> Receiver<ControlMessage> {
+        let channel = mpsc::channel();
+
+        self.channel_for_settings = Some(channel.0);
+
+        channel.1
+    }
+
+    pub fn new_error(&mut self, error: core::Error) {
+        match error.kind() {
+            core::ErrorKind::NoDevice => self.state = ChipState::WaitingData,
+            err => self.state = ChipState::Error(format!("{:?}", err)),
+        };
+    }
+
     pub fn new_event(&mut self, event: TelemetryMessage) {
-        // Send to LORA?
+        // Send to LORA? (the 'lora' feature might be disabled, so this would be 'None')
         if let Some(lora_tx) = &self.lora_tx {
             if let Err(e) = lora_tx.send(event.clone()) {
                 error!("an issue occured while sending data to lora: {:?}", e);
             }
         };
 
-        // Handle actual event
+        // Handle actual telemetry event
         match event {
             TelemetryMessage::AlarmTrap(alarm) => {
                 self.update_tick(alarm.systick);
@@ -103,15 +213,14 @@ impl Chip {
                 self.clean_if_stopped();
 
                 self.update_tick(snapshot.systick);
-                self.update_cycles_per_minute(snapshot.cpm_command as usize);
-                self.update_settings_values(&snapshot);
+                self.update_settings_from_snapshot(&snapshot);
 
                 for alarm in &snapshot.current_alarm_codes {
                     match AlarmPriority::try_from(*alarm) {
                         Ok(priority) => self.new_alarm((*alarm).into(), priority, true),
-                        Err(e) => warn!(
-                            "skip alarm {} because we couldn't get the priority: {:?}",
-                            alarm, e
+                        Err(err) => warn!(
+                            "skip alarm {} because we could not get the priority: {:?}",
+                            alarm, err
                         ),
                     };
                 }
@@ -128,43 +237,15 @@ impl Chip {
             }
 
             TelemetryMessage::ControlAck(ack) => {
-                self.update_on_ack(ack);
+                self.update_settings_and_snapshot_from_control(ack);
             }
-        };
-    }
-
-    pub fn handle_settings_events(&mut self, events: Vec<ChipSettingsEvent>) {
-        for event in events {
-            let message = self.settings.new_settings_event(event);
-
-            debug!(
-                "handled setting event: {:?}, sender: {:?}",
-                message, self.channel_for_settings
-            );
-
-            if let Some(tx) = &self.channel_for_settings {
-                if let Err(err) = tx.send(message.clone()) {
-                    error!(
-                        "error sending message {:?} to the control unit: {:?}",
-                        message, err
-                    );
-                } else {
-                    debug!("setting message {:?} sent", message);
-                }
-            }
-        }
-    }
-
-    pub fn new_error(&mut self, error: core::Error) {
-        match error.kind() {
-            core::ErrorKind::NoDevice => self.state = ChipState::WaitingData,
-            err => self.state = ChipState::Error(format!("{:?}", err)),
         };
     }
 
     fn new_alarm(&mut self, code: AlarmCode, priority: AlarmPriority, triggered: bool) {
         if triggered {
-            self.ongoing_alarms.insert(code, priority); // If we ever receive the same alarm, just replace the one we have
+            // If we ever receive the same alarm, just replace the one we have
+            self.ongoing_alarms.insert(code, priority);
         } else {
             self.ongoing_alarms.remove(&code);
         }
@@ -183,7 +264,7 @@ impl Chip {
             0
         };
 
-        // Low pass filter
+        // Low-pass filter
         let new_point = last_pressure as i16
             - ((last_pressure as i16 - snapshot.pressure as i16)
                 / TELEMETRY_POINTS_LOW_PASS_DEGREE as i16);
@@ -193,26 +274,22 @@ impl Chip {
             .push_front((snapshot_time, new_point as u16));
     }
 
-    pub fn get_battery_level(&self) -> Option<u8> {
-        self.battery_level
-    }
-
-    pub fn get_state(&self) -> &ChipState {
-        &self.state
-    }
-
     fn update_boot_time(&mut self) {
-        let now = Utc::now();
-        let duration = chrono::Duration::microseconds(self.last_tick as i64);
+        let (now, duration) = (
+            Utc::now(),
+            chrono::Duration::microseconds(self.last_tick as i64),
+        );
 
         self.boot_time = Some(now - duration);
     }
 
     fn update_tick(&mut self, tick: u64) {
-        // Sometimes, a MachineStateSnapshot event can be received with an older systick
-        // This is due to the way the systick is computed on the Makair's side. If we are too close of an ending millisecond
-        // the micro() call will probably return the microseconds of the next millisecond, thus making a wrong order
-        // If we have less than 1ms of difference between the messages, just ignore the systick update
+        // Sometimes, a 'MachineStateSnapshot' event can be received with an older systick
+        // This is due to the way the systick is computed on the Makair's side. If we are too \
+        //   close of an ending millisecond the micro() call will probably return the microseconds \
+        //   of the next millisecond, thus making a wrong order. If we have less than 1ms of \
+        //   difference between the messages, just ignore the systick update.
+
         let to_update = if tick < self.last_tick {
             self.last_tick - tick > 1000
         } else {
@@ -235,85 +312,18 @@ impl Chip {
     fn clean_if_stopped(&mut self) {
         if self.state == ChipState::Stopped {
             self.data_pressure.clear();
+
             self.last_machine_snapshot = MachineStateSnapshot::default();
         }
     }
 
-    pub fn reset(&mut self, new_tick: u64) {
-        self.last_tick = new_tick;
-        self.data_pressure.clear();
-        self.last_machine_snapshot = MachineStateSnapshot::default();
-        self.ongoing_alarms.clear();
+    fn update_settings_from_snapshot(&mut self, snapshot: &MachineStateSnapshot) {
+        // This updates all settings value, upon receiving a \
+        //   'TelemetryMessage::MachineStateSnapshot' message from the firmware.
 
-        self.update_boot_time();
-    }
-
-    pub fn clean_expired_pressure(&mut self) {
-        if !self.data_pressure.is_empty() {
-            let older = self.data_pressure.front().unwrap().0
-                - chrono::Duration::seconds(GRAPH_DRAW_SECONDS as _);
-
-            while self
-                .data_pressure
-                .back()
-                .map(|p| p.0 < older)
-                .unwrap_or(false)
-            {
-                self.data_pressure.pop_back();
-            }
-        }
-    }
-
-    fn deduplicate_alarms(alarms: &mut HashMap<AlarmCode, AlarmPriority>) {
-        // Map adjacent alarm codes
-        let mut adjacent_codes = Vec::new();
-
-        for (alarm_code, _) in alarms.iter() {
-            // Is this alarm related to a lower-priority alarm? Attempt to remove it from the list \
-            //   of alarms, if it exists.
-            if let Some(alarm_adjacent_code) = alarm_code.adjacent() {
-                if alarms.contains_key(&alarm_adjacent_code) {
-                    adjacent_codes.push(alarm_adjacent_code);
-                }
-            }
-        }
-
-        // Remove found adjacent alarms (if any)
-        for adjacent_code in adjacent_codes {
-            alarms.remove(&adjacent_code);
-        }
-    }
-
-    pub fn ongoing_alarms_sorted(&self) -> Vec<(AlarmCode, AlarmPriority)> {
-        let mut ongoing_alarms = self.ongoing_alarms.clone();
-
-        Chip::deduplicate_alarms(&mut ongoing_alarms);
-
-        let mut vec_alarms: Vec<(AlarmCode, AlarmPriority)> = ongoing_alarms
-            .iter()
-            .map(|(code, priority)| (*code, priority.clone()))
-            .collect();
-
-        vec_alarms.sort_by(|(code1, _), (code2, _)| code1.cmp(&code2));
-
-        vec_alarms
-    }
-
-    pub fn init_settings_receiver(&mut self) -> Receiver<ControlMessage> {
-        let channel = mpsc::channel();
-        self.channel_for_settings = Some(channel.0);
-        channel.1
-    }
-
-    fn update_cycles_per_minute(&mut self, cycles_per_minute: usize) {
-        self.settings
-            .expiration_term
-            .set_cycles_per_minute(cycles_per_minute);
-    }
-
-    fn update_settings_values(&mut self, snapshot: &MachineStateSnapshot) {
         // Update expiratory term values
         self.settings.expiration_term.expiratory_term = snapshot.expiratory_term as usize;
+        self.settings.expiration_term.cycles_per_minute = snapshot.cpm_command as usize;
 
         // Update trigger values
         self.settings.trigger.state = if snapshot.trigger_enabled {
@@ -333,7 +343,12 @@ impl Chip {
         self.settings.pressure.peep = convert_cmh2o_to_mmh2o(snapshot.peep_command);
     }
 
-    fn update_on_ack(&mut self, ack: ControlAck) {
+    fn update_settings_and_snapshot_from_control(&mut self, ack: ControlAck) {
+        // This updates the internal stored states whenever the UI receives a \
+        //   'TelemetryMessage::ControlAck' message, which is sent to confirm an user-generated \
+        //   control message has been accepted and applied in the firmware. Updating all internal \
+        //   values straight away live-refreshes the UI w/ the up-to-date values, instead of \
+        //   requiring a full wait until the next data snapshot comes (at the end of each cycle).
         match ack.setting {
             ControlSetting::PeakPressure => {
                 self.settings.pressure.peak = ack.value as usize;

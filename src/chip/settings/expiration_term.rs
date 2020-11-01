@@ -17,7 +17,7 @@ pub enum SettingsExpirationTermEvent {
 #[derive(Debug)]
 pub struct SettingsExpirationTerm {
     pub expiratory_term: usize,
-    cycles_per_minute: usize,
+    pub cycles_per_minute: usize,
 }
 
 impl SettingsExpirationTerm {
@@ -44,10 +44,6 @@ impl SettingsExpirationTerm {
         } else {
             None
         }
-    }
-
-    pub fn set_cycles_per_minute(&mut self, cycles_per_minute: usize) {
-        self.cycles_per_minute = cycles_per_minute;
     }
 
     fn set_expiratory_term(&self, action: SettingAction) -> ControlMessage {
