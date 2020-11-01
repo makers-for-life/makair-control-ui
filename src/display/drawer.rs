@@ -4,10 +4,8 @@
 // License: Public Domain License
 
 use std::sync::mpsc::{Receiver, Sender};
-use std::time::{Duration as TimeDuration};
+use std::time::Duration;
 
-use chrono::offset::Utc;
-use chrono::Duration;
 use conrod_core::Ui;
 use glium::glutin::{ContextBuilder, EventsLoop, WindowBuilder};
 use glium::Surface;
@@ -25,7 +23,8 @@ use super::identifiers::Ids;
 use super::renderer::{DisplayRenderer, DisplayRendererBuilder};
 use super::support::GliumDisplayWinitWrapper;
 
-const THREAD_SLEEP_THROTTLE: TimeDuration = TimeDuration::from_millis(10);
+const FRAMERATE_SLEEP_THROTTLE_RUNNING: Duration = Duration::from_millis(1000 / DISPLAY_FRAMERATE_RUNNING);
+const FRAMERATE_SLEEP_THROTTLE_STOPPED: Duration = Duration::from_millis(1000 / DISPLAY_FRAMERATE_STOPPED);
 
 pub struct DisplayDrawerBuilder<'a> {
     _phantom: &'a std::marker::PhantomData<u8>,
@@ -81,18 +80,13 @@ impl<'a> DisplayDrawer<'a> {
         // Start drawer loop
         // Flow: cycles through telemetry events, and refreshes the view every time there is an \
         //   update on the machines state.
-        let (mut last_render, mut last_chip_state, mut is_first_frame) =
-            (Utc::now(), ChipState::WaitingData, true);
+        let (mut last_chip_state, mut is_first_frame) = (ChipState::WaitingData, true);
 
         'main: loop {
             let (mut has_poll_events, mut has_chip_state_change) = (false, false);
 
             // Receive telemetry data (from the input serial from the motherboard)
             // Empty the events queue before doing anything else
-            // Notice: limit the speed at which serial data may be polled. If this is not limited, \
-            //   CPU usage can grow as high as 5% residual under release mode, and 20% residual \
-            //   under debug mode. This is done only if an empty or disconnected message is \
-            //   received.
             'poll_serial: loop {
                 match serial_poller.poll(&rx) {
                     Ok(PollEvent::Ready(event)) => {
@@ -100,14 +94,8 @@ impl<'a> DisplayDrawer<'a> {
 
                         has_poll_events = true;
                     }
-                    Ok(PollEvent::Pending) => {
-                        std::thread::sleep(THREAD_SLEEP_THROTTLE);
-
-                        break 'poll_serial
-                    },
+                    Ok(PollEvent::Pending) => break 'poll_serial,
                     Err(error) => {
-                        std::thread::sleep(THREAD_SLEEP_THROTTLE);
-
                         self.chip.new_error(error);
 
                         break 'poll_serial;
@@ -121,53 +109,55 @@ impl<'a> DisplayDrawer<'a> {
                 DisplayEventsHandleOutcome::Continue => {}
             }
 
-            // Refresh the data as shown in the UI (if we have any data in the buffer)
-            let now = Utc::now();
+            // Catch chip state changes
+            if self.chip.get_state() != &last_chip_state {
+                last_chip_state = self.chip.get_state().to_owned();
 
-            if (now - last_render) > Duration::milliseconds((1000 / DISPLAY_FRAMERATE) as _) {
-                // Catch chip state changes
-                if self.chip.get_state() != &last_chip_state {
-                    last_chip_state = self.chip.get_state().to_owned();
+                has_chip_state_change = true;
+            }
 
-                    has_chip_state_change = true;
-                }
+            if last_chip_state == ChipState::Running {
+                // Clean expired pressure (this allows the graph from sliding from right to \
+                //   left)
+                self.chip.clean_expired_pressure();
 
-                if last_chip_state == ChipState::Running {
-                    // Clean expired pressure (this allows the graph from sliding from right to \
-                    //   left)
-                    self.chip.clean_expired_pressure();
+                // Force redraw if we are not stopped
+                // For some reason, with a "shared" Ids struct, conrod won't detect we need to \
+                //   redraw even though we know we have a different graph each new frame
+                self.interface.needs_redraw();
+            }
 
-                    // Force redraw if we are not stopped
-                    // For some reason, with a "shared" Ids struct, conrod won't detect we need to \
-                    //   redraw even though we know we have a different graph each new frame
-                    self.interface.needs_redraw();
-                }
+            // Run events since the last render
+            let events = self.renderer.run_events(&mut self.interface);
 
-                last_render = now;
+            // Refresh UI? (if any event occured, either user-based or poll-based)
+            // Notice: if this is the first frame, do not wait for an event to occur, refresh \
+            //   immediately. Only check those if the chip state is stopped, as to minimize \
+            //   CPU usage when no graph needs to be drawn and animated.
+            if last_chip_state == ChipState::Running
+                || has_chip_state_change
+                || is_first_frame
+                || has_poll_events
+                || !events.is_empty()
+            {
+                // Proceed UI refresh
+                self.chip.handle_settings_events(events);
 
-                // Run events since the last render
-                let events = self.renderer.run_events(&mut self.interface);
+                self.refresh();
 
-                // Refresh UI? (if any event occured, either user-based or poll-based)
-                // Notice: if this is the first frame, do not wait for an event to occur, refresh \
-                //   immediately. Only check those if the chip state is stopped, as to minimize \
-                //   CPU usage when no graph needs to be drawn and animated.
-                if last_chip_state == ChipState::Running
-                    || has_chip_state_change
-                    || is_first_frame
-                    || has_poll_events
-                    || !events.is_empty()
-                {
-                    // Proceed UI refresh
-                    self.chip.handle_settings_events(events);
+                // This is not the first frame anymore
+                is_first_frame = false;
+            }
 
-                    self.refresh();
-
-                    // This is not the first frame anymore
-                    is_first_frame = false;
-                }
+            // Limit framerate to 'FRAMERATE_SLEEP_THROTTLE_RUNNING' or \
+            //   'DISPLAY_FRAMERATE_STOPPED' (depending on current chip state)
+            // Notice: limit the speed at the drawer loop is called. If this is not limited, \
+            //   CPU usage can grow as high as 5% residual under release mode, and 20% residual \
+            //   under debug mode.
+            if last_chip_state == ChipState::Running {
+                std::thread::sleep(FRAMERATE_SLEEP_THROTTLE_RUNNING);
             } else {
-                std::thread::sleep(THREAD_SLEEP_THROTTLE);
+                std::thread::sleep(FRAMERATE_SLEEP_THROTTLE_STOPPED);
             }
         }
     }
