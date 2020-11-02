@@ -154,7 +154,7 @@ impl<'a> DisplayDrawer<'a> {
                 || has_user_events
             {
                 // Handle user events
-                if has_user_events && user_events.len() > 0 {
+                if has_user_events && !user_events.is_empty() {
                     self.chip.handle_settings_events(user_events);
                 }
 
