@@ -38,9 +38,13 @@ pub struct Config {
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create rounded rectangle
-    widget::rectangle::Rectangle::fill_with([config.width, config.height], config.background_color)
-        .bottom_left_with_margins_on(config.ids.0, config.y_position, config.x_position)
-        .set(config.ids.1, &mut master.ui);
+    widget::rounded_rectangle::RoundedRectangle::fill_with(
+        [config.width, config.height],
+        TELEMETRY_WIDGET_UNIT_BORDER_RADIUS,
+        config.background_color,
+    )
+    .bottom_left_with_margins_on(config.ids.0, config.y_position, config.x_position)
+    .set(config.ids.1, &mut master.ui);
 
     // Create title text
     widget::Text::new(&config.title)
@@ -127,5 +131,5 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
             .set(unit_id, &mut master.ui);
     }
 
-    TELEMETRY_WIDGET_SIZE_WIDTH
+    TELEMETRY_WIDGET_BOTTOM_SIZE_WIDTH
 }

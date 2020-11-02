@@ -40,9 +40,13 @@ pub struct Config<'a> {
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create container
-    widget::rectangle::Rectangle::fill_with([config.width, config.height], config.background_color)
-        .bottom_left_with_margins_on(config.parent, config.y_position, config.x_position)
-        .set(config.container, &mut master.ui);
+    widget::rounded_rectangle::RoundedRectangle::fill_with(
+        [config.width, config.height],
+        TELEMETRY_WIDGET_UNIT_BORDER_RADIUS,
+        config.background_color,
+    )
+    .bottom_left_with_margins_on(config.parent, config.y_position, config.x_position)
+    .set(config.container, &mut master.ui);
 
     // Append left border
     widget::rectangle::Rectangle::fill_with([1.0, config.height], color::BLACK.with_alpha(0.25))

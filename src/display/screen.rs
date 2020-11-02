@@ -282,14 +282,10 @@ impl<'a> Screen<'a> {
     ) {
         let machine_snapshot = self.machine_snapshot.unwrap();
 
-        // Process shared values
-        let widgets_right_width: f64 = (DISPLAY_WINDOW_SIZE_WIDTH - GRAPH_WIDTH) as f64;
-        let widgets_right_height: f64 = GRAPH_HEIGHT as f64 / 3.0;
-
         // Initialize the pressure graph widget
         self.widgets.render(ControlWidgetType::TelemetryContainer(
             telemetry_container::Config::new(
-                widgets_right_width,
+                TELEMETRY_WIDGET_RIGHT_SIZE_WIDTH,
                 DISPLAY_WINDOW_SIZE_HEIGHT as f64 - LAYOUT_HEADER_SIZE_HEIGHT,
                 self.ids.pressure_graph,
                 self.ids.telemetry_widgets_right,
@@ -332,10 +328,11 @@ impl<'a> Screen<'a> {
                     Some(self.ids.peak_unit),
                 ),
                 x_position: 0.0,
-                y_position: GRAPH_HEIGHT as f64 + LAYOUT_FOOTER_SIZE_HEIGHT - widgets_right_height,
+                y_position: GRAPH_HEIGHT as f64 + LAYOUT_FOOTER_SIZE_HEIGHT
+                    - TELEMETRY_WIDGET_RIGHT_SIZE_HEIGHT * 1.0,
                 background_color: Color::Rgba(39.0 / 255.0, 66.0 / 255.0, 100.0 / 255.0, 1.0),
-                width: widgets_right_width,
-                height: widgets_right_height,
+                width: TELEMETRY_WIDGET_RIGHT_SIZE_WIDTH,
+                height: TELEMETRY_WIDGET_RIGHT_SIZE_HEIGHT,
             }));
 
         // Initialize the plateau widget
@@ -369,10 +366,11 @@ impl<'a> Screen<'a> {
                 ),
                 x_position: 0.0,
                 y_position: GRAPH_HEIGHT as f64 + LAYOUT_FOOTER_SIZE_HEIGHT
-                    - widgets_right_height * 2.0,
+                    - TELEMETRY_WIDGET_RIGHT_SIZE_HEIGHT * 2.0
+                    - TELEMETRY_WIDGET_SPACING_SIDES,
                 background_color: Color::Rgba(66.0 / 255.0, 44.0 / 255.0, 85.0 / 255.0, 1.0),
-                width: widgets_right_width,
-                height: widgets_right_height,
+                width: TELEMETRY_WIDGET_RIGHT_SIZE_WIDTH,
+                height: TELEMETRY_WIDGET_RIGHT_SIZE_HEIGHT,
             }));
 
         // Initialize the PEEP widget
@@ -406,10 +404,11 @@ impl<'a> Screen<'a> {
                 ),
                 x_position: 0.0,
                 y_position: GRAPH_HEIGHT as f64 + LAYOUT_FOOTER_SIZE_HEIGHT
-                    - widgets_right_height * 3.0,
+                    - TELEMETRY_WIDGET_RIGHT_SIZE_HEIGHT * 3.0
+                    - TELEMETRY_WIDGET_SPACING_SIDES * 2.0,
                 background_color: Color::Rgba(76.0 / 255.0, 73.0 / 255.0, 25.0 / 255.0, 1.0),
-                width: widgets_right_width,
-                height: widgets_right_height,
+                width: TELEMETRY_WIDGET_RIGHT_SIZE_WIDTH,
+                height: TELEMETRY_WIDGET_RIGHT_SIZE_HEIGHT,
             }));
 
         // Initialize the cycles widget
@@ -436,7 +435,7 @@ impl<'a> Screen<'a> {
                 x_position: 0.0,
                 y_position: 0.0,
                 background_color: Color::Rgba(47.0 / 255.0, 74.0 / 255.0, 16.0 / 255.0, 1.0),
-                width: TELEMETRY_WIDGET_SIZE_WIDTH,
+                width: TELEMETRY_WIDGET_BOTTOM_SIZE_WIDTH,
                 height: LAYOUT_FOOTER_SIZE_HEIGHT,
             }));
 
@@ -462,10 +461,10 @@ impl<'a> Screen<'a> {
                     self.ids.tidal_value_target,
                     Some(self.ids.tidal_unit),
                 ),
-                x_position: TELEMETRY_WIDGET_SIZE_WIDTH,
+                x_position: TELEMETRY_WIDGET_BOTTOM_SIZE_WIDTH + TELEMETRY_WIDGET_SPACING_SIDES,
                 y_position: 0.0,
                 background_color: Color::Rgba(52.0 / 255.0, 52.0 / 255.0, 52.0 / 255.0, 1.0),
-                width: TELEMETRY_WIDGET_SIZE_WIDTH,
+                width: TELEMETRY_WIDGET_BOTTOM_SIZE_WIDTH,
                 height: LAYOUT_FOOTER_SIZE_HEIGHT,
             }));
 
@@ -513,10 +512,10 @@ impl<'a> Screen<'a> {
                     self.ids.ratio_value_target,
                     Some(self.ids.ratio_unit),
                 ),
-                x_position: TELEMETRY_WIDGET_SIZE_WIDTH,
+                x_position: TELEMETRY_WIDGET_BOTTOM_SIZE_WIDTH + TELEMETRY_WIDGET_SPACING_SIDES,
                 y_position: 0.0,
                 background_color: color::BLUE,
-                width: TELEMETRY_WIDGET_SIZE_WIDTH,
+                width: TELEMETRY_WIDGET_BOTTOM_SIZE_WIDTH,
                 height: LAYOUT_FOOTER_SIZE_HEIGHT,
             }));
 
@@ -535,9 +534,9 @@ impl<'a> Screen<'a> {
                 expiratory_term_widget: self.ids.trigger_overview_expiratory_term,
                 plateau_duration_widget: self.ids.trigger_overview_plateau_duration,
                 background_color: color::BLUE,
-                width: TELEMETRY_WIDGET_SIZE_WIDTH,
+                width: TELEMETRY_WIDGET_BOTTOM_SIZE_WIDTH,
                 height: LAYOUT_FOOTER_SIZE_HEIGHT,
-                x_position: TELEMETRY_WIDGET_SIZE_WIDTH,
+                x_position: TELEMETRY_WIDGET_BOTTOM_SIZE_WIDTH + TELEMETRY_WIDGET_SPACING_SIDES,
                 y_position: 0.0,
                 trigger_settings: trigger,
             },
