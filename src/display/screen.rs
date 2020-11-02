@@ -415,7 +415,11 @@ impl<'a> Screen<'a> {
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-cycles"),
-                value_measured: None,
+                value_measured: if machine_snapshot.cpm_command == 0 {
+                    None
+                } else {
+                    machine_snapshot.previous_cpm.map(|value| value.to_string())
+                },
                 value_target: Some(if machine_snapshot.cpm_command == 0 {
                     TELEMETRY_WIDGET_VALUE_EMPTY.to_owned()
                 } else {
