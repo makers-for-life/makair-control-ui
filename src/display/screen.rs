@@ -247,9 +247,6 @@ impl<'a> Screen<'a> {
             title: self.ids.stop_title,
             message: self.ids.stop_message,
         }));
-
-        // Render settings modals (as needed)
-        self.render_settings(settings, modals);
     }
 
     pub fn render_error(&mut self, error: String) {
