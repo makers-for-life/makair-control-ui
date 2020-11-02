@@ -30,6 +30,7 @@ pub struct Config {
     pub width: f64,
     pub height: f64,
     pub padding: Option<f64>,
+    pub colors: Option<(Color, Color)>,
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
@@ -46,7 +47,12 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     );
 
     // Initialize container style for borders
-    let container_borders_style = Style::Fill(Some(CONTAINER_BORDER_COLOR));
+    let container_borders_style = Style::Fill(
+        config
+            .colors
+            .map(|colors| colors.1)
+            .or(Some(CONTAINER_BORDER_COLOR)),
+    );
 
     // Create rectangle for borders
     RoundedRectangle::styled(
@@ -60,7 +66,10 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Initialize container style
     let mut container_style = canvas::Style::default();
 
-    container_style.color = Some(CONTAINER_COLOR);
+    container_style.color = config
+        .colors
+        .map(|colors| colors.0)
+        .or(Some(CONTAINER_COLOR));
     container_style.border = Some(0.0);
     container_style.border_color = Some(color::TRANSPARENT);
 

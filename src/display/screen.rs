@@ -233,6 +233,10 @@ impl<'a> Screen<'a> {
             None,
             None,
             Some(self.ids.pressure_graph),
+            Some((
+                Color::Rgba(0.0, 0.0, 0.0, 0.98),
+                Color::Rgba(1.0, 1.0, 1.0, 0.075),
+            )),
         );
 
         self.widgets.render(ControlWidgetType::Stop(stop::Config {
@@ -547,6 +551,7 @@ impl<'a> Screen<'a> {
         padding: Option<f64>,
         validate: Option<(WidgetId, WidgetId)>,
         wrapper: Option<WidgetId>,
+        colors: Option<(Color, Color)>,
     ) {
         self.widgets.render(ControlWidgetType::Modal(modal::Config {
             parent: wrapper.unwrap_or(self.ids.background),
@@ -557,6 +562,7 @@ impl<'a> Screen<'a> {
             width,
             height,
             padding,
+            colors,
         }));
     }
 
@@ -578,6 +584,7 @@ impl<'a> Screen<'a> {
             TRIGGER_SETTINGS_MODAL_HEIGTH,
             Some(TRIGGER_SETTINGS_MODAL_PADDING),
             Some((self.ids.modal_validate, self.ids.modal_validate_text)),
+            None,
             None,
         );
 
@@ -617,6 +624,7 @@ impl<'a> Screen<'a> {
             Some(EXPIRATION_TERM_SETTINGS_MODAL_PADDING),
             Some((self.ids.modal_validate, self.ids.modal_validate_text)),
             None,
+            None,
         );
 
         self.widgets
@@ -650,6 +658,7 @@ impl<'a> Screen<'a> {
             PRESSURE_SETTINGS_MODAL_HEIGTH,
             Some(PRESSURE_SETTINGS_MODAL_PADDING),
             Some((self.ids.modal_validate, self.ids.modal_validate_text)),
+            None,
             None,
         );
 
@@ -695,6 +704,7 @@ impl<'a> Screen<'a> {
             CYCLES_SETTINGS_MODAL_HEIGTH,
             Some(CYCLES_SETTINGS_MODAL_PADDING),
             Some((self.ids.modal_validate, self.ids.modal_validate_text)),
+            None,
             None,
         );
 
