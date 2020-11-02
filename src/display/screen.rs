@@ -200,15 +200,8 @@ impl<'a> Screen<'a> {
         // Render bottom elements
         self.render_telemetry(telemetry_data, &settings.trigger, &settings.expiration_term);
 
-        if modals.trigger {
-            self.render_trigger_settings(&settings.trigger);
-        } else if modals.expiration_term {
-            self.render_expiration_term_settings(&settings.expiration_term);
-        } else if modals.pressure {
-            self.render_pressure_settings(&settings.pressure);
-        } else if modals.cycles {
-            self.render_cycles_settings(&settings.cycles);
-        }
+        // Render modals (as needed)
+        self.render_settings(settings, modals);
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -233,21 +226,23 @@ impl<'a> Screen<'a> {
             modals,
         );
 
-        if !modals.trigger && !modals.expiration_term && !modals.cycles && !modals.pressure {
-            self.render_modal(
-                DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH,
-                DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT,
-                None,
-                None,
-            );
+        // Render stop modal
+        self.render_modal(
+            DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH,
+            DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT,
+            None,
+            None,
+            Some(self.ids.pressure_graph),
+        );
 
-            // Render stop layer
-            self.widgets.render(ControlWidgetType::Stop(stop::Config {
-                container: self.ids.modal_container,
-                title: self.ids.stopped_title,
-                message: self.ids.stopped_message,
-            }));
-        }
+        self.widgets.render(ControlWidgetType::Stop(stop::Config {
+            container: self.ids.modal_container,
+            title: self.ids.stopped_title,
+            message: self.ids.stopped_message,
+        }));
+
+        // Render settings modals (as needed)
+        self.render_settings(settings, modals);
     }
 
     pub fn render_error(&mut self, error: String) {
@@ -551,9 +546,10 @@ impl<'a> Screen<'a> {
         height: f64,
         padding: Option<f64>,
         validate: Option<(WidgetId, WidgetId)>,
+        wrapper: Option<WidgetId>,
     ) {
         self.widgets.render(ControlWidgetType::Modal(modal::Config {
-            parent: self.ids.background,
+            parent: wrapper.unwrap_or(self.ids.background),
             background: self.ids.modal_background,
             container_borders: self.ids.modal_container_borders,
             container: self.ids.modal_container,
@@ -564,12 +560,25 @@ impl<'a> Screen<'a> {
         }));
     }
 
+    pub fn render_settings(&mut self, settings: &'a ChipSettings, modals: &ScreenModalsOpen) {
+        if modals.trigger {
+            self.render_trigger_settings(&settings.trigger);
+        } else if modals.expiration_term {
+            self.render_expiration_term_settings(&settings.expiration_term);
+        } else if modals.pressure {
+            self.render_pressure_settings(&settings.pressure);
+        } else if modals.cycles {
+            self.render_cycles_settings(&settings.cycles);
+        }
+    }
+
     fn render_trigger_settings(&mut self, settings: &'a SettingsTrigger) {
         self.render_modal(
             TRIGGER_SETTINGS_MODAL_WIDTH,
             TRIGGER_SETTINGS_MODAL_HEIGTH,
             Some(TRIGGER_SETTINGS_MODAL_PADDING),
             Some((self.ids.modal_validate, self.ids.modal_validate_text)),
+            None,
         );
 
         self.widgets.render(ControlWidgetType::TriggerSettings(
@@ -607,6 +616,7 @@ impl<'a> Screen<'a> {
             EXPIRATION_TERM_SETTINGS_MODAL_HEIGTH,
             Some(EXPIRATION_TERM_SETTINGS_MODAL_PADDING),
             Some((self.ids.modal_validate, self.ids.modal_validate_text)),
+            None,
         );
 
         self.widgets
@@ -640,6 +650,7 @@ impl<'a> Screen<'a> {
             PRESSURE_SETTINGS_MODAL_HEIGTH,
             Some(PRESSURE_SETTINGS_MODAL_PADDING),
             Some((self.ids.modal_validate, self.ids.modal_validate_text)),
+            None,
         );
 
         self.widgets.render(ControlWidgetType::PressureSettings(
@@ -684,6 +695,7 @@ impl<'a> Screen<'a> {
             CYCLES_SETTINGS_MODAL_HEIGTH,
             Some(CYCLES_SETTINGS_MODAL_PADDING),
             Some((self.ids.modal_validate, self.ids.modal_validate_text)),
+            None,
         );
 
         self.widgets

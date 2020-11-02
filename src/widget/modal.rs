@@ -40,9 +40,8 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         color: CANVAS_COLOR,
         width: DISPLAY_WINDOW_SIZE_WIDTH as _,
         height: DISPLAY_WINDOW_SIZE_HEIGHT as _,
-        positions: x_y[
-            0.0,
-            0.0,
+        positions: middle_of[
+            config.parent,
         ]
     );
 
