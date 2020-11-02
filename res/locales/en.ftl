@@ -55,4 +55,4 @@ error-title = An error occured:
 modal-close = Close
 
 stop-title = Ventilator unit inactive
-stop-description = Please re-enable it to resume ventilation
+stop-description = Please start it to begin or resume ventilation
