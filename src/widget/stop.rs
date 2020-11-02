@@ -32,7 +32,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create title text
     widget::text::Text::new(&APP_I18N.t("stop-title"))
         .with_style(title_style)
-        .mid_top_with_margin_on(config.container, DISPLAY_STOPPED_MESSAGE_PADDING_TOP)
+        .mid_top_with_margin_on(config.container, DISPLAY_STOP_MESSAGE_PADDING_TOP)
         .set(config.title, &mut master.ui);
 
     // Initialize message style
@@ -45,7 +45,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create message text
     widget::text::Text::new(&APP_I18N.t("stop-description"))
         .with_style(message_style)
-        .mid_bottom_with_margin_on(config.container, DISPLAY_STOPPED_MESSAGE_PADDING_BOTTOM)
+        .mid_bottom_with_margin_on(config.container, DISPLAY_STOP_MESSAGE_PADDING_BOTTOM)
         .set(config.message, &mut master.ui);
 
     0 as _

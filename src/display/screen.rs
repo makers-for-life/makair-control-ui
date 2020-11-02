@@ -226,23 +226,26 @@ impl<'a> Screen<'a> {
             modals,
         );
 
-        // Render stop modal
-        self.render_modal(
-            DISPLAY_STOPPED_MESSAGE_CONTAINER_WIDTH,
-            DISPLAY_STOPPED_MESSAGE_CONTAINER_HEIGHT,
-            None,
-            None,
-            Some(self.ids.pressure_graph),
-            Some((
+        // Render stop 'pseudo-modal'
+        self.widgets.render(ControlWidgetType::Modal(modal::Config {
+            parent: self.ids.pressure_graph,
+            background: self.ids.stop_background,
+            container_borders: self.ids.stop_container_borders,
+            container: self.ids.stop_container,
+            validate: None,
+            width: DISPLAY_STOP_MESSAGE_CONTAINER_WIDTH,
+            height: DISPLAY_STOP_MESSAGE_CONTAINER_HEIGHT,
+            padding: None,
+            colors: Some((
                 Color::Rgba(0.0, 0.0, 0.0, 0.98),
                 Color::Rgba(1.0, 1.0, 1.0, 0.075),
             )),
-        );
+        }));
 
         self.widgets.render(ControlWidgetType::Stop(stop::Config {
-            container: self.ids.modal_container,
-            title: self.ids.stopped_title,
-            message: self.ids.stopped_message,
+            container: self.ids.stop_container,
+            title: self.ids.stop_title,
+            message: self.ids.stop_message,
         }));
 
         // Render settings modals (as needed)

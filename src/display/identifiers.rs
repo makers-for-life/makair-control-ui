@@ -147,8 +147,11 @@ widget_ids!(pub struct Ids {
   modal_validate,
   modal_validate_text,
 
-  stopped_title,
-  stopped_message,
+  stop_background,
+  stop_container_borders,
+  stop_container,
+  stop_title,
+  stop_message,
 
   error,
 
