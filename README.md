@@ -13,7 +13,7 @@
 | V1.3.x | Improve text readability, by increasing font sizes | ✅
 | V1.4.x | Added internationalization capabilities | ✅
 | V1.5.x | Improve UI readability + allow to change MakAir's settings | ✅
-| V2.0.x | Telemetry protocol version update to V2 + large code rework + improved UI/UX + translated alarms + regulatory compliance | ❌
+| V2.0.x | Telemetry protocol version update to V2 + large code rework + improved UI/UX + improved performances + translated alarms + regulatory compliance | ❌
 
 ## How To Build?
 
