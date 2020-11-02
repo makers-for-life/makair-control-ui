@@ -82,31 +82,35 @@ impl DisplayUIEvents {
         expiration_term_settings_state: &mut DisplayRendererSettingsState,
         pressure_settings_state: &mut DisplayRendererSettingsState,
         cycles_settings_state: &mut DisplayRendererSettingsState,
-    ) -> Vec<ChipSettingsEvent> {
-        let mut all_events = Vec::new();
+    ) -> (bool, Vec<ChipSettingsEvent>) {
+        let (mut has_events, mut events) = (false, Vec::new());
 
         // Handle telemetry clicks
-        Self::run_telemetry_clicks(
+        if Self::run_telemetry_clicks(
             interface,
             ids,
             trigger_settings_state,
             expiration_term_settings_state,
             pressure_settings_state,
             cycles_settings_state,
-        );
+        ) {
+            has_events = true;
+        }
 
         // Handle modal settings clicks
-        Self::run_modal_settings_clicks(
+        if Self::run_modal_settings_clicks(
             interface,
             ids,
             trigger_settings_state,
             expiration_term_settings_state,
             pressure_settings_state,
             cycles_settings_state,
-            &mut all_events,
-        );
+            &mut events,
+        ) {
+            has_events = true;
+        }
 
-        all_events
+        (has_events, events)
     }
 
     fn run_telemetry_clicks(
@@ -116,13 +120,15 @@ impl DisplayUIEvents {
         expiration_term_settings_state: &mut DisplayRendererSettingsState,
         pressure_settings_state: &mut DisplayRendererSettingsState,
         cycles_settings_state: &mut DisplayRendererSettingsState,
-    ) {
+    ) -> bool {
+        let mut has_events = false;
+
         // Generate all event handlers for telemetry clicks
         // Notice: if you click on a text, the text element will receive the click, not its \
         //   parent. Maybe there is a way to listen on a parent for childs clicks but we could not \
         //   find one. So we chain each iterator of every childs to be sure to capture the click.
         gen_ui_events_telemetry_settings_clicks!(
-            interface,
+            interface, has_events,
 
             {
                 "trigger", trigger_settings_state, [
@@ -178,6 +184,8 @@ impl DisplayUIEvents {
                 ]
             },
         );
+
+        has_events
     }
 
     fn run_modal_settings_clicks(
@@ -188,10 +196,12 @@ impl DisplayUIEvents {
         pressure_settings_state: &mut DisplayRendererSettingsState,
         cycles_settings_state: &mut DisplayRendererSettingsState,
         events: &mut Vec<ChipSettingsEvent>,
-    ) {
+    ) -> bool {
+        let mut has_events = false;
+
         // Generate all event handlers for modal settings clicks
         gen_ui_events_modal_settings_clicks!(
-            interface, ids, events,
+            interface, ids, has_events, events,
 
             {
                 "trigger", Trigger, trigger_settings_state,
@@ -300,6 +310,8 @@ impl DisplayUIEvents {
                 }
             },
         );
+
+        has_events
     }
 
     fn count_clicks(interface: &Ui, widget_ids: &[WidgetId]) -> usize {

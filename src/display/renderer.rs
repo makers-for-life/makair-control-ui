@@ -128,7 +128,7 @@ impl DisplayRenderer {
         }
     }
 
-    pub fn run_events(&mut self, interface: &mut Ui) -> Vec<ChipSettingsEvent> {
+    pub fn run_events(&mut self, interface: &mut Ui) -> (bool, Vec<ChipSettingsEvent>) {
         // Run all UI events (defer to sub-handler)
         DisplayUIEvents::run(
             interface,

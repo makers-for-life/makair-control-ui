@@ -69,7 +69,7 @@ macro_rules! gen_widget_impls {
 }
 
 macro_rules! gen_ui_events_telemetry_settings_clicks {
-    ($interface:ident, $({$name:expr, $settings_state:expr, $widget_ids:expr}),+,) => {
+    ($interface:ident, $has:ident, $({$name:expr, $settings_state:expr, $widget_ids:expr}),+,) => {
         $(
             let clicks = DisplayUIEvents::count_clicks(
                 $interface,
@@ -80,6 +80,8 @@ macro_rules! gen_ui_events_telemetry_settings_clicks {
                 debug!("pressed the {} widget once", $name);
 
                 $settings_state.toggle();
+
+                $has = true;
             }
         )+
     }
@@ -89,6 +91,7 @@ macro_rules! gen_ui_events_modal_settings_clicks {
     (
         $interface:ident,
         $ids:ident,
+        $has:ident,
         $events:ident,
 
         $({
@@ -116,6 +119,8 @@ macro_rules! gen_ui_events_modal_settings_clicks {
                     debug!("pressed the {} settings close button once", $name);
 
                     $settings_state.toggle();
+
+                    $has = true;
                 }
 
                 // Handle clicks on dynamic form elements
@@ -129,6 +134,8 @@ macro_rules! gen_ui_events_modal_settings_clicks {
                         $events.push(ChipSettingsEvent::$type(
                             $action,
                         ));
+
+                        $has = true;
                     }
                 )*
             }
