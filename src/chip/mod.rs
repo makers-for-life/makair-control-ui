@@ -15,7 +15,7 @@ use telemetry::alarm::AlarmCode;
 use telemetry::control::{ControlMessage, ControlSetting};
 use telemetry::serial::core;
 use telemetry::structures::{
-    AlarmPriority, ControlAck, DataSnapshot, MachineStateSnapshot, TelemetryMessage,
+    AlarmPriority, ControlAck, DataSnapshot, MachineStateSnapshot, StoppedMessage, TelemetryMessage,
 };
 
 use crate::config::environment::*;
@@ -35,6 +35,16 @@ pub enum ChipState {
 pub enum ChipEventUpdate {
     May,
     MayNot,
+}
+
+struct ChipSettingsUpdate {
+    peak_command: Option<u8>,
+    plateau_command: Option<u8>,
+    peep_command: Option<u8>,
+    cpm_command: Option<u8>,
+    expiratory_term: Option<u8>,
+    trigger_enabled: Option<bool>,
+    trigger_offset: Option<u8>,
 }
 
 pub struct Chip {
@@ -256,6 +266,7 @@ impl Chip {
 
             TelemetryMessage::StoppedMessage(message) => {
                 self.update_tick(message.systick);
+                self.update_settings_from_stopped(&message);
 
                 // A stopped message should only trigger an UI refresh when changed
                 if self.state != ChipState::Stopped {
@@ -352,30 +363,73 @@ impl Chip {
         }
     }
 
+    fn update_settings_from_parameters(&mut self, update: ChipSettingsUpdate) {
+        // Update expiratory term values
+        if let Some(expiratory_term) = update.expiratory_term {
+            self.settings.expiration_term.expiratory_term = expiratory_term as usize;
+        }
+        if let Some(cpm_command) = update.cpm_command {
+            self.settings.expiration_term.cycles_per_minute = cpm_command as usize;
+        }
+
+        // Update trigger values
+        if let Some(trigger_enabled) = update.trigger_enabled {
+            self.settings.trigger.state = if trigger_enabled {
+                SettingsTriggerState::Enabled
+            } else {
+                SettingsTriggerState::Disabled
+            };
+        }
+
+        if let Some(trigger_offset) = update.trigger_offset {
+            self.settings.trigger.inspiratory_trigger_offset = trigger_offset as usize;
+        }
+
+        // Update cycle values
+        if let Some(cpm_command) = update.cpm_command {
+            self.settings.cycles.cycles_per_minute = cpm_command as usize;
+        }
+
+        // Update pressure values
+        if let Some(peak_command) = update.peak_command {
+            self.settings.pressure.peak = convert_cmh2o_to_mmh2o(peak_command);
+        }
+        if let Some(plateau_command) = update.plateau_command {
+            self.settings.pressure.plateau = convert_cmh2o_to_mmh2o(plateau_command);
+        }
+        if let Some(peep_command) = update.peep_command {
+            self.settings.pressure.peep = convert_cmh2o_to_mmh2o(peep_command);
+        }
+    }
+
     fn update_settings_from_snapshot(&mut self, snapshot: &MachineStateSnapshot) {
         // This updates all settings value, upon receiving a \
         //   'TelemetryMessage::MachineStateSnapshot' message from the firmware.
 
-        // Update expiratory term values
-        self.settings.expiration_term.expiratory_term = snapshot.expiratory_term as usize;
-        self.settings.expiration_term.cycles_per_minute = snapshot.cpm_command as usize;
+        self.update_settings_from_parameters(ChipSettingsUpdate {
+            peak_command: Some(snapshot.peak_command),
+            plateau_command: Some(snapshot.plateau_command),
+            peep_command: Some(snapshot.peep_command),
+            cpm_command: Some(snapshot.cpm_command),
+            expiratory_term: Some(snapshot.expiratory_term),
+            trigger_enabled: Some(snapshot.trigger_enabled),
+            trigger_offset: Some(snapshot.trigger_offset),
+        });
+    }
 
-        // Update trigger values
-        self.settings.trigger.state = if snapshot.trigger_enabled {
-            SettingsTriggerState::Enabled
-        } else {
-            SettingsTriggerState::Disabled
-        };
+    fn update_settings_from_stopped(&mut self, message: &StoppedMessage) {
+        // This initializes all settings value, upon receiving a \
+        //   'TelemetryMessage::StoppedMessage' message from the firmware.
 
-        self.settings.trigger.inspiratory_trigger_offset = snapshot.trigger_offset as usize;
-
-        // Update cycle values
-        self.settings.cycles.cycles_per_minute = snapshot.cpm_command as usize;
-
-        // Update pressure values
-        self.settings.pressure.peak = convert_cmh2o_to_mmh2o(snapshot.peak_command);
-        self.settings.pressure.plateau = convert_cmh2o_to_mmh2o(snapshot.plateau_command);
-        self.settings.pressure.peep = convert_cmh2o_to_mmh2o(snapshot.peep_command);
+        self.update_settings_from_parameters(ChipSettingsUpdate {
+            peak_command: message.peak_command,
+            plateau_command: message.plateau_command,
+            peep_command: message.peep_command,
+            cpm_command: message.cpm_command,
+            expiratory_term: message.expiratory_term,
+            trigger_enabled: message.trigger_enabled,
+            trigger_offset: message.trigger_offset,
+        });
     }
 
     fn update_settings_and_snapshot_from_control(&mut self, ack: ControlAck) {
@@ -426,6 +480,14 @@ impl Chip {
             ControlSetting::ExpiratoryTerm => {
                 self.settings.expiration_term.expiratory_term = ack.value as usize;
                 self.last_machine_snapshot.expiratory_term = ack.value as u8;
+            }
+
+            ControlSetting::RespirationEnabled => {
+                if ack.value == 0 {
+                    self.state = ChipState::Stopped;
+                } else {
+                    self.state = ChipState::Running;
+                }
             }
         }
     }
