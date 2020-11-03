@@ -232,7 +232,8 @@ impl Chip {
                 self.add_pressure(&snapshot);
 
                 self.battery_level = Some(snapshot.battery_level);
-                self.state = ChipState::Running;
+
+                self.update_state_running();
 
                 // A data snapshot should always trigger an UI refresh (ie. instantaneous graph \
                 //   update)
@@ -257,7 +258,7 @@ impl Chip {
 
                 self.last_machine_snapshot = snapshot;
 
-                self.state = ChipState::Running;
+                self.update_state_running();
 
                 // A machine state snapshot should always trigger an UI refresh, as those are sent \
                 //   at the end of each ventilation cycle, and thus are not super spammy.
@@ -270,7 +271,7 @@ impl Chip {
 
                 // A stopped message should only trigger an UI refresh when changed
                 if self.state != ChipState::Stopped {
-                    self.state = ChipState::Stopped;
+                    self.update_state_stopped();
 
                     ChipEventUpdate::May
                 } else {
@@ -361,6 +362,16 @@ impl Chip {
 
             self.last_machine_snapshot = MachineStateSnapshot::default();
         }
+    }
+
+    fn update_state_running(&mut self) {
+        self.settings.run.state = SettingActionState::Enabled;
+        self.state = ChipState::Running;
+    }
+
+    fn update_state_stopped(&mut self) {
+        self.settings.run.state = SettingActionState::Disabled;
+        self.state = ChipState::Stopped;
     }
 
     fn update_settings_from_parameters(&mut self, update: ChipSettingsUpdate) {
@@ -484,9 +495,9 @@ impl Chip {
 
             ControlSetting::RespirationEnabled => {
                 if ack.value == 0 {
-                    self.state = ChipState::Stopped;
+                    self.update_state_stopped();
                 } else {
-                    self.state = ChipState::Running;
+                    self.update_state_running();
                 }
             }
         }
