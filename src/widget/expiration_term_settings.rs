@@ -52,7 +52,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
 pub fn term<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate term label
-    gen_widget_label!(
+    gen_widget_label_form!(
         master,
         text_id: config.expiration_term_text_widget,
         value: &APP_I18N.t("modal-expiration-term-expiratory-term"),

@@ -51,7 +51,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
 pub fn cycles<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate cycles label
-    gen_widget_label!(
+    gen_widget_label_form!(
         master,
         text_id: config.cycles_text_widget,
         value: &APP_I18N.t("modal-cycles-cycles-per-minute"),

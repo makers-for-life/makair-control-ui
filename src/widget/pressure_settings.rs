@@ -68,7 +68,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
 pub fn peak<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate peak label
-    gen_widget_label!(
+    gen_widget_label_form!(
         master,
         text_id: config.pressure_peak_text_widget,
         value: &APP_I18N.t("modal-pressure-peak"),
@@ -100,7 +100,7 @@ pub fn peak<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 
 pub fn plateau<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate plateau label
-    gen_widget_label!(
+    gen_widget_label_form!(
         master,
         text_id: config.pressure_plateau_text_widget,
         value: &APP_I18N.t("modal-pressure-plateau"),
@@ -136,7 +136,7 @@ pub fn plateau<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 
 pub fn peep<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate PEEP label
-    gen_widget_label!(
+    gen_widget_label_form!(
         master,
         text_id: config.pressure_peep_text_widget,
         value: &APP_I18N.t("modal-pressure-expiratory"),

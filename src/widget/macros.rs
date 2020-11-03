@@ -63,25 +63,45 @@ macro_rules! gen_widget_button {
     };
 }
 
-macro_rules! gen_widget_label {
+macro_rules! gen_widget_label_styled {
     (
         $master:ident,
         text_id: $text_id:expr,
         value: $value:expr,
+        font_size: $font_size:ident,
+        font_weight: $font_weight:ident,
         positions: $position_call:tt[$($position_arguments:expr,)*]
     ) => {
         // Initialize text style
         let mut text_style = widget::text::Style::default();
 
-        text_style.font_id = Some(Some($master.fonts.regular));
+        text_style.font_id = Some(Some($master.fonts.$font_weight));
         text_style.color = Some(color::WHITE);
-        text_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
+        text_style.font_size = Some($font_size);
 
         // Create text
         widget::Text::new($value)
             .with_style(text_style)
             .$position_call($($position_arguments,)*)
             .set($text_id, &mut $master.ui);
+    };
+}
+
+macro_rules! gen_widget_label_form {
+    (
+        $master:ident,
+        text_id: $text_id:expr,
+        value: $value:expr,
+        positions: $position_call:tt[$($position_arguments:expr,)*]
+    ) => {
+        gen_widget_label_styled!(
+            $master,
+            text_id: $text_id,
+            value: $value,
+            font_size: MODAL_TEXT_FONT_SIZE,
+            font_weight: regular,
+            positions: $position_call[$($position_arguments,)*]
+        );
     };
 }
 

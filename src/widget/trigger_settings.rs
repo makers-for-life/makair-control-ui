@@ -64,7 +64,7 @@ pub fn status<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 
 pub fn status_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate status label
-    gen_widget_label!(
+    gen_widget_label_form!(
         master,
         text_id: config.status_enabled_text_widget,
         value: &APP_I18N.t("modal-trigger-inspiratory-status"),
@@ -127,7 +127,7 @@ pub fn offset<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 
 pub fn offset_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate offset label
-    gen_widget_label!(
+    gen_widget_label_form!(
         master,
         text_id: config.inspiratory_offset_text_widget,
         value: &APP_I18N.t("modal-trigger-inspiratory-offset"),
