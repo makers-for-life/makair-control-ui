@@ -3,6 +3,10 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+use conrod_core::Ui;
+
+use crate::config::environment::*;
+
 widget_ids!(pub struct Ids {
   layout_header,
   layout_body,
@@ -152,6 +156,10 @@ widget_ids!(pub struct Ids {
   run_status_button,
   run_status_button_text,
 
+  advanced_container,
+  advanced_line_labels[],
+  advanced_line_values[],
+
   modal_background,
   modal_container_borders,
   modal_container,
@@ -170,3 +178,17 @@ widget_ids!(pub struct Ids {
   initializing_logo,
   initializing_text,
 });
+
+impl Ids {
+    pub fn allocate(&mut self, interface: &mut Ui) {
+        self.advanced_line_labels.resize(
+            ADVANCED_SETTINGS_LINES_COUNT,
+            &mut interface.widget_id_generator(),
+        );
+
+        self.advanced_line_values.resize(
+            ADVANCED_SETTINGS_LINES_COUNT,
+            &mut interface.widget_id_generator(),
+        );
+    }
+}

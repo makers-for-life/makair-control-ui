@@ -650,6 +650,13 @@ impl<'a> Screen<'a> {
                 height: ADVANCED_SETTINGS_MODAL_HEIGTH
                     - MODAL_VALIDATE_BUTTON_HEIGHT
                     - (ADVANCED_SETTINGS_MODAL_PADDING * 2.0),
+
+                snapshot: &self.machine_snapshot.unwrap(),
+
+                advanced_container_parent: self.ids.modal_container,
+                advanced_container_widget: self.ids.advanced_container,
+                advanced_container_line_labels: &self.ids.advanced_line_labels,
+                advanced_container_line_values: &self.ids.advanced_line_values,
             },
         ));
     }

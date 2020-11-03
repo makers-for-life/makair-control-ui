@@ -49,7 +49,7 @@ impl<'a> DisplayDrawerBuilder<'a> {
         window: WindowBuilder,
         context: ContextBuilder,
         events_loop: EventsLoop,
-        interface: &'a mut Ui,
+        mut interface: &'a mut Ui,
         fonts: Fonts,
         chip: Chip,
     ) -> DisplayDrawer<'a> {
@@ -58,7 +58,9 @@ impl<'a> DisplayDrawerBuilder<'a> {
             GliumDisplayWinitWrapper(glium::Display::new(window, context, &events_loop).unwrap());
 
         // Create drawer IDs
-        let ids = Ids::new(interface.widget_id_generator());
+        let mut ids = Ids::new(interface.widget_id_generator());
+
+        ids.allocate(&mut interface);
 
         // Create drawer
         DisplayDrawer {
