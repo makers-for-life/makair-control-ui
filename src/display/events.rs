@@ -74,6 +74,7 @@ impl DisplayEvents {
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 impl DisplayUIEvents {
     pub fn run(
         interface: &mut Ui,
