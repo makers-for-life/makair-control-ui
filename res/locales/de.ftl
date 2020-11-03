@@ -36,6 +36,10 @@ trigger-label-configure = Antippen zum Öffnen
 trigger-state-enabled = aktiviert
 trigger-state-disabled = Behindert
 
+modal-run-status = Status der Beatmungseinheit
+modal-run-status-started = Laufen - aufhören?
+modal-run-status-stopped = Gestoppt - Starten?
+
 modal-trigger-inspiratory-status = Inspirationsstatus auslösen:
 modal-trigger-inspiratory-offset = Inspiratorischer Trigger-Offset:
 

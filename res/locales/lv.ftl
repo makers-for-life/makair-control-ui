@@ -36,6 +36,10 @@ trigger-label-configure = Pieskarieties, lai atvērtu
 trigger-state-enabled = Iespējots
 trigger-state-disabled = Atspējots
 
+modal-run-status = Ventilatora bloka statuss
+modal-run-status-started = Skriet - apstāties?
+modal-run-status-stopped = Apturēts - sākt?
+
 modal-trigger-inspiratory-status = Iedvesmojošā stāvokļa izraisītājs:
 modal-trigger-inspiratory-offset = Ieelpošanas trigera nobīde:
 

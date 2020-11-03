@@ -36,6 +36,10 @@ trigger-label-configure = Нажмите, чтобы настроить
 trigger-state-enabled = Включено
 trigger-state-disabled = инвалид
 
+modal-run-status = Состояние вентиляционной установки
+modal-run-status-started = Бег - Стоп?
+modal-run-status-stopped = Остановлен - Пуск?
+
 modal-trigger-inspiratory-status = Статус триггера:
 modal-trigger-inspiratory-offset = Смещение триггера:
 

@@ -36,6 +36,10 @@ trigger-label-configure = Touchez pour configurer
 trigger-state-enabled = Activé
 trigger-state-disabled = Désactivé
 
+modal-run-status = Unité de ventilation
+modal-run-status-started = Active — La stopper ?
+modal-run-status-stopped = Arrêtée — La démarrer ?
+
 modal-trigger-inspiratory-status = État du trigger inspiratoire :
 modal-trigger-inspiratory-offset = Seuil de déclenchement :
 

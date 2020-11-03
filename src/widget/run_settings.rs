@@ -21,10 +21,81 @@ use crate::APP_I18N;
 pub struct Config {
     pub width: f64,
     pub height: f64,
+
+    pub status_container_parent: WidgetId,
+    pub status_container_widget: WidgetId,
+    pub status_enabled_text_widget: WidgetId,
+    pub status_enabled_button_widget: WidgetId,
+    pub status_enabled_button_text_widget: WidgetId,
 }
 
 pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
-    // TODO
+    // Create container
+    gen_widget_container!(
+        master,
+        container_id: config.status_container_widget,
+        color: color::TRANSPARENT,
+        width: config.width,
+        height: config.height / 2.0,
+        positions: top_left_of[
+            config.status_container_parent,
+        ]
+    );
+
+    // Append contents
+    status(master, &config);
 
     0 as _
+}
+
+pub fn status<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+    // Append sub-contents
+    status_label(master, &config);
+    status_form(master, &config);
+}
+
+pub fn status_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+    // Generate status label
+    gen_widget_label!(
+        master,
+        text_id: config.status_enabled_text_widget,
+        value: &APP_I18N.t("modal-run-status"),
+        positions: top_left_of[
+            config.status_container_widget,
+        ]
+    );
+}
+
+pub fn status_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+    let todo_enabled = false;
+
+    // Acquire status button color & label
+    let status_label = match todo_enabled {
+        true => APP_I18N.t("modal-run-status-started"),
+        false => APP_I18N.t("modal-run-status-stopped"),
+    };
+    let button_color = match todo_enabled {
+        true => color::DARK_GREEN,
+        false => color::DARK_RED,
+    };
+
+    // Append status button
+    gen_widget_button!(
+        master,
+        button_id: config.status_enabled_button_widget,
+        text_id: config.status_enabled_button_text_widget,
+        text_color: button_color,
+        text_font_size: 16,
+        width: 280.0,
+        value_top: 4.0,
+        value: &status_label,
+
+        positions: (
+            top_left_with_margins_on[
+                config.status_container_widget,
+                -3.0,
+                RUN_SETTINGS_MODAL_FORM_PADDING_LEFT,
+            ]
+        )
+    );
 }

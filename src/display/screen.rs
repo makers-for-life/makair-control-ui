@@ -617,6 +617,21 @@ impl<'a> Screen<'a> {
             None,
             None,
         );
+
+        self.widgets.render(ControlWidgetType::RunSettings(
+            run_settings::Config {
+                width: RUN_SETTINGS_MODAL_WIDTH,
+                height: RUN_SETTINGS_MODAL_HEIGTH
+                    - MODAL_VALIDATE_BUTTON_HEIGHT
+                    - (RUN_SETTINGS_MODAL_PADDING * 2.0),
+
+                status_container_parent: self.ids.modal_container,
+                status_container_widget: self.ids.run_status_container,
+                status_enabled_text_widget: self.ids.run_status_text,
+                status_enabled_button_widget: self.ids.run_status_button,
+                status_enabled_button_text_widget: self.ids.run_status_button_text,
+            },
+        ));
     }
 
     fn render_advanced_settings(&mut self) {
@@ -628,6 +643,15 @@ impl<'a> Screen<'a> {
             None,
             None,
         );
+
+        self.widgets.render(ControlWidgetType::AdvancedSettings(
+            advanced_settings::Config {
+                width: ADVANCED_SETTINGS_MODAL_WIDTH,
+                height: ADVANCED_SETTINGS_MODAL_HEIGTH
+                    - MODAL_VALIDATE_BUTTON_HEIGHT
+                    - (ADVANCED_SETTINGS_MODAL_PADDING * 2.0),
+            },
+        ));
     }
 
     fn render_trigger_settings(&mut self, settings: &'a SettingsTrigger) {

@@ -36,6 +36,10 @@ trigger-label-configure = Tap to configure
 trigger-state-enabled = Enabled
 trigger-state-disabled = Disabled
 
+modal-run-status = Ventilator unit status
+modal-run-status-started = Running — Tap to stop
+modal-run-status-stopped = Stopped — Tap to start
+
 modal-trigger-inspiratory-status = Inspiratory trigger status:
 modal-trigger-inspiratory-offset = Inspiratory trigger offset:
 

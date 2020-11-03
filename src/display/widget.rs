@@ -33,6 +33,8 @@ gen_widget_impls!(
     TelemetryContainer -> telemetry_container,
     TelemetryView -> telemetry_view,
     Layout -> layout,
+    RunSettings -> run_settings,
+    AdvancedSettings -> advanced_settings,
     TriggerSettings -> trigger_settings['a],
     TriggerOverview -> trigger_overview['a],
     ExpirationTermSettings -> expiration_term_settings['a],

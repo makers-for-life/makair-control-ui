@@ -147,6 +147,11 @@ widget_ids!(pub struct Ids {
   trigger_offset_text,
   trigger_offset_value,
 
+  run_status_container,
+  run_status_text,
+  run_status_button,
+  run_status_button_text,
+
   modal_background,
   modal_container_borders,
   modal_container,

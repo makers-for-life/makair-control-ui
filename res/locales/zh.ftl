@@ -36,6 +36,10 @@ trigger-label-configure = 点击配置
 trigger-state-enabled = 已启用
 trigger-state-disabled = 残障人士
 
+modal-run-status = 呼吸机状态
+modal-run-status-started = 跑步-停下来吗？
+modal-run-status-stopped = 已停止-开始吗？
+
 modal-trigger-inspiratory-status = 触发吸气状态：
 modal-trigger-inspiratory-offset = 吸气扳机偏移量：
 

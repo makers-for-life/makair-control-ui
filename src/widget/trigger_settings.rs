@@ -20,6 +20,7 @@ pub struct Config<'a> {
     pub height: f64,
 
     pub trigger_settings: &'a SettingsTrigger,
+
     pub status_container_parent: WidgetId,
     pub status_container_widget: WidgetId,
     pub status_enabled_text_widget: WidgetId,
