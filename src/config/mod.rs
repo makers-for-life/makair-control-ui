@@ -4,5 +4,6 @@
 // License: Public Domain License
 
 pub mod arguments;
+pub mod context;
 pub mod environment;
 pub mod logger;

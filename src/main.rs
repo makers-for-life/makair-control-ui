@@ -37,6 +37,7 @@ use crate::chip::Chip;
 use crate::lora::controller::LoraController;
 
 use config::arguments::ConfigArguments;
+use config::context::ConfigContext;
 use config::logger::ConfigLogger;
 use display::window::DisplayWindowBuilder;
 use locale::accessor::LocaleAccessor;
@@ -56,11 +57,16 @@ pub struct EmbeddedLocales;
 
 lazy_static! {
     static ref APP_ARGS: ConfigArguments = make_app_args();
+    static ref APP_CONTEXT: ConfigContext = make_app_context();
     static ref APP_I18N: LocaleAccessor = make_app_i18n();
 }
 
 fn make_app_args() -> ConfigArguments {
     ConfigArguments::read()
+}
+
+fn make_app_context() -> ConfigContext {
+    ConfigContext::make()
 }
 
 fn make_app_i18n() -> LocaleAccessor {

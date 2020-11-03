@@ -18,8 +18,10 @@ use telemetry::structures::MachineStateSnapshot;
 
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
+use crate::utilities::parse::parse_non_empty_number_to_string;
+use crate::APP_CONTEXT;
 
-const CONTROL_UI_VERSION: &'static str = env!("CARGO_PKG_VERSION");
+const CONTROL_UI_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub struct Config<'a> {
     pub width: f64,
@@ -50,31 +52,29 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     let line_data: [(&str, &str); ADVANCED_SETTINGS_LINES_COUNT] = [
         (
             "telemetry-version",
-            &(if config.snapshot.telemetry_version == 0 {
-                "".to_string()
-            } else {
-                config.snapshot.telemetry_version.to_string()
-            }),
+            &parse_non_empty_number_to_string(config.snapshot.telemetry_version as usize),
         ),
         ("control-ui-version", CONTROL_UI_VERSION),
-        ("control-ui-uptime-seconds", ""), // TODO
+        (
+            "control-ui-uptime-seconds",
+            &parse_non_empty_number_to_string(APP_CONTEXT.start_time.elapsed().as_secs() as usize),
+        ),
         ("firmware-version", &config.snapshot.version),
-        ("firmware-target", ""), // TODO
+        ("firmware-target", ""), // TODO: BootMessage::mode
         ("runtime-device-id", &config.snapshot.device_id.to_string()),
         (
             "runtime-uptime-seconds",
-            &(if config.snapshot.systick == 0 {
-                "".to_string()
-            } else {
-                (config.snapshot.systick / 1000000).to_string()
-            }),
+            &parse_non_empty_number_to_string(config.snapshot.systick as usize / 1000000),
         ),
-        ("runtime-cycles", &config.snapshot.cycle.to_string()),
-        ("runtime-phase", ""),      // TODO
-        ("pinch-angle-inhale", ""), // TODO
-        ("pinch-angle-exhale", ""), // TODO
-        ("blower-rpm", ""),         // TODO
-        ("battery-voltage", ""),    // TODO
+        (
+            "runtime-cycles",
+            &parse_non_empty_number_to_string(config.snapshot.cycle as usize),
+        ),
+        ("runtime-phase", ""),      // TODO: DataSnapshot::subphase
+        ("pinch-angle-inhale", ""), // TODO: DataSnapshot::blower_valve_position
+        ("pinch-angle-exhale", ""), // TODO: DataSnapshot::patient_valve_position
+        ("blower-rpm", ""),         // TODO: DataSnapshot::blower_rpm
+        ("battery-voltage", ""),    // TODO: DataSnapshot::battery_level
     ];
 
     // Append lines

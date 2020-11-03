@@ -19,3 +19,11 @@ pub fn parse_version_number(version: &str) -> &str {
     // Fallback on the identity function (return version as-is)
     version
 }
+
+pub fn parse_non_empty_number_to_string(value: usize) -> String {
+    if value == 0 {
+        "".to_string()
+    } else {
+        value.to_string()
+    }
+}
