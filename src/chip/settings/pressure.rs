@@ -5,15 +5,15 @@
 
 use telemetry::control::{ControlMessage, ControlSetting};
 
-use crate::chip::settings::SettingAction;
+use crate::chip::settings::SettingActionRange;
 
 const PRESSURE_STEP: usize = 10;
 
 #[derive(Debug)]
 pub enum SettingsPressureEvent {
-    Peak(SettingAction),
-    Plateau(SettingAction),
-    PEEP(SettingAction),
+    Peak(SettingActionRange),
+    Plateau(SettingActionRange),
+    PEEP(SettingActionRange),
 }
 
 #[derive(Debug)]
@@ -40,7 +40,7 @@ impl SettingsPressure {
         }
     }
 
-    fn set_peak(&self, action: SettingAction) -> ControlMessage {
+    fn set_peak(&self, action: SettingActionRange) -> ControlMessage {
         let control = ControlSetting::PeakPressure;
 
         ControlMessage {
@@ -49,7 +49,7 @@ impl SettingsPressure {
         }
     }
 
-    fn set_plateau(&self, action: SettingAction) -> ControlMessage {
+    fn set_plateau(&self, action: SettingActionRange) -> ControlMessage {
         let control = ControlSetting::PlateauPressure;
 
         ControlMessage {
@@ -58,7 +58,7 @@ impl SettingsPressure {
         }
     }
 
-    fn set_peep(&self, action: SettingAction) -> ControlMessage {
+    fn set_peep(&self, action: SettingActionRange) -> ControlMessage {
         let control = ControlSetting::PEEP;
 
         ControlMessage {
@@ -70,7 +70,7 @@ impl SettingsPressure {
     fn acquire_new_value(
         &self,
         control: &ControlSetting,
-        action: SettingAction,
+        action: SettingActionRange,
         previous_value: usize,
     ) -> usize {
         action.to_new_value(control, previous_value, PRESSURE_STEP)

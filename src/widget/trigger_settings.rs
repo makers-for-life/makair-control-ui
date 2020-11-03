@@ -9,7 +9,7 @@ use conrod_core::{
     Positionable, Sizeable, Widget,
 };
 
-use crate::chip::settings::trigger::{SettingsTrigger, SettingsTriggerState};
+use crate::chip::settings::{trigger::SettingsTrigger, SettingActionState};
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
@@ -77,12 +77,12 @@ pub fn status_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 pub fn status_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Acquire status button color & label
     let status_label = match config.trigger_settings.state {
-        SettingsTriggerState::Enabled => APP_I18N.t("trigger-state-enabled"),
-        SettingsTriggerState::Disabled => APP_I18N.t("trigger-state-disabled"),
+        SettingActionState::Enabled => APP_I18N.t("trigger-state-enabled"),
+        SettingActionState::Disabled => APP_I18N.t("trigger-state-disabled"),
     };
     let button_color = match config.trigger_settings.state {
-        SettingsTriggerState::Enabled => color::DARK_GREEN,
-        SettingsTriggerState::Disabled => color::DARK_RED,
+        SettingActionState::Enabled => color::DARK_GREEN,
+        SettingActionState::Disabled => color::DARK_RED,
     };
 
     // Append status button

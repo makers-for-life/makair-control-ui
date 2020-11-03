@@ -5,42 +5,26 @@
 
 use telemetry::control::{ControlMessage, ControlSetting};
 
-use crate::chip::settings::SettingAction;
+use crate::chip::settings::{SettingActionRange, SettingActionState};
 
 const TRIGGER_OFFSET_STEP: usize = 1;
 
 #[derive(Debug)]
 pub enum SettingsTriggerEvent {
     TriggerToggle,
-    TriggerOffset(SettingAction),
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum SettingsTriggerState {
-    Disabled = 0,
-    Enabled = 1,
+    TriggerOffset(SettingActionRange),
 }
 
 #[derive(Debug)]
 pub struct SettingsTrigger {
-    pub state: SettingsTriggerState,
+    pub state: SettingActionState,
     pub inspiratory_trigger_offset: usize,
-}
-
-impl SettingsTriggerState {
-    fn from_value(value: usize) -> Self {
-        if value > 0 {
-            Self::Enabled
-        } else {
-            Self::Disabled
-        }
-    }
 }
 
 impl SettingsTrigger {
     pub fn new() -> SettingsTrigger {
         SettingsTrigger {
-            state: SettingsTriggerState::from_value(ControlSetting::TriggerEnabled.default()),
+            state: SettingActionState::from_value(ControlSetting::TriggerEnabled.default()),
             inspiratory_trigger_offset: ControlSetting::TriggerOffset.default(),
         }
     }
@@ -55,18 +39,13 @@ impl SettingsTrigger {
     }
 
     fn toggle_enabled(&self) -> ControlMessage {
-        let new_state = match self.state {
-            SettingsTriggerState::Enabled => SettingsTriggerState::Disabled,
-            SettingsTriggerState::Disabled => SettingsTriggerState::Enabled,
-        };
-
         ControlMessage {
             setting: ControlSetting::TriggerEnabled,
-            value: new_state as u16,
+            value: self.state.to_toggled() as u16,
         }
     }
 
-    fn set_inspiratory_trigger_offset(&self, action: SettingAction) -> ControlMessage {
+    fn set_inspiratory_trigger_offset(&self, action: SettingActionRange) -> ControlMessage {
         let setting = ControlSetting::TriggerOffset;
         let new_value = action.to_new_value(
             &setting,

@@ -5,13 +5,13 @@
 
 use telemetry::control::{ControlMessage, ControlSetting};
 
-use crate::chip::settings::SettingAction;
+use crate::chip::settings::SettingActionRange;
 
 const CYCLES_PER_MINUTE_STEP: usize = 1;
 
 #[derive(Debug)]
 pub enum SettingsCyclesEvent {
-    CyclesPerMinute(SettingAction),
+    CyclesPerMinute(SettingActionRange),
 }
 
 #[derive(Debug)]
@@ -32,7 +32,7 @@ impl SettingsCycles {
         }
     }
 
-    fn set_cycles_per_minute(&self, action: SettingAction) -> ControlMessage {
+    fn set_cycles_per_minute(&self, action: SettingActionRange) -> ControlMessage {
         let setting = ControlSetting::CyclesPerMinute;
         let new_value =
             action.to_new_value(&setting, self.cycles_per_minute, CYCLES_PER_MINUTE_STEP);

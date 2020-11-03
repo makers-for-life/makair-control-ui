@@ -8,8 +8,8 @@ use glium::glutin::{Event, EventsLoop, KeyboardInput, WindowEvent};
 
 use crate::chip::settings::{
     cycles::SettingsCyclesEvent, expiration_term::SettingsExpirationTermEvent,
-    pressure::SettingsPressureEvent, trigger::SettingsTriggerEvent, ChipSettingsEvent,
-    SettingAction,
+    pressure::SettingsPressureEvent, run::SettingsRunEvent, trigger::SettingsTriggerEvent,
+    ChipSettingsEvent, SettingActionRange,
 };
 
 use super::identifiers::Ids;
@@ -229,6 +229,13 @@ impl DisplayUIEvents {
 
             {
                 "run", Run, run_settings_state,
+
+                {
+                    SettingsRunEvent::RespirationEnabled, "toggle", [
+                        ids.run_status_button,
+                        ids.run_status_button_text,
+                    ]
+                }
             },
 
             {
@@ -246,14 +253,14 @@ impl DisplayUIEvents {
                 },
 
                 {
-                    SettingsTriggerEvent::TriggerOffset(SettingAction::Less), "offset less", [
+                    SettingsTriggerEvent::TriggerOffset(SettingActionRange::Less), "offset less", [
                         ids.trigger_offset_less_button,
                         ids.trigger_offset_less_button_text,
                     ]
                 },
 
                 {
-                    SettingsTriggerEvent::TriggerOffset(SettingAction::More), "offset more", [
+                    SettingsTriggerEvent::TriggerOffset(SettingActionRange::More), "offset more", [
                         ids.trigger_offset_more_button,
                         ids.trigger_offset_more_button_text,
                     ]
@@ -264,14 +271,14 @@ impl DisplayUIEvents {
                 "expiratory term", ExpirationTerm, expiration_term_settings_state,
 
                 {
-                    SettingsExpirationTermEvent::ExpiratoryTerm(SettingAction::Less), "term less", [
+                    SettingsExpirationTermEvent::ExpiratoryTerm(SettingActionRange::Less), "term less", [
                         ids.expiration_term_less_button,
                         ids.expiration_term_less_button_text,
                     ]
                 },
 
                 {
-                    SettingsExpirationTermEvent::ExpiratoryTerm(SettingAction::More), "term more", [
+                    SettingsExpirationTermEvent::ExpiratoryTerm(SettingActionRange::More), "term more", [
                         ids.expiration_term_more_button,
                         ids.expiration_term_more_button_text,
                     ]
@@ -282,14 +289,14 @@ impl DisplayUIEvents {
                 "cycles", Cycles, cycles_settings_state,
 
                 {
-                    SettingsCyclesEvent::CyclesPerMinute(SettingAction::Less), "cycles less", [
+                    SettingsCyclesEvent::CyclesPerMinute(SettingActionRange::Less), "cycles less", [
                         ids.cycles_less_button,
                         ids.cycles_less_button_text,
                     ]
                 },
 
                 {
-                    SettingsCyclesEvent::CyclesPerMinute(SettingAction::More), "cycles more", [
+                    SettingsCyclesEvent::CyclesPerMinute(SettingActionRange::More), "cycles more", [
                         ids.cycles_more_button,
                         ids.cycles_more_button_text,
                     ]
@@ -300,42 +307,42 @@ impl DisplayUIEvents {
                 "pressure", Pressure, pressure_settings_state,
 
                 {
-                    SettingsPressureEvent::Peak(SettingAction::Less), "peak less", [
+                    SettingsPressureEvent::Peak(SettingActionRange::Less), "peak less", [
                         ids.pressure_peak_less_button,
                         ids.pressure_peak_less_button_text,
                     ]
                 },
 
                 {
-                    SettingsPressureEvent::Peak(SettingAction::More), "peak more", [
+                    SettingsPressureEvent::Peak(SettingActionRange::More), "peak more", [
                         ids.pressure_peak_more_button,
                         ids.pressure_peak_more_button_text,
                     ]
                 },
 
                 {
-                    SettingsPressureEvent::Plateau(SettingAction::Less), "plateau less", [
+                    SettingsPressureEvent::Plateau(SettingActionRange::Less), "plateau less", [
                         ids.pressure_plateau_less_button,
                         ids.pressure_plateau_less_button_text,
                     ]
                 },
 
                 {
-                    SettingsPressureEvent::Plateau(SettingAction::More), "plateau more", [
+                    SettingsPressureEvent::Plateau(SettingActionRange::More), "plateau more", [
                         ids.pressure_plateau_more_button,
                         ids.pressure_plateau_more_button_text,
                     ]
                 },
 
                 {
-                    SettingsPressureEvent::PEEP(SettingAction::Less), "peep less", [
+                    SettingsPressureEvent::PEEP(SettingActionRange::Less), "peep less", [
                         ids.pressure_peep_less_button,
                         ids.pressure_peep_less_button_text,
                     ]
                 },
 
                 {
-                    SettingsPressureEvent::PEEP(SettingAction::More), "peep more", [
+                    SettingsPressureEvent::PEEP(SettingActionRange::More), "peep more", [
                         ids.pressure_peep_more_button,
                         ids.pressure_peep_more_button_text,
                     ]

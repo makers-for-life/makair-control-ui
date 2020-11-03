@@ -11,7 +11,7 @@ use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
 
 use crate::chip::settings::{
     cycles::SettingsCycles, expiration_term::SettingsExpirationTerm, pressure::SettingsPressure,
-    trigger::SettingsTrigger, ChipSettings,
+    run::SettingsRun, trigger::SettingsTrigger, ChipSettings,
 };
 use crate::config::environment::*;
 use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
@@ -594,7 +594,7 @@ impl<'a> Screen<'a> {
 
     pub fn render_settings(&mut self, settings: &'a ChipSettings, modals: &ScreenModalsOpen) {
         if modals.run {
-            self.render_run_settings();
+            self.render_run_settings(&settings.run);
         } else if modals.advanced {
             self.render_advanced_settings();
         } else if modals.trigger {
@@ -608,7 +608,7 @@ impl<'a> Screen<'a> {
         }
     }
 
-    fn render_run_settings(&mut self) {
+    fn render_run_settings(&mut self, settings: &'a SettingsRun) {
         self.render_modal(
             RUN_SETTINGS_MODAL_WIDTH,
             RUN_SETTINGS_MODAL_HEIGTH,
@@ -618,20 +618,20 @@ impl<'a> Screen<'a> {
             None,
         );
 
-        self.widgets.render(ControlWidgetType::RunSettings(
-            run_settings::Config {
+        self.widgets
+            .render(ControlWidgetType::RunSettings(run_settings::Config {
                 width: RUN_SETTINGS_MODAL_WIDTH,
                 height: RUN_SETTINGS_MODAL_HEIGTH
                     - MODAL_VALIDATE_BUTTON_HEIGHT
                     - (RUN_SETTINGS_MODAL_PADDING * 2.0),
+                run_settings: settings,
 
                 status_container_parent: self.ids.modal_container,
                 status_container_widget: self.ids.run_status_container,
                 status_enabled_text_widget: self.ids.run_status_text,
                 status_enabled_button_widget: self.ids.run_status_button,
                 status_enabled_button_text_widget: self.ids.run_status_button_text,
-            },
-        ));
+            }));
     }
 
     fn render_advanced_settings(&mut self) {

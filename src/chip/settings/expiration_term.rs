@@ -5,13 +5,13 @@
 
 use telemetry::control::{ControlMessage, ControlSetting};
 
-use crate::chip::settings::SettingAction;
+use crate::chip::settings::SettingActionRange;
 
 const EXPIRATORY_TERM_STEP: usize = 1;
 
 #[derive(Debug)]
 pub enum SettingsExpirationTermEvent {
-    ExpiratoryTerm(SettingAction),
+    ExpiratoryTerm(SettingActionRange),
 }
 
 #[derive(Debug)]
@@ -46,7 +46,7 @@ impl SettingsExpirationTerm {
         }
     }
 
-    fn set_expiratory_term(&self, action: SettingAction) -> ControlMessage {
+    fn set_expiratory_term(&self, action: SettingActionRange) -> ControlMessage {
         let setting = ControlSetting::ExpiratoryTerm;
         let new_value = action.to_new_value(&setting, self.expiratory_term, EXPIRATORY_TERM_STEP);
 

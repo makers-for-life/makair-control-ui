@@ -14,13 +14,16 @@ use conrod_core::{
     Positionable, Sizeable, Widget,
 };
 
+use crate::chip::settings::{run::SettingsRun, SettingActionState};
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::APP_I18N;
 
-pub struct Config {
+pub struct Config<'a> {
     pub width: f64,
     pub height: f64,
+
+    pub run_settings: &'a SettingsRun,
 
     pub status_container_parent: WidgetId,
     pub status_container_widget: WidgetId,
@@ -29,7 +32,7 @@ pub struct Config {
     pub status_enabled_button_text_widget: WidgetId,
 }
 
-pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create container
     gen_widget_container!(
         master,
@@ -67,16 +70,14 @@ pub fn status_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 }
 
 pub fn status_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
-    let todo_enabled = false;
-
     // Acquire status button color & label
-    let status_label = match todo_enabled {
-        true => APP_I18N.t("modal-run-status-started"),
-        false => APP_I18N.t("modal-run-status-stopped"),
+    let status_label = match config.run_settings.state {
+        SettingActionState::Enabled => APP_I18N.t("modal-run-status-started"),
+        SettingActionState::Disabled => APP_I18N.t("modal-run-status-stopped"),
     };
-    let button_color = match todo_enabled {
-        true => color::DARK_GREEN,
-        false => color::DARK_RED,
+    let button_color = match config.run_settings.state {
+        SettingActionState::Enabled => color::DARK_GREEN,
+        SettingActionState::Disabled => color::DARK_RED,
     };
 
     // Append status button

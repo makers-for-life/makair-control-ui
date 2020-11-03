@@ -10,7 +10,7 @@ use std::collections::{HashMap, VecDeque};
 use std::convert::TryFrom;
 use std::sync::mpsc::{self, Receiver, Sender};
 
-use settings::{trigger::SettingsTriggerState, ChipSettings, ChipSettingsEvent};
+use settings::{ChipSettings, ChipSettingsEvent, SettingActionState};
 use telemetry::alarm::AlarmCode;
 use telemetry::control::{ControlMessage, ControlSetting};
 use telemetry::serial::core;
@@ -375,9 +375,9 @@ impl Chip {
         // Update trigger values
         if let Some(trigger_enabled) = update.trigger_enabled {
             self.settings.trigger.state = if trigger_enabled {
-                SettingsTriggerState::Enabled
+                SettingActionState::Enabled
             } else {
-                SettingsTriggerState::Disabled
+                SettingActionState::Disabled
             };
         }
 
@@ -464,10 +464,10 @@ impl Chip {
 
             ControlSetting::TriggerEnabled => {
                 if ack.value == 0 {
-                    self.settings.trigger.state = SettingsTriggerState::Disabled;
+                    self.settings.trigger.state = SettingActionState::Disabled;
                     self.last_machine_snapshot.trigger_enabled = false;
                 } else {
-                    self.settings.trigger.state = SettingsTriggerState::Enabled;
+                    self.settings.trigger.state = SettingActionState::Enabled;
                     self.last_machine_snapshot.trigger_enabled = true;
                 }
             }
