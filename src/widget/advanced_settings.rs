@@ -19,6 +19,8 @@ use telemetry::structures::MachineStateSnapshot;
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 
+const CONTROL_UI_VERSION: &'static str = env!("CARGO_PKG_VERSION");
+
 pub struct Config<'a> {
     pub width: f64,
     pub height: f64,
@@ -45,21 +47,34 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     );
 
     // Generate line data
-    let line_data: [(&str, String); ADVANCED_SETTINGS_LINES_COUNT] = [
-        // TODO: populate w/ real values + label translations / or not?
-        ("motherboard-serial", "MFL-02X".to_string()),
-        ("telemetry-version", "0.0.0".to_string()),
-        ("control-ui-version", "0.0.0".to_string()),
-        ("control-ui-uptime", "2 minutes".to_string()),
-        ("firmware-version", "0.0.0".to_string()),
-        ("firmware-target", "development".to_string()),
-        ("runtime-uptime", "3 minutes".to_string()),
-        ("runtime-cycles", "214 cycles".to_string()),
-        ("runtime-phase", "exhale".to_string()),
-        ("pinch-angle-inhale", "43.2 deg".to_string()),
-        ("pinch-angle-exhale", "2.5 deg".to_string()),
-        ("blower-rpm", "2091 rpm".to_string()),
-        ("battery-voltage", "27V".to_string()),
+    let line_data: [(&str, &str); ADVANCED_SETTINGS_LINES_COUNT] = [
+        (
+            "telemetry-version",
+            &(if config.snapshot.telemetry_version == 0 {
+                "".to_string()
+            } else {
+                config.snapshot.telemetry_version.to_string()
+            }),
+        ),
+        ("control-ui-version", CONTROL_UI_VERSION),
+        ("control-ui-uptime-seconds", ""), // TODO
+        ("firmware-version", &config.snapshot.version),
+        ("firmware-target", ""), // TODO
+        ("runtime-device-id", &config.snapshot.device_id.to_string()),
+        (
+            "runtime-uptime-seconds",
+            &(if config.snapshot.systick == 0 {
+                "".to_string()
+            } else {
+                (config.snapshot.systick / 1000000).to_string()
+            }),
+        ),
+        ("runtime-cycles", &config.snapshot.cycle.to_string()),
+        ("runtime-phase", ""),      // TODO
+        ("pinch-angle-inhale", ""), // TODO
+        ("pinch-angle-exhale", ""), // TODO
+        ("blower-rpm", ""),         // TODO
+        ("battery-voltage", ""),    // TODO
     ];
 
     // Append lines
@@ -100,14 +115,18 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         value_text_style.font_size = Some(ADVANCED_SETTINGS_LINE_FONT_SIZE);
 
         // Create text
-        widget::Text::new(&line_data[index].1)
-            .with_style(value_text_style)
-            .top_left_with_margins_on(
-                *container_line,
-                0.0,
-                ADVANCED_SETTINGS_LINE_VALUE_PADDING_LEFT,
-            )
-            .set(config.advanced_container_line_values[index], &mut master.ui);
+        widget::Text::new(if line_data[index].1.is_empty() {
+            ADVANCED_SETTINGS_LINE_VALUE_EMPTY
+        } else {
+            &line_data[index].1
+        })
+        .with_style(value_text_style)
+        .top_left_with_margins_on(
+            *container_line,
+            0.0,
+            ADVANCED_SETTINGS_LINE_VALUE_PADDING_LEFT,
+        )
+        .set(config.advanced_container_line_values[index], &mut master.ui);
     }
 
     0 as _
