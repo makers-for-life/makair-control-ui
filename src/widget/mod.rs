@@ -10,6 +10,7 @@ pub mod alarm;
 pub mod alarms;
 pub mod background;
 pub mod branding;
+pub mod controls;
 pub mod cycles_settings;
 pub mod error;
 pub mod expiration_term_settings;

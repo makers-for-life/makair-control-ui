@@ -61,9 +61,9 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
     // Compute container left margin (based on alarms count)
     let container_margin_left = if alarms_count == 0 {
-        32.0
+        DISPLAY_ALARM_CONTAINER_MARGIN_LEFT_BASE
     } else {
-        -1.0 * BRANDING_WIDTH as f64
+        DISPLAY_ALARM_CONTAINER_MARGIN_LEFT_HAS_ALARMS
     };
 
     // Compute container height (based on alarms count)

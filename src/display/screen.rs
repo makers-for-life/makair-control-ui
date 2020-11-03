@@ -127,6 +127,18 @@ impl<'a> Screen<'a> {
             }));
     }
 
+    pub fn render_heartbeat(&mut self, heartbeat_data: DisplayDataHeartbeat<'a>) {
+        self.widgets
+            .render(ControlWidgetType::Heartbeat(heartbeat::Config::new(
+                heartbeat_data.data_pressure,
+                self.machine_snapshot.unwrap().peak_command,
+                self.ids.layout_header,
+                self.ids.heartbeat_ground,
+                self.ids.heartbeat_surround,
+                self.ids.heartbeat_inner,
+            )));
+    }
+
     pub fn render_status(&mut self, status_data: DisplayDataStatus<'a>) {
         self.widgets
             .render(ControlWidgetType::Status(status::Config::new(
@@ -144,15 +156,18 @@ impl<'a> Screen<'a> {
             )));
     }
 
-    pub fn render_heartbeat(&mut self, heartbeat_data: DisplayDataHeartbeat<'a>) {
+    pub fn render_controls(&mut self, controls_data: DisplayDataControls<'a>) {
         self.widgets
-            .render(ControlWidgetType::Heartbeat(heartbeat::Config::new(
-                heartbeat_data.data_pressure,
-                self.machine_snapshot.unwrap().peak_command,
+            .render(ControlWidgetType::Controls(controls::Config::new(
                 self.ids.layout_header,
-                self.ids.heartbeat_ground,
-                self.ids.heartbeat_surround,
-                self.ids.heartbeat_inner,
+                self.ids.controls_wrapper,
+                self.ids.controls_button_run,
+                self.ids.controls_button_advanced,
+                self.ids.controls_image_run,
+                self.ids.controls_image_advanced,
+                controls_data.run_image_id,
+                controls_data.advanced_image_id,
+                controls_data.chip_state,
             )));
     }
 
@@ -171,6 +186,7 @@ impl<'a> Screen<'a> {
     pub fn render_with_data(
         &mut self,
         branding_data: DisplayDataBranding<'a>,
+        controls_data: DisplayDataControls<'a>,
         status_data: DisplayDataStatus<'a>,
         heartbeat_data: DisplayDataHeartbeat<'a>,
         graph_data: DisplayDataGraph,
@@ -182,7 +198,7 @@ impl<'a> Screen<'a> {
         self.render_background();
         self.render_layout();
 
-        // Render top elements
+        // Render top left elements
         self.render_branding(
             branding_data.firmware_version,
             RUNTIME_VERSION,
@@ -191,8 +207,11 @@ impl<'a> Screen<'a> {
             branding_data.height,
         );
         self.render_alarms();
-        self.render_status(status_data);
+
+        // Render top right elements
         self.render_heartbeat(heartbeat_data);
+        self.render_status(status_data);
+        self.render_controls(controls_data);
 
         // Render middle elements
         self.render_graph(graph_data.image_id, graph_data.width, graph_data.height);
@@ -208,6 +227,7 @@ impl<'a> Screen<'a> {
     pub fn render_stop(
         &mut self,
         branding_data: DisplayDataBranding<'a>,
+        controls_data: DisplayDataControls<'a>,
         status_data: DisplayDataStatus<'a>,
         heartbeat_data: DisplayDataHeartbeat<'a>,
         graph_data: DisplayDataGraph,
@@ -218,6 +238,7 @@ impl<'a> Screen<'a> {
         // Render regular data as background
         self.render_with_data(
             branding_data,
+            controls_data,
             status_data,
             heartbeat_data,
             graph_data,

@@ -26,6 +26,12 @@ widget_ids!(pub struct Ids {
   branding_image,
   branding_text,
 
+  controls_wrapper,
+  controls_button_run,
+  controls_button_advanced,
+  controls_image_run,
+  controls_image_advanced,
+
   status_wrapper,
   status_unit_box,
   status_unit_text,

@@ -56,6 +56,10 @@ lazy_static! {
         gen_load_image_reverse!("bootloader-logo", BOOTLOADER_LOGO_WIDTH);
     static ref IMAGE_TELEMETRY_ARROW_RGBA_RAW: Vec<u8> =
         gen_load_image_reverse!("telemetry-arrow", TELEMETRY_ARROW_WIDTH);
+    static ref IMAGE_CONTROLS_RUN_RGBA_RAW: Vec<u8> =
+        gen_load_image_reverse!("controls-run", CONTROLS_BUTTON_ICON_WIDTH);
+    static ref IMAGE_CONTROLS_ADVANCED_RGBA_RAW: Vec<u8> =
+        gen_load_image_reverse!("controls-advanced", CONTROLS_BUTTON_ICON_WIDTH);
     static ref IMAGE_STATUS_SAVE_RGBA_RAW: Vec<u8> =
         gen_load_image_reverse!("save", STATUS_SAVE_ICON_WIDTH);
     static ref GRAPH_AXIS_Y_FONT: TextStyle<'static> =
@@ -289,9 +293,16 @@ impl DisplayRenderer {
 
         let save_image_id = if APP_ARGS.is_recording() {
             let save_icon_texture = self.draw_status_save_icon(display);
+
             Some(image_map.insert(save_icon_texture))
         } else {
             None
+        };
+
+        let screen_data_controls = DisplayDataControls {
+            run_image_id: image_map.insert(self.draw_controls_run_icon(display)),
+            advanced_image_id: image_map.insert(self.draw_controls_advanced_icon(display)),
+            chip_state,
         };
 
         let screen_data_status = DisplayDataStatus {
@@ -314,6 +325,7 @@ impl DisplayRenderer {
         match chip_state {
             ChipState::Running => screen.render_with_data(
                 screen_data_branding,
+                screen_data_controls,
                 screen_data_status,
                 screen_data_heartbeat,
                 screen_data_graph,
@@ -329,6 +341,7 @@ impl DisplayRenderer {
 
             ChipState::Stopped => screen.render_stop(
                 screen_data_branding,
+                screen_data_controls,
                 screen_data_status,
                 screen_data_heartbeat,
                 screen_data_graph,
@@ -365,6 +378,26 @@ impl DisplayRenderer {
         // Create image from raw buffer (cached)
         gen_draw_cached_image!(
             display <= IMAGE_TELEMETRY_ARROW_RGBA_RAW[TELEMETRY_ARROW_WIDTH, TELEMETRY_ARROW_HEIGHT]
+        )
+    }
+
+    fn draw_controls_run_icon(
+        &self,
+        display: &GliumDisplayWinitWrapper,
+    ) -> glium::texture::Texture2d {
+        // Create image from raw buffer (cached)
+        gen_draw_cached_image!(
+            display <= IMAGE_CONTROLS_RUN_RGBA_RAW[CONTROLS_BUTTON_ICON_WIDTH, CONTROLS_BUTTON_ICON_HEIGHT]
+        )
+    }
+
+    fn draw_controls_advanced_icon(
+        &self,
+        display: &GliumDisplayWinitWrapper,
+    ) -> glium::texture::Texture2d {
+        // Create image from raw buffer (cached)
+        gen_draw_cached_image!(
+            display <= IMAGE_CONTROLS_ADVANCED_RGBA_RAW[CONTROLS_BUTTON_ICON_WIDTH, CONTROLS_BUTTON_ICON_HEIGHT]
         )
     }
 

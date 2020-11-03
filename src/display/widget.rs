@@ -23,6 +23,7 @@ gen_widget_impls!(
     Background -> background,
     Error -> error,
     Branding -> branding['a],
+    Controls -> controls['a],
     Status -> status['a],
     Heartbeat -> heartbeat['a],
     Initializing -> initializing,

@@ -13,6 +13,12 @@ pub struct DisplayDataBranding<'a> {
     pub height: f64,
 }
 
+pub struct DisplayDataControls<'a> {
+    pub run_image_id: conrod_core::image::Id,
+    pub advanced_image_id: conrod_core::image::Id,
+    pub chip_state: &'a ChipState,
+}
+
 pub struct DisplayDataStatus<'a> {
     pub battery_level: Option<u8>,
     pub chip_state: &'a ChipState,
