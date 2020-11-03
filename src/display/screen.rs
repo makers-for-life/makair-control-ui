@@ -32,6 +32,8 @@ pub struct Screen<'a> {
 }
 
 pub struct ScreenModalsOpen {
+    run: bool,
+    advanced: bool,
     trigger: bool,
     expiration_term: bool,
     pressure: bool,
@@ -591,7 +593,11 @@ impl<'a> Screen<'a> {
     }
 
     pub fn render_settings(&mut self, settings: &'a ChipSettings, modals: &ScreenModalsOpen) {
-        if modals.trigger {
+        if modals.run {
+            self.render_run_settings();
+        } else if modals.advanced {
+            self.render_advanced_settings();
+        } else if modals.trigger {
             self.render_trigger_settings(&settings.trigger);
         } else if modals.expiration_term {
             self.render_expiration_term_settings(&settings.expiration_term);
@@ -600,6 +606,28 @@ impl<'a> Screen<'a> {
         } else if modals.cycles {
             self.render_cycles_settings(&settings.cycles);
         }
+    }
+
+    fn render_run_settings(&mut self) {
+        self.render_modal(
+            RUN_SETTINGS_MODAL_WIDTH,
+            RUN_SETTINGS_MODAL_HEIGTH,
+            Some(RUN_SETTINGS_MODAL_PADDING),
+            Some((self.ids.modal_validate, self.ids.modal_validate_text)),
+            None,
+            None,
+        );
+    }
+
+    fn render_advanced_settings(&mut self) {
+        self.render_modal(
+            ADVANCED_SETTINGS_MODAL_WIDTH,
+            ADVANCED_SETTINGS_MODAL_HEIGTH,
+            Some(ADVANCED_SETTINGS_MODAL_PADDING),
+            Some((self.ids.modal_validate, self.ids.modal_validate_text)),
+            None,
+            None,
+        );
     }
 
     fn render_trigger_settings(&mut self, settings: &'a SettingsTrigger) {
@@ -754,12 +782,16 @@ impl<'a> Screen<'a> {
 
 impl ScreenModalsOpen {
     pub fn from_states(
+        run_open: &DisplayRendererSettingsState,
+        advanced_open: &DisplayRendererSettingsState,
         trigger_open: &DisplayRendererSettingsState,
         expiration_term_open: &DisplayRendererSettingsState,
         pressure_open: &DisplayRendererSettingsState,
         cycles_open: &DisplayRendererSettingsState,
     ) -> Self {
         ScreenModalsOpen {
+            run: run_open == &DisplayRendererSettingsState::Opened,
+            advanced: advanced_open == &DisplayRendererSettingsState::Opened,
             trigger: trigger_open == &DisplayRendererSettingsState::Opened,
             expiration_term: expiration_term_open == &DisplayRendererSettingsState::Opened,
             pressure: pressure_open == &DisplayRendererSettingsState::Opened,

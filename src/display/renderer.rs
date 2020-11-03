@@ -43,6 +43,8 @@ pub struct DisplayRendererBuilder;
 pub struct DisplayRenderer {
     fonts: Fonts,
     ids: Ids,
+    run_settings_state: DisplayRendererSettingsState,
+    advanced_settings_state: DisplayRendererSettingsState,
     trigger_settings_state: DisplayRendererSettingsState,
     expiration_term_settings_state: DisplayRendererSettingsState,
     pressure_settings_state: DisplayRendererSettingsState,
@@ -87,6 +89,8 @@ impl DisplayRendererBuilder {
         DisplayRenderer {
             fonts,
             ids,
+            run_settings_state: DisplayRendererSettingsState::default(),
+            advanced_settings_state: DisplayRendererSettingsState::default(),
             trigger_settings_state: DisplayRendererSettingsState::default(),
             expiration_term_settings_state: DisplayRendererSettingsState::default(),
             pressure_settings_state: DisplayRendererSettingsState::default(),
@@ -137,6 +141,8 @@ impl DisplayRenderer {
         DisplayUIEvents::run(
             interface,
             &self.ids,
+            &mut self.run_settings_state,
+            &mut self.advanced_settings_state,
             &mut self.trigger_settings_state,
             &mut self.expiration_term_settings_state,
             &mut self.pressure_settings_state,
@@ -332,6 +338,8 @@ impl DisplayRenderer {
                 screen_data_telemetry,
                 chip_settings,
                 &ScreenModalsOpen::from_states(
+                    &self.run_settings_state,
+                    &self.advanced_settings_state,
                     &self.trigger_settings_state,
                     &self.expiration_term_settings_state,
                     &self.pressure_settings_state,
@@ -348,6 +356,8 @@ impl DisplayRenderer {
                 screen_data_telemetry,
                 chip_settings,
                 &ScreenModalsOpen::from_states(
+                    &self.run_settings_state,
+                    &self.advanced_settings_state,
                     &self.trigger_settings_state,
                     &self.expiration_term_settings_state,
                     &self.pressure_settings_state,
