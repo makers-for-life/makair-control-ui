@@ -232,10 +232,18 @@ impl DisplayUIEvents {
                 "run", Run, run_settings_state,
 
                 {
-                    SettingsRunEvent::RespirationEnabled, "toggle", [
+                    SettingsRunEvent::RespirationEnabled, "toggle",
+
+                    [
                         ids.run_status_button,
                         ids.run_status_button_text,
-                    ]
+                    ],
+
+                    // Auto-close the modal upon pressing the run state toggle button, as this \
+                    //   is confusing to users otherwise, and is prone to user making mistakes by \
+                    //   double tapping the button and thus cycling the respirator between states \
+                    //   quickly, which is not intended and can be dangerous.
+                    Some(DisplayRendererSettingsState::Closed)
                 }
             },
 
@@ -247,24 +255,36 @@ impl DisplayUIEvents {
                 "trigger", Trigger, trigger_settings_state,
 
                 {
-                    SettingsTriggerEvent::TriggerToggle, "toggle", [
+                    SettingsTriggerEvent::TriggerToggle, "toggle",
+
+                    [
                         ids.trigger_status_button,
                         ids.trigger_status_button_text,
-                    ]
+                    ],
+
+                    None
                 },
 
                 {
-                    SettingsTriggerEvent::TriggerOffset(SettingActionRange::Less), "offset less", [
+                    SettingsTriggerEvent::TriggerOffset(SettingActionRange::Less), "offset less",
+
+                    [
                         ids.trigger_offset_less_button,
                         ids.trigger_offset_less_button_text,
-                    ]
+                    ],
+
+                    None
                 },
 
                 {
-                    SettingsTriggerEvent::TriggerOffset(SettingActionRange::More), "offset more", [
+                    SettingsTriggerEvent::TriggerOffset(SettingActionRange::More), "offset more",
+
+                    [
                         ids.trigger_offset_more_button,
                         ids.trigger_offset_more_button_text,
-                    ]
+                    ],
+
+                    None
                 }
             },
 
@@ -272,17 +292,27 @@ impl DisplayUIEvents {
                 "expiratory term", ExpirationTerm, expiration_term_settings_state,
 
                 {
-                    SettingsExpirationTermEvent::ExpiratoryTerm(SettingActionRange::Less), "term less", [
+                    SettingsExpirationTermEvent::ExpiratoryTerm(SettingActionRange::Less),
+                    "term less",
+
+                    [
                         ids.expiration_term_less_button,
                         ids.expiration_term_less_button_text,
-                    ]
+                    ],
+
+                    None
                 },
 
                 {
-                    SettingsExpirationTermEvent::ExpiratoryTerm(SettingActionRange::More), "term more", [
+                    SettingsExpirationTermEvent::ExpiratoryTerm(SettingActionRange::More),
+                    "term more",
+
+                    [
                         ids.expiration_term_more_button,
                         ids.expiration_term_more_button_text,
-                    ]
+                    ],
+
+                    None
                 }
             },
 
@@ -290,17 +320,25 @@ impl DisplayUIEvents {
                 "cycles", Cycles, cycles_settings_state,
 
                 {
-                    SettingsCyclesEvent::CyclesPerMinute(SettingActionRange::Less), "cycles less", [
+                    SettingsCyclesEvent::CyclesPerMinute(SettingActionRange::Less), "cycles less",
+
+                    [
                         ids.cycles_less_button,
                         ids.cycles_less_button_text,
-                    ]
+                    ],
+
+                    None
                 },
 
                 {
-                    SettingsCyclesEvent::CyclesPerMinute(SettingActionRange::More), "cycles more", [
+                    SettingsCyclesEvent::CyclesPerMinute(SettingActionRange::More), "cycles more",
+
+                    [
                         ids.cycles_more_button,
                         ids.cycles_more_button_text,
-                    ]
+                    ],
+
+                    None
                 }
             },
 
@@ -308,31 +346,47 @@ impl DisplayUIEvents {
                 "pressure", Pressure, pressure_settings_state,
 
                 {
-                    SettingsPressureEvent::Plateau(SettingActionRange::Less), "plateau less", [
+                    SettingsPressureEvent::Plateau(SettingActionRange::Less), "plateau less",
+
+                    [
                         ids.pressure_plateau_less_button,
                         ids.pressure_plateau_less_button_text,
-                    ]
+                    ],
+
+                    None
                 },
 
                 {
-                    SettingsPressureEvent::Plateau(SettingActionRange::More), "plateau more", [
+                    SettingsPressureEvent::Plateau(SettingActionRange::More), "plateau more",
+
+                    [
                         ids.pressure_plateau_more_button,
                         ids.pressure_plateau_more_button_text,
-                    ]
+                    ],
+
+                    None
                 },
 
                 {
-                    SettingsPressureEvent::PEEP(SettingActionRange::Less), "peep less", [
+                    SettingsPressureEvent::PEEP(SettingActionRange::Less), "peep less",
+
+                    [
                         ids.pressure_peep_less_button,
                         ids.pressure_peep_less_button_text,
-                    ]
+                    ],
+
+                    None
                 },
 
                 {
-                    SettingsPressureEvent::PEEP(SettingActionRange::More), "peep more", [
+                    SettingsPressureEvent::PEEP(SettingActionRange::More), "peep more",
+
+                    [
                         ids.pressure_peep_more_button,
                         ids.pressure_peep_more_button_text,
-                    ]
+                    ],
+
+                    None
                 }
             },
         );

@@ -102,7 +102,8 @@ macro_rules! gen_ui_events_modal_settings_clicks {
             $({
                 $action:expr,
                 $field_name:expr,
-                $widget_ids:expr
+                $widget_ids:expr,
+                $forced_state:expr
             }),*
         }),+,
     ) => {
@@ -136,6 +137,17 @@ macro_rules! gen_ui_events_modal_settings_clicks {
                         ));
 
                         $has = true;
+
+                        // Force to provided state?
+                        if let Some(forced_state) = $forced_state {
+                            debug!(
+                                "forced state of the {} settings modal upon button press to: {:?}",
+                                $name,
+                                forced_state
+                            );
+
+                            *$settings_state = forced_state;
+                        }
                     }
                 )*
             }

@@ -44,7 +44,11 @@ macro_rules! gen_widget_button {
         let button_style = widget::primitive::shape::Style::Fill(Some(color::WHITE));
 
         // Create rectangle for button
-        widget::RoundedRectangle::styled([$width, BUTTON_HEIGHT], BUTTON_BORDER_RADIUS, button_style)
+        widget::RoundedRectangle::styled(
+            [$width, BUTTON_HEIGHT],
+            BUTTON_BORDER_RADIUS,
+            button_style
+        )
             $(.$position_call($($position_arguments,)*))+
             .set($button_id, &mut $master.ui);
 
