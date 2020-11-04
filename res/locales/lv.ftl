@@ -47,7 +47,6 @@ modal-expiration-term-expiratory-term = Derīguma termiņš:
 
 modal-cycles-cycles-per-minute = Cikli minūtē:
 
-modal-pressure-peak = Maksimālais spiediens:
 modal-pressure-plateau = Plato spiediens:
 modal-pressure-expiratory = Izelpas spiediens:
 

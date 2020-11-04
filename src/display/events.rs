@@ -308,20 +308,6 @@ impl DisplayUIEvents {
                 "pressure", Pressure, pressure_settings_state,
 
                 {
-                    SettingsPressureEvent::Peak(SettingActionRange::Less), "peak less", [
-                        ids.pressure_peak_less_button,
-                        ids.pressure_peak_less_button_text,
-                    ]
-                },
-
-                {
-                    SettingsPressureEvent::Peak(SettingActionRange::More), "peak more", [
-                        ids.pressure_peak_more_button,
-                        ids.pressure_peak_more_button_text,
-                    ]
-                },
-
-                {
                     SettingsPressureEvent::Plateau(SettingActionRange::Less), "plateau less", [
                         ids.pressure_plateau_less_button,
                         ids.pressure_plateau_less_button_text,

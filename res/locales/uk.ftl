@@ -47,7 +47,6 @@ modal-expiration-term-expiratory-term = Термін видиху:
 
 modal-cycles-cycles-per-minute = Цикли в хвилину:
 
-modal-pressure-peak = Піковий тиск:
 modal-pressure-plateau = Тиск на плато:
 modal-pressure-expiratory = Тиск на видиху:
 

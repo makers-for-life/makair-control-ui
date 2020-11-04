@@ -47,7 +47,6 @@ modal-expiration-term-expiratory-term = 呼气期:
 
 modal-cycles-cycles-per-minute = 每分钟循环数：
 
-modal-pressure-peak = 峰值压力：
 modal-pressure-plateau = 高原压力：
 modal-pressure-expiratory = 呼气压力：
 

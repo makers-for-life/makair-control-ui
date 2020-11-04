@@ -94,12 +94,6 @@ widget_ids!(pub struct Ids {
   expiration_term_value,
 
   pressure_container,
-  pressure_peak_more_button,
-  pressure_peak_more_button_text,
-  pressure_peak_less_button,
-  pressure_peak_less_button_text,
-  pressure_peak_text,
-  pressure_peak_value,
   pressure_plateau_more_button,
   pressure_plateau_more_button_text,
   pressure_plateau_less_button,

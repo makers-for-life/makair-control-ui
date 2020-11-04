@@ -759,12 +759,6 @@ impl<'a> Screen<'a> {
 
                 pressure_container_parent: self.ids.modal_container,
                 pressure_container_widget: self.ids.pressure_container,
-                pressure_peak_more_button_widget: self.ids.pressure_peak_more_button,
-                pressure_peak_more_button_text_widget: self.ids.pressure_peak_more_button_text,
-                pressure_peak_less_button_widget: self.ids.pressure_peak_less_button,
-                pressure_peak_less_button_text_widget: self.ids.pressure_peak_less_button_text,
-                pressure_peak_text_widget: self.ids.pressure_peak_text,
-                pressure_peak_value_widget: self.ids.pressure_peak_value,
                 pressure_plateau_more_button_widget: self.ids.pressure_plateau_more_button,
                 pressure_plateau_more_button_text_widget: self
                     .ids

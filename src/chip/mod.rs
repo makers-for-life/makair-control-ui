@@ -38,7 +38,6 @@ pub enum ChipEventUpdate {
 }
 
 struct ChipSettingsUpdate {
-    peak_command: Option<u8>,
     plateau_command: Option<u8>,
     peep_command: Option<u8>,
     cpm_command: Option<u8>,
@@ -409,9 +408,6 @@ impl Chip {
         }
 
         // Update pressure values
-        if let Some(peak_command) = update.peak_command {
-            self.settings.pressure.peak = convert_cmh2o_to_mmh2o(peak_command);
-        }
         if let Some(plateau_command) = update.plateau_command {
             self.settings.pressure.plateau = convert_cmh2o_to_mmh2o(plateau_command);
         }
@@ -425,7 +421,6 @@ impl Chip {
         //   'TelemetryMessage::MachineStateSnapshot' message from the firmware.
 
         self.update_settings_from_parameters(ChipSettingsUpdate {
-            peak_command: Some(snapshot.peak_command),
             plateau_command: Some(snapshot.plateau_command),
             peep_command: Some(snapshot.peep_command),
             cpm_command: Some(snapshot.cpm_command),
@@ -440,7 +435,6 @@ impl Chip {
         //   'TelemetryMessage::StoppedMessage' message from the firmware.
 
         self.update_settings_from_parameters(ChipSettingsUpdate {
-            peak_command: message.peak_command,
             plateau_command: message.plateau_command,
             peep_command: message.peep_command,
             cpm_command: message.cpm_command,
@@ -458,7 +452,6 @@ impl Chip {
         //   requiring a full wait until the next data snapshot comes (at the end of each cycle).
         match ack.setting {
             ControlSetting::PeakPressure => {
-                self.settings.pressure.peak = ack.value as usize;
                 self.last_machine_snapshot.peak_command =
                     convert_mmh2o_to_cmh2o(ConvertMode::Rounded, ack.value as f64) as u8
             }

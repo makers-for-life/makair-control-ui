@@ -47,7 +47,6 @@ modal-expiration-term-expiratory-term = Término expiratorio:
 
 modal-cycles-cycles-per-minute = Ciclos por minuto:
 
-modal-pressure-peak = Presión pico:
 modal-pressure-plateau = Presión meseta:
 modal-pressure-expiratory = Presión espiratoria:
 

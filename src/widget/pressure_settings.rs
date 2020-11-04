@@ -23,12 +23,6 @@ pub struct Config<'a> {
 
     pub pressure_container_parent: WidgetId,
     pub pressure_container_widget: WidgetId,
-    pub pressure_peak_text_widget: WidgetId,
-    pub pressure_peak_less_button_widget: WidgetId,
-    pub pressure_peak_less_button_text_widget: WidgetId,
-    pub pressure_peak_more_button_widget: WidgetId,
-    pub pressure_peak_more_button_text_widget: WidgetId,
-    pub pressure_peak_value_widget: WidgetId,
 
     pub pressure_plateau_text_widget: WidgetId,
     pub pressure_plateau_less_button_widget: WidgetId,
@@ -59,43 +53,10 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     );
 
     // Append contents
-    peak(master, &config);
     plateau(master, &config);
     peep(master, &config);
 
     0 as _
-}
-
-pub fn peak<'a>(master: &mut ControlWidget<'a>, config: &Config) {
-    // Generate peak label
-    gen_widget_label_form!(
-        master,
-        text_id: config.pressure_peak_text_widget,
-        value: &APP_I18N.t("modal-pressure-peak"),
-        positions: top_left_of[
-            config.pressure_container_widget,
-        ]
-    );
-
-    // Generate peak navigation buttons
-    gen_widget_button_navigate!(
-        master,
-        button_less_id: config.pressure_peak_less_button_widget,
-        button_less_text_id: config.pressure_peak_less_button_text_widget,
-        button_more_id: config.pressure_peak_more_button_widget,
-        button_more_text_id: config.pressure_peak_more_button_text_widget,
-        value_id: config.pressure_peak_value_widget,
-        value: &format!(
-            "{} {}",
-            convert_mmh2o_to_cmh2o(ConvertMode::Rounded, config.pressure_settings.peak as f64),
-            APP_I18N.t("telemetry-unit-cmh2o")
-        ),
-        positions: top_left_with_margins_on[
-            config.pressure_peak_text_widget,
-            -2.0,
-            PRESSURE_SETTINGS_MODAL_FORM_PADDING_LEFT,
-        ]
-    );
 }
 
 pub fn plateau<'a>(master: &mut ControlWidget<'a>, config: &Config) {
@@ -104,9 +65,8 @@ pub fn plateau<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         master,
         text_id: config.pressure_plateau_text_widget,
         value: &APP_I18N.t("modal-pressure-plateau"),
-        positions: down_from[
-            config.pressure_peak_text_widget,
-            PRESSURE_SETTINGS_MODAL_FORM_ROW_MARGIN_TOP,
+        positions: top_left_of[
+            config.pressure_container_widget,
         ]
     );
 

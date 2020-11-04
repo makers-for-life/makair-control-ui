@@ -47,7 +47,6 @@ modal-expiration-term-expiratory-term = Exspiratorischer Begriff:
 
 modal-cycles-cycles-per-minute = Zyklen pro Minute:
 
-modal-pressure-peak = Spitzendruck:
 modal-pressure-plateau = Plateaudruck:
 modal-pressure-expiratory = Ausatmungsdruck:
 
