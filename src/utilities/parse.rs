@@ -27,3 +27,7 @@ pub fn parse_non_empty_number_to_string(value: usize) -> String {
         value.to_string()
     }
 }
+
+pub fn parse_non_empty_optional_number_to_string(value: Option<usize>) -> String {
+    parse_non_empty_number_to_string(value.unwrap_or(0))
+}

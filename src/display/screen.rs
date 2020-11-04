@@ -7,7 +7,7 @@ use conrod_core::color::{self, Color};
 use conrod_core::widget::Id as WidgetId;
 
 use telemetry::alarm::AlarmCode;
-use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
+use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot};
 
 use crate::chip::settings::{
     cycles::SettingsCycles, expiration_term::SettingsExpirationTerm, pressure::SettingsPressure,
@@ -27,6 +27,7 @@ use super::widget::{ControlWidget, ControlWidgetType};
 pub struct Screen<'a> {
     ids: &'a Ids,
     machine_snapshot: Option<&'a MachineStateSnapshot>,
+    data_snapshot: Option<&'a DataSnapshot>,
     ongoing_alarms: Option<&'a [(AlarmCode, AlarmPriority)]>,
     widgets: ControlWidget<'a>,
 }
@@ -46,11 +47,13 @@ impl<'a> Screen<'a> {
         ids: &'a Ids,
         fonts: &'a Fonts,
         machine_snapshot: Option<&'a MachineStateSnapshot>,
+        data_snapshot: Option<&'a DataSnapshot>,
         ongoing_alarms: Option<&'a [(AlarmCode, AlarmPriority)]>,
     ) -> Screen<'a> {
         Screen {
             ids,
             machine_snapshot,
+            data_snapshot,
             ongoing_alarms,
             widgets: ControlWidget::new(ui, fonts),
         }
@@ -651,7 +654,8 @@ impl<'a> Screen<'a> {
                     - MODAL_VALIDATE_BUTTON_HEIGHT
                     - (ADVANCED_SETTINGS_MODAL_PADDING * 2.0),
 
-                snapshot: &self.machine_snapshot.unwrap(),
+                machine_snapshot: &self.machine_snapshot.unwrap(),
+                data_snapshot: self.data_snapshot,
 
                 advanced_container_parent: self.ids.modal_container,
                 advanced_container_widget: self.ids.advanced_container,

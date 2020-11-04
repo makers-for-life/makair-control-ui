@@ -254,6 +254,7 @@ impl<'a> DisplayDrawer<'a> {
         let image_map = self.renderer.render(
             &self.chip.data_pressure,
             &self.chip.last_machine_snapshot,
+            self.chip.last_data_snapshot.as_ref(),
             &self.chip.ongoing_alarms_sorted(),
             &self.display,
             &mut self.interface,

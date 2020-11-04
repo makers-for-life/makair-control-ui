@@ -12,7 +12,7 @@ use image::load_from_memory;
 use plotters::prelude::*;
 use plotters::style::TextStyle;
 use telemetry::alarm::AlarmCode;
-use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
+use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot};
 
 use crate::chip::settings::{ChipSettings, ChipSettingsEvent};
 use crate::chip::ChipState;
@@ -105,6 +105,7 @@ impl DisplayRenderer {
         &mut self,
         data_pressure: &DataPressure,
         machine_snapshot: &MachineStateSnapshot,
+        data_snapshot: Option<&DataSnapshot>,
         ongoing_alarms: &[(AlarmCode, AlarmPriority)],
         display: &GliumDisplayWinitWrapper,
         interface: &mut Ui,
@@ -126,6 +127,7 @@ impl DisplayRenderer {
                 image_map,
                 data_pressure,
                 machine_snapshot,
+                data_snapshot,
                 ongoing_alarms,
                 battery_level,
                 chip_state,
@@ -175,7 +177,7 @@ impl DisplayRenderer {
             connecting: is_connecting,
         };
 
-        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None);
+        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None, None);
 
         screen.render_initializing(screen_bootloader);
 
@@ -190,7 +192,7 @@ impl DisplayRenderer {
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let ui = interface.set_widgets();
 
-        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None);
+        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None, None);
 
         screen.render_error(error);
 
@@ -205,6 +207,7 @@ impl DisplayRenderer {
         mut image_map: conrod_core::image::Map<texture::Texture2d>,
         data_pressure: &DataPressure,
         machine_snapshot: &MachineStateSnapshot,
+        data_snapshot: Option<&DataSnapshot>,
         ongoing_alarms: &[(AlarmCode, AlarmPriority)],
         battery_level: Option<u8>,
         chip_state: &ChipState,
@@ -283,6 +286,7 @@ impl DisplayRenderer {
             &self.ids,
             &self.fonts,
             Some(machine_snapshot),
+            data_snapshot,
             Some(ongoing_alarms),
         );
 

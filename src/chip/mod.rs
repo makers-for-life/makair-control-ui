@@ -52,8 +52,8 @@ pub struct Chip {
     pub last_tick: u64,
     pub data_pressure: DataPressure,
     pub last_machine_snapshot: MachineStateSnapshot,
+    pub last_data_snapshot: Option<DataSnapshot>,
     pub ongoing_alarms: HashMap<AlarmCode, AlarmPriority>,
-    pub battery_level: Option<u8>,
     pub settings: ChipSettings,
     state: ChipState,
     lora_tx: Option<Sender<TelemetryMessage>>,
@@ -70,8 +70,8 @@ impl Chip {
             last_tick: 0,
             data_pressure: VecDeque::with_capacity(GRAPH_NUMBER_OF_POINTS + 100),
             last_machine_snapshot,
+            last_data_snapshot: None,
             ongoing_alarms: HashMap::new(),
-            battery_level: None,
             settings: ChipSettings::new(cycles_per_minute),
             state: ChipState::WaitingData,
             lora_tx: lora_sender,
@@ -81,9 +81,9 @@ impl Chip {
 
     pub fn reset(&mut self, new_tick: u64) {
         self.last_tick = new_tick;
-        self.data_pressure.clear();
 
-        self.last_machine_snapshot = MachineStateSnapshot::default();
+        self.clean();
+
         self.ongoing_alarms.clear();
 
         self.update_boot_time();
@@ -128,7 +128,9 @@ impl Chip {
     }
 
     pub fn get_battery_level(&self) -> Option<u8> {
-        self.battery_level
+        self.last_data_snapshot
+            .as_ref()
+            .map(|snapshot| snapshot.battery_level)
     }
 
     pub fn get_state(&self) -> &ChipState {
@@ -231,7 +233,7 @@ impl Chip {
                 self.update_tick(snapshot.systick);
                 self.add_pressure(&snapshot);
 
-                self.battery_level = Some(snapshot.battery_level);
+                self.last_data_snapshot = Some(snapshot);
 
                 self.update_state_running();
 
@@ -356,11 +358,16 @@ impl Chip {
         }
     }
 
+    fn clean(&mut self) {
+        self.data_pressure.clear();
+
+        self.last_machine_snapshot = MachineStateSnapshot::default();
+        self.last_data_snapshot = None;
+    }
+
     fn clean_if_stopped(&mut self) {
         if self.state == ChipState::Stopped {
-            self.data_pressure.clear();
-
-            self.last_machine_snapshot = MachineStateSnapshot::default();
+            self.clean();
         }
     }
 
