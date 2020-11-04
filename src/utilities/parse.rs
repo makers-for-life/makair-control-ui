@@ -28,6 +28,13 @@ pub fn parse_non_empty_number_to_string(value: usize) -> String {
     }
 }
 
-pub fn parse_non_empty_optional_number_to_string(value: Option<usize>) -> String {
-    parse_non_empty_number_to_string(value.unwrap_or(0))
+pub fn parse_optional_number_to_string(value: Option<usize>) -> String {
+    // Notice: as an optional value is passed, we consider here that zero should not be mapped to \
+    //   an empty string value. An empty string value is always the result of passing a 'None' \
+    //   value.
+    if let Some(value) = value {
+        value.to_string()
+    } else {
+        "".to_string()
+    }
 }

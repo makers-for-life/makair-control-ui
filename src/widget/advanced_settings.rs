@@ -18,9 +18,7 @@ use telemetry::structures::{DataSnapshot, MachineStateSnapshot};
 
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
-use crate::utilities::parse::{
-    parse_non_empty_number_to_string, parse_non_empty_optional_number_to_string,
-};
+use crate::utilities::parse::{parse_non_empty_number_to_string, parse_optional_number_to_string};
 use crate::APP_CONTEXT;
 
 const CONTROL_UI_VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -100,7 +98,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         // Time spent since the beginning of the current respiratory cycle (in milliseconds)
         (
             "ventilation-cycle-milliseconds",
-            &parse_non_empty_optional_number_to_string(
+            &parse_optional_number_to_string(
                 config
                     .data_snapshot
                     .map(|data| (data.centile * 10) as usize),
@@ -109,7 +107,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         // Pinch valve angle (inhale circuit pinch valve)
         (
             "pinch-angle-inhale-degrees",
-            &parse_non_empty_optional_number_to_string(
+            &parse_optional_number_to_string(
                 config
                     .data_snapshot
                     .map(|data| data.blower_valve_position as usize),
@@ -118,7 +116,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         // Pinch valve angle (exhale circuit pinch valve)
         (
             "pinch-angle-exhale-degrees",
-            &parse_non_empty_optional_number_to_string(
+            &parse_optional_number_to_string(
                 config
                     .data_snapshot
                     .map(|data| data.patient_valve_position as usize),
@@ -127,14 +125,14 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         // Blower speed (in RPM, ie. rotations per minute)
         (
             "blower-speed-rpm",
-            &parse_non_empty_optional_number_to_string(
+            &parse_optional_number_to_string(
                 config.data_snapshot.map(|data| data.blower_rpm as usize),
             ),
         ),
         // Battery level (in volts)
         (
             "battery-level-volts",
-            &parse_non_empty_optional_number_to_string(
+            &parse_optional_number_to_string(
                 config.data_snapshot.map(|data| data.battery_level as usize),
             ),
         ),
