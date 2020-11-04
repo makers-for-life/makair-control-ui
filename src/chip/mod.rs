@@ -305,6 +305,14 @@ impl Chip {
         let snapshot_time =
             self.boot_time.unwrap() + Duration::microseconds(snapshot.systick as i64);
 
+        // Clean any expired pressures before we can push new ones
+        // Notice: this is typically done on the drawer-side, as the telemetry may not progress \
+        //   while screen drawing is still guaranteed to progress over time. Though, in case the \
+        //   framerate is heavily limited and the telemetry pushes faster than the drawer can \
+        //   clean, then we must ensure we do not push past object limits here (otherwise over a \
+        //   long run time this could result in an OOM / out-of-memory error).
+        self.clean_expired_pressure();
+
         // Fetch last pressure value in order to reduce noise
         let last_pressure = if let Some(last_pressure_inner) = self.data_pressure.get(0) {
             last_pressure_inner.1
