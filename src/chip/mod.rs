@@ -81,7 +81,10 @@ impl Chip {
     pub fn reset(&mut self, new_tick: u64) {
         self.last_tick = new_tick;
 
-        self.clean();
+        self.data_pressure.clear();
+
+        self.last_machine_snapshot = MachineStateSnapshot::default();
+        self.last_data_snapshot = None;
 
         self.ongoing_alarms.clear();
 
@@ -227,11 +230,10 @@ impl Chip {
             }
 
             TelemetryMessage::DataSnapshot(snapshot) => {
-                self.clean_if_stopped();
-
                 self.update_tick(snapshot.systick);
                 self.add_pressure(&snapshot);
 
+                // Store last data snapshot
                 self.last_data_snapshot = Some(snapshot);
 
                 self.update_state_running();
@@ -242,8 +244,6 @@ impl Chip {
             }
 
             TelemetryMessage::MachineStateSnapshot(snapshot) => {
-                self.clean_if_stopped();
-
                 self.update_tick(snapshot.systick);
                 self.update_settings_from_snapshot(&snapshot);
 
@@ -269,6 +269,9 @@ impl Chip {
             TelemetryMessage::StoppedMessage(message) => {
                 self.update_tick(message.systick);
                 self.update_settings_from_stopped(&message);
+
+                // Last data snapshot is not relevant when the state went from running to stopped
+                self.last_data_snapshot = None;
 
                 // A stopped message should only trigger an UI refresh when changed
                 if self.state != ChipState::Stopped {
@@ -362,19 +365,6 @@ impl Chip {
                     self.update_boot_time();
                 }
             }
-        }
-    }
-
-    fn clean(&mut self) {
-        self.data_pressure.clear();
-
-        self.last_machine_snapshot = MachineStateSnapshot::default();
-        self.last_data_snapshot = None;
-    }
-
-    fn clean_if_stopped(&mut self) {
-        if self.state == ChipState::Stopped {
-            self.clean();
         }
     }
 
