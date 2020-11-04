@@ -75,7 +75,7 @@ fn make_app_i18n() -> LocaleAccessor {
 
 fn ensure_states() {
     // Ensure all statics are valid (a `deref` is enough to lazily initialize them)
-    let (_, _) = (APP_ARGS.deref(), APP_I18N.deref());
+    let (_, _, _) = (APP_CONTEXT.deref(), APP_ARGS.deref(), APP_I18N.deref());
 }
 
 fn main() {
