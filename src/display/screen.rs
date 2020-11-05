@@ -26,6 +26,7 @@ use super::widget::{ControlWidget, ControlWidgetType};
 
 pub struct Screen<'a> {
     ids: &'a Ids,
+    last_tick: Option<u64>,
     machine_snapshot: Option<&'a MachineStateSnapshot>,
     data_snapshot: Option<&'a DataSnapshot>,
     ongoing_alarms: Option<&'a [(AlarmCode, AlarmPriority)]>,
@@ -46,12 +47,14 @@ impl<'a> Screen<'a> {
         ui: conrod_core::UiCell<'a>,
         ids: &'a Ids,
         fonts: &'a Fonts,
+        last_tick: Option<u64>,
         machine_snapshot: Option<&'a MachineStateSnapshot>,
         data_snapshot: Option<&'a DataSnapshot>,
         ongoing_alarms: Option<&'a [(AlarmCode, AlarmPriority)]>,
     ) -> Screen<'a> {
         Screen {
             ids,
+            last_tick,
             machine_snapshot,
             data_snapshot,
             ongoing_alarms,
@@ -654,6 +657,7 @@ impl<'a> Screen<'a> {
                     - MODAL_VALIDATE_BUTTON_HEIGHT
                     - (ADVANCED_SETTINGS_MODAL_PADDING * 2.0),
 
+                last_tick: self.last_tick,
                 machine_snapshot: &self.machine_snapshot.unwrap(),
                 data_snapshot: self.data_snapshot,
 

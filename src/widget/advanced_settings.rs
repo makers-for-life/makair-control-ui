@@ -27,6 +27,7 @@ pub struct Config<'a> {
     pub width: f64,
     pub height: f64,
 
+    pub last_tick: Option<u64>,
     pub machine_snapshot: &'a MachineStateSnapshot,
     pub data_snapshot: Option<&'a DataSnapshot>,
 
@@ -74,12 +75,10 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         //   refreshed data snapshot systick.
         (
             "runtime-uptime-seconds",
-            &parse_non_empty_number_to_string(
+            &parse_optional_number_to_string(
                 config
-                    .data_snapshot
-                    .map(|data| data.systick)
-                    .unwrap_or(config.machine_snapshot.systick) as usize
-                    / 1000000,
+                    .last_tick
+                    .map(|last_tick| (last_tick as usize) / 1000000),
             ),
         ),
         // Runtime cycles (ie. respiratory cycles)

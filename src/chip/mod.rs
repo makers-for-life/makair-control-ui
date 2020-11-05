@@ -485,6 +485,7 @@ impl Chip {
         // This initializes all settings and snapshot values, upon receiving a \
         //   'TelemetryMessage::StoppedMessage' message from the firmware.
 
+        // Update local settings from message
         self.update_settings_from_parameters(ChipSettingsUpdate {
             plateau_command: message.plateau_command,
             peep_command: message.peep_command,
@@ -494,6 +495,12 @@ impl Chip {
             trigger_offset: message.trigger_offset,
         });
 
+        // Assign non-optional message values to snapshot
+        self.last_machine_snapshot.telemetry_version = message.telemetry_version;
+        self.last_machine_snapshot.version = message.version.to_owned();
+        self.last_machine_snapshot.device_id = message.device_id.to_owned();
+
+        // Assign optional message values to snapshot
         gen_override_snapshot_values_from_stopped!(
             self.last_machine_snapshot,
             message,

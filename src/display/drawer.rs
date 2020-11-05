@@ -252,6 +252,7 @@ impl<'a> DisplayDrawer<'a> {
 
     fn refresh(&mut self) {
         let image_map = self.renderer.render(
+            self.chip.last_tick,
             &self.chip.data_pressure,
             &self.chip.last_machine_snapshot,
             self.chip.last_data_snapshot.as_ref(),

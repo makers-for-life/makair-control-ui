@@ -103,6 +103,7 @@ impl DisplayRenderer {
     #[allow(clippy::too_many_arguments)]
     pub fn render(
         &mut self,
+        last_tick: u64,
         data_pressure: &DataPressure,
         machine_snapshot: &MachineStateSnapshot,
         data_snapshot: Option<&DataSnapshot>,
@@ -125,6 +126,7 @@ impl DisplayRenderer {
                 display,
                 interface,
                 image_map,
+                last_tick,
                 data_pressure,
                 machine_snapshot,
                 data_snapshot,
@@ -177,7 +179,7 @@ impl DisplayRenderer {
             connecting: is_connecting,
         };
 
-        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None, None);
+        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None, None, None);
 
         screen.render_initializing(screen_bootloader);
 
@@ -192,7 +194,7 @@ impl DisplayRenderer {
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let ui = interface.set_widgets();
 
-        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None, None);
+        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None, None, None);
 
         screen.render_error(error);
 
@@ -205,6 +207,7 @@ impl DisplayRenderer {
         display: &GliumDisplayWinitWrapper,
         interface: &mut Ui,
         mut image_map: conrod_core::image::Map<texture::Texture2d>,
+        last_tick: u64,
         data_pressure: &DataPressure,
         machine_snapshot: &MachineStateSnapshot,
         data_snapshot: Option<&DataSnapshot>,
@@ -285,6 +288,7 @@ impl DisplayRenderer {
             ui,
             &self.ids,
             &self.fonts,
+            Some(last_tick),
             Some(machine_snapshot),
             data_snapshot,
             Some(ongoing_alarms),
