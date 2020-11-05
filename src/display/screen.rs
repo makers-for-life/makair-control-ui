@@ -13,6 +13,7 @@ use crate::chip::settings::{
     cycles::SettingsCycles, expiration_term::SettingsExpirationTerm, pressure::SettingsPressure,
     run::SettingsRun, trigger::SettingsTrigger, ChipSettings,
 };
+use crate::chip::ChipError;
 use crate::config::environment::*;
 use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::widget::*;
@@ -278,9 +279,18 @@ impl<'a> Screen<'a> {
         }));
     }
 
-    pub fn render_error(&mut self, config: DisplayDataError) {
+    pub fn render_error(&mut self, config: DisplayDataError<'a>) {
+        // Generate error message
+        let message = match config.error {
+            ChipError::NoDevice => APP_I18N.t("error-message-no-device"),
+            ChipError::TimedOut => APP_I18N.t("error-message-timed-out"),
+            ChipError::Other(details) => details.to_owned(),
+        };
+
+        // Render background
         self.render_background();
 
+        // Render error
         self.widgets
             .render(ControlWidgetType::Error(error::Config::new(
                 self.ids.error_container,
@@ -291,7 +301,7 @@ impl<'a> Screen<'a> {
                 config.width,
                 config.height,
                 config.image_id,
-                config.message,
+                message,
             )));
     }
 

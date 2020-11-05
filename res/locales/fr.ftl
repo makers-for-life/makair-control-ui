@@ -55,6 +55,9 @@ initializing-connected = Préparation en cours...
 
 error-title = Oups. Une erreur est survenue.
 
+error-message-no-device = Impossible d'atteindre la télémétrie. Est-elle configurée correctement ?
+error-message-timed-out = Certains composants pourraient ne pas avoir démarré. Redémarrez la machine.
+
 modal-close = Fermer
 
 stop-title = Unité de ventilation inactive

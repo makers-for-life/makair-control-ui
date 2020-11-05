@@ -4,6 +4,7 @@
 // License: Public Domain License
 
 use std::borrow::Cow;
+use std::time::Duration;
 
 use chrono::{DateTime, NaiveDateTime, Utc};
 use conrod_core::Ui;
@@ -15,10 +16,10 @@ use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot};
 
 use crate::chip::settings::{ChipSettings, ChipSettingsEvent};
-use crate::chip::ChipState;
+use crate::chip::{ChipError, ChipState};
 use crate::config::environment::*;
 use crate::utilities::image::reverse_rgba;
-use crate::utilities::parse::{parse_text_lines_to_single, parse_version_number};
+use crate::utilities::parse::parse_version_number;
 #[cfg(feature = "graph-scaler")]
 use crate::utilities::pressure::process_max_allowed_pressure;
 use crate::utilities::types::DataPressure;
@@ -31,6 +32,8 @@ use super::fonts::Fonts;
 use super::identifiers::Ids;
 use super::screen::{Screen, ScreenModalsOpen};
 use super::support::GliumDisplayWinitWrapper;
+
+const WAITING_FOR_DATA_TIMEOUT_AFTER: Duration = Duration::from_secs(10);
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum DisplayRendererSettingsState {
@@ -120,7 +123,16 @@ impl DisplayRenderer {
 
         match chip_state {
             // Waiting for data from the motherboard, treat it as a 'connecting...' state
-            ChipState::WaitingData => self.initializing(display, interface, image_map, true),
+            ChipState::WaitingData(started_time) => {
+                // The UI has been waiting for data for too long? Show an error instead, though \
+                //   we are still waiting for data, so this may fix by itself. This is done for UI \
+                //   purposes, though the chip state is still 'ChipState::WaitingData'.
+                if started_time.elapsed() >= WAITING_FOR_DATA_TIMEOUT_AFTER {
+                    self.error(display, interface, image_map, &ChipError::TimedOut)
+                } else {
+                    self.initializing(display, interface, image_map, true)
+                }
+            }
             // Initializing, treat it as a 'connected' state
             ChipState::Initializing => self.initializing(display, interface, image_map, false),
             // Running or stopped, handle data
@@ -138,12 +150,7 @@ impl DisplayRenderer {
                 chip_settings,
             ),
             // An error occured
-            ChipState::Error(err) => self.error(
-                display,
-                interface,
-                image_map,
-                parse_text_lines_to_single(err, "; "),
-            ),
+            ChipState::Error(err) => self.error(display, interface, image_map, err),
         }
     }
 
@@ -198,7 +205,7 @@ impl DisplayRenderer {
         display: &GliumDisplayWinitWrapper,
         interface: &mut Ui,
         mut image_map: conrod_core::image::Map<texture::Texture2d>,
-        error: String,
+        error: &ChipError,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let error_icon_image_texture = self.draw_error_icon(display);
 
@@ -215,7 +222,7 @@ impl DisplayRenderer {
             image_id,
             width: error_icon_width as _,
             height: error_icon_height as _,
-            message: error,
+            error,
         };
 
         let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None, None, None);

@@ -12,6 +12,7 @@ use chrono::{offset::Utc, DateTime, Duration};
 use std::collections::{HashMap, VecDeque};
 use std::convert::TryFrom;
 use std::sync::mpsc::{self, Receiver, Sender};
+use std::time::Instant;
 
 use settings::{ChipSettings, ChipSettingsEvent, SettingActionState};
 use telemetry::alarm::AlarmCode;
@@ -22,6 +23,7 @@ use telemetry::structures::{
 };
 
 use crate::config::environment::*;
+use crate::utilities::parse::parse_text_lines_to_single;
 use crate::utilities::types::DataPressure;
 use crate::utilities::units::{convert_cmh2o_to_mmh2o, convert_mmh2o_to_cmh2o, ConvertMode};
 
@@ -30,8 +32,15 @@ pub enum ChipState {
     Initializing,
     Running,
     Stopped,
-    WaitingData,
-    Error(String),
+    WaitingData(Instant),
+    Error(ChipError),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ChipError {
+    NoDevice,
+    TimedOut,
+    Other(String),
 }
 
 #[derive(PartialEq)]
@@ -75,7 +84,7 @@ impl Chip {
             last_data_snapshot: None,
             ongoing_alarms: HashMap::new(),
             settings: ChipSettings::new(cycles_per_minute),
-            state: ChipState::WaitingData,
+            state: ChipState::WaitingData(Instant::now()),
             lora_tx: lora_sender,
             channel_for_settings: None,
         }
@@ -191,8 +200,13 @@ impl Chip {
 
     pub fn new_error(&mut self, error: core::Error) {
         match error.kind() {
-            core::ErrorKind::NoDevice => self.state = ChipState::WaitingData,
-            err => self.state = ChipState::Error(format!("{:?}", err)),
+            core::ErrorKind::NoDevice => self.state = ChipState::Error(ChipError::NoDevice),
+            err => {
+                self.state = ChipState::Error(ChipError::Other(parse_text_lines_to_single(
+                    &format!("{:?}", err),
+                    "; ",
+                )))
+            }
         };
     }
 

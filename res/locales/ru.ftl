@@ -55,6 +55,9 @@ initializing-connected = Инициализация...
 
 error-title = Ой. Произошла ошибка.
 
+error-message-no-device = Невозможно связаться с мастером телеметрии.
+error-message-timed-out = Некоторые компоненты не запускались.
+
 modal-close = в порядке
 
 stop-title = Аппарат ИВЛ не активен

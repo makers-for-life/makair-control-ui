@@ -55,6 +55,9 @@ initializing-connected = 初始化中...
 
 error-title = 哎呀。 发生错误。
 
+error-message-no-device = 无法到达遥测主机。
+error-message-timed-out = 某些组件无法启动。
+
 modal-close = 好
 
 stop-title = 呼吸机单元无效

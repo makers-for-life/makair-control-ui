@@ -55,6 +55,9 @@ initializing-connected = Inicializando...
 
 error-title = Ops. Um erro ocorreu.
 
+error-message-no-device = Não é possível alcançar o mestre de telemetria.
+error-message-timed-out = Alguns componentes falharam ao iniciar.
+
 modal-close = OK
 
 stop-title = Unidade de ventilação inativa

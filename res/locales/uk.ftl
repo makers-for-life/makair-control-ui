@@ -55,6 +55,9 @@ initializing-connected = Ініціалізація...
 
 error-title = На жаль Сталася помилка.
 
+error-message-no-device = Не вдається зв’язатися з майстром телеметрії.
+error-message-timed-out = Не вдалося запустити деякі компоненти.
+
 modal-close = в порядку
 
 stop-title = Апарат ШВЛ не активний

@@ -55,6 +55,9 @@ initializing-connected = Notiek inicializēšana...
 
 error-title = Hmm ... Notika kļūda.
 
+error-message-no-device = Nevar sasniegt telemetrijas kapteini.
+error-message-timed-out = Dažus komponentus neizdevās palaist.
+
 modal-close = OK
 
 stop-title = Ventilatora ierīce neaktīva

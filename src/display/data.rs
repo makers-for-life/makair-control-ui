@@ -3,7 +3,7 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-use crate::chip::ChipState;
+use crate::chip::{ChipError, ChipState};
 use crate::utilities::types::DataPressure;
 
 pub struct DisplayDataBranding<'a> {
@@ -46,9 +46,9 @@ pub struct DisplayDataBootloader {
     pub connecting: bool,
 }
 
-pub struct DisplayDataError {
+pub struct DisplayDataError<'a> {
     pub image_id: conrod_core::image::Id,
     pub width: f64,
     pub height: f64,
-    pub message: String,
+    pub error: &'a ChipError,
 }

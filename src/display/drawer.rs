@@ -86,7 +86,8 @@ impl<'a> DisplayDrawer<'a> {
         // Start drawer loop
         // Flow: cycles through telemetry events, and refreshes the view every time there is an \
         //   update on the machines state.
-        let (mut last_chip_state, mut is_first_frame) = (ChipState::WaitingData, true);
+        let (mut last_chip_state, mut is_first_frame) =
+            (ChipState::WaitingData(Instant::now()), true);
 
         'main: loop {
             let (mut has_poll_events, mut has_chip_state_change) = (false, false);

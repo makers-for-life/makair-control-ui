@@ -55,6 +55,9 @@ initializing-connected = Initialisierung...
 
 error-title = Hoppla. Ein Fehler ist aufgetreten.
 
+error-message-no-device = Der Telemetriemaster kann nicht erreicht werden.
+error-message-timed-out = Einige Komponenten konnten nicht gestartet werden.
+
 modal-close = OK
 
 stop-title = Das Beatmungsgerät ist nicht aktiv
