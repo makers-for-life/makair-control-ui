@@ -556,6 +556,10 @@ impl Chip {
         //   values straight away live-refreshes the UI w/ the up-to-date values, instead of \
         //   requiring a full wait until the next data snapshot comes (at the end of each cycle).
         match ack.setting {
+            ControlSetting::Heartbeat => {
+                // Ignore heartbeat acknowledgements (stateless)
+            }
+
             ControlSetting::PeakPressure => {
                 self.last_machine_snapshot.peak_command =
                     convert_mmh2o_to_cmh2o(ConvertMode::Rounded, ack.value as f64) as u8
