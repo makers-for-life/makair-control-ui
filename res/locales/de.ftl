@@ -53,7 +53,7 @@ modal-pressure-expiratory = Ausatmungsdruck:
 initializing-connecting = Inbetriebnahme...
 initializing-connected = Initialisierung...
 
-error-title = Ein Fehler ist aufgetreten:
+error-title = Hoppla. Ein Fehler ist aufgetreten.
 
 modal-close = OK
 

@@ -53,7 +53,7 @@ modal-pressure-expiratory = Тиск на видиху:
 initializing-connecting = Запуск...
 initializing-connected = Ініціалізація...
 
-error-title = Виникла помилка
+error-title = На жаль Сталася помилка.
 
 modal-close = в порядку
 

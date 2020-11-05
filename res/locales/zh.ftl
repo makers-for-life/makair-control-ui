@@ -53,7 +53,7 @@ modal-pressure-expiratory = 呼气压力：
 initializing-connecting = 启动...
 initializing-connected = 初始化中...
 
-error-title = 发生错误：
+error-title = 哎呀。 发生错误。
 
 modal-close = 好
 

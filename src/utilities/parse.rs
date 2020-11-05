@@ -38,3 +38,7 @@ pub fn parse_optional_number_to_string(value: Option<usize>) -> String {
         "".to_string()
     }
 }
+
+pub fn parse_text_lines_to_single(text: &str, delimiter: &str) -> String {
+    text.split('\n').collect::<Vec<&str>>().join(delimiter)
+}

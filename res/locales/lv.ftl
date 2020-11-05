@@ -53,7 +53,7 @@ modal-pressure-expiratory = Izelpas spiediens:
 initializing-connecting = Notiek palaišana...
 initializing-connected = Notiek inicializēšana...
 
-error-title = Notika kļūda:
+error-title = Hmm ... Notika kļūda.
 
 modal-close = OK
 

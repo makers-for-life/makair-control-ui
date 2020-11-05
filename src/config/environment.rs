@@ -16,9 +16,13 @@ pub const DISPLAY_FRAMERATE_STOPPED: u64 = 8;
 pub const BOOTLOADER_LOGO_WIDTH: u32 = 98;
 pub const BOOTLOADER_LOGO_HEIGHT: u32 = 96;
 
-pub const ERROR_PADDING_TOP: f64 = 16.0;
-pub const ERROR_PADDING_LEFT: f64 = 22.0;
-pub const ERROR_MESSAGE_FONT_SIZE: u32 = 18;
+pub const ERROR_WIDTH: f64 = 180.0;
+pub const ERROR_HEIGHT: f64 = 186.0;
+pub const ERROR_ICON_WIDTH: u32 = 115;
+pub const ERROR_ICON_HEIGHT: u32 = 101;
+pub const ERROR_TEXT_BOX_HEIGHT: f64 = 50.0;
+pub const ERROR_TITLE_FONT_SIZE: u32 = 19;
+pub const ERROR_MESSAGE_FONT_SIZE: u32 = 16;
 
 pub const INITIALIZING_WIDTH: f64 = 160.0;
 pub const INITIALIZING_HEIGHT: f64 = 138.0;

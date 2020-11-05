@@ -45,3 +45,10 @@ pub struct DisplayDataBootloader {
     pub height: f64,
     pub connecting: bool,
 }
+
+pub struct DisplayDataError {
+    pub image_id: conrod_core::image::Id,
+    pub width: f64,
+    pub height: f64,
+    pub message: String,
+}

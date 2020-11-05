@@ -53,7 +53,7 @@ modal-pressure-expiratory = Pression d'expiration :
 initializing-connecting = Démarrage en cours...
 initializing-connected = Préparation en cours...
 
-error-title = Une erreur est survenue :
+error-title = Oups. Une erreur est survenue.
 
 modal-close = Fermer
 

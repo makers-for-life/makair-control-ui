@@ -278,13 +278,20 @@ impl<'a> Screen<'a> {
         }));
     }
 
-    pub fn render_error(&mut self, error: String) {
+    pub fn render_error(&mut self, config: DisplayDataError) {
         self.render_background();
 
         self.widgets
             .render(ControlWidgetType::Error(error::Config::new(
-                error,
-                self.ids.error,
+                self.ids.error_container,
+                self.ids.error_icon,
+                self.ids.error_text_wrapper,
+                self.ids.error_text_title,
+                self.ids.error_text_message,
+                config.width,
+                config.height,
+                config.image_id,
+                config.message,
             )));
     }
 

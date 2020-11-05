@@ -166,7 +166,11 @@ widget_ids!(pub struct Ids {
   stop_title,
   stop_message,
 
-  error,
+  error_container,
+  error_icon,
+  error_text_wrapper,
+  error_text_title,
+  error_text_message,
 
   initializing_container,
   initializing_logo,

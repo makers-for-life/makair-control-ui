@@ -53,7 +53,7 @@ modal-pressure-expiratory = Давление на выдохе:
 initializing-connecting = Начиная...
 initializing-connected = Инициализация...
 
-error-title = Произошла ошибка
+error-title = Ой. Произошла ошибка.
 
 modal-close = в порядке
 

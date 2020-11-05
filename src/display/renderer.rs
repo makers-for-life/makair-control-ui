@@ -18,7 +18,7 @@ use crate::chip::settings::{ChipSettings, ChipSettingsEvent};
 use crate::chip::ChipState;
 use crate::config::environment::*;
 use crate::utilities::image::reverse_rgba;
-use crate::utilities::parse::parse_version_number;
+use crate::utilities::parse::{parse_text_lines_to_single, parse_version_number};
 #[cfg(feature = "graph-scaler")]
 use crate::utilities::pressure::process_max_allowed_pressure;
 use crate::utilities::types::DataPressure;
@@ -56,6 +56,8 @@ lazy_static! {
         gen_load_image_reverse!("top-logo", BRANDING_WIDTH);
     static ref IMAGE_BOOTLOADER_LOGO_RGBA_RAW: Vec<u8> =
         gen_load_image_reverse!("bootloader-logo", BOOTLOADER_LOGO_WIDTH);
+    static ref IMAGE_ERROR_ICON_RGBA_RAW: Vec<u8> =
+        gen_load_image_reverse!("error-icon", ERROR_ICON_WIDTH);
     static ref IMAGE_TELEMETRY_ARROW_RGBA_RAW: Vec<u8> =
         gen_load_image_reverse!("telemetry-arrow", TELEMETRY_ARROW_WIDTH);
     static ref IMAGE_CONTROLS_RUN_RGBA_RAW: Vec<u8> =
@@ -136,7 +138,12 @@ impl DisplayRenderer {
                 chip_settings,
             ),
             // An error occured
-            ChipState::Error(err) => self.error(interface, image_map, err.clone()),
+            ChipState::Error(err) => self.error(
+                display,
+                interface,
+                image_map,
+                parse_text_lines_to_single(err, "; "),
+            ),
         }
     }
 
@@ -188,15 +195,32 @@ impl DisplayRenderer {
 
     fn error(
         &mut self,
+        display: &GliumDisplayWinitWrapper,
         interface: &mut Ui,
-        image_map: conrod_core::image::Map<texture::Texture2d>,
+        mut image_map: conrod_core::image::Map<texture::Texture2d>,
         error: String,
     ) -> conrod_core::image::Map<texture::Texture2d> {
+        let error_icon_image_texture = self.draw_error_icon(display);
+
+        let (error_icon_width, error_icon_height) = (
+            error_icon_image_texture.get_width(),
+            error_icon_image_texture.get_height().unwrap(),
+        );
+
+        let image_id = image_map.insert(error_icon_image_texture);
+
         let ui = interface.set_widgets();
+
+        let screen_error = DisplayDataError {
+            image_id,
+            width: error_icon_width as _,
+            height: error_icon_height as _,
+            message: error,
+        };
 
         let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None, None, None);
 
-        screen.render_error(error);
+        screen.render_error(screen_error);
 
         image_map
     }
@@ -386,6 +410,13 @@ impl DisplayRenderer {
         // Create image from raw buffer (cached)
         gen_draw_cached_image!(
             display <= IMAGE_BOOTLOADER_LOGO_RGBA_RAW[BOOTLOADER_LOGO_WIDTH, BOOTLOADER_LOGO_HEIGHT]
+        )
+    }
+
+    fn draw_error_icon(&self, display: &GliumDisplayWinitWrapper) -> glium::texture::Texture2d {
+        // Create image from raw buffer (cached)
+        gen_draw_cached_image!(
+            display <= IMAGE_ERROR_ICON_RGBA_RAW[ERROR_ICON_WIDTH, ERROR_ICON_HEIGHT]
         )
     }
 

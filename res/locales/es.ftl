@@ -53,7 +53,7 @@ modal-pressure-expiratory = Presión espiratoria:
 initializing-connecting = Empezando...
 initializing-connected = Inicializando...
 
-error-title = Error:
+error-title = ¡Ups! Ocurrió un error.
 
 modal-close = OK
 
