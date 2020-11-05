@@ -28,33 +28,13 @@ const GROUND_CIRCLE_COLOR_OVERFLOW: Color =
     Color::Rgba(204.0 / 255.0, 204.0 / 255.0, 204.0 / 255.0, 1.0);
 
 pub struct Config<'a> {
-    data_pressure: &'a ChipDataPressure,
-    peak_command: u8,
+    pub data_pressure: &'a ChipDataPressure,
+    pub peak_command: u8,
 
-    container: WidgetId,
-    ground: WidgetId,
-    surround: WidgetId,
-    inner: WidgetId,
-}
-
-impl<'a> Config<'a> {
-    pub fn new(
-        data_pressure: &'a ChipDataPressure,
-        peak_command: u8,
-        container: WidgetId,
-        ground: WidgetId,
-        surround: WidgetId,
-        inner: WidgetId,
-    ) -> Config<'a> {
-        Config {
-            data_pressure,
-            peak_command,
-            container,
-            ground,
-            surround,
-            inner,
-        }
-    }
+    pub container: WidgetId,
+    pub ground: WidgetId,
+    pub surround: WidgetId,
+    pub inner: WidgetId,
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {

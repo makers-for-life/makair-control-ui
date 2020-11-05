@@ -13,38 +13,16 @@ use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 
 pub struct Config<'a> {
-    parent: WidgetId,
+    pub parent: WidgetId,
 
-    version_firmware: &'a str,
-    version_control: &'a str,
+    pub version_firmware: &'a str,
+    pub version_control: &'a str,
 
-    width: f64,
-    height: f64,
+    pub width: f64,
+    pub height: f64,
 
-    image: conrod_core::image::Id,
-    ids: (WidgetId, WidgetId, WidgetId),
-}
-
-impl<'a> Config<'a> {
-    pub fn new(
-        parent: WidgetId,
-        version_firmware: &'a str,
-        version_control: &'a str,
-        width: f64,
-        height: f64,
-        image: conrod_core::image::Id,
-        ids: (WidgetId, WidgetId, WidgetId),
-    ) -> Config<'a> {
-        Config {
-            parent,
-            version_firmware,
-            version_control,
-            width,
-            height,
-            image,
-            ids,
-        }
-    }
+    pub image: conrod_core::image::Id,
+    pub ids: (WidgetId, WidgetId, WidgetId),
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {

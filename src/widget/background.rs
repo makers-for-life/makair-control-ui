@@ -11,14 +11,8 @@ use conrod_core::{
 use crate::display::widget::ControlWidget;
 
 pub struct Config {
-    color: conrod_core::color::Color,
-    id: WidgetId,
-}
-
-impl Config {
-    pub fn new(color: conrod_core::color::Color, id: WidgetId) -> Config {
-        Config { color, id }
-    }
+    pub color: conrod_core::color::Color,
+    pub id: WidgetId,
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {

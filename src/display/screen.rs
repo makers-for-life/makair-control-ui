@@ -80,34 +80,34 @@ impl<'a> Screen<'a> {
 
     pub fn render_background(&mut self) {
         self.widgets
-            .render(ControlWidgetType::Background(background::Config::new(
-                color::BLACK,
-                self.ids.background,
-            )));
+            .render(ControlWidgetType::Background(background::Config {
+                color: color::BLACK,
+                id: self.ids.background,
+            }));
     }
 
     pub fn render_layout(&mut self) {
         self.widgets
-            .render(ControlWidgetType::Layout(layout::Config::new(
-                layout::Slice::new(
-                    self.ids.background,
-                    0.0,
-                    LAYOUT_HEADER_SIZE_HEIGHT,
-                    self.ids.layout_header,
-                ),
-                layout::Slice::new(
-                    self.ids.background,
-                    LAYOUT_HEADER_SIZE_HEIGHT,
-                    LAYOUT_BODY_SIZE_HEIGHT,
-                    self.ids.layout_body,
-                ),
-                layout::Slice::new(
-                    self.ids.background,
-                    LAYOUT_HEADER_SIZE_HEIGHT + LAYOUT_BODY_SIZE_HEIGHT,
-                    LAYOUT_FOOTER_SIZE_HEIGHT,
-                    self.ids.layout_footer,
-                ),
-            )));
+            .render(ControlWidgetType::Layout(layout::Config {
+                header: layout::Slice {
+                    parent: self.ids.background,
+                    layout: self.ids.layout_header,
+                    top: 0.0,
+                    height: LAYOUT_HEADER_SIZE_HEIGHT,
+                },
+                body: layout::Slice {
+                    parent: self.ids.background,
+                    layout: self.ids.layout_body,
+                    top: LAYOUT_HEADER_SIZE_HEIGHT,
+                    height: LAYOUT_BODY_SIZE_HEIGHT,
+                },
+                footer: layout::Slice {
+                    parent: self.ids.background,
+                    layout: self.ids.layout_footer,
+                    top: LAYOUT_HEADER_SIZE_HEIGHT + LAYOUT_BODY_SIZE_HEIGHT,
+                    height: LAYOUT_FOOTER_SIZE_HEIGHT,
+                },
+            }));
     }
 
     pub fn render_branding(
@@ -119,19 +119,19 @@ impl<'a> Screen<'a> {
         height: f64,
     ) {
         self.widgets
-            .render(ControlWidgetType::Branding(branding::Config::new(
-                self.ids.layout_header,
+            .render(ControlWidgetType::Branding(branding::Config {
+                parent: self.ids.layout_header,
                 version_firmware,
                 version_control,
                 width,
                 height,
-                image_id,
-                (
+                image: image_id,
+                ids: (
                     self.ids.branding_container,
                     self.ids.branding_image,
                     self.ids.branding_text,
                 ),
-            )));
+            }));
     }
 
     pub fn render_alarms(&mut self) {
@@ -153,62 +153,61 @@ impl<'a> Screen<'a> {
 
     pub fn render_heartbeat(&mut self, heartbeat_data: DisplayDataHeartbeat<'a>) {
         self.widgets
-            .render(ControlWidgetType::Heartbeat(heartbeat::Config::new(
-                heartbeat_data.data_pressure,
-                self.machine_snapshot.unwrap().peak_command,
-                self.ids.layout_header,
-                self.ids.heartbeat_ground,
-                self.ids.heartbeat_surround,
-                self.ids.heartbeat_inner,
-            )));
+            .render(ControlWidgetType::Heartbeat(heartbeat::Config {
+                data_pressure: heartbeat_data.data_pressure,
+                peak_command: self.machine_snapshot.unwrap().peak_command,
+                container: self.ids.layout_header,
+                ground: self.ids.heartbeat_ground,
+                surround: self.ids.heartbeat_surround,
+                inner: self.ids.heartbeat_inner,
+            }));
     }
 
     pub fn render_status(&mut self, status_data: DisplayDataStatus<'a>) {
         self.widgets
-            .render(ControlWidgetType::Status(status::Config::new(
-                self.ids.layout_header,
-                self.ids.status_wrapper,
-                self.ids.status_unit_box,
-                self.ids.status_unit_text,
-                self.ids.status_power_box,
-                self.ids.status_power_text,
-                self.ids.status_save_icon,
-                status_data.battery_level,
-                status_data.chip_state,
-                self.ongoing_alarms.unwrap(),
-                status_data.save_image_id,
-            )));
+            .render(ControlWidgetType::Status(status::Config {
+                container: self.ids.layout_header,
+                wrapper: self.ids.status_wrapper,
+                unit_box: self.ids.status_unit_box,
+                unit_text: self.ids.status_unit_text,
+                power_box: self.ids.status_power_box,
+                power_text: self.ids.status_power_text,
+                save_icon: self.ids.status_save_icon,
+                battery_level: status_data.battery_level,
+                chip_state: status_data.chip_state,
+                alarms: self.ongoing_alarms.unwrap(),
+                save_icon_id: status_data.save_image_id,
+            }));
     }
 
     pub fn render_controls(&mut self, controls_data: DisplayDataControls<'a>) {
         self.widgets
-            .render(ControlWidgetType::Controls(controls::Config::new(
-                self.ids.layout_header,
-                self.ids.controls_wrapper,
-                self.ids.controls_button_run,
-                self.ids.controls_button_snooze,
-                self.ids.controls_button_advanced,
-                self.ids.controls_image_run,
-                self.ids.controls_image_snooze,
-                self.ids.controls_image_advanced,
-                controls_data.run_image_id,
-                controls_data.snooze_inactive_image_id,
-                controls_data.snooze_active_image_id,
-                controls_data.advanced_image_id,
-                controls_data.chip_state,
-                &controls_data.chip_settings.snooze,
-            )));
+            .render(ControlWidgetType::Controls(controls::Config {
+                container: self.ids.layout_header,
+                wrapper: self.ids.controls_wrapper,
+                run_button: self.ids.controls_button_run,
+                snooze_button: self.ids.controls_button_snooze,
+                advanced_button: self.ids.controls_button_advanced,
+                run_icon: self.ids.controls_image_run,
+                snooze_icon: self.ids.controls_image_snooze,
+                advanced_icon: self.ids.controls_image_advanced,
+                run_icon_image: controls_data.run_image_id,
+                snooze_inactive_icon_image: controls_data.snooze_inactive_image_id,
+                snooze_active_icon_image: controls_data.snooze_active_image_id,
+                advanced_icon_image: controls_data.advanced_image_id,
+                chip_state: controls_data.chip_state,
+                snooze_settings: &controls_data.chip_settings.snooze,
+            }));
     }
 
     pub fn render_graph(&mut self, image_id: conrod_core::image::Id, width: f64, height: f64) {
-        self.widgets
-            .render(ControlWidgetType::Graph(graph::Config::new(
-                width,
-                height,
-                image_id,
-                self.ids.layout_body,
-                self.ids.graph_pressure,
-            )));
+        self.widgets.render(ControlWidgetType::Graph(graph::Config {
+            width,
+            height,
+            image: image_id,
+            parent: self.ids.layout_body,
+            id: self.ids.graph_pressure,
+        }));
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -312,33 +311,32 @@ impl<'a> Screen<'a> {
         self.render_background();
 
         // Render error
-        self.widgets
-            .render(ControlWidgetType::Error(error::Config::new(
-                self.ids.error_container,
-                self.ids.error_icon,
-                self.ids.error_text_wrapper,
-                self.ids.error_text_title,
-                self.ids.error_text_message,
-                config.width,
-                config.height,
-                config.image_id,
-                message,
-            )));
+        self.widgets.render(ControlWidgetType::Error(error::Config {
+            container: self.ids.error_container,
+            icon: self.ids.error_icon,
+            text_wrapper: self.ids.error_text_wrapper,
+            text_title: self.ids.error_text_title,
+            text_message: self.ids.error_text_message,
+            width: config.width,
+            height: config.height,
+            image: config.image_id,
+            message,
+        }));
     }
 
     pub fn render_initializing(&mut self, config: DisplayDataBootloader) {
         self.render_background();
 
         self.widgets
-            .render(ControlWidgetType::Initializing(initializing::Config::new(
-                self.ids.initializing_container,
-                self.ids.initializing_logo,
-                self.ids.initializing_text,
-                config.width,
-                config.height,
-                config.image_id,
-                config.connecting,
-            )));
+            .render(ControlWidgetType::Initializing(initializing::Config {
+                container: self.ids.initializing_container,
+                logo: self.ids.initializing_logo,
+                text: self.ids.initializing_text,
+                width: config.width,
+                height: config.height,
+                image: config.image_id,
+                connecting: config.connecting,
+            }));
     }
 
     pub fn render_telemetry(
@@ -351,12 +349,12 @@ impl<'a> Screen<'a> {
 
         // Initialize the pressure graph widget
         self.widgets.render(ControlWidgetType::TelemetryContainer(
-            telemetry_container::Config::new(
-                TELEMETRY_WIDGET_RIGHT_SIZE_WIDTH,
-                DISPLAY_WINDOW_SIZE_HEIGHT as f64 - LAYOUT_HEADER_SIZE_HEIGHT,
-                self.ids.graph_pressure,
-                self.ids.telemetry_widgets_right,
-            ),
+            telemetry_container::Config {
+                width: TELEMETRY_WIDGET_RIGHT_SIZE_WIDTH,
+                height: DISPLAY_WINDOW_SIZE_HEIGHT as f64 - LAYOUT_HEADER_SIZE_HEIGHT,
+                parent: self.ids.graph_pressure,
+                id: self.ids.telemetry_widgets_right,
+            },
         ));
 
         // Check if at least a pressure value is known (otherwise, all pressure widgets should \

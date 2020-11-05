@@ -13,38 +13,17 @@ use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 
 pub struct Slice {
-    parent: WidgetId,
-    layout: WidgetId,
+    pub parent: WidgetId,
+    pub layout: WidgetId,
 
-    top: f64,
-    height: f64,
+    pub top: f64,
+    pub height: f64,
 }
 
 pub struct Config {
-    header: Slice,
-    body: Slice,
-    footer: Slice,
-}
-
-impl Slice {
-    pub fn new(parent: WidgetId, top: f64, height: f64, layout: WidgetId) -> Slice {
-        Slice {
-            parent,
-            top,
-            height,
-            layout,
-        }
-    }
-}
-
-impl Config {
-    pub fn new(header: Slice, body: Slice, footer: Slice) -> Config {
-        Config {
-            header,
-            body,
-            footer,
-        }
-    }
+    pub header: Slice,
+    pub body: Slice,
+    pub footer: Slice,
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {

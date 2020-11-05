@@ -12,22 +12,11 @@ use conrod_core::{
 use crate::display::widget::ControlWidget;
 
 pub struct Config {
-    width: f64,
-    height: f64,
+    pub width: f64,
+    pub height: f64,
 
-    parent: WidgetId,
-    id: WidgetId,
-}
-
-impl Config {
-    pub fn new(width: f64, height: f64, parent: WidgetId, id: WidgetId) -> Config {
-        Config {
-            width,
-            height,
-            parent,
-            id,
-        }
-    }
+    pub parent: WidgetId,
+    pub id: WidgetId,
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {

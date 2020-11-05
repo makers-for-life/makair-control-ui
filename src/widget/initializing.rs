@@ -16,38 +16,16 @@ use crate::APP_I18N;
 const TEXT_COLOR: Color = Color::Rgba(1.0, 1.0, 1.0, 0.2);
 
 pub struct Config {
-    container: WidgetId,
-    logo: WidgetId,
-    text: WidgetId,
+    pub container: WidgetId,
+    pub logo: WidgetId,
+    pub text: WidgetId,
 
-    width: f64,
-    height: f64,
+    pub width: f64,
+    pub height: f64,
 
-    image: conrod_core::image::Id,
+    pub image: conrod_core::image::Id,
 
-    connecting: bool,
-}
-
-impl Config {
-    pub fn new(
-        container_id: WidgetId,
-        logo_id: WidgetId,
-        text_id: WidgetId,
-        width: f64,
-        height: f64,
-        image: conrod_core::image::Id,
-        connecting: bool,
-    ) -> Config {
-        Config {
-            container: container_id,
-            logo: logo_id,
-            text: text_id,
-            width,
-            height,
-            image,
-            connecting,
-        }
-    }
+    pub connecting: bool,
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {

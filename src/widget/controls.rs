@@ -25,59 +25,22 @@ const BUTTON_SNOOZE_ACTIVE_COLOR: Color = Color::Rgba(1.0, 1.0, 1.0, 1.0);
 const BUTTON_ADVANCED_COLOR: Color = BUTTON_BASE_COLOR;
 
 pub struct Config<'a> {
-    container: WidgetId,
-    wrapper: WidgetId,
-    run_button: WidgetId,
-    snooze_button: WidgetId,
-    advanced_button: WidgetId,
-    run_icon: WidgetId,
-    snooze_icon: WidgetId,
-    advanced_icon: WidgetId,
+    pub container: WidgetId,
+    pub wrapper: WidgetId,
+    pub run_button: WidgetId,
+    pub snooze_button: WidgetId,
+    pub advanced_button: WidgetId,
+    pub run_icon: WidgetId,
+    pub snooze_icon: WidgetId,
+    pub advanced_icon: WidgetId,
 
-    run_icon_image: conrod_core::image::Id,
-    snooze_active_icon_image: conrod_core::image::Id,
-    snooze_inactive_icon_image: conrod_core::image::Id,
-    advanced_icon_image: conrod_core::image::Id,
+    pub run_icon_image: conrod_core::image::Id,
+    pub snooze_active_icon_image: conrod_core::image::Id,
+    pub snooze_inactive_icon_image: conrod_core::image::Id,
+    pub advanced_icon_image: conrod_core::image::Id,
 
-    chip_state: &'a ChipState,
-    snooze_settings: &'a SettingsSnooze,
-}
-
-#[allow(clippy::too_many_arguments)]
-impl<'a> Config<'a> {
-    pub fn new(
-        container: WidgetId,
-        wrapper: WidgetId,
-        run_button: WidgetId,
-        snooze_button: WidgetId,
-        advanced_button: WidgetId,
-        run_icon: WidgetId,
-        snooze_icon: WidgetId,
-        advanced_icon: WidgetId,
-        run_icon_image: conrod_core::image::Id,
-        snooze_inactive_icon_image: conrod_core::image::Id,
-        snooze_active_icon_image: conrod_core::image::Id,
-        advanced_icon_image: conrod_core::image::Id,
-        chip_state: &'a ChipState,
-        snooze_settings: &'a SettingsSnooze,
-    ) -> Config<'a> {
-        Config {
-            container,
-            wrapper,
-            run_button,
-            snooze_button,
-            advanced_button,
-            run_icon,
-            snooze_icon,
-            advanced_icon,
-            run_icon_image,
-            snooze_inactive_icon_image,
-            snooze_active_icon_image,
-            advanced_icon_image,
-            chip_state,
-            snooze_settings,
-        }
-    }
+    pub chip_state: &'a ChipState,
+    pub snooze_settings: &'a SettingsSnooze,
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {

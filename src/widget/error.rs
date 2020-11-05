@@ -14,45 +14,18 @@ use crate::display::widget::ControlWidget;
 use crate::APP_I18N;
 
 pub struct Config {
-    container: WidgetId,
-    icon: WidgetId,
-    text_wrapper: WidgetId,
-    text_title: WidgetId,
-    text_message: WidgetId,
+    pub container: WidgetId,
+    pub icon: WidgetId,
+    pub text_wrapper: WidgetId,
+    pub text_title: WidgetId,
+    pub text_message: WidgetId,
 
-    width: f64,
-    height: f64,
+    pub width: f64,
+    pub height: f64,
 
-    image: conrod_core::image::Id,
+    pub image: conrod_core::image::Id,
 
-    message: String,
-}
-
-#[allow(clippy::too_many_arguments)]
-impl Config {
-    pub fn new(
-        container_id: WidgetId,
-        icon_id: WidgetId,
-        text_wrapper_id: WidgetId,
-        text_title_id: WidgetId,
-        text_message_id: WidgetId,
-        width: f64,
-        height: f64,
-        image: conrod_core::image::Id,
-        message: String,
-    ) -> Config {
-        Config {
-            container: container_id,
-            icon: icon_id,
-            text_wrapper: text_wrapper_id,
-            text_title: text_title_id,
-            text_message: text_message_id,
-            width,
-            height,
-            image,
-            message,
-        }
-    }
+    pub message: String,
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {

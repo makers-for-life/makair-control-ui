@@ -25,49 +25,18 @@ const UNIT_ACTIVE_COLOR: Color = Color::Rgba(50.0 / 255.0, 186.0 / 255.0, 0.0, 1
 const POWER_BOX_BATTERY_COLOR: Color = Color::Rgba(208.0 / 255.0, 92.0 / 255.0, 0.0, 1.0);
 
 pub struct Config<'a> {
-    container: WidgetId,
-    wrapper: WidgetId,
-    unit_box: WidgetId,
-    unit_text: WidgetId,
-    power_box: WidgetId,
-    power_text: WidgetId,
-    save_icon: WidgetId,
+    pub container: WidgetId,
+    pub wrapper: WidgetId,
+    pub unit_box: WidgetId,
+    pub unit_text: WidgetId,
+    pub power_box: WidgetId,
+    pub power_text: WidgetId,
+    pub save_icon: WidgetId,
 
-    battery_level: Option<u8>,
-    chip_state: &'a ChipState,
-    alarms: &'a [(AlarmCode, AlarmPriority)],
-    save_icon_id: Option<conrod_core::image::Id>,
-}
-
-#[allow(clippy::too_many_arguments)]
-impl<'a> Config<'a> {
-    pub fn new(
-        container: WidgetId,
-        wrapper: WidgetId,
-        unit_box: WidgetId,
-        unit_text: WidgetId,
-        power_box: WidgetId,
-        power_text: WidgetId,
-        save_icon: WidgetId,
-        battery_level: Option<u8>,
-        chip_state: &'a ChipState,
-        alarms: &'a [(AlarmCode, AlarmPriority)],
-        save_icon_id: Option<conrod_core::image::Id>,
-    ) -> Config<'a> {
-        Config {
-            container,
-            wrapper,
-            unit_box,
-            unit_text,
-            power_box,
-            power_text,
-            save_icon,
-            battery_level,
-            chip_state,
-            alarms,
-            save_icon_id,
-        }
-    }
+    pub battery_level: Option<u8>,
+    pub chip_state: &'a ChipState,
+    pub alarms: &'a [(AlarmCode, AlarmPriority)],
+    pub save_icon_id: Option<conrod_core::image::Id>,
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
