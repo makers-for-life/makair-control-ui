@@ -52,11 +52,6 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
     // Generate line data
     let line_data: [(&str, &str); ADVANCED_SETTINGS_LINES_COUNT] = [
-        // Telemetry version
-        (
-            "telemetry-version",
-            &parse_non_empty_number_to_string(config.machine_snapshot.telemetry_version as usize),
-        ),
         // Control UI version
         ("control-ui-version", CONTROL_UI_VERSION),
         (
@@ -65,6 +60,11 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         ),
         // Firmware version
         ("firmware-version", &config.machine_snapshot.version),
+        // Telemetry version
+        (
+            "telemetry-version",
+            &parse_non_empty_number_to_string(config.machine_snapshot.telemetry_version as usize),
+        ),
         // Runtime device identifier (randomly generated at each boot of the motherboard)
         (
             "runtime-device-id",
