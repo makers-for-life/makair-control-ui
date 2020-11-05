@@ -32,8 +32,10 @@ widget_ids!(pub struct Ids {
 
   controls_wrapper,
   controls_button_run,
+  controls_button_snooze,
   controls_button_advanced,
   controls_image_run,
+  controls_image_snooze,
   controls_image_advanced,
 
   status_wrapper,

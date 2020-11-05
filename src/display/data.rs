@@ -15,6 +15,8 @@ pub struct DisplayDataBranding<'a> {
 
 pub struct DisplayDataControls<'a> {
     pub run_image_id: conrod_core::image::Id,
+    pub snooze_inactive_image_id: conrod_core::image::Id,
+    pub snooze_active_image_id: conrod_core::image::Id,
     pub advanced_image_id: conrod_core::image::Id,
     pub chip_state: &'a ChipState,
 }

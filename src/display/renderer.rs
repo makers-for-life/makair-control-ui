@@ -65,6 +65,10 @@ lazy_static! {
         gen_load_image_reverse!("telemetry-arrow", TELEMETRY_ARROW_WIDTH);
     static ref IMAGE_CONTROLS_RUN_RGBA_RAW: Vec<u8> =
         gen_load_image_reverse!("controls-run", CONTROLS_BUTTON_ICON_WIDTH);
+    static ref IMAGE_CONTROLS_SNOOZE_INACTIVE_RGBA_RAW: Vec<u8> =
+        gen_load_image_reverse!("controls-snooze-inactive", CONTROLS_BUTTON_ICON_WIDTH);
+    static ref IMAGE_CONTROLS_SNOOZE_ACTIVE_RGBA_RAW: Vec<u8> =
+        gen_load_image_reverse!("controls-snooze-active", CONTROLS_BUTTON_ICON_WIDTH);
     static ref IMAGE_CONTROLS_ADVANCED_RGBA_RAW: Vec<u8> =
         gen_load_image_reverse!("controls-advanced", CONTROLS_BUTTON_ICON_WIDTH);
     static ref IMAGE_STATUS_SAVE_RGBA_RAW: Vec<u8> =
@@ -345,8 +349,15 @@ impl DisplayRenderer {
         };
 
         let screen_data_controls = DisplayDataControls {
-            run_image_id: image_map.insert(self.draw_controls_run_icon(display)),
-            advanced_image_id: image_map.insert(self.draw_controls_advanced_icon(display)),
+            run_image_id: image_map
+                .insert(self.draw_controls_icon(display, &*IMAGE_CONTROLS_RUN_RGBA_RAW)),
+            snooze_inactive_image_id: image_map.insert(
+                self.draw_controls_icon(display, &*IMAGE_CONTROLS_SNOOZE_INACTIVE_RGBA_RAW),
+            ),
+            snooze_active_image_id: image_map
+                .insert(self.draw_controls_icon(display, &*IMAGE_CONTROLS_SNOOZE_ACTIVE_RGBA_RAW)),
+            advanced_image_id: image_map
+                .insert(self.draw_controls_icon(display, &*IMAGE_CONTROLS_ADVANCED_RGBA_RAW)),
             chip_state,
         };
 
@@ -437,23 +448,14 @@ impl DisplayRenderer {
         )
     }
 
-    fn draw_controls_run_icon(
+    fn draw_controls_icon(
         &self,
         display: &GliumDisplayWinitWrapper,
+        icon_rgba_raw: &[u8],
     ) -> glium::texture::Texture2d {
         // Create image from raw buffer (cached)
         gen_draw_cached_image!(
-            display <= IMAGE_CONTROLS_RUN_RGBA_RAW[CONTROLS_BUTTON_ICON_WIDTH, CONTROLS_BUTTON_ICON_HEIGHT]
-        )
-    }
-
-    fn draw_controls_advanced_icon(
-        &self,
-        display: &GliumDisplayWinitWrapper,
-    ) -> glium::texture::Texture2d {
-        // Create image from raw buffer (cached)
-        gen_draw_cached_image!(
-            display <= IMAGE_CONTROLS_ADVANCED_RGBA_RAW[CONTROLS_BUTTON_ICON_WIDTH, CONTROLS_BUTTON_ICON_HEIGHT]
+            display <= icon_rgba_raw[CONTROLS_BUTTON_ICON_WIDTH, CONTROLS_BUTTON_ICON_HEIGHT]
         )
     }
 
