@@ -73,7 +73,7 @@ The following options can be passed to the Control UI upon running it:
 * `--fullscreen`: enables fullscreen mode (used on the final ventilator display only);
 * `--translation={locale}`: locale to use in the UI, where `{locale}` is a [supported locale code](#supported-translations);
 * `--disable-lora`: disables LoRa telemetry broadcasts (`lora` build feature);
-* `--lora-device={device}`: lora device path, where `{device}` is a path eg. `/dev/ttyAMA0` (`lora` build feature);
+* `--lora-device={device}`: LoRa device path, where `{device}` is a path eg. `/dev/ttyAMA0` (`lora` build feature);
 
 ## Supported Translations
 
