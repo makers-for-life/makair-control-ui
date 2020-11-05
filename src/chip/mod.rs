@@ -611,7 +611,7 @@ impl Chip {
             }
 
             ControlSetting::AlarmSnooze => {
-                // TODO: to be implemented
+                self.settings.snooze.alarms = SettingActionState::from_value(ack.value as usize);
             }
         }
     }

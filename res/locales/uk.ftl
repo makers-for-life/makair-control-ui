@@ -40,6 +40,10 @@ modal-run-status = Статус блоку вентилятора
 modal-run-status-started = Біг - зупинка?
 modal-run-status-stopped = Зупинився - почати?
 
+modal-snooze-alarms = Сигналізація
+modal-snooze-alarms-active = Звукові сигнали увімкнено
+modal-snooze-alarms-inactive = Звукові сигнали відключені
+
 modal-trigger-inspiratory-status = Стан тригера:
 modal-trigger-inspiratory-offset = Зсув тригера:
 

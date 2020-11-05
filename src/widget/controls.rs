@@ -9,7 +9,10 @@ use conrod_core::{
     Positionable, Sizeable, Widget,
 };
 
-use crate::chip::ChipState;
+use crate::chip::{
+    settings::{snooze::SettingsSnooze, SettingActionState},
+    ChipState,
+};
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 
@@ -37,6 +40,7 @@ pub struct Config<'a> {
     advanced_icon_image: conrod_core::image::Id,
 
     chip_state: &'a ChipState,
+    snooze_settings: &'a SettingsSnooze,
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -55,6 +59,7 @@ impl<'a> Config<'a> {
         snooze_active_icon_image: conrod_core::image::Id,
         advanced_icon_image: conrod_core::image::Id,
         chip_state: &'a ChipState,
+        snooze_settings: &'a SettingsSnooze,
     ) -> Config<'a> {
         Config {
             container,
@@ -70,6 +75,7 @@ impl<'a> Config<'a> {
             snooze_active_icon_image,
             advanced_icon_image,
             chip_state,
+            snooze_settings,
         }
     }
 }
@@ -111,12 +117,9 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         .set(config.run_icon, &mut master.ui);
 
     // Create snooze control button
-    // TODO: implement state retrieval
-    let is_snoozed = false;
-
     widget::primitive::shape::circle::Circle::fill_with(
         CONTROLS_BUTTON_RADIUS,
-        if is_snoozed {
+        if config.snooze_settings.alarms == SettingActionState::Enabled {
             BUTTON_SNOOZE_ACTIVE_COLOR
         } else {
             BUTTON_SNOOZE_INACTIVE_COLOR
@@ -126,11 +129,13 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     .set(config.snooze_button, &mut master.ui);
 
     // Append snooze icon
-    widget::image::Image::new(if is_snoozed {
-        config.snooze_active_icon_image
-    } else {
-        config.snooze_inactive_icon_image
-    })
+    widget::image::Image::new(
+        if config.snooze_settings.alarms == SettingActionState::Enabled {
+            config.snooze_active_icon_image
+        } else {
+            config.snooze_inactive_icon_image
+        },
+    )
     .w_h(
         CONTROLS_BUTTON_ICON_HEIGHT as _,
         CONTROLS_BUTTON_ICON_WIDTH as _,

@@ -40,6 +40,10 @@ modal-run-status = Status da unidade de ventilação
 modal-run-status-started = Correndo - pare?
 modal-run-status-stopped = Parado - Iniciar?
 
+modal-snooze-alarms = Alarmes
+modal-snooze-alarms-active = Bips ativados
+modal-snooze-alarms-inactive = Beeps desativados
+
 modal-trigger-inspiratory-status = Status inspiratório do gatilho:
 modal-trigger-inspiratory-offset = Deslocamento do gatilho:
 

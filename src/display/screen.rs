@@ -11,7 +11,7 @@ use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot};
 
 use crate::chip::settings::{
     cycles::SettingsCycles, expiration_term::SettingsExpirationTerm, pressure::SettingsPressure,
-    run::SettingsRun, trigger::SettingsTrigger, ChipSettings,
+    run::SettingsRun, snooze::SettingsSnooze, trigger::SettingsTrigger, ChipSettings,
 };
 use crate::chip::ChipError;
 use crate::config::environment::*;
@@ -36,6 +36,7 @@ pub struct Screen<'a> {
 
 pub struct ScreenModalsOpen {
     run: bool,
+    snooze: bool,
     advanced: bool,
     trigger: bool,
     expiration_term: bool,
@@ -181,6 +182,7 @@ impl<'a> Screen<'a> {
                 controls_data.snooze_active_image_id,
                 controls_data.advanced_image_id,
                 controls_data.chip_state,
+                &controls_data.chip_settings.snooze,
             )));
     }
 
@@ -623,6 +625,8 @@ impl<'a> Screen<'a> {
     pub fn render_settings(&mut self, settings: &'a ChipSettings, modals: &ScreenModalsOpen) {
         if modals.run {
             self.render_run_settings(&settings.run);
+        } else if modals.snooze {
+            self.render_snooze_settings(&settings.snooze);
         } else if modals.advanced {
             self.render_advanced_settings();
         } else if modals.trigger {
@@ -659,6 +663,32 @@ impl<'a> Screen<'a> {
                 status_enabled_text_widget: self.ids.run_status_text,
                 status_enabled_button_widget: self.ids.run_status_button,
                 status_enabled_button_text_widget: self.ids.run_status_button_text,
+            }));
+    }
+
+    fn render_snooze_settings(&mut self, settings: &'a SettingsSnooze) {
+        self.render_modal(
+            SNOOZE_SETTINGS_MODAL_WIDTH,
+            SNOOZE_SETTINGS_MODAL_HEIGTH,
+            Some(SNOOZE_SETTINGS_MODAL_PADDING),
+            Some((self.ids.modal_validate, self.ids.modal_validate_text)),
+            None,
+            None,
+        );
+
+        self.widgets
+            .render(ControlWidgetType::SnoozeSettings(snooze_settings::Config {
+                width: SNOOZE_SETTINGS_MODAL_WIDTH,
+                height: SNOOZE_SETTINGS_MODAL_HEIGTH
+                    - MODAL_VALIDATE_BUTTON_HEIGHT
+                    - (SNOOZE_SETTINGS_MODAL_PADDING * 2.0),
+                snooze_settings: settings,
+
+                container_parent: self.ids.modal_container,
+                container_widget: self.ids.snooze_container,
+                alarms_enabled_text_widget: self.ids.snooze_alarms_text,
+                alarms_enabled_button_widget: self.ids.snooze_alarms_button,
+                alarms_enabled_button_text_widget: self.ids.snooze_alarms_button_text,
             }));
     }
 
@@ -838,6 +868,7 @@ impl<'a> Screen<'a> {
 impl ScreenModalsOpen {
     pub fn from_states(
         run_open: &DisplayRendererSettingsState,
+        snooze_open: &DisplayRendererSettingsState,
         advanced_open: &DisplayRendererSettingsState,
         trigger_open: &DisplayRendererSettingsState,
         expiration_term_open: &DisplayRendererSettingsState,
@@ -846,6 +877,7 @@ impl ScreenModalsOpen {
     ) -> Self {
         ScreenModalsOpen {
             run: run_open == &DisplayRendererSettingsState::Opened,
+            snooze: snooze_open == &DisplayRendererSettingsState::Opened,
             advanced: advanced_open == &DisplayRendererSettingsState::Opened,
             trigger: trigger_open == &DisplayRendererSettingsState::Opened,
             expiration_term: expiration_term_open == &DisplayRendererSettingsState::Opened,

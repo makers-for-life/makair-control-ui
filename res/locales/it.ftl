@@ -40,6 +40,10 @@ modal-run-status = Stato unità ventilatore
 modal-run-status-started = In esecuzione - Stop?
 modal-run-status-stopped = Fermato - Inizio?
 
+modal-snooze-alarms = Allarmi
+modal-snooze-alarms-active = Segnali acustici abilitati
+modal-snooze-alarms-inactive = Segnali acustici disabilitati
+
 modal-trigger-inspiratory-status = Stato inspiratorio trigger:
 modal-trigger-inspiratory-offset = Offset trigger inspiratorio:
 

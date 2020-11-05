@@ -47,6 +47,7 @@ pub struct DisplayRenderer {
     fonts: Fonts,
     ids: Ids,
     run_settings_state: DisplayRendererSettingsState,
+    snooze_settings_state: DisplayRendererSettingsState,
     advanced_settings_state: DisplayRendererSettingsState,
     trigger_settings_state: DisplayRendererSettingsState,
     expiration_term_settings_state: DisplayRendererSettingsState,
@@ -99,6 +100,7 @@ impl DisplayRendererBuilder {
             fonts,
             ids,
             run_settings_state: DisplayRendererSettingsState::default(),
+            snooze_settings_state: DisplayRendererSettingsState::default(),
             advanced_settings_state: DisplayRendererSettingsState::default(),
             trigger_settings_state: DisplayRendererSettingsState::default(),
             expiration_term_settings_state: DisplayRendererSettingsState::default(),
@@ -164,6 +166,7 @@ impl DisplayRenderer {
             interface,
             &self.ids,
             &mut self.run_settings_state,
+            &mut self.snooze_settings_state,
             &mut self.advanced_settings_state,
             &mut self.trigger_settings_state,
             &mut self.expiration_term_settings_state,
@@ -359,6 +362,7 @@ impl DisplayRenderer {
             advanced_image_id: image_map
                 .insert(self.draw_controls_icon(display, &*IMAGE_CONTROLS_ADVANCED_RGBA_RAW)),
             chip_state,
+            chip_settings,
         };
 
         let screen_data_status = DisplayDataStatus {
@@ -389,6 +393,7 @@ impl DisplayRenderer {
                 chip_settings,
                 &ScreenModalsOpen::from_states(
                     &self.run_settings_state,
+                    &self.snooze_settings_state,
                     &self.advanced_settings_state,
                     &self.trigger_settings_state,
                     &self.expiration_term_settings_state,
@@ -407,6 +412,7 @@ impl DisplayRenderer {
                 chip_settings,
                 &ScreenModalsOpen::from_states(
                     &self.run_settings_state,
+                    &self.snooze_settings_state,
                     &self.advanced_settings_state,
                     &self.trigger_settings_state,
                     &self.expiration_term_settings_state,

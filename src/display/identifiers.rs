@@ -152,6 +152,11 @@ widget_ids!(pub struct Ids {
   run_status_button,
   run_status_button_text,
 
+  snooze_container,
+  snooze_alarms_text,
+  snooze_alarms_button,
+  snooze_alarms_button_text,
+
   advanced_container,
   advanced_line_labels[],
   advanced_line_values[],

@@ -40,6 +40,10 @@ modal-run-status = Unité de ventilation
 modal-run-status-started = Active — La stopper ?
 modal-run-status-stopped = Arrêtée — La démarrer ?
 
+modal-snooze-alarms = Sourdine d'alarme
+modal-snooze-alarms-active = Bips actifs (défaut)
+modal-snooze-alarms-inactive = Bips désactivés (temporaire)
+
 modal-trigger-inspiratory-status = État du trigger inspiratoire :
 modal-trigger-inspiratory-offset = Seuil de déclenchement :
 

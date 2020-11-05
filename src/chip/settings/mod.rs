@@ -7,6 +7,7 @@ pub mod cycles;
 pub mod expiration_term;
 pub mod pressure;
 pub mod run;
+pub mod snooze;
 pub mod trigger;
 
 use telemetry::control::{ControlMessage, ControlSetting};
@@ -15,11 +16,13 @@ use cycles::*;
 use expiration_term::*;
 use pressure::*;
 use run::*;
+use snooze::*;
 use trigger::*;
 
 #[derive(Debug)]
 pub enum ChipSettingsEvent {
     Run(SettingsRunEvent),
+    Snooze(SettingsSnoozeEvent),
     Trigger(SettingsTriggerEvent),
     ExpirationTerm(SettingsExpirationTermEvent),
     Cycles(SettingsCyclesEvent),
@@ -39,7 +42,7 @@ pub enum SettingActionRange {
 }
 
 impl SettingActionState {
-    fn from_value(value: usize) -> Self {
+    pub fn from_value(value: usize) -> Self {
         if value > 0 {
             Self::Enabled
         } else {
@@ -87,6 +90,7 @@ impl SettingActionRange {
 #[derive(Debug)]
 pub struct ChipSettings {
     pub run: SettingsRun,
+    pub snooze: SettingsSnooze,
     pub trigger: SettingsTrigger,
     pub expiration_term: SettingsExpirationTerm,
     pub cycles: SettingsCycles,
@@ -97,6 +101,7 @@ impl ChipSettings {
     pub fn new(cycles_per_minute: usize) -> ChipSettings {
         ChipSettings {
             run: SettingsRun::new(),
+            snooze: SettingsSnooze::new(),
             trigger: SettingsTrigger::new(),
             expiration_term: SettingsExpirationTerm::new(cycles_per_minute),
             cycles: SettingsCycles::new(),
@@ -107,6 +112,7 @@ impl ChipSettings {
     pub fn new_settings_event(&mut self, event: ChipSettingsEvent) -> ControlMessage {
         match event {
             ChipSettingsEvent::Run(event) => self.run.new_event(event),
+            ChipSettingsEvent::Snooze(event) => self.snooze.new_event(event),
             ChipSettingsEvent::Trigger(event) => self.trigger.new_event(event),
             ChipSettingsEvent::ExpirationTerm(event) => self.expiration_term.new_event(event),
             ChipSettingsEvent::Cycles(event) => self.cycles.new_event(event),

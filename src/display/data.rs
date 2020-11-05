@@ -3,7 +3,7 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-use crate::chip::{ChipError, ChipState};
+use crate::chip::{settings::ChipSettings, ChipError, ChipState};
 use crate::utilities::types::DataPressure;
 
 pub struct DisplayDataBranding<'a> {
@@ -19,6 +19,7 @@ pub struct DisplayDataControls<'a> {
     pub snooze_active_image_id: conrod_core::image::Id,
     pub advanced_image_id: conrod_core::image::Id,
     pub chip_state: &'a ChipState,
+    pub chip_settings: &'a ChipSettings,
 }
 
 pub struct DisplayDataStatus<'a> {

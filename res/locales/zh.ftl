@@ -40,6 +40,10 @@ modal-run-status = 呼吸机状态
 modal-run-status-started = 跑步-停下来吗？
 modal-run-status-stopped = 已停止-开始吗？
 
+modal-snooze-alarms = 警报器
+modal-snooze-alarms-active = 启用哔声
+modal-snooze-alarms-inactive = 哔声禁用
+
 modal-trigger-inspiratory-status = 触发吸气状态：
 modal-trigger-inspiratory-offset = 吸气扳机偏移量：
 

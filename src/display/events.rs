@@ -8,8 +8,8 @@ use glium::glutin::{Event, EventsLoop, KeyboardInput, WindowEvent};
 
 use crate::chip::settings::{
     cycles::SettingsCyclesEvent, expiration_term::SettingsExpirationTermEvent,
-    pressure::SettingsPressureEvent, run::SettingsRunEvent, trigger::SettingsTriggerEvent,
-    ChipSettingsEvent, SettingActionRange,
+    pressure::SettingsPressureEvent, run::SettingsRunEvent, snooze::SettingsSnoozeEvent,
+    trigger::SettingsTriggerEvent, ChipSettingsEvent, SettingActionRange,
 };
 
 use super::identifiers::Ids;
@@ -80,6 +80,7 @@ impl DisplayUIEvents {
         interface: &mut Ui,
         ids: &Ids,
         run_settings_state: &mut DisplayRendererSettingsState,
+        snooze_settings_state: &mut DisplayRendererSettingsState,
         advanced_settings_state: &mut DisplayRendererSettingsState,
         trigger_settings_state: &mut DisplayRendererSettingsState,
         expiration_term_settings_state: &mut DisplayRendererSettingsState,
@@ -93,6 +94,7 @@ impl DisplayUIEvents {
             interface,
             ids,
             run_settings_state,
+            snooze_settings_state,
             advanced_settings_state,
             trigger_settings_state,
             expiration_term_settings_state,
@@ -107,6 +109,7 @@ impl DisplayUIEvents {
             interface,
             ids,
             run_settings_state,
+            snooze_settings_state,
             advanced_settings_state,
             trigger_settings_state,
             expiration_term_settings_state,
@@ -124,6 +127,7 @@ impl DisplayUIEvents {
         interface: &mut Ui,
         ids: &Ids,
         run_settings_state: &mut DisplayRendererSettingsState,
+        snooze_settings_state: &mut DisplayRendererSettingsState,
         advanced_settings_state: &mut DisplayRendererSettingsState,
         trigger_settings_state: &mut DisplayRendererSettingsState,
         expiration_term_settings_state: &mut DisplayRendererSettingsState,
@@ -143,6 +147,13 @@ impl DisplayUIEvents {
                 "run", run_settings_state, [
                     ids.controls_button_run,
                     ids.controls_image_run,
+                ]
+            },
+
+            {
+                "snooze", snooze_settings_state, [
+                    ids.controls_button_snooze,
+                    ids.controls_image_snooze,
                 ]
             },
 
@@ -215,6 +226,7 @@ impl DisplayUIEvents {
         interface: &mut Ui,
         ids: &Ids,
         run_settings_state: &mut DisplayRendererSettingsState,
+        snooze_settings_state: &mut DisplayRendererSettingsState,
         advanced_settings_state: &mut DisplayRendererSettingsState,
         trigger_settings_state: &mut DisplayRendererSettingsState,
         expiration_term_settings_state: &mut DisplayRendererSettingsState,
@@ -244,6 +256,21 @@ impl DisplayUIEvents {
                     //   double tapping the button and thus cycling the respirator between states \
                     //   quickly, which is not intended and can be dangerous.
                     Some(DisplayRendererSettingsState::Closed)
+                }
+            },
+
+            {
+                "snooze", Snooze, snooze_settings_state,
+
+                {
+                    SettingsSnoozeEvent::AlarmSnooze, "alarms",
+
+                    [
+                        ids.snooze_alarms_button,
+                        ids.snooze_alarms_button_text,
+                    ],
+
+                    None
                 }
             },
 

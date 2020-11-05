@@ -22,6 +22,7 @@ pub mod layout;
 pub mod modal;
 pub mod pressure_settings;
 pub mod run_settings;
+pub mod snooze_settings;
 pub mod status;
 pub mod stop;
 pub mod telemetry_container;

@@ -40,6 +40,10 @@ modal-run-status = Ventilator unit status
 modal-run-status-started = Running — Tap to stop
 modal-run-status-stopped = Stopped — Tap to start
 
+modal-snooze-alarms = Snooze alarms
+modal-snooze-alarms-active = Beeps enabled (default setting)
+modal-snooze-alarms-inactive = Beeps disabled (for some time)
+
 modal-trigger-inspiratory-status = Inspiratory trigger status:
 modal-trigger-inspiratory-offset = Inspiratory trigger offset:
 

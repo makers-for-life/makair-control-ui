@@ -40,6 +40,10 @@ modal-run-status = Ventilatora bloka statuss
 modal-run-status-started = Skriet - apstāties?
 modal-run-status-stopped = Apturēts - sākt?
 
+modal-snooze-alarms = Signāli
+modal-snooze-alarms-active = Pīkstieni ir iespējoti
+modal-snooze-alarms-inactive = Pīkstieni ir invalīdi
+
 modal-trigger-inspiratory-status = Iedvesmojošā stāvokļa izraisītājs:
 modal-trigger-inspiratory-offset = Ieelpošanas trigera nobīde:
 
