@@ -13,7 +13,7 @@ telemetry-unit-milliliters = миллилитров
 telemetry-unit-milliseconds = миллисекунды
 
 alarms-title = ТРЕВОГИ
-alarms-empty = Активных тревог нет.
+alarms-empty = Тревоги нет.
 
 alarms-message-plateau-pressure-not-reached = Давление плато не достигается
 alarms-message-patient-unplugged = Пациент отключен от сети

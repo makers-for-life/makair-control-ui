@@ -13,7 +13,7 @@ telemetry-unit-milliliters = 毫升（毫升）
 telemetry-unit-milliseconds = 毫秒
 
 alarms-title = 警报
-alarms-empty = 没有活动的警报。
+alarms-empty = 没有警报
 
 alarms-message-plateau-pressure-not-reached = 没有达到高原压力
 alarms-message-patient-unplugged = 拔掉病人电源

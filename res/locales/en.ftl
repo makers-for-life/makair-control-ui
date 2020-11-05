@@ -13,7 +13,7 @@ telemetry-unit-milliliters = mL (milliliters)
 telemetry-unit-milliseconds = ms
 
 alarms-title = ALARMS
-alarms-empty = There are no active alarms.
+alarms-empty = No alarm is active.
 
 alarms-message-plateau-pressure-not-reached = Plateau pressure is not reached
 alarms-message-patient-unplugged = Patient is unplugged

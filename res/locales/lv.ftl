@@ -13,7 +13,7 @@ telemetry-unit-milliliters = mL (mililitri)
 telemetry-unit-milliseconds = ms
 
 alarms-title = TRAUKSME
-alarms-empty = Aktīvu trauksmju nav.
+alarms-empty = Nav trauksmes.
 
 alarms-message-plateau-pressure-not-reached = Plato spiediens nav sasniegts
 alarms-message-patient-unplugged = Pacients ir atvienots no tīkla
