@@ -284,6 +284,7 @@ impl<'a> Screen<'a> {
         let message = match config.error {
             ChipError::NoDevice => APP_I18N.t("error-message-no-device"),
             ChipError::TimedOut => APP_I18N.t("error-message-timed-out"),
+            ChipError::BadProtocol => APP_I18N.t("error-message-bad-protocol"),
             ChipError::Other(details) => details.to_owned(),
         };
 

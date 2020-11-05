@@ -57,6 +57,7 @@ error-title = Oups. Une erreur est survenue.
 
 error-message-no-device = Impossible d'atteindre la télémétrie. Est-elle configurée correctement ?
 error-message-timed-out = Certains composants pourraient ne pas avoir démarré. Redémarrez la machine.
+error-message-bad-protocol = La version du protocole de télémétrie du système n'est pas supportée. Mettez à niveau.
 
 modal-close = Fermer
 

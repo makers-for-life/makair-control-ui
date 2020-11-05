@@ -57,6 +57,7 @@ error-title = Ой. Произошла ошибка.
 
 error-message-no-device = Невозможно связаться с мастером телеметрии.
 error-message-timed-out = Некоторые компоненты не запускались.
+error-message-bad-protocol = Неподдерживаемый протокол телеметрии.
 
 modal-close = в порядке
 

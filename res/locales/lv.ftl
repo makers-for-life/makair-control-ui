@@ -57,6 +57,7 @@ error-title = Hmm ... Notika kļūda.
 
 error-message-no-device = Nevar sasniegt telemetrijas kapteini.
 error-message-timed-out = Dažus komponentus neizdevās palaist.
+error-message-bad-protocol = Neatbalstīts telemetrijas protokols.
 
 modal-close = OK
 

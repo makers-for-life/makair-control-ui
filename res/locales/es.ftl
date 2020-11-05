@@ -57,6 +57,7 @@ error-title = ¡Ups! Ocurrió un error.
 
 error-message-no-device = No se puede conectar con el maestro de telemetría.
 error-message-timed-out = Algunos componentes no se iniciaron.
+error-message-bad-protocol = Protocolo de telemetría no admitido.
 
 modal-close = OK
 

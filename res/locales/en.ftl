@@ -57,6 +57,7 @@ error-title = Oops. An error occurred.
 
 error-message-no-device = Cannot reach the telemetry master. Is it properly configured?
 error-message-timed-out = Some components may have failed to start. Can you try power cycling?
+error-message-bad-protocol = The firmware is using an unsupported telemetry protocol. Please update software.
 
 modal-close = Close
 

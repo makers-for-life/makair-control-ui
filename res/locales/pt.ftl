@@ -57,6 +57,7 @@ error-title = Ops. Um erro ocorreu.
 
 error-message-no-device = Não é possível alcançar o mestre de telemetria.
 error-message-timed-out = Alguns componentes falharam ao iniciar.
+error-message-bad-protocol = Protocolo de telemetria não compatível.
 
 modal-close = OK
 

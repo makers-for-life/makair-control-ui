@@ -114,9 +114,16 @@ impl<'a> DisplayDrawer<'a> {
                             has_poll_events = true;
                         }
                     }
+                    Ok(PollEvent::Corrupted(error)) => {
+                        // Handle unrecoverable corruption errors
+                        self.chip.new_telemetry_error(error);
+
+                        break 'poll_serial;
+                    }
                     Ok(PollEvent::Pending) => break 'poll_serial,
                     Err(error) => {
-                        self.chip.new_error(error);
+                        // Handle unrecoverable core errors
+                        self.chip.new_core_error(error);
 
                         break 'poll_serial;
                     }

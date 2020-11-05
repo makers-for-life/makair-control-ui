@@ -57,6 +57,7 @@ error-title = 哎呀。 发生错误。
 
 error-message-no-device = 无法到达遥测主机。
 error-message-timed-out = 某些组件无法启动。
+error-message-bad-protocol = 不支持的遥测协议。
 
 modal-close = 好
 

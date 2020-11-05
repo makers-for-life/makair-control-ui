@@ -57,6 +57,7 @@ error-title = Hoppla. Ein Fehler ist aufgetreten.
 
 error-message-no-device = Der Telemetriemaster kann nicht erreicht werden.
 error-message-timed-out = Einige Komponenten konnten nicht gestartet werden.
+error-message-bad-protocol = Nicht unterstütztes Telemetrieprotokoll.
 
 modal-close = OK
 

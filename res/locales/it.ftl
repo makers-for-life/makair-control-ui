@@ -57,6 +57,7 @@ error-title = Ops. Si è verificato un errore.
 
 error-message-no-device = Impossibile raggiungere il master della telemetria.
 error-message-timed-out = Alcuni componenti non sono stati avviati.
+error-message-bad-protocol = Protocollo di telemetria non supportato.
 
 modal-close = OK
 

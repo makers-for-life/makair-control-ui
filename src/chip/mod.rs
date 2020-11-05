@@ -19,7 +19,8 @@ use telemetry::alarm::AlarmCode;
 use telemetry::control::{ControlMessage, ControlSetting};
 use telemetry::serial::core;
 use telemetry::structures::{
-    AlarmPriority, ControlAck, DataSnapshot, MachineStateSnapshot, StoppedMessage, TelemetryMessage,
+    AlarmPriority, ControlAck, DataSnapshot, HighLevelError, MachineStateSnapshot, StoppedMessage,
+    TelemetryMessage,
 };
 
 use crate::config::environment::*;
@@ -40,6 +41,7 @@ pub enum ChipState {
 pub enum ChipError {
     NoDevice,
     TimedOut,
+    BadProtocol,
     Other(String),
 }
 
@@ -198,7 +200,7 @@ impl Chip {
         channel.1
     }
 
-    pub fn new_error(&mut self, error: core::Error) {
+    pub fn new_core_error(&mut self, error: core::Error) {
         match error.kind() {
             core::ErrorKind::NoDevice => self.state = ChipState::Error(ChipError::NoDevice),
             err => {
@@ -206,6 +208,23 @@ impl Chip {
                     &format!("{:?}", err),
                     "; ",
                 )))
+            }
+        };
+    }
+
+    pub fn new_telemetry_error(&mut self, error: HighLevelError) {
+        match error {
+            HighLevelError::CrcError { .. } => {
+                // CRC errors can be safely ignored as they may only happen once or twice for a \
+                //   session, but we still want log an error about this.
+                error!("a telemetry event had to be ignored because it raised a crc error");
+            }
+            HighLevelError::UnsupportedProtocolVersion { .. } => {
+                // Protocol version errors are critical, and should always result in an error \
+                //   screen as to warn the user.
+                error!("got a telemetry event for an unsupported protocol version, erroring out");
+
+                self.state = ChipState::Error(ChipError::BadProtocol);
             }
         };
     }
