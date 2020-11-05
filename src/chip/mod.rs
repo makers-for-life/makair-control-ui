@@ -3,6 +3,9 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+#[macro_use]
+mod macros;
+
 pub mod settings;
 
 use chrono::{offset::Utc, DateTime, Duration};
@@ -268,7 +271,7 @@ impl Chip {
 
             TelemetryMessage::StoppedMessage(message) => {
                 self.update_tick(message.systick);
-                self.update_settings_from_stopped(&message);
+                self.update_settings_and_snapshot_from_stopped(&message);
 
                 // Last data snapshot is not relevant when the state went from running to stopped
                 self.last_data_snapshot = None;
@@ -428,8 +431,8 @@ impl Chip {
         });
     }
 
-    fn update_settings_from_stopped(&mut self, message: &StoppedMessage) {
-        // This initializes all settings value, upon receiving a \
+    fn update_settings_and_snapshot_from_stopped(&mut self, message: &StoppedMessage) {
+        // This initializes all settings and snapshot values, upon receiving a \
         //   'TelemetryMessage::StoppedMessage' message from the firmware.
 
         self.update_settings_from_parameters(ChipSettingsUpdate {
@@ -440,6 +443,20 @@ impl Chip {
             trigger_enabled: message.trigger_enabled,
             trigger_offset: message.trigger_offset,
         });
+
+        gen_override_snapshot_values_from_stopped!(
+            self.last_machine_snapshot,
+            message,
+            [
+                peak_command,
+                plateau_command,
+                peep_command,
+                cpm_command,
+                trigger_enabled,
+                trigger_offset,
+                expiratory_term
+            ]
+        );
     }
 
     fn update_settings_and_snapshot_from_control(&mut self, ack: ControlAck) {
