@@ -91,7 +91,7 @@ impl DisplayWindow {
 
         // Load all required fonts to interface
         // Notice: this depends on the in-use translation, as eg. CJK glyphs are not included in \
-        //   the default font.
+        //   the default font; used only for Chinese, Korean and Japanese.
         let fonts = match APP_ARGS.translation.as_str() {
             "zh" | "ko" | "ja" => Fonts::new(
                 interface.fonts.insert(FONT_CJK_NOTOSANS_ALL.clone()),

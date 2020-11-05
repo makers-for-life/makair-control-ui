@@ -207,7 +207,7 @@ impl<'a> Screen<'a> {
                 height,
                 image_id,
                 self.ids.layout_body,
-                self.ids.pressure_graph,
+                self.ids.graph_pressure,
             )));
     }
 
@@ -278,7 +278,7 @@ impl<'a> Screen<'a> {
 
         // Render stop 'pseudo-modal'
         self.widgets.render(ControlWidgetType::Modal(modal::Config {
-            parent: self.ids.pressure_graph,
+            parent: self.ids.graph_pressure,
             background: self.ids.stop_background,
             container_borders: self.ids.stop_container_borders,
             container: self.ids.stop_container,
@@ -354,7 +354,7 @@ impl<'a> Screen<'a> {
             telemetry_container::Config::new(
                 TELEMETRY_WIDGET_RIGHT_SIZE_WIDTH,
                 DISPLAY_WINDOW_SIZE_HEIGHT as f64 - LAYOUT_HEADER_SIZE_HEIGHT,
-                self.ids.pressure_graph,
+                self.ids.graph_pressure,
                 self.ids.telemetry_widgets_right,
             ),
         ));

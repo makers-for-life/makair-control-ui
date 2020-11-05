@@ -24,7 +24,7 @@ widget_ids!(pub struct Ids {
 
   background,
 
-  pressure_graph,
+  graph_pressure,
 
   branding_container,
   branding_image,
@@ -50,7 +50,6 @@ widget_ids!(pub struct Ids {
   heartbeat_inner,
 
   telemetry_widgets_right,
-  telemetry_widgets_bottom,
 
   cycles_parent,
   cycles_title,
