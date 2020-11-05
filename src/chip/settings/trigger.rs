@@ -47,6 +47,7 @@ impl SettingsTrigger {
 
     fn set_inspiratory_trigger_offset(&self, action: SettingActionRange) -> ControlMessage {
         let setting = ControlSetting::TriggerOffset;
+
         let new_value = action.to_new_value(
             &setting,
             self.inspiratory_trigger_offset,

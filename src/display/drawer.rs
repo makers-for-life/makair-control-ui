@@ -15,7 +15,7 @@ use telemetry::{self, TelemetryChannelType};
 use crate::chip::{Chip, ChipEventUpdate, ChipState};
 use crate::config::arguments::RunMode;
 use crate::config::environment::*;
-use crate::serial::poller::{PollEvent, SerialPollerBuilder};
+use crate::serial::poller::{PollEvent, SerialPoller, SerialPollerBuilder};
 use crate::APP_ARGS;
 
 use super::events::{DisplayEventsBuilder, DisplayEventsHandleOutcome};
@@ -83,7 +83,7 @@ impl<'a> DisplayDrawer<'a> {
             (SerialPollerBuilder::new(), DisplayEventsBuilder::new());
 
         // Start gathering telemetry
-        let rx = self.telemetry();
+        let rx = self.bind_telemetry();
 
         // Start drawer loop
         // Flow: cycles through telemetry events, and refreshes the view every time there is an \
@@ -94,8 +94,6 @@ impl<'a> DisplayDrawer<'a> {
             (ChipState::WaitingData(now_time), now_time, true);
 
         'main: loop {
-            let (mut has_poll_events, mut has_chip_state_change) = (false, false);
-
             // Measure loop tick start time
             // Notice: this will be used to prevent the FPS throttler from skipping frames, as the \
             //   methods called here may add a bit of overhead time to the final thread sleep \
@@ -105,30 +103,7 @@ impl<'a> DisplayDrawer<'a> {
 
             // Receive telemetry data (from the input serial from the motherboard)
             // Empty the events queue before doing anything else
-            'poll_serial: loop {
-                match serial_poller.poll(&rx) {
-                    Ok(PollEvent::Ready(event)) => {
-                        // Do we need to mark this event as resulting in an UI update? (due to an \
-                        //   internal data point having been updated)
-                        if self.chip.new_event(event) == ChipEventUpdate::May {
-                            has_poll_events = true;
-                        }
-                    }
-                    Ok(PollEvent::Corrupted(error)) => {
-                        // Handle unrecoverable corruption errors
-                        self.chip.new_telemetry_error(error);
-
-                        break 'poll_serial;
-                    }
-                    Ok(PollEvent::Pending) => break 'poll_serial,
-                    Err(error) => {
-                        // Handle unrecoverable core errors
-                        self.chip.new_core_error(error);
-
-                        break 'poll_serial;
-                    }
-                };
-            }
+            let has_poll_events = self.poll_telemetry(&mut serial_poller, &rx);
 
             // Handle incoming UI events (ie. from the window, eg. 'ESC' key is pressed)
             match events_handler.handle(&self.display, &mut self.interface, &mut self.events_loop) {
@@ -137,6 +112,8 @@ impl<'a> DisplayDrawer<'a> {
             }
 
             // Catch chip state changes
+            let mut has_chip_state_change = false;
+
             if self.chip.get_state() != &last_chip_state {
                 last_chip_state = self.chip.get_state().to_owned();
 
@@ -214,7 +191,7 @@ impl<'a> DisplayDrawer<'a> {
         }
     }
 
-    fn telemetry(&mut self) -> Receiver<TelemetryChannelType> {
+    fn bind_telemetry(&mut self) -> Receiver<TelemetryChannelType> {
         // Start gathering telemetry
         let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
             std::sync::mpsc::channel();
@@ -262,6 +239,41 @@ impl<'a> DisplayDrawer<'a> {
         }
 
         rx
+    }
+
+    fn poll_telemetry(
+        &mut self,
+        poller: &mut SerialPoller,
+        rx: &Receiver<TelemetryChannelType>,
+    ) -> bool {
+        let mut has_poll_events = false;
+
+        'poll_serial: loop {
+            match poller.poll(rx) {
+                Ok(PollEvent::Ready(event)) => {
+                    // Do we need to mark this event as resulting in an UI update? (due to an \
+                    //   internal data point having been updated)
+                    if self.chip.new_event(event) == ChipEventUpdate::May {
+                        has_poll_events = true;
+                    }
+                }
+                Ok(PollEvent::Corrupted(error)) => {
+                    // Handle unrecoverable corruption errors
+                    self.chip.new_telemetry_error(error);
+
+                    break 'poll_serial;
+                }
+                Ok(PollEvent::Pending) => break 'poll_serial,
+                Err(error) => {
+                    // Handle unrecoverable core errors
+                    self.chip.new_core_error(error);
+
+                    break 'poll_serial;
+                }
+            };
+        }
+
+        has_poll_events
     }
 
     fn refresh(&mut self) {
