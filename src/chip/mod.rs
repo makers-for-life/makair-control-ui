@@ -439,6 +439,9 @@ impl Chip {
         if let Some(peep_command) = update.peep_command {
             self.settings.pressure.peep = convert_cmh2o_to_mmh2o(peep_command);
         }
+
+        // TODO: add alarm_snoozed (StoppedMessage + MachineStateSnapshot) once available in the \
+        //   telemetry V2 protocol (BREAKING).
     }
 
     fn update_settings_from_snapshot(&mut self, snapshot: &MachineStateSnapshot) {
