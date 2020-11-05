@@ -28,6 +28,7 @@ pub struct Config {
     message: String,
 }
 
+#[allow(clippy::too_many_arguments)]
 impl Config {
     pub fn new(
         container_id: WidgetId,
