@@ -114,8 +114,8 @@ impl<'a> DisplayDrawer<'a> {
             // Catch chip state changes
             let mut has_chip_state_change = false;
 
-            if self.chip.get_state() != &last_chip_state {
-                last_chip_state = self.chip.get_state().to_owned();
+            if self.chip.state != last_chip_state {
+                last_chip_state = self.chip.state.to_owned();
 
                 has_chip_state_change = true;
             }

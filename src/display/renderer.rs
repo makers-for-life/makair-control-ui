@@ -121,7 +121,7 @@ impl DisplayRenderer {
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let image_map = conrod_core::image::Map::<texture::Texture2d>::new();
 
-        match chip.get_state() {
+        match &chip.state {
             // Waiting for data from the motherboard, treat it as a 'connecting...' state
             ChipState::WaitingData(started_time) => {
                 // The UI has been waiting for data for too long? Show an error instead, though \
@@ -351,13 +351,16 @@ impl DisplayRenderer {
                 .insert(self.draw_controls_icon(display, &*IMAGE_CONTROLS_SNOOZE_ACTIVE_RGBA_RAW)),
             advanced_image_id: image_map
                 .insert(self.draw_controls_icon(display, &*IMAGE_CONTROLS_ADVANCED_RGBA_RAW)),
-            chip_state: &chip.get_state(),
+            chip_state: &chip.state,
             chip_settings: &chip.settings,
         };
 
         let screen_data_status = DisplayDataStatus {
-            chip_state: &chip.get_state(),
-            battery_level: chip.get_battery_level(),
+            chip_state: &chip.state,
+            battery_level: chip
+                .last_data_snapshot
+                .as_ref()
+                .map(|data| data.battery_level),
             save_image_id,
         };
         let screen_data_heartbeat = DisplayDataHeartbeat {
@@ -375,7 +378,7 @@ impl DisplayRenderer {
         };
 
         // Render screen data (depending on state, running or stopped)
-        match chip.get_state() {
+        match chip.state {
             ChipState::Running => screen.render_running(
                 screen_data_branding,
                 screen_data_controls,

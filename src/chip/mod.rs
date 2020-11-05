@@ -68,7 +68,7 @@ pub struct Chip {
     pub last_data_snapshot: Option<DataSnapshot>,
     pub ongoing_alarms: HashMap<AlarmCode, AlarmPriority>,
     pub settings: ChipSettings,
-    state: ChipState,
+    pub state: ChipState,
     lora_tx: Option<Sender<TelemetryMessage>>,
     channel_for_settings: Option<Sender<ControlMessage>>,
 }
@@ -141,16 +141,6 @@ impl Chip {
                 }
             }
         }
-    }
-
-    pub fn get_battery_level(&self) -> Option<u8> {
-        self.last_data_snapshot
-            .as_ref()
-            .map(|snapshot| snapshot.battery_level)
-    }
-
-    pub fn get_state(&self) -> &ChipState {
-        &self.state
     }
 
     pub fn ongoing_alarms_sorted(&self) -> Vec<(AlarmCode, AlarmPriority)> {
