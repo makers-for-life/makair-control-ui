@@ -554,9 +554,15 @@ impl<'a> Screen<'a> {
                     );
 
                     if expiratory_term_value.fract() == 0.0 {
-                        format!("{}:{}", CYCLE_RATIO_INSPIRATION, expiratory_term_value,)
+                        format!(
+                            "{}:{}",
+                            TELEMETRY_WIDGET_CYCLES_RATIO_INSPIRATION, expiratory_term_value,
+                        )
                     } else {
-                        format!("{}:{:.1}", CYCLE_RATIO_INSPIRATION, expiratory_term_value,)
+                        format!(
+                            "{}:{:.1}",
+                            TELEMETRY_WIDGET_CYCLES_RATIO_INSPIRATION, expiratory_term_value,
+                        )
                     }
                 }),
                 value_target: None,

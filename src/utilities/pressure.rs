@@ -9,10 +9,10 @@ pub fn process_max_allowed_pressure(peak_command: u8) -> u8 {
     let mut max_pressure = if peak_command > 0 {
         peak_command as f64
     } else {
-        PEAK_PRESSURE_INITIAL_MIN
+        MAX_ALLOWED_PRESSURE_INITIAL_MINIMUM
     };
 
-    max_pressure = max_pressure + max_pressure * PEAK_PRESSURE_ALERT_ERROR_RATIO;
+    max_pressure = max_pressure + max_pressure * MAX_ALLOWED_PRESSURE_ALERT_ERROR_RATIO;
 
     max_pressure as u8
 }

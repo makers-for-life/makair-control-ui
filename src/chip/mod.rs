@@ -78,10 +78,13 @@ impl Chip {
         let last_machine_snapshot = MachineStateSnapshot::default();
         let cycles_per_minute = last_machine_snapshot.cpm_command as usize;
 
+        // Notice: initialize the data pressure storage w/ a safety gap of 1 second of data points
         Chip {
             boot_time: None,
             last_tick: 0,
-            data_pressure: VecDeque::with_capacity(GRAPH_NUMBER_OF_POINTS + 100),
+            data_pressure: VecDeque::with_capacity(
+                GRAPH_NUMBER_OF_POINTS + TELEMETRY_POINTS_PER_SECOND,
+            ),
             last_machine_snapshot,
             last_data_snapshot: None,
             ongoing_alarms: HashMap::new(),
