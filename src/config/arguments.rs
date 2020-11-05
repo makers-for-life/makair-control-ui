@@ -95,7 +95,7 @@ impl ConfigArguments {
             },
             (None, Some(i)) => RunMode::Input(i.to_string()),
             (None, None) => {
-                eprintln!("you should provide either a serial port (-p) or an input file (-i)");
+                eprintln!("You should provide either a serial port (-p) or an input file (-i)");
 
                 std::process::exit(1);
             }
