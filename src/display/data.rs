@@ -3,8 +3,7 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-use crate::chip::{settings::ChipSettings, ChipError, ChipState};
-use crate::utilities::types::DataPressure;
+use crate::chip::{settings::ChipSettings, ChipDataPressure, ChipError, ChipState};
 
 pub struct DisplayDataBranding<'a> {
     pub firmware_version: &'a str,
@@ -29,7 +28,7 @@ pub struct DisplayDataStatus<'a> {
 }
 
 pub struct DisplayDataHeartbeat<'a> {
-    pub data_pressure: &'a DataPressure,
+    pub data_pressure: &'a ChipDataPressure,
 }
 
 pub struct DisplayDataGraph {

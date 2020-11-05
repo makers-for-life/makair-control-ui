@@ -15,13 +15,12 @@ use plotters::style::TextStyle;
 use telemetry::structures::MachineStateSnapshot;
 
 use crate::chip::settings::ChipSettingsEvent;
-use crate::chip::{Chip, ChipError, ChipState};
+use crate::chip::{Chip, ChipDataPressure, ChipError, ChipState};
 use crate::config::environment::*;
 use crate::utilities::image::reverse_rgba;
 use crate::utilities::parse::parse_version_number;
 #[cfg(feature = "graph-scaler")]
 use crate::utilities::pressure::process_max_allowed_pressure;
-use crate::utilities::types::DataPressure;
 use crate::EmbeddedImages;
 use crate::APP_ARGS;
 
@@ -464,7 +463,7 @@ impl DisplayRenderer {
 
     fn draw_data_chart(
         &self,
-        data_pressure: &DataPressure,
+        data_pressure: &ChipDataPressure,
         machine_snapshot: &MachineStateSnapshot,
         display: &GliumDisplayWinitWrapper,
     ) -> glium::texture::Texture2d {

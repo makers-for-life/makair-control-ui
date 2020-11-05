@@ -11,10 +11,10 @@ use conrod_core::{
     Positionable, Widget,
 };
 
+use crate::chip::ChipDataPressure;
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::utilities::pressure::process_max_allowed_pressure;
-use crate::utilities::types::DataPressure;
 
 const SURROUND_CIRCLE_COLOR: Color = Color::Rgba(153.0 / 255.0, 153.0 / 255.0, 153.0 / 255.0, 1.0);
 
@@ -28,7 +28,7 @@ const GROUND_CIRCLE_COLOR_OVERFLOW: Color =
     Color::Rgba(204.0 / 255.0, 204.0 / 255.0, 204.0 / 255.0, 1.0);
 
 pub struct Config<'a> {
-    data_pressure: &'a DataPressure,
+    data_pressure: &'a ChipDataPressure,
     peak_command: u8,
 
     container: WidgetId,
@@ -39,7 +39,7 @@ pub struct Config<'a> {
 
 impl<'a> Config<'a> {
     pub fn new(
-        data_pressure: &'a DataPressure,
+        data_pressure: &'a ChipDataPressure,
         peak_command: u8,
         container: WidgetId,
         ground: WidgetId,

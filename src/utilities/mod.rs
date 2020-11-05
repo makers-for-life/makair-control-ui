@@ -6,5 +6,4 @@
 pub mod image;
 pub mod parse;
 pub mod pressure;
-pub mod types;
 pub mod units;

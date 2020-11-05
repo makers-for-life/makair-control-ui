@@ -25,8 +25,9 @@ use telemetry::structures::{
 
 use crate::config::environment::*;
 use crate::utilities::parse::parse_text_lines_to_single;
-use crate::utilities::types::DataPressure;
 use crate::utilities::units::{convert_cmh2o_to_mmh2o, convert_mmh2o_to_cmh2o, ConvertMode};
+
+pub type ChipDataPressure = VecDeque<(DateTime<Utc>, u16)>;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ChipState {
@@ -63,7 +64,7 @@ struct ChipSettingsUpdate {
 pub struct Chip {
     pub boot_time: Option<DateTime<Utc>>,
     pub last_tick: u64,
-    pub data_pressure: DataPressure,
+    pub data_pressure: ChipDataPressure,
     pub last_machine_snapshot: MachineStateSnapshot,
     pub last_data_snapshot: Option<DataSnapshot>,
     pub ongoing_alarms: HashMap<AlarmCode, AlarmPriority>,
