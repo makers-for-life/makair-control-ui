@@ -17,7 +17,7 @@
 
 ## How To Build?
 
-### Building on a development computer
+### Building on a computer (for development)
 
 In order to setup your environment and build the code, please follow these steps:
 
@@ -31,7 +31,7 @@ Wayland support may be available but it hasn't been tested. You need a working X
 
 _Tested with Rust version: `rustc 1.47.0 (18bf6b4f0 2020-10-07)`_
 
-### Building on a MakAir ventilator
+### Building on a MakAir ventilator (for end use)
 
 Building directly on a ventilator is convenient for testing purposes while developing. The Raspberry Pi boards in ventilators run ArchLinux. To build on a ventilator:
 
