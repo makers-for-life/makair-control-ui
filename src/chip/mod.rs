@@ -249,16 +249,7 @@ impl Chip {
             TelemetryMessage::MachineStateSnapshot(snapshot) => {
                 self.update_tick(snapshot.systick);
                 self.update_settings_from_snapshot(&snapshot);
-
-                for alarm in &snapshot.current_alarm_codes {
-                    match AlarmPriority::try_from(*alarm) {
-                        Ok(priority) => self.new_alarm((*alarm).into(), priority, true),
-                        Err(err) => warn!(
-                            "skip alarm {} because we could not get the priority: {:?}",
-                            alarm, err
-                        ),
-                    };
-                }
+                self.update_alarms_from_snapshot(&snapshot);
 
                 self.last_machine_snapshot = snapshot;
 
@@ -429,6 +420,65 @@ impl Chip {
             trigger_enabled: Some(snapshot.trigger_enabled),
             trigger_offset: Some(snapshot.trigger_offset),
         });
+    }
+
+    fn update_alarms_from_snapshot(&mut self, snapshot: &MachineStateSnapshot) {
+        // Notice: as alarms added and removed from the 'TelemetryMessage::AlarmTrap' message \
+        //   may sometimes faill due to a missed telemetry packet (eg. out-of-order et al), we \
+        //   need to re-synchronize all displayed alarms from the end-of-cycle machine state \
+        //   snapshot messages. Hence why we first add the missing alarms, and then remove the \
+        //   alarms that do not exist anymore. Usually, this handler should do no work and leave \
+        //   the local alarms storage object untouched. That is why we do not perform a simple \
+        //   clear of the storage map and full rebuild everytime, as this would be sub-optimal.
+
+        // Map received alarm codes
+        let snapshot_alarm_codes: Vec<AlarmCode> = snapshot
+            .current_alarm_codes
+            .iter()
+            .map(|alarm| (*alarm).into())
+            .collect();
+
+        // Handle current alarms? (from truth source, ie. snapshot)
+        if !snapshot_alarm_codes.is_empty() {
+            for snapshot_alarm_code in &snapshot_alarm_codes {
+                // Attempt to parse and insert alarm? (only if it does not exist yet in storage)
+                if !self.ongoing_alarms.contains_key(snapshot_alarm_code) {
+                    warn!(
+                        "adding ongoing alarm: {:?}, which went desynchronized with its trap",
+                        snapshot_alarm_code
+                    );
+
+                    match AlarmPriority::try_from(snapshot_alarm_code.code()) {
+                        Ok(priority) => self.new_alarm(*snapshot_alarm_code, priority, true),
+                        Err(err) => warn!(
+                            "skip alarm {:?} because we could not get the priority: {:?}",
+                            snapshot_alarm_code, err
+                        ),
+                    };
+                }
+            }
+        }
+
+        // Flush non-existing alarms? (from truth source, ie. snapshot)
+        if !self.ongoing_alarms.is_empty() {
+            let cleared_alarm_codes: Vec<AlarmCode> = self
+                .ongoing_alarms
+                .iter()
+                .map(|(ongoing_alarm_code, _)| *ongoing_alarm_code)
+                .filter(|ongoing_alarm_code| !snapshot_alarm_codes.contains(ongoing_alarm_code))
+                .collect();
+
+            if !cleared_alarm_codes.is_empty() {
+                warn!(
+                    "clearing {} ongoing alarms, which went desynchronized with traps",
+                    self.ongoing_alarms.len()
+                );
+
+                for cleared_alarm_code in &cleared_alarm_codes {
+                    self.ongoing_alarms.remove(cleared_alarm_code);
+                }
+            }
+        }
     }
 
     fn update_settings_and_snapshot_from_stopped(&mut self, message: &StoppedMessage) {
