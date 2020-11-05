@@ -45,6 +45,8 @@ Building directly on a ventilator is convenient for testing purposes while devel
 
 ## How To Run?
 
+### Quick start
+
 To run the Control UI, please ensure that your device first has an open serial connection with the motherboard.
 
 _Note that the Control UI relies on the MakAir Telemetry library, which gets pulled from the [makair-telemetry](https://github.com/makers-for-life/makair-telemetry) repository._
@@ -57,6 +59,19 @@ You may also play a pre-recorded file, by passing it as an input (this is handy 
 
 1. Pull the telemetry library (in the parent directory): `git pull https://github.com/makers-for-life/makair-telemetry.git`
 2. Run an example (from the Control UI directory): `./makair-control --input=../makair-telemetry/records/short_with_errors` (where `--input` is an UNIX file path)
+
+### Available options
+
+The following options can be passed to the Control UI upon running it:
+
+* `--log={level}`: log level, where `{level}` is one of: `debug`, `info`, `warn`, `error`;
+* `--port={id}`: serial port identifier to connect to the firmware via the telemetry protocol, where `{id}` is a serial port ID, eg. `1`;
+* `--input={file}`: path to a telemetry record to play in the UI, where `{file}` is a record file (all UI controls will be inactive);
+* `--output={directory}`: path to directory in which telemetry records should be stored, where `{directory}` is a path (disabled by default);
+* `--fullscreen`: enables fullscreen mode (used on the final ventilator display only);
+* `--translation={locale}`: locale to use in the UI, where `{locale}` is a [supported locale code](#supported-translations);
+* `--disable-lora`: disables LoRa telemetry broadcasts (`lora` build feature);
+* `--lora-device={device}`: lora device path, where `{device}` is a path eg. `/dev/ttyAMA0` (`lora` build feature);
 
 ## Supported Translations
 
