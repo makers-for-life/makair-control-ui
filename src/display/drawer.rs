@@ -30,6 +30,8 @@ const FRAMERATE_SLEEP_THROTTLE_STOPPED: Duration =
     Duration::from_millis(1000 / DISPLAY_FRAMERATE_STOPPED);
 const FRAMERATE_SLEEP_THROTTLE_MINIMUM: Duration = Duration::from_millis(10);
 
+const FORCE_REFRESH_INACTIVE_PERIOD: Duration = Duration::from_secs(5);
+
 pub struct DisplayDrawerBuilder<'a> {
     _phantom: &'a std::marker::PhantomData<u8>,
 }
@@ -86,8 +88,10 @@ impl<'a> DisplayDrawer<'a> {
         // Start drawer loop
         // Flow: cycles through telemetry events, and refreshes the view every time there is an \
         //   update on the machines state.
-        let (mut last_chip_state, mut is_first_frame) =
-            (ChipState::WaitingData(Instant::now()), true);
+        let now_time = Instant::now();
+
+        let (mut last_chip_state, mut last_refresh, mut is_first_frame) =
+            (ChipState::WaitingData(now_time), now_time, true);
 
         'main: loop {
             let (mut has_poll_events, mut has_chip_state_change) = (false, false);
@@ -150,11 +154,13 @@ impl<'a> DisplayDrawer<'a> {
             // Notice: if this is the first frame, do not wait for an event to occur, refresh \
             //   immediately. Only check those if the chip state is stopped, as to minimize \
             //   CPU usage when no graph needs to be drawn and animated.
+            // TODO: re-enable all has_checks
             if last_chip_state == ChipState::Running
-                || has_chip_state_change
-                || is_first_frame
                 || has_poll_events
                 || has_user_events
+                || has_chip_state_change
+                || is_first_frame
+                || last_refresh.elapsed() >= FORCE_REFRESH_INACTIVE_PERIOD
             {
                 // Handle user events
                 if has_user_events && !user_events.is_empty() {
@@ -164,8 +170,9 @@ impl<'a> DisplayDrawer<'a> {
                 // Proceed UI refresh?
                 self.refresh();
 
-                // This is not the first frame anymore
+                // Mark as refreshed now
                 is_first_frame = false;
+                last_refresh = tick_start_time;
             }
 
             // Measure loop tick total elapsed time
