@@ -572,6 +572,10 @@ impl Chip {
                     self.update_state_running();
                 }
             }
+
+            ControlSetting::AlarmSnooze => {
+                // TODO: to be implemented
+            }
         }
     }
 }
