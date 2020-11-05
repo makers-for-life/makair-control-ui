@@ -108,7 +108,7 @@ macro_rules! gen_ui_events_modal_settings_clicks {
         }),+,
     ) => {
         $(
-            if $settings_state == &DisplayRendererSettingsState::Opened {
+            if $settings_state == DisplayRendererSettingsState::Opened {
                 // Handle clicks on the close button
                 for _ in 0..DisplayUIEvents::count_clicks(
                     $interface,
@@ -146,7 +146,7 @@ macro_rules! gen_ui_events_modal_settings_clicks {
                                 forced_state
                             );
 
-                            *$settings_state = forced_state;
+                            $settings_state = forced_state;
                         }
                     }
                 )*

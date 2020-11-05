@@ -22,17 +22,8 @@ use crate::APP_I18N;
 use super::data::*;
 use super::fonts::Fonts;
 use super::identifiers::Ids;
-use super::renderer::DisplayRendererSettingsState;
+use super::renderer::DisplayRendererStates;
 use super::widget::{ControlWidget, ControlWidgetType};
-
-pub struct Screen<'a> {
-    ids: &'a Ids,
-    last_tick: Option<u64>,
-    machine_snapshot: Option<&'a MachineStateSnapshot>,
-    data_snapshot: Option<&'a DataSnapshot>,
-    ongoing_alarms: Option<&'a [(AlarmCode, AlarmPriority)]>,
-    widgets: ControlWidget<'a>,
-}
 
 pub struct ScreenModalsOpen {
     run: bool,
@@ -44,15 +35,38 @@ pub struct ScreenModalsOpen {
     cycles: bool,
 }
 
+pub struct Screen<'a> {
+    ids: &'a Ids,
+    last_tick: Option<u64>,
+    machine_snapshot: Option<&'a MachineStateSnapshot>,
+    data_snapshot: Option<&'a DataSnapshot>,
+    ongoing_alarms: Option<&'a [(AlarmCode, AlarmPriority)]>,
+    widgets: ControlWidget<'a>,
+}
+
+impl ScreenModalsOpen {
+    pub fn from_states(states: &DisplayRendererStates) -> Self {
+        ScreenModalsOpen {
+            run: states.run_settings.is_open(),
+            snooze: states.snooze_settings.is_open(),
+            advanced: states.advanced_settings.is_open(),
+            trigger: states.trigger_settings.is_open(),
+            expiration_term: states.expiration_term_settings.is_open(),
+            pressure: states.pressure_settings.is_open(),
+            cycles: states.cycles_settings.is_open(),
+        }
+    }
+}
+
 impl<'a> Screen<'a> {
     pub fn new(
         ui: conrod_core::UiCell<'a>,
         ids: &'a Ids,
         fonts: &'a Fonts,
+        ongoing_alarms: Option<&'a [(AlarmCode, AlarmPriority)]>,
         last_tick: Option<u64>,
         machine_snapshot: Option<&'a MachineStateSnapshot>,
         data_snapshot: Option<&'a DataSnapshot>,
-        ongoing_alarms: Option<&'a [(AlarmCode, AlarmPriority)]>,
     ) -> Screen<'a> {
         Screen {
             ids,
@@ -198,7 +212,7 @@ impl<'a> Screen<'a> {
     }
 
     #[allow(clippy::too_many_arguments)]
-    pub fn render_with_data(
+    pub fn render_running(
         &mut self,
         branding_data: DisplayDataBranding<'a>,
         controls_data: DisplayDataControls<'a>,
@@ -250,8 +264,8 @@ impl<'a> Screen<'a> {
         settings: &'a ChipSettings,
         modals: &ScreenModalsOpen,
     ) {
-        // Render regular data as background
-        self.render_with_data(
+        // Render regular data as background (alias the running screen)
+        self.render_running(
             branding_data,
             controls_data,
             status_data,
@@ -862,27 +876,5 @@ impl<'a> Screen<'a> {
                 cycles_text_widget: self.ids.cycles_text,
                 cycles_value_widget: self.ids.cycles_value,
             }));
-    }
-}
-
-impl ScreenModalsOpen {
-    pub fn from_states(
-        run_open: &DisplayRendererSettingsState,
-        snooze_open: &DisplayRendererSettingsState,
-        advanced_open: &DisplayRendererSettingsState,
-        trigger_open: &DisplayRendererSettingsState,
-        expiration_term_open: &DisplayRendererSettingsState,
-        pressure_open: &DisplayRendererSettingsState,
-        cycles_open: &DisplayRendererSettingsState,
-    ) -> Self {
-        ScreenModalsOpen {
-            run: run_open == &DisplayRendererSettingsState::Opened,
-            snooze: snooze_open == &DisplayRendererSettingsState::Opened,
-            advanced: advanced_open == &DisplayRendererSettingsState::Opened,
-            trigger: trigger_open == &DisplayRendererSettingsState::Opened,
-            expiration_term: expiration_term_open == &DisplayRendererSettingsState::Opened,
-            pressure: pressure_open == &DisplayRendererSettingsState::Opened,
-            cycles: cycles_open == &DisplayRendererSettingsState::Opened,
-        }
     }
 }

@@ -277,19 +277,12 @@ impl<'a> DisplayDrawer<'a> {
     }
 
     fn refresh(&mut self) {
-        let image_map = self.renderer.render(
-            self.chip.last_tick,
-            &self.chip.data_pressure,
-            &self.chip.last_machine_snapshot,
-            self.chip.last_data_snapshot.as_ref(),
-            &self.chip.ongoing_alarms_sorted(),
-            &self.display,
-            &mut self.interface,
-            self.chip.get_battery_level(),
-            &self.chip.get_state(),
-            &self.chip.settings,
-        );
+        // Render screen to an image
+        let image_map = self
+            .renderer
+            .render(&self.display, &mut self.interface, &self.chip);
 
+        // Draw interface if it changed
         if let Some(primitives) = self.interface.draw_if_changed() {
             self.glium_renderer
                 .fill(&self.display.0, primitives, &image_map);

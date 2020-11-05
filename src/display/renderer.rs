@@ -12,11 +12,10 @@ use glium::texture;
 use image::load_from_memory;
 use plotters::prelude::*;
 use plotters::style::TextStyle;
-use telemetry::alarm::AlarmCode;
-use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot};
+use telemetry::structures::MachineStateSnapshot;
 
-use crate::chip::settings::{ChipSettings, ChipSettingsEvent};
-use crate::chip::{ChipError, ChipState};
+use crate::chip::settings::ChipSettingsEvent;
+use crate::chip::{Chip, ChipError, ChipState};
 use crate::config::environment::*;
 use crate::utilities::image::reverse_rgba;
 use crate::utilities::parse::parse_version_number;
@@ -46,13 +45,18 @@ pub struct DisplayRendererBuilder;
 pub struct DisplayRenderer {
     fonts: Fonts,
     ids: Ids,
-    run_settings_state: DisplayRendererSettingsState,
-    snooze_settings_state: DisplayRendererSettingsState,
-    advanced_settings_state: DisplayRendererSettingsState,
-    trigger_settings_state: DisplayRendererSettingsState,
-    expiration_term_settings_state: DisplayRendererSettingsState,
-    pressure_settings_state: DisplayRendererSettingsState,
-    cycles_settings_state: DisplayRendererSettingsState,
+    states: DisplayRendererStates,
+}
+
+#[derive(Default)]
+pub struct DisplayRendererStates {
+    pub run_settings: DisplayRendererSettingsState,
+    pub snooze_settings: DisplayRendererSettingsState,
+    pub advanced_settings: DisplayRendererSettingsState,
+    pub trigger_settings: DisplayRendererSettingsState,
+    pub expiration_term_settings: DisplayRendererSettingsState,
+    pub pressure_settings: DisplayRendererSettingsState,
+    pub cycles_settings: DisplayRendererSettingsState,
 }
 
 lazy_static! {
@@ -85,6 +89,10 @@ impl DisplayRendererSettingsState {
             Self::Opened => Self::Closed,
         };
     }
+
+    pub fn is_open(&self) -> bool {
+        self == &Self::Opened
+    }
 }
 
 impl Default for DisplayRendererSettingsState {
@@ -99,35 +107,21 @@ impl DisplayRendererBuilder {
         DisplayRenderer {
             fonts,
             ids,
-            run_settings_state: DisplayRendererSettingsState::default(),
-            snooze_settings_state: DisplayRendererSettingsState::default(),
-            advanced_settings_state: DisplayRendererSettingsState::default(),
-            trigger_settings_state: DisplayRendererSettingsState::default(),
-            expiration_term_settings_state: DisplayRendererSettingsState::default(),
-            pressure_settings_state: DisplayRendererSettingsState::default(),
-            cycles_settings_state: DisplayRendererSettingsState::default(),
+            states: DisplayRendererStates::default(),
         }
     }
 }
 
 impl DisplayRenderer {
-    #[allow(clippy::too_many_arguments)]
     pub fn render(
         &mut self,
-        last_tick: u64,
-        data_pressure: &DataPressure,
-        machine_snapshot: &MachineStateSnapshot,
-        data_snapshot: Option<&DataSnapshot>,
-        ongoing_alarms: &[(AlarmCode, AlarmPriority)],
         display: &GliumDisplayWinitWrapper,
         interface: &mut Ui,
-        battery_level: Option<u8>,
-        chip_state: &ChipState,
-        chip_settings: &ChipSettings,
+        chip: &Chip,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         let image_map = conrod_core::image::Map::<texture::Texture2d>::new();
 
-        match chip_state {
+        match chip.get_state() {
             // Waiting for data from the motherboard, treat it as a 'connecting...' state
             ChipState::WaitingData(started_time) => {
                 // The UI has been waiting for data for too long? Show an error instead, though \
@@ -142,19 +136,9 @@ impl DisplayRenderer {
             // Initializing, treat it as a 'connected' state
             ChipState::Initializing => self.initializing(display, interface, image_map, false),
             // Running or stopped, handle data
-            ChipState::Running | ChipState::Stopped => self.data(
-                display,
-                interface,
-                image_map,
-                last_tick,
-                data_pressure,
-                machine_snapshot,
-                data_snapshot,
-                ongoing_alarms,
-                battery_level,
-                chip_state,
-                chip_settings,
-            ),
+            ChipState::Running | ChipState::Stopped => {
+                self.data(display, interface, image_map, chip)
+            }
             // An error occured
             ChipState::Error(err) => self.error(display, interface, image_map, err),
         }
@@ -162,17 +146,7 @@ impl DisplayRenderer {
 
     pub fn run_events(&mut self, interface: &mut Ui) -> (bool, Vec<ChipSettingsEvent>) {
         // Run all UI events (defer to sub-handler)
-        DisplayUIEvents::run(
-            interface,
-            &self.ids,
-            &mut self.run_settings_state,
-            &mut self.snooze_settings_state,
-            &mut self.advanced_settings_state,
-            &mut self.trigger_settings_state,
-            &mut self.expiration_term_settings_state,
-            &mut self.pressure_settings_state,
-            &mut self.cycles_settings_state,
-        )
+        DisplayUIEvents::run(interface, &self.ids, &mut self.states)
     }
 
     fn initializing(
@@ -182,6 +156,7 @@ impl DisplayRenderer {
         mut image_map: conrod_core::image::Map<texture::Texture2d>,
         is_connecting: bool,
     ) -> conrod_core::image::Map<texture::Texture2d> {
+        // Draw bootloader logo
         let bootloader_logo_image_texture = self.draw_bootloader_logo(display);
 
         let (bootloader_logo_width, bootloader_logo_height) = (
@@ -191,8 +166,7 @@ impl DisplayRenderer {
 
         let image_id = image_map.insert(bootloader_logo_image_texture);
 
-        let ui = interface.set_widgets();
-
+        // Create initializing screen
         let screen_bootloader = DisplayDataBootloader {
             image_id,
             width: bootloader_logo_width as _,
@@ -200,7 +174,15 @@ impl DisplayRenderer {
             connecting: is_connecting,
         };
 
-        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None, None, None);
+        let mut screen = Screen::new(
+            interface.set_widgets(),
+            &self.ids,
+            &self.fonts,
+            None,
+            None,
+            None,
+            None,
+        );
 
         screen.render_initializing(screen_bootloader);
 
@@ -214,6 +196,7 @@ impl DisplayRenderer {
         mut image_map: conrod_core::image::Map<texture::Texture2d>,
         error: &ChipError,
     ) -> conrod_core::image::Map<texture::Texture2d> {
+        // Draw error icon
         let error_icon_image_texture = self.draw_error_icon(display);
 
         let (error_icon_width, error_icon_height) = (
@@ -223,8 +206,7 @@ impl DisplayRenderer {
 
         let image_id = image_map.insert(error_icon_image_texture);
 
-        let ui = interface.set_widgets();
-
+        // Create error screen
         let screen_error = DisplayDataError {
             image_id,
             width: error_icon_width as _,
@@ -232,27 +214,27 @@ impl DisplayRenderer {
             error,
         };
 
-        let mut screen = Screen::new(ui, &self.ids, &self.fonts, None, None, None, None);
+        let mut screen = Screen::new(
+            interface.set_widgets(),
+            &self.ids,
+            &self.fonts,
+            None,
+            None,
+            None,
+            None,
+        );
 
         screen.render_error(screen_error);
 
         image_map
     }
 
-    #[allow(clippy::too_many_arguments)]
     fn data(
         &mut self,
         display: &GliumDisplayWinitWrapper,
         interface: &mut Ui,
         mut image_map: conrod_core::image::Map<texture::Texture2d>,
-        last_tick: u64,
-        data_pressure: &DataPressure,
-        machine_snapshot: &MachineStateSnapshot,
-        data_snapshot: Option<&DataSnapshot>,
-        ongoing_alarms: &[(AlarmCode, AlarmPriority)],
-        battery_level: Option<u8>,
-        chip_state: &ChipState,
-        chip_settings: &ChipSettings,
+        chip: &Chip,
     ) -> conrod_core::image::Map<texture::Texture2d> {
         // Create branding
         let branding_image_texture = self.draw_branding(display);
@@ -265,7 +247,8 @@ impl DisplayRenderer {
         let branding_image_id = image_map.insert(branding_image_texture);
 
         // Create graph
-        let graph_image_texture = self.draw_data_chart(data_pressure, machine_snapshot, display);
+        let graph_image_texture =
+            self.draw_data_chart(&chip.data_pressure, &chip.last_machine_snapshot, display);
 
         let (graph_width, graph_height) = (
             graph_image_texture.get_width(),
@@ -281,11 +264,13 @@ impl DisplayRenderer {
         // Create widgets
         let mut ui = interface.set_widgets();
 
-        let ongoing_alarms_len = ongoing_alarms.len();
-        let widgets_alarms_len = self.ids.alarm_alarms.len();
+        let ongoing_alarms = chip.ongoing_alarms_sorted();
 
-        if ongoing_alarms_len > widgets_alarms_len {
-            for i in widgets_alarms_len..ongoing_alarms_len {
+        let (ongoing_alarms_count, widgets_alarms_count) =
+            (ongoing_alarms.len(), self.ids.alarm_alarms.len());
+
+        if ongoing_alarms_count > widgets_alarms_count {
+            for i in widgets_alarms_count..ongoing_alarms_count {
                 let index = i + 1;
                 self.ids
                     .alarm_alarms
@@ -304,40 +289,45 @@ impl DisplayRenderer {
                     .resize(index, &mut ui.widget_id_generator());
             }
         } else {
-            let diff = widgets_alarms_len - ongoing_alarms_len;
-            let useless_id = &mut ui.widget_id_generator();
+            let (alarms_difference, alarm_id) = (
+                widgets_alarms_count - ongoing_alarms_count,
+                &mut ui.widget_id_generator(),
+            );
 
-            if diff > 0 {
-                self.ids.alarm_alarms.resize(ongoing_alarms_len, useless_id);
+            if alarms_difference > 0 {
+                self.ids.alarm_alarms.resize(ongoing_alarms_count, alarm_id);
                 self.ids
                     .alarm_codes_containers
-                    .resize(ongoing_alarms_len, useless_id);
-                self.ids.alarm_codes.resize(ongoing_alarms_len, useless_id);
+                    .resize(ongoing_alarms_count, alarm_id);
+                self.ids.alarm_codes.resize(ongoing_alarms_count, alarm_id);
                 self.ids
                     .alarm_codes_containers
-                    .resize(ongoing_alarms_len, useless_id);
+                    .resize(ongoing_alarms_count, alarm_id);
                 self.ids
                     .alarm_messages
-                    .resize(ongoing_alarms_len, useless_id);
+                    .resize(ongoing_alarms_count, alarm_id);
             }
         }
 
+        // Create screen & its screen data
         let mut screen = Screen::new(
             ui,
             &self.ids,
             &self.fonts,
-            Some(last_tick),
-            Some(machine_snapshot),
-            data_snapshot,
-            Some(ongoing_alarms),
+            Some(&ongoing_alarms),
+            Some(chip.last_tick),
+            Some(&chip.last_machine_snapshot),
+            chip.last_data_snapshot.as_ref(),
         );
 
         let screen_data_branding = DisplayDataBranding {
-            firmware_version: parse_version_number(if machine_snapshot.version.is_empty() {
-                BRANDING_TEXT_VERSION_NONE
-            } else {
-                &machine_snapshot.version
-            }),
+            firmware_version: parse_version_number(
+                if chip.last_machine_snapshot.version.is_empty() {
+                    BRANDING_TEXT_VERSION_NONE
+                } else {
+                    &chip.last_machine_snapshot.version
+                },
+            ),
             image_id: branding_image_id,
             width: branding_width as _,
             height: branding_height as _,
@@ -361,16 +351,18 @@ impl DisplayRenderer {
                 .insert(self.draw_controls_icon(display, &*IMAGE_CONTROLS_SNOOZE_ACTIVE_RGBA_RAW)),
             advanced_image_id: image_map
                 .insert(self.draw_controls_icon(display, &*IMAGE_CONTROLS_ADVANCED_RGBA_RAW)),
-            chip_state,
-            chip_settings,
+            chip_state: &chip.get_state(),
+            chip_settings: &chip.settings,
         };
 
         let screen_data_status = DisplayDataStatus {
-            chip_state,
-            battery_level,
+            chip_state: &chip.get_state(),
+            battery_level: chip.get_battery_level(),
             save_image_id,
         };
-        let screen_data_heartbeat = DisplayDataHeartbeat { data_pressure };
+        let screen_data_heartbeat = DisplayDataHeartbeat {
+            data_pressure: &chip.data_pressure,
+        };
 
         let screen_data_graph = DisplayDataGraph {
             image_id: graph_image_id,
@@ -382,24 +374,17 @@ impl DisplayRenderer {
             arrow_image_id: telemetry_arrow_image_id,
         };
 
-        match chip_state {
-            ChipState::Running => screen.render_with_data(
+        // Render screen data (depending on state, running or stopped)
+        match chip.get_state() {
+            ChipState::Running => screen.render_running(
                 screen_data_branding,
                 screen_data_controls,
                 screen_data_status,
                 screen_data_heartbeat,
                 screen_data_graph,
                 screen_data_telemetry,
-                chip_settings,
-                &ScreenModalsOpen::from_states(
-                    &self.run_settings_state,
-                    &self.snooze_settings_state,
-                    &self.advanced_settings_state,
-                    &self.trigger_settings_state,
-                    &self.expiration_term_settings_state,
-                    &self.pressure_settings_state,
-                    &self.cycles_settings_state,
-                ),
+                &chip.settings,
+                &ScreenModalsOpen::from_states(&self.states),
             ),
 
             ChipState::Stopped => screen.render_stop(
@@ -409,16 +394,8 @@ impl DisplayRenderer {
                 screen_data_heartbeat,
                 screen_data_graph,
                 screen_data_telemetry,
-                chip_settings,
-                &ScreenModalsOpen::from_states(
-                    &self.run_settings_state,
-                    &self.snooze_settings_state,
-                    &self.advanced_settings_state,
-                    &self.trigger_settings_state,
-                    &self.expiration_term_settings_state,
-                    &self.pressure_settings_state,
-                    &self.cycles_settings_state,
-                ),
+                &chip.settings,
+                &ScreenModalsOpen::from_states(&self.states),
             ),
 
             _ => unreachable!(),

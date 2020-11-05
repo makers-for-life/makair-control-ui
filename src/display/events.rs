@@ -13,7 +13,7 @@ use crate::chip::settings::{
 };
 
 use super::identifiers::Ids;
-use super::renderer::DisplayRendererSettingsState;
+use super::renderer::{DisplayRendererSettingsState, DisplayRendererStates};
 use super::support::{self, EventLoop, GliumDisplayWinitWrapper};
 
 pub struct DisplayEventsBuilder;
@@ -74,49 +74,21 @@ impl DisplayEvents {
     }
 }
 
-#[allow(clippy::too_many_arguments)]
 impl DisplayUIEvents {
     pub fn run(
         interface: &mut Ui,
         ids: &Ids,
-        run_settings_state: &mut DisplayRendererSettingsState,
-        snooze_settings_state: &mut DisplayRendererSettingsState,
-        advanced_settings_state: &mut DisplayRendererSettingsState,
-        trigger_settings_state: &mut DisplayRendererSettingsState,
-        expiration_term_settings_state: &mut DisplayRendererSettingsState,
-        pressure_settings_state: &mut DisplayRendererSettingsState,
-        cycles_settings_state: &mut DisplayRendererSettingsState,
+        states: &mut DisplayRendererStates,
     ) -> (bool, Vec<ChipSettingsEvent>) {
         let (mut has_events, mut events) = (false, Vec::new());
 
         // Handle telemetry clicks
-        if Self::run_opener_clicks(
-            interface,
-            ids,
-            run_settings_state,
-            snooze_settings_state,
-            advanced_settings_state,
-            trigger_settings_state,
-            expiration_term_settings_state,
-            pressure_settings_state,
-            cycles_settings_state,
-        ) {
+        if Self::run_opener_clicks(interface, ids, states) {
             has_events = true;
         }
 
         // Handle modal settings clicks
-        if Self::run_modal_settings_clicks(
-            interface,
-            ids,
-            run_settings_state,
-            snooze_settings_state,
-            advanced_settings_state,
-            trigger_settings_state,
-            expiration_term_settings_state,
-            pressure_settings_state,
-            cycles_settings_state,
-            &mut events,
-        ) {
+        if Self::run_modal_settings_clicks(interface, ids, states, &mut events) {
             has_events = true;
         }
 
@@ -126,13 +98,7 @@ impl DisplayUIEvents {
     fn run_opener_clicks(
         interface: &mut Ui,
         ids: &Ids,
-        run_settings_state: &mut DisplayRendererSettingsState,
-        snooze_settings_state: &mut DisplayRendererSettingsState,
-        advanced_settings_state: &mut DisplayRendererSettingsState,
-        trigger_settings_state: &mut DisplayRendererSettingsState,
-        expiration_term_settings_state: &mut DisplayRendererSettingsState,
-        pressure_settings_state: &mut DisplayRendererSettingsState,
-        cycles_settings_state: &mut DisplayRendererSettingsState,
+        states: &mut DisplayRendererStates,
     ) -> bool {
         let mut has_events = false;
 
@@ -144,28 +110,28 @@ impl DisplayUIEvents {
             interface, has_events,
 
             {
-                "run", run_settings_state, [
+                "run", states.run_settings, [
                     ids.controls_button_run,
                     ids.controls_image_run,
                 ]
             },
 
             {
-                "snooze", snooze_settings_state, [
+                "snooze", states.snooze_settings, [
                     ids.controls_button_snooze,
                     ids.controls_image_snooze,
                 ]
             },
 
             {
-                "advanced", advanced_settings_state, [
+                "advanced", states.advanced_settings, [
                     ids.controls_button_advanced,
                     ids.controls_image_advanced,
                 ]
             },
 
             {
-                "trigger", trigger_settings_state, [
+                "trigger", states.trigger_settings, [
                     ids.trigger_overview_container,
                     ids.trigger_overview_title,
                     ids.trigger_overview_status_label,
@@ -176,7 +142,7 @@ impl DisplayUIEvents {
             },
 
             {
-                "expiratory term", expiration_term_settings_state, [
+                "expiratory term", states.expiration_term_settings, [
                     ids.ratio_parent,
                     ids.ratio_title,
                     ids.ratio_value_measured,
@@ -185,7 +151,7 @@ impl DisplayUIEvents {
             },
 
             {
-                "cycles", cycles_settings_state, [
+                "cycles", states.cycles_settings, [
                     ids.cycles_parent,
                     ids.cycles_title,
                     ids.cycles_value_measured,
@@ -196,7 +162,7 @@ impl DisplayUIEvents {
             },
 
             {
-                "pressure", pressure_settings_state, [
+                "pressure", states.pressure_settings, [
                     ids.peak_parent,
                     ids.peak_title,
                     ids.peak_value_measured,
@@ -225,13 +191,7 @@ impl DisplayUIEvents {
     fn run_modal_settings_clicks(
         interface: &mut Ui,
         ids: &Ids,
-        run_settings_state: &mut DisplayRendererSettingsState,
-        snooze_settings_state: &mut DisplayRendererSettingsState,
-        advanced_settings_state: &mut DisplayRendererSettingsState,
-        trigger_settings_state: &mut DisplayRendererSettingsState,
-        expiration_term_settings_state: &mut DisplayRendererSettingsState,
-        pressure_settings_state: &mut DisplayRendererSettingsState,
-        cycles_settings_state: &mut DisplayRendererSettingsState,
+        states: &mut DisplayRendererStates,
         events: &mut Vec<ChipSettingsEvent>,
     ) -> bool {
         let mut has_events = false;
@@ -241,7 +201,7 @@ impl DisplayUIEvents {
             interface, ids, has_events, events,
 
             {
-                "run", Run, run_settings_state,
+                "run", Run, states.run_settings,
 
                 {
                     SettingsRunEvent::RespirationEnabled, "toggle",
@@ -260,7 +220,7 @@ impl DisplayUIEvents {
             },
 
             {
-                "snooze", Snooze, snooze_settings_state,
+                "snooze", Snooze, states.snooze_settings,
 
                 {
                     SettingsSnoozeEvent::AlarmSnooze, "alarms",
@@ -275,11 +235,11 @@ impl DisplayUIEvents {
             },
 
             {
-                "advanced", Advanced, advanced_settings_state,
+                "advanced", Advanced, states.advanced_settings,
             },
 
             {
-                "trigger", Trigger, trigger_settings_state,
+                "trigger", Trigger, states.trigger_settings,
 
                 {
                     SettingsTriggerEvent::TriggerToggle, "toggle",
@@ -316,7 +276,7 @@ impl DisplayUIEvents {
             },
 
             {
-                "expiratory term", ExpirationTerm, expiration_term_settings_state,
+                "expiratory term", ExpirationTerm, states.expiration_term_settings,
 
                 {
                     SettingsExpirationTermEvent::ExpiratoryTerm(SettingActionRange::Less),
@@ -344,7 +304,7 @@ impl DisplayUIEvents {
             },
 
             {
-                "cycles", Cycles, cycles_settings_state,
+                "cycles", Cycles, states.cycles_settings,
 
                 {
                     SettingsCyclesEvent::CyclesPerMinute(SettingActionRange::Less), "cycles less",
@@ -370,7 +330,7 @@ impl DisplayUIEvents {
             },
 
             {
-                "pressure", Pressure, pressure_settings_state,
+                "pressure", Pressure, states.pressure_settings,
 
                 {
                     SettingsPressureEvent::Plateau(SettingActionRange::Less), "plateau less",
