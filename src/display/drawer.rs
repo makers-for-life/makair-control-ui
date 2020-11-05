@@ -154,7 +154,6 @@ impl<'a> DisplayDrawer<'a> {
             // Notice: if this is the first frame, do not wait for an event to occur, refresh \
             //   immediately. Only check those if the chip state is stopped, as to minimize \
             //   CPU usage when no graph needs to be drawn and animated.
-            // TODO: re-enable all has_checks
             if last_chip_state == ChipState::Running
                 || has_poll_events
                 || has_user_events
