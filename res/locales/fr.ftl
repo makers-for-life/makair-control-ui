@@ -41,7 +41,7 @@ modal-run-status-started = Active — La stopper ?
 modal-run-status-stopped = Arrêtée — La démarrer ?
 
 modal-snooze-alarms = Sourdine d'alarme
-modal-snooze-alarms-active = Bips actifs (défaut)
+modal-snooze-alarms-active = Bips activés (valeur par défaut)
 modal-snooze-alarms-inactive = Bips désactivés (temporaire)
 
 modal-trigger-inspiratory-status = État du trigger inspiratoire :
