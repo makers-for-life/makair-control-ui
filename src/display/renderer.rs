@@ -166,8 +166,8 @@ impl DisplayRenderer {
         (has_heartbeat, has_user_events, user_events)
     }
 
-    pub fn has_state_throttle_framerate(&self) -> bool {
-        // Returns whether a current state value should result in a throttled framerate, so that \
+    pub fn has_state_moderate_framerate(&self) -> bool {
+        // Returns whether a current state value should result in a moderate framerate, so that \
         //   resource usage is at a minimum.
 
         // The advanced settings modal is quite heavy to re-render every time, and we do not need \
