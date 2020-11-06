@@ -24,10 +24,12 @@ use super::identifiers::Ids;
 use super::renderer::{DisplayRenderer, DisplayRendererBuilder};
 use super::support::GliumDisplayWinitWrapper;
 
-const FRAMERATE_SLEEP_THROTTLE_RUNNING: Duration =
-    Duration::from_millis(1000 / DISPLAY_FRAMERATE_RUNNING);
-const FRAMERATE_SLEEP_THROTTLE_STOPPED: Duration =
-    Duration::from_millis(1000 / DISPLAY_FRAMERATE_STOPPED);
+const FRAMERATE_SLEEP_THROTTLE_SMOOTH_HEAVY: Duration =
+    Duration::from_millis(1000 / DISPLAY_FRAMERATE_SMOOTH_HEAVY);
+const FRAMERATE_SLEEP_THROTTLE_MODERATE_FAST: Duration =
+    Duration::from_millis(1000 / DISPLAY_FRAMERATE_MODERATE_FAST);
+const FRAMERATE_SLEEP_THROTTLE_JERKY_FAST: Duration =
+    Duration::from_millis(1000 / DISPLAY_FRAMERATE_JERKY_FAST);
 const FRAMERATE_SLEEP_THROTTLE_MINIMUM: Duration = Duration::from_millis(10);
 
 const FORCE_REFRESH_INACTIVE_PERIOD: Duration = Duration::from_secs(5);
@@ -127,7 +129,7 @@ impl<'a> DisplayDrawer<'a> {
 
                 // Force redraw if we are not stopped
                 // For some reason, with a "shared" Ids struct, conrod won't detect we need to \
-                //   redraw even though we know we have a different graph each new frame
+                //   redraw even though we know we have a different graph each new frame.
                 self.interface.needs_redraw();
             }
 
@@ -178,10 +180,11 @@ impl<'a> DisplayDrawer<'a> {
             // Measure loop tick total elapsed time
             let tick_spent_time = tick_start_time.elapsed();
 
-            // Limit framerate to 'FRAMERATE_SLEEP_THROTTLE_RUNNING' or \
-            //   'DISPLAY_FRAMERATE_STOPPED' (depending on current chip state, as we do not need \
-            //   as many frames in stopped states; this way we can guarantee the CPU usage will be \
-            //   minimal, even if something asks for frequent UI refreshes while in stopped state)
+            // Limit framerate to 'FRAMERATE_SLEEP_THROTTLE_SMOOTH_HEAVY' or \
+            //   'DISPLAY_FRAMERATE_STATIC_LIGHT' (depending on current chip state, as we do not \
+            //   need as many frames in stopped states; this way we can guarantee the CPU usage \
+            //   will be minimal, even if something asks for frequent UI refreshes while in \
+            //   stopped state; also depends on other states like if a settings modal is open)
             // Notice #1: limit the speed at the drawer loop is called. If this is not limited, \
             //   CPU usage can grow as high as 5% residual under release mode, and 40% residual \
             //   under debug mode.
@@ -190,9 +193,15 @@ impl<'a> DisplayDrawer<'a> {
             //   time, then fallback on a minimum guaranteed throttle time as to release the \
             //   thread for some time.
             let mut throttle_sleep_duration = if last_chip_state == ChipState::Running {
-                FRAMERATE_SLEEP_THROTTLE_RUNNING
+                // A state requests that framerate should be moderated (lighter middle-ground \
+                //   between the fast but jerky framerate and the smooth but heavy framerate)
+                if self.renderer.has_state_moderate_framerate() {
+                    FRAMERATE_SLEEP_THROTTLE_MODERATE_FAST
+                } else {
+                    FRAMERATE_SLEEP_THROTTLE_SMOOTH_HEAVY
+                }
             } else {
-                FRAMERATE_SLEEP_THROTTLE_STOPPED
+                FRAMERATE_SLEEP_THROTTLE_JERKY_FAST
             };
 
             if throttle_sleep_duration > tick_spent_time {
