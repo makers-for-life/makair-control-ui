@@ -90,8 +90,8 @@ impl<'a> DisplayDrawer<'a> {
         //   update on the machines state.
         let now_time = Instant::now();
 
-        let (mut last_chip_state, mut last_refresh, mut is_first_frame) =
-            (ChipState::WaitingData(now_time), now_time, true);
+        let (mut last_chip_state, mut last_refresh, mut last_heartbeat, mut is_first_frame) =
+            (ChipState::WaitingData(now_time), now_time, now_time, true);
 
         'main: loop {
             // Measure loop tick start time
@@ -132,7 +132,24 @@ impl<'a> DisplayDrawer<'a> {
             }
 
             // Run events since the last render
-            let (has_user_events, user_events) = self.renderer.run_events(&mut self.interface);
+            let (has_heartbeat, has_user_events, user_events) =
+                self.renderer
+                    .run_events(&mut self.interface, &last_heartbeat, &tick_start_time);
+
+            // Dispatch heartbeat?
+            // Notice: heartbeats are critical, as they indicate the firmware that the Control UI \
+            //   is still up and running. If the firmware misses a certain number of heartbeats, \
+            //   it will think that the Control UI is frozen, and thus will power cycle the \
+            //   computer that runs it. Note that, while this may look dangerous, heartbeats \
+            //   should be sent from the drawer loop itself, as this is the main Control UI event \
+            //   loop. If the Control UI drawer loop freezes, then the Control UI would be \
+            //   unusable and unresponsive, and thus heartbeats MUST be stopped so that a power \
+            //   cycle gets triggered by the firmware.
+            if has_heartbeat {
+                self.chip.dispatch_heartbeat_event();
+
+                last_heartbeat = tick_start_time;
+            }
 
             // Refresh UI? (if any event occured, either user-based or poll-based)
             // Notice: if this is the first frame, do not wait for an event to occur, refresh \
@@ -147,7 +164,7 @@ impl<'a> DisplayDrawer<'a> {
             {
                 // Handle user events
                 if has_user_events && !user_events.is_empty() {
-                    self.chip.handle_settings_events(user_events);
+                    self.chip.dispatch_settings_events(user_events);
                 }
 
                 // Proceed UI refresh?

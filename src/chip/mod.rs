@@ -125,7 +125,20 @@ impl Chip {
         }
     }
 
-    pub fn handle_settings_events(&mut self, events: Vec<ChipSettingsEvent>) {
+    pub fn dispatch_heartbeat_event(&mut self) {
+        if let Some(tx) = &self.channel_for_settings {
+            if let Err(err) = tx.send(ControlMessage {
+                setting: ControlSetting::Heartbeat,
+                value: 0,
+            }) {
+                error!("error sending heartbeat to the firmware: {:?}", err);
+            } else {
+                debug!("heartbeat sent to the firmware");
+            }
+        }
+    }
+
+    pub fn dispatch_settings_events(&mut self, events: Vec<ChipSettingsEvent>) {
         for event in events {
             let message = self.settings.new_settings_event(event);
 

@@ -4,7 +4,7 @@
 // License: Public Domain License
 
 use std::borrow::Cow;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use chrono::{DateTime, NaiveDateTime, Utc};
 use conrod_core::Ui;
@@ -32,6 +32,7 @@ use super::screen::{Screen, ScreenModalsOpen};
 use super::support::GliumDisplayWinitWrapper;
 
 const WAITING_FOR_DATA_TIMEOUT_AFTER: Duration = Duration::from_secs(10);
+const DISPATCH_HEARTBEAT_EVERY: Duration = Duration::from_secs(1);
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum DisplayRendererSettingsState {
@@ -143,9 +144,24 @@ impl DisplayRenderer {
         }
     }
 
-    pub fn run_events(&mut self, interface: &mut Ui) -> (bool, Vec<ChipSettingsEvent>) {
+    pub fn run_events(
+        &mut self,
+        interface: &mut Ui,
+        last_heartbeat: &Instant,
+        tick_time: &Instant,
+    ) -> (bool, bool, Vec<ChipSettingsEvent>) {
         // Run all UI events (defer to sub-handler)
-        DisplayUIEvents::run(interface, &self.ids, &mut self.states)
+        let (has_user_events, user_events) =
+            DisplayUIEvents::run(interface, &self.ids, &mut self.states);
+
+        // Check if should run heartbeat? (ie. if it should be sent to the firmware)
+        let mut has_heartbeat = false;
+
+        if tick_time.duration_since(*last_heartbeat) >= DISPATCH_HEARTBEAT_EVERY {
+            has_heartbeat = true;
+        }
+
+        (has_heartbeat, has_user_events, user_events)
     }
 
     fn initializing(
