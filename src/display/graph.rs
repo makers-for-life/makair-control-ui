@@ -11,6 +11,7 @@ use telemetry::structures::MachineStateSnapshot;
 
 use crate::chip::{Chip, ChipDataPressure};
 use crate::config::environment::*;
+#[cfg(feature = "graph-scaler")]
 use crate::utilities::pressure::process_max_allowed_pressure;
 
 use super::renderer::DisplayRenderer;
