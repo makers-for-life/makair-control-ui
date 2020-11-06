@@ -18,7 +18,10 @@ use telemetry::structures::{DataSnapshot, MachineStateSnapshot};
 
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
-use crate::utilities::parse::{parse_non_empty_number_to_string, parse_optional_number_to_string};
+use crate::utilities::{
+    parse::{parse_non_empty_number_to_string, parse_optional_number_to_string},
+    units::convert_sub_ppm_to_ppm,
+};
 use crate::APP_CONTEXT;
 
 const CONTROL_UI_VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -121,11 +124,15 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
                     .map(|data| data.patient_valve_position as usize),
             ),
         ),
-        // Blower speed (in RPM, ie. rotations per minute)
+        // Blower speed (in PPM, ie. command sent to the ESC; the telemetry protocol calls this \
+        //   RPM, although what is really sent is a PPM value divided by 10 as to fit on 1 octet, \
+        //   where the final ESC PPM value goes from 300 to 1800).
         (
-            "blower-speed-rpm",
+            "blower-speed-throttle-ppm",
             &parse_optional_number_to_string(
-                config.data_snapshot.map(|data| data.blower_rpm as usize),
+                config
+                    .data_snapshot
+                    .map(|data| convert_sub_ppm_to_ppm(data.blower_rpm)),
             ),
         ),
         // Battery level (in volts)

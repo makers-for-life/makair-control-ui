@@ -18,3 +18,7 @@ pub fn convert_mmh2o_to_cmh2o(mode: ConvertMode, value: f64) -> f64 {
 pub fn convert_cmh2o_to_mmh2o(value: u8) -> usize {
     (value as usize) * 10
 }
+
+pub fn convert_sub_ppm_to_ppm(value: u8) -> usize {
+    (value as usize) * 10
+}
