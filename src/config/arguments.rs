@@ -5,6 +5,11 @@
 
 use clap::{App, Arg};
 
+#[cfg(debug_assertions)]
+const LOG_LEVEL_DEFAULT: &str = "debug";
+#[cfg(not(debug_assertions))]
+const LOG_LEVEL_DEFAULT: &str = "warn";
+
 pub enum RunMode {
     Port {
         port: String,
@@ -35,7 +40,7 @@ impl ConfigArguments {
                     .short("l")
                     .long("log")
                     .help("Log level")
-                    .default_value("warn")
+                    .default_value(LOG_LEVEL_DEFAULT)
                     .takes_value(true),
             )
             .arg(
