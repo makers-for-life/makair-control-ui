@@ -35,7 +35,7 @@ impl ConfigArguments {
                     .short("l")
                     .long("log")
                     .help("Log level")
-                    .default_value("debug")
+                    .default_value("warn")
                     .takes_value(true),
             )
             .arg(
