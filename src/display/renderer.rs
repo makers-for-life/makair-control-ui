@@ -3,31 +3,22 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-use std::borrow::Cow;
 use std::time::{Duration, Instant};
 
-use chrono::{DateTime, NaiveDateTime, Utc};
 use conrod_core::Ui;
 use glium::texture;
-use image::load_from_memory;
-use plotters::prelude::*;
-use plotters::style::TextStyle;
-use telemetry::structures::MachineStateSnapshot;
 
 use crate::chip::settings::ChipSettingsEvent;
-use crate::chip::{Chip, ChipDataPressure, ChipError, ChipState};
+use crate::chip::{Chip, ChipError, ChipState};
 use crate::config::environment::*;
-use crate::utilities::image::reverse_rgba;
 use crate::utilities::parse::parse_version_number;
-#[cfg(feature = "graph-scaler")]
-use crate::utilities::pressure::process_max_allowed_pressure;
-use crate::EmbeddedImages;
 use crate::APP_ARGS;
 
 use super::data::*;
 use super::events::DisplayUIEvents;
 use super::fonts::Fonts;
-use super::identifiers::Ids;
+use super::identifiers::{Ids, ImageIds};
+use super::images::DisplayImages;
 use super::screen::{Screen, ScreenModalsOpen};
 use super::support::GliumDisplayWinitWrapper;
 
@@ -45,6 +36,7 @@ pub struct DisplayRendererBuilder;
 pub struct DisplayRenderer {
     fonts: Fonts,
     ids: Ids,
+    images: ImageIds,
     states: DisplayRendererStates,
 }
 
@@ -57,29 +49,6 @@ pub struct DisplayRendererStates {
     pub expiration_term_settings: DisplayRendererSettingsState,
     pub pressure_settings: DisplayRendererSettingsState,
     pub cycles_settings: DisplayRendererSettingsState,
-}
-
-lazy_static! {
-    static ref IMAGE_TOP_LOGO_RGBA_RAW: Vec<u8> =
-        gen_load_image_reverse!("top-logo", BRANDING_WIDTH);
-    static ref IMAGE_BOOTLOADER_LOGO_RGBA_RAW: Vec<u8> =
-        gen_load_image_reverse!("bootloader-logo", BOOTLOADER_LOGO_WIDTH);
-    static ref IMAGE_ERROR_ICON_RGBA_RAW: Vec<u8> =
-        gen_load_image_reverse!("error-icon", ERROR_ICON_WIDTH);
-    static ref IMAGE_TELEMETRY_ARROW_RGBA_RAW: Vec<u8> =
-        gen_load_image_reverse!("telemetry-arrow", TELEMETRY_ARROW_WIDTH);
-    static ref IMAGE_CONTROLS_RUN_RGBA_RAW: Vec<u8> =
-        gen_load_image_reverse!("controls-run", CONTROLS_BUTTON_ICON_WIDTH);
-    static ref IMAGE_CONTROLS_SNOOZE_INACTIVE_RGBA_RAW: Vec<u8> =
-        gen_load_image_reverse!("controls-snooze-inactive", CONTROLS_BUTTON_ICON_WIDTH);
-    static ref IMAGE_CONTROLS_SNOOZE_ACTIVE_RGBA_RAW: Vec<u8> =
-        gen_load_image_reverse!("controls-snooze-active", CONTROLS_BUTTON_ICON_WIDTH);
-    static ref IMAGE_CONTROLS_ADVANCED_RGBA_RAW: Vec<u8> =
-        gen_load_image_reverse!("controls-advanced", CONTROLS_BUTTON_ICON_WIDTH);
-    static ref IMAGE_STATUS_SAVE_RGBA_RAW: Vec<u8> =
-        gen_load_image_reverse!("save", STATUS_SAVE_ICON_WIDTH);
-    static ref GRAPH_AXIS_Y_FONT: TextStyle<'static> =
-        TextStyle::from(("sans-serif", 15).into_font());
 }
 
 impl DisplayRendererSettingsState {
@@ -103,10 +72,11 @@ impl Default for DisplayRendererSettingsState {
 
 #[allow(clippy::new_ret_no_self)]
 impl DisplayRendererBuilder {
-    pub fn new(fonts: Fonts, ids: Ids) -> DisplayRenderer {
+    pub fn new(fonts: Fonts, ids: Ids, images: ImageIds) -> DisplayRenderer {
         DisplayRenderer {
             fonts,
             ids,
+            images,
             states: DisplayRendererStates::default(),
         }
     }
@@ -117,10 +87,9 @@ impl DisplayRenderer {
         &mut self,
         display: &GliumDisplayWinitWrapper,
         interface: &mut Ui,
+        mut image_map: &mut conrod_core::image::Map<texture::Texture2d>,
         chip: &Chip,
-    ) -> conrod_core::image::Map<texture::Texture2d> {
-        let mut image_map = conrod_core::image::Map::<texture::Texture2d>::new();
-
+    ) {
         match &chip.state {
             // Waiting for data from the motherboard, treat it as a 'connecting...' state
             ChipState::WaitingData(started_time) => {
@@ -128,22 +97,20 @@ impl DisplayRenderer {
                 //   we are still waiting for data, so this may fix by itself. This is done for UI \
                 //   purposes, though the chip state is still 'ChipState::WaitingData'.
                 if started_time.elapsed() >= WAITING_FOR_DATA_TIMEOUT_AFTER {
-                    self.error(display, interface, &mut image_map, &ChipError::TimedOut)
+                    self.error(interface, &ChipError::TimedOut)
                 } else {
-                    self.initializing(display, interface, &mut image_map, true)
+                    self.initializing(interface, true)
                 }
             }
             // Initializing, treat it as a 'connected' state
-            ChipState::Initializing => self.initializing(display, interface, &mut image_map, false),
+            ChipState::Initializing => self.initializing(interface, false),
             // Running or stopped, handle data
             ChipState::Running | ChipState::Stopped => {
                 self.data(display, interface, &mut image_map, chip)
             }
             // An error occured
-            ChipState::Error(err) => self.error(display, interface, &mut image_map, err),
+            ChipState::Error(err) => self.error(interface, err),
         };
-
-        image_map
     }
 
     pub fn run_events(
@@ -180,28 +147,12 @@ impl DisplayRenderer {
         false
     }
 
-    fn initializing(
-        &mut self,
-        display: &GliumDisplayWinitWrapper,
-        interface: &mut Ui,
-        image_map: &mut conrod_core::image::Map<texture::Texture2d>,
-        is_connecting: bool,
-    ) {
-        // Draw bootloader logo
-        let bootloader_logo_image_texture = self.draw_bootloader_logo(display);
-
-        let (bootloader_logo_width, bootloader_logo_height) = (
-            bootloader_logo_image_texture.get_width(),
-            bootloader_logo_image_texture.get_height().unwrap(),
-        );
-
-        let image_id = image_map.insert(bootloader_logo_image_texture);
-
+    fn initializing(&mut self, interface: &mut Ui, is_connecting: bool) {
         // Create initializing screen
         let screen_bootloader = DisplayDataBootloader {
-            image_id,
-            width: bootloader_logo_width as _,
-            height: bootloader_logo_height as _,
+            image_id: self.images.bootloader_logo,
+            width: BOOTLOADER_LOGO_WIDTH as _,
+            height: BOOTLOADER_LOGO_HEIGHT as _,
             connecting: is_connecting,
         };
 
@@ -218,28 +169,12 @@ impl DisplayRenderer {
         screen.render_initializing(screen_bootloader);
     }
 
-    fn error(
-        &mut self,
-        display: &GliumDisplayWinitWrapper,
-        interface: &mut Ui,
-        image_map: &mut conrod_core::image::Map<texture::Texture2d>,
-        error: &ChipError,
-    ) {
-        // Draw error icon
-        let error_icon_image_texture = self.draw_error_icon(display);
-
-        let (error_icon_width, error_icon_height) = (
-            error_icon_image_texture.get_width(),
-            error_icon_image_texture.get_height().unwrap(),
-        );
-
-        let image_id = image_map.insert(error_icon_image_texture);
-
+    fn error(&mut self, interface: &mut Ui, error: &ChipError) {
         // Create error screen
         let screen_error = DisplayDataError {
-            image_id,
-            width: error_icon_width as _,
-            height: error_icon_height as _,
+            image_id: self.images.error_icon,
+            width: ERROR_ICON_WIDTH as _,
+            height: ERROR_ICON_HEIGHT as _,
             error,
         };
 
@@ -263,19 +198,9 @@ impl DisplayRenderer {
         image_map: &mut conrod_core::image::Map<texture::Texture2d>,
         chip: &Chip,
     ) {
-        // Create branding
-        let branding_image_texture = self.draw_branding(display);
-
-        let (branding_width, branding_height) = (
-            branding_image_texture.get_width(),
-            branding_image_texture.get_height().unwrap(),
-        );
-
-        let branding_image_id = image_map.insert(branding_image_texture);
-
         // Create graph
         let graph_image_texture =
-            self.draw_data_chart(&chip.data_pressure, &chip.last_machine_snapshot, display);
+            DisplayImages::data_chart(&chip.data_pressure, &chip.last_machine_snapshot, display);
 
         let (graph_width, graph_height) = (
             graph_image_texture.get_width(),
@@ -283,10 +208,6 @@ impl DisplayRenderer {
         );
 
         let graph_image_id = image_map.insert(graph_image_texture);
-
-        // Create telemetry
-        let telemetry_arrow_image_texture = self.draw_telemetry_arrow(display);
-        let telemetry_arrow_image_id = image_map.insert(telemetry_arrow_image_texture);
 
         // Create widgets
         let mut ui = interface.set_widgets();
@@ -355,29 +276,22 @@ impl DisplayRenderer {
                     &chip.last_machine_snapshot.version
                 },
             ),
-            image_id: branding_image_id,
-            width: branding_width as _,
-            height: branding_height as _,
+            image_id: self.images.branding,
+            width: BRANDING_WIDTH as _,
+            height: BRANDING_HEIGHT as _,
         };
 
         let save_image_id = if APP_ARGS.is_recording() {
-            let save_icon_texture = self.draw_status_save_icon(display);
-
-            Some(image_map.insert(save_icon_texture))
+            Some(self.images.status_save_icon)
         } else {
             None
         };
 
         let screen_data_controls = DisplayDataControls {
-            run_image_id: image_map
-                .insert(self.draw_controls_icon(display, &*IMAGE_CONTROLS_RUN_RGBA_RAW)),
-            snooze_inactive_image_id: image_map.insert(
-                self.draw_controls_icon(display, &*IMAGE_CONTROLS_SNOOZE_INACTIVE_RGBA_RAW),
-            ),
-            snooze_active_image_id: image_map
-                .insert(self.draw_controls_icon(display, &*IMAGE_CONTROLS_SNOOZE_ACTIVE_RGBA_RAW)),
-            advanced_image_id: image_map
-                .insert(self.draw_controls_icon(display, &*IMAGE_CONTROLS_ADVANCED_RGBA_RAW)),
+            run_image_id: self.images.controls_run_icon,
+            snooze_inactive_image_id: self.images.controls_snooze_inactive_icon,
+            snooze_active_image_id: self.images.controls_snooze_active_icon,
+            advanced_image_id: self.images.controls_advanced_icon,
             chip_state: &chip.state,
             chip_settings: &chip.settings,
         };
@@ -401,7 +315,7 @@ impl DisplayRenderer {
         };
 
         let screen_data_telemetry = DisplayDataTelemetry {
-            arrow_image_id: telemetry_arrow_image_id,
+            arrow_image_id: self.images.telemetry_arrow,
         };
 
         // Render screen data (depending on state, running or stopped)
@@ -430,206 +344,5 @@ impl DisplayRenderer {
 
             _ => unreachable!(),
         };
-    }
-
-    fn draw_bootloader_logo(
-        &self,
-        display: &GliumDisplayWinitWrapper,
-    ) -> glium::texture::Texture2d {
-        // Create image from raw buffer (cached)
-        gen_draw_cached_image!(
-            display <= IMAGE_BOOTLOADER_LOGO_RGBA_RAW[BOOTLOADER_LOGO_WIDTH, BOOTLOADER_LOGO_HEIGHT]
-        )
-    }
-
-    fn draw_error_icon(&self, display: &GliumDisplayWinitWrapper) -> glium::texture::Texture2d {
-        // Create image from raw buffer (cached)
-        gen_draw_cached_image!(
-            display <= IMAGE_ERROR_ICON_RGBA_RAW[ERROR_ICON_WIDTH, ERROR_ICON_HEIGHT]
-        )
-    }
-
-    fn draw_telemetry_arrow(
-        &self,
-        display: &GliumDisplayWinitWrapper,
-    ) -> glium::texture::Texture2d {
-        // Create image from raw buffer (cached)
-        gen_draw_cached_image!(
-            display <= IMAGE_TELEMETRY_ARROW_RGBA_RAW[TELEMETRY_ARROW_WIDTH, TELEMETRY_ARROW_HEIGHT]
-        )
-    }
-
-    fn draw_controls_icon(
-        &self,
-        display: &GliumDisplayWinitWrapper,
-        icon_rgba_raw: &[u8],
-    ) -> glium::texture::Texture2d {
-        // Create image from raw buffer (cached)
-        gen_draw_cached_image!(
-            display <= icon_rgba_raw[CONTROLS_BUTTON_ICON_WIDTH, CONTROLS_BUTTON_ICON_HEIGHT]
-        )
-    }
-
-    fn draw_status_save_icon(
-        &self,
-        display: &GliumDisplayWinitWrapper,
-    ) -> glium::texture::Texture2d {
-        // Create image from raw buffer (cached)
-        gen_draw_cached_image!(
-            display <= IMAGE_STATUS_SAVE_RGBA_RAW[STATUS_SAVE_ICON_WIDTH, STATUS_SAVE_ICON_HEIGHT]
-        )
-    }
-
-    fn draw_branding(&self, display: &GliumDisplayWinitWrapper) -> glium::texture::Texture2d {
-        // Create image from raw buffer (cached)
-        gen_draw_cached_image!(
-            display <= IMAGE_TOP_LOGO_RGBA_RAW[BRANDING_WIDTH, BRANDING_HEIGHT]
-        )
-    }
-
-    fn draw_data_chart(
-        &self,
-        data_pressure: &ChipDataPressure,
-        machine_snapshot: &MachineStateSnapshot,
-        display: &GliumDisplayWinitWrapper,
-    ) -> glium::texture::Texture2d {
-        let mut buffer_rgb: Vec<u8> = vec![0; (GRAPH_WIDTH * GRAPH_HEIGHT * 3) as usize];
-
-        // Docs: https://docs.rs/plotters/0.2.12/plotters/drawing/struct.BitMapBackend.html
-        let drawing = BitMapBackend::with_buffer(&mut buffer_rgb, (GRAPH_WIDTH, GRAPH_HEIGHT))
-            .into_drawing_area();
-
-        // Acquire time range
-        let newest_time = data_pressure
-            .front()
-            .unwrap_or(&(
-                DateTime::from_utc(NaiveDateTime::from_timestamp(0, 0), Utc),
-                0,
-            ))
-            .0;
-        let oldest_time = newest_time - chrono::Duration::seconds(GRAPH_DRAW_SECONDS as _);
-
-        // Docs: https://docs.rs/plotters/0.2.12/plotters/chart/struct.ChartBuilder.html
-
-        // "Default" static graph maximum mode requested
-        // Convert the "range high" value from cmH20 to mmH20, as this is the high-precision unit \
-        //   we work with for graphing purposes only.
-        #[cfg(not(feature = "graph-scaler"))]
-        let range_high = {
-            let range_high = (GRAPH_DRAW_RANGE_HIGH_STATIC_INITIAL as i32)
-                * (TELEMETRY_POINTS_PRECISION_DIVIDE as i32);
-
-            // Void statement to prevent the compiler from warning about unused \
-            //   'machine_snapshot', which is indeed used under feature 'graph-scaler'.
-            let _ = machine_snapshot.peak_command;
-
-            range_high
-        };
-
-        // "Graph scaler" auto-scale mode requested, will auto-process graph maximum
-        #[cfg(feature = "graph-scaler")]
-        let range_high = {
-            let peak_command_or_initial = if machine_snapshot.peak_command > 0 {
-                machine_snapshot.peak_command
-            } else {
-                GRAPH_DRAW_RANGE_HIGH_DYNAMIC_INITIAL
-            };
-
-            // Convert the "range high" value from cmH20 to mmH20, as this is the high-precision unit \
-            //   we work with for graphing purposes only.
-            let mut range_high = (process_max_allowed_pressure(peak_command_or_initial) as u16
-                * TELEMETRY_POINTS_PRECISION_DIVIDE) as i32;
-
-            // Override "range high" with a larger value contained in graph (avoids \
-            //   larger-than-range-high graph points to flat out)
-            let graph_largest_point = {
-                let mut data_pressure_points_ordered = data_pressure
-                    .iter()
-                    .map(|x| x.1 as i32)
-                    .collect::<Vec<i32>>();
-
-                data_pressure_points_ordered.sort_unstable();
-
-                *data_pressure_points_ordered.last().unwrap_or(&0)
-            };
-
-            if graph_largest_point > range_high {
-                range_high = graph_largest_point;
-            }
-
-            range_high
-        };
-
-        let mut chart = ChartBuilder::on(&drawing)
-            .margin_top(GRAPH_DRAW_MARGIN_TOP)
-            .margin_bottom(GRAPH_DRAW_MARGIN_BOTTOM)
-            .margin_left(GRAPH_DRAW_MARGIN_LEFT)
-            .margin_right(GRAPH_DRAW_MARGIN_RIGHT)
-            .x_label_area_size(0)
-            .y_label_area_size(GRAPH_DRAW_LABEL_WIDTH)
-            .build_cartesian_2d(oldest_time..newest_time, GRAPH_DRAW_RANGE_LOW..range_high)
-            .expect("failed to build chart");
-
-        chart
-            .configure_mesh()
-            .bold_line_style(&plotters::style::colors::WHITE.mix(0.04))
-            .light_line_style(&plotters::style::colors::BLACK)
-            .y_labels(GRAPH_DRAW_LABEL_NUMBER_MAX)
-            .y_label_style(GRAPH_AXIS_Y_FONT.color(&WHITE.mix(0.65)))
-            .y_label_formatter(&|y| {
-                // Convert high-precision point in mmH20 back to cmH20 (which measurements & \
-                //   targets both use)
-                (y / TELEMETRY_POINTS_PRECISION_DIVIDE as i32).to_string()
-            })
-            .draw()
-            .expect("failed to draw chart mesh");
-
-        // Docs: https://docs.rs/plotters/0.2.12/plotters/prelude/struct.LineSeries.html
-        chart
-            .draw_series(
-                LineSeries::new(
-                    data_pressure.iter().map(|x| (x.0, x.1 as i32)),
-                    ShapeStyle::from(&plotters::style::RGBColor(0, 137, 255))
-                        .filled()
-                        .stroke_width(GRAPH_DRAW_LINE_SIZE),
-                )
-                .point_size(GRAPH_DRAW_POINT_SIZE),
-            )
-            .expect("failed to draw chart data");
-
-        drop(chart);
-        drop(drawing);
-
-        // Convert chart from an RGB to an RGBA image buffer
-        let (width_value, height_value) = (GRAPH_WIDTH as usize, GRAPH_HEIGHT as usize);
-
-        let mut buffer_rgba: Vec<u8> = vec![0; width_value * height_value * 4];
-
-        for row in 0..(height_value - 1) {
-            let (row_start_rgb, row_start_rgba) =
-                (row * width_value, (height_value - row - 1) * width_value);
-
-            for column in 0..(width_value - 1) {
-                let (rgb_index, rgba_index) =
-                    ((row_start_rgb + column) * 3, (row_start_rgba + column) * 4);
-
-                buffer_rgba[rgba_index] = buffer_rgb[rgb_index];
-                buffer_rgba[rgba_index + 1] = buffer_rgb[rgb_index + 1];
-                buffer_rgba[rgba_index + 2] = buffer_rgb[rgb_index + 2];
-                buffer_rgba[rgba_index + 3] = 255;
-            }
-        }
-
-        // Instantiate a raw image in a 2D space
-        let raw_image =
-            glium::texture::RawImage2d::from_raw_rgba(buffer_rgba, (GRAPH_WIDTH, GRAPH_HEIGHT));
-
-        // Build the final 2D texture from the raw image buffer in a 2D space
-        glium::texture::Texture2d::with_mipmaps(
-            &display.0,
-            raw_image,
-            glium::texture::MipmapsOption::NoMipmap,
-        )
-        .unwrap()
     }
 }

@@ -11,6 +11,7 @@ mod drawer;
 mod events;
 mod fonts;
 mod identifiers;
+mod images;
 mod renderer;
 mod screen;
 mod support;

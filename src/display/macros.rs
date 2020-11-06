@@ -3,6 +3,30 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+macro_rules! image_ids {
+    (pub struct $name:ident { $($key:ident),+, }) => {
+        pub struct $name {
+            $(
+                pub $key: ImageId,
+            )+
+        }
+
+        impl $name {
+            pub fn new(
+                display: &GliumDisplayWinitWrapper,
+                image_map: &mut conrod_core::image::Map<texture::Texture2d>,
+            ) -> $name {
+                // Insert all images in the image map, returning re-usable image identifiers
+                $name {
+                    $(
+                        $key: image_map.insert(DisplayImages::$key(display)),
+                    )+
+                }
+            }
+        }
+    };
+}
+
 macro_rules! gen_load_font {
     ($family:expr, $name:expr) => {
         conrod_core::text::Font::from_bytes(

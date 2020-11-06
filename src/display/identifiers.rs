@@ -3,9 +3,13 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-use conrod_core::Ui;
+use conrod_core::{image::Id as ImageId, Ui};
+use glium::texture;
 
 use crate::config::environment::*;
+
+use super::images::DisplayImages;
+use super::support::GliumDisplayWinitWrapper;
 
 widget_ids!(pub struct Ids {
   layout_container,
@@ -182,6 +186,18 @@ widget_ids!(pub struct Ids {
   initializing_container,
   initializing_logo,
   initializing_text,
+});
+
+image_ids!(pub struct ImageIds {
+  bootloader_logo,
+  error_icon,
+  branding,
+  telemetry_arrow,
+  status_save_icon,
+  controls_run_icon,
+  controls_snooze_inactive_icon,
+  controls_snooze_active_icon,
+  controls_advanced_icon,
 });
 
 impl Ids {

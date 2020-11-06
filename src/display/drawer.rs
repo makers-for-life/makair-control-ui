@@ -9,7 +9,7 @@ use std::time::{Duration, Instant};
 
 use conrod_core::Ui;
 use glium::glutin::{ContextBuilder, EventsLoop, WindowBuilder};
-use glium::Surface;
+use glium::{texture, Surface};
 use telemetry::{self, TelemetryChannelType};
 
 use crate::chip::{Chip, ChipEventUpdate, ChipState};
@@ -20,7 +20,7 @@ use crate::APP_ARGS;
 
 use super::events::{DisplayEventsBuilder, DisplayEventsHandleOutcome};
 use super::fonts::Fonts;
-use super::identifiers::Ids;
+use super::identifiers::{Ids, ImageIds};
 use super::renderer::{DisplayRenderer, DisplayRendererBuilder};
 use super::support::GliumDisplayWinitWrapper;
 
@@ -44,6 +44,7 @@ pub struct DisplayDrawer<'a> {
     display: GliumDisplayWinitWrapper,
     interface: &'a mut Ui,
     events_loop: EventsLoop,
+    image_map: conrod_core::image::Map<texture::Texture2d>,
     chip: Chip,
 }
 
@@ -61,18 +62,24 @@ impl<'a> DisplayDrawerBuilder<'a> {
         let display =
             GliumDisplayWinitWrapper(glium::Display::new(window, context, &events_loop).unwrap());
 
-        // Create drawer IDs
+        // Create widget IDs (simplified to 'IDs')
         let mut ids = Ids::new(interface.widget_id_generator());
 
         ids.allocate(&mut interface);
 
+        // Create image IDs
+        let mut image_map = conrod_core::image::Map::<texture::Texture2d>::new();
+
+        let images = ImageIds::new(&display, &mut image_map);
+
         // Create drawer
         DisplayDrawer {
-            renderer: DisplayRendererBuilder::new(fonts, ids),
+            renderer: DisplayRendererBuilder::new(fonts, ids, images),
             glium_renderer: conrod_glium::Renderer::new(&display.0).unwrap(),
             display,
             interface,
             events_loop,
+            image_map,
             chip,
         }
     }
@@ -304,21 +311,24 @@ impl<'a> DisplayDrawer<'a> {
 
     fn refresh(&mut self) {
         // Render screen to an image
-        let image_map = self
-            .renderer
-            .render(&self.display, &mut self.interface, &self.chip);
+        self.renderer.render(
+            &self.display,
+            &mut self.interface,
+            &mut self.image_map,
+            &self.chip,
+        );
 
         // Draw interface if it changed
         if let Some(primitives) = self.interface.draw_if_changed() {
             self.glium_renderer
-                .fill(&self.display.0, primitives, &image_map);
+                .fill(&self.display.0, primitives, &self.image_map);
 
             let mut target = self.display.0.draw();
 
             target.clear_color(0.0, 0.0, 0.0, 1.0);
 
             self.glium_renderer
-                .draw(&self.display.0, &mut target, &image_map)
+                .draw(&self.display.0, &mut target, &self.image_map)
                 .unwrap();
 
             target.finish().unwrap();
