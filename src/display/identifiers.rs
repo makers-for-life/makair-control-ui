@@ -8,6 +8,7 @@ use conrod_core::Ui;
 use crate::config::environment::*;
 
 widget_ids!(pub struct Ids {
+  layout_container,
   layout_header,
   layout_body,
   layout_footer,

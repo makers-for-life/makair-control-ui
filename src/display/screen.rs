@@ -89,20 +89,23 @@ impl<'a> Screen<'a> {
     pub fn render_layout(&mut self) {
         self.widgets
             .render(ControlWidgetType::Layout(layout::Config {
+                width: DISPLAY_WINDOW_SIZE_WIDTH as _,
+                height: DISPLAY_WINDOW_SIZE_HEIGHT as _,
+
+                parent: self.ids.background,
+                container: self.ids.layout_container,
+
                 header: layout::Slice {
-                    parent: self.ids.background,
                     layout: self.ids.layout_header,
                     top: 0.0,
                     height: LAYOUT_HEADER_SIZE_HEIGHT,
                 },
                 body: layout::Slice {
-                    parent: self.ids.background,
                     layout: self.ids.layout_body,
                     top: LAYOUT_HEADER_SIZE_HEIGHT,
                     height: LAYOUT_BODY_SIZE_HEIGHT,
                 },
                 footer: layout::Slice {
-                    parent: self.ids.background,
                     layout: self.ids.layout_footer,
                     top: LAYOUT_HEADER_SIZE_HEIGHT + LAYOUT_BODY_SIZE_HEIGHT,
                     height: LAYOUT_FOOTER_SIZE_HEIGHT,

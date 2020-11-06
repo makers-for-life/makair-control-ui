@@ -6,14 +6,13 @@
 use conrod_core::{
     color,
     widget::{self, Id as WidgetId},
-    Positionable, Widget,
+    Positionable, Sizeable, Widget,
 };
 
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 
 pub struct Slice {
-    pub parent: WidgetId,
     pub layout: WidgetId,
 
     pub top: f64,
@@ -21,12 +20,30 @@ pub struct Slice {
 }
 
 pub struct Config {
+    pub width: u32,
+    pub height: u32,
+
+    pub parent: WidgetId,
+    pub container: WidgetId,
+
     pub header: Slice,
     pub body: Slice,
     pub footer: Slice,
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
+    // Create container
+    gen_widget_container!(
+        master,
+        container_id: config.container,
+        color: color::TRANSPARENT,
+        width: config.width as _,
+        height: config.height as _,
+        positions: middle_of[
+            config.parent,
+        ]
+    );
+
     // #1: Create body layout rectangle
     // Notice: this must be drawn first, so that the 'z-index' of this layout slice is lower than \
     //   others following.
@@ -34,7 +51,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         [DISPLAY_WINDOW_SIZE_WIDTH as _, config.body.height],
         color::TRANSPARENT,
     )
-    .top_left_with_margins_on(config.body.parent, config.body.top, 0.0)
+    .top_left_with_margins_on(config.container, config.body.top, 0.0)
     .set(config.body.layout, &mut master.ui);
 
     // #2: Create header layout rectangle
@@ -44,7 +61,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         [DISPLAY_WINDOW_SIZE_WIDTH as _, config.header.height],
         color::TRANSPARENT,
     )
-    .top_left_with_margins_on(config.header.parent, config.header.top, 0.0)
+    .top_left_with_margins_on(config.container, config.header.top, 0.0)
     .set(config.header.layout, &mut master.ui);
 
     // #3: Create footer layout rectangle
@@ -54,7 +71,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         [DISPLAY_WINDOW_SIZE_WIDTH as _, config.footer.height],
         color::TRANSPARENT,
     )
-    .top_left_with_margins_on(config.footer.parent, config.footer.top, 0.0)
+    .top_left_with_margins_on(config.container, config.footer.top, 0.0)
     .set(config.footer.layout, &mut master.ui);
 
     0.0
