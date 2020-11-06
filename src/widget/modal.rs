@@ -31,6 +31,7 @@ pub struct Config {
     pub height: f64,
     pub padding: Option<f64>,
     pub colors: Option<(Color, Color)>,
+    pub background_sizes: Option<(u32, u32)>,
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
@@ -39,8 +40,10 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         master,
         container_id: config.background,
         color: CANVAS_COLOR,
-        width: DISPLAY_WINDOW_SIZE_WIDTH as _,
-        height: DISPLAY_WINDOW_SIZE_HEIGHT as _,
+        width:
+            config.background_sizes.map(|sizes| sizes.0).unwrap_or(DISPLAY_WINDOW_SIZE_WIDTH) as _,
+        height:
+            config.background_sizes.map(|sizes| sizes.1).unwrap_or(DISPLAY_WINDOW_SIZE_HEIGHT) as _,
         positions: middle_of[
             config.parent,
         ]

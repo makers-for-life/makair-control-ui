@@ -4,7 +4,6 @@
 // License: Public Domain License
 
 use conrod_core::color::{self, Color};
-use conrod_core::widget::Id as WidgetId;
 
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot};
@@ -292,6 +291,7 @@ impl<'a> Screen<'a> {
                 Color::Rgba(0.0, 0.0, 0.0, 0.98),
                 Color::Rgba(1.0, 1.0, 1.0, 0.075),
             )),
+            background_sizes: Some((GRAPH_WIDTH, GRAPH_HEIGHT)),
         }));
 
         self.widgets.render(ControlWidgetType::Stop(stop::Config {
@@ -621,25 +621,18 @@ impl<'a> Screen<'a> {
         ));
     }
 
-    fn render_modal(
-        &mut self,
-        width: f64,
-        height: f64,
-        padding: Option<f64>,
-        validate: Option<(WidgetId, WidgetId)>,
-        wrapper: Option<WidgetId>,
-        colors: Option<(Color, Color)>,
-    ) {
+    fn render_modal(&mut self, width: f64, height: f64, padding: Option<f64>) {
         self.widgets.render(ControlWidgetType::Modal(modal::Config {
-            parent: wrapper.unwrap_or(self.ids.background),
+            parent: self.ids.background,
             background: self.ids.modal_background,
             container_borders: self.ids.modal_container_borders,
             container: self.ids.modal_container,
-            validate,
+            validate: Some((self.ids.modal_validate, self.ids.modal_validate_text)),
             width,
             height,
-            padding,
-            colors,
+            padding: padding,
+            colors: None,
+            background_sizes: None,
         }));
     }
 
@@ -666,9 +659,6 @@ impl<'a> Screen<'a> {
             RUN_SETTINGS_MODAL_WIDTH,
             RUN_SETTINGS_MODAL_HEIGTH,
             Some(RUN_SETTINGS_MODAL_PADDING),
-            Some((self.ids.modal_validate, self.ids.modal_validate_text)),
-            None,
-            None,
         );
 
         self.widgets
@@ -692,9 +682,6 @@ impl<'a> Screen<'a> {
             SNOOZE_SETTINGS_MODAL_WIDTH,
             SNOOZE_SETTINGS_MODAL_HEIGTH,
             Some(SNOOZE_SETTINGS_MODAL_PADDING),
-            Some((self.ids.modal_validate, self.ids.modal_validate_text)),
-            None,
-            None,
         );
 
         self.widgets
@@ -718,9 +705,6 @@ impl<'a> Screen<'a> {
             ADVANCED_SETTINGS_MODAL_WIDTH,
             ADVANCED_SETTINGS_MODAL_HEIGTH,
             Some(ADVANCED_SETTINGS_MODAL_PADDING),
-            Some((self.ids.modal_validate, self.ids.modal_validate_text)),
-            None,
-            None,
         );
 
         self.widgets.render(ControlWidgetType::AdvancedSettings(
@@ -747,9 +731,6 @@ impl<'a> Screen<'a> {
             TRIGGER_SETTINGS_MODAL_WIDTH,
             TRIGGER_SETTINGS_MODAL_HEIGTH,
             Some(TRIGGER_SETTINGS_MODAL_PADDING),
-            Some((self.ids.modal_validate, self.ids.modal_validate_text)),
-            None,
-            None,
         );
 
         self.widgets.render(ControlWidgetType::TriggerSettings(
@@ -786,9 +767,6 @@ impl<'a> Screen<'a> {
             EXPIRATION_TERM_SETTINGS_MODAL_WIDTH,
             EXPIRATION_TERM_SETTINGS_MODAL_HEIGTH,
             Some(EXPIRATION_TERM_SETTINGS_MODAL_PADDING),
-            Some((self.ids.modal_validate, self.ids.modal_validate_text)),
-            None,
-            None,
         );
 
         self.widgets
@@ -821,9 +799,6 @@ impl<'a> Screen<'a> {
             PRESSURE_SETTINGS_MODAL_WIDTH,
             PRESSURE_SETTINGS_MODAL_HEIGTH,
             Some(PRESSURE_SETTINGS_MODAL_PADDING),
-            Some((self.ids.modal_validate, self.ids.modal_validate_text)),
-            None,
-            None,
         );
 
         self.widgets.render(ControlWidgetType::PressureSettings(
@@ -861,9 +836,6 @@ impl<'a> Screen<'a> {
             CYCLES_SETTINGS_MODAL_WIDTH,
             CYCLES_SETTINGS_MODAL_HEIGTH,
             Some(CYCLES_SETTINGS_MODAL_PADDING),
-            Some((self.ids.modal_validate, self.ids.modal_validate_text)),
-            None,
-            None,
         );
 
         self.widgets
