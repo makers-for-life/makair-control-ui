@@ -20,6 +20,7 @@ use crate::APP_ARGS;
 
 use super::events::{DisplayEventsBuilder, DisplayEventsHandleOutcome};
 use super::fonts::Fonts;
+use super::graph::DisplayGraph;
 use super::identifiers::{Ids, ImageIds};
 use super::renderer::{DisplayRenderer, DisplayRendererBuilder};
 use super::support::GliumDisplayWinitWrapper;
@@ -134,9 +135,17 @@ impl<'a> DisplayDrawer<'a> {
                 //   left)
                 self.chip.clean_expired_pressure();
 
-                // Force redraw if we are not stopped
-                // For some reason, with a "shared" Ids struct, conrod won't detect we need to \
-                //   redraw even though we know we have a different graph each new frame.
+                // Re-draw the latest graph images
+                DisplayGraph::refresh(
+                    &self.display,
+                    &self.renderer,
+                    &mut self.image_map,
+                    &self.chip,
+                );
+
+                // Force redraw (as the graph has just been updated)
+                // For some reason, the redraw is not automatically forced, even if the graph \
+                //   image was replaced in the watched image map.
                 self.interface.needs_redraw();
             }
 
@@ -311,12 +320,7 @@ impl<'a> DisplayDrawer<'a> {
 
     fn refresh(&mut self) {
         // Render screen to an image
-        self.renderer.render(
-            &self.display,
-            &mut self.interface,
-            &mut self.image_map,
-            &self.chip,
-        );
+        self.renderer.render(&mut self.interface, &self.chip);
 
         // Draw interface if it changed
         if let Some(primitives) = self.interface.draw_if_changed() {

@@ -198,6 +198,7 @@ image_ids!(pub struct ImageIds {
   controls_snooze_inactive_icon,
   controls_snooze_active_icon,
   controls_advanced_icon,
+  graph_pressure,
 });
 
 impl Ids {

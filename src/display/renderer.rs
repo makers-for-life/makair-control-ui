@@ -6,7 +6,6 @@
 use std::time::{Duration, Instant};
 
 use conrod_core::Ui;
-use glium::texture;
 
 use crate::chip::settings::ChipSettingsEvent;
 use crate::chip::{Chip, ChipError, ChipState};
@@ -18,9 +17,7 @@ use super::data::*;
 use super::events::DisplayUIEvents;
 use super::fonts::Fonts;
 use super::identifiers::{Ids, ImageIds};
-use super::images::DisplayImages;
 use super::screen::{Screen, ScreenModalsOpen};
-use super::support::GliumDisplayWinitWrapper;
 
 const WAITING_FOR_DATA_TIMEOUT_AFTER: Duration = Duration::from_secs(10);
 const DISPATCH_HEARTBEAT_EVERY: Duration = Duration::from_secs(1);
@@ -36,8 +33,8 @@ pub struct DisplayRendererBuilder;
 pub struct DisplayRenderer {
     fonts: Fonts,
     ids: Ids,
-    images: ImageIds,
     states: DisplayRendererStates,
+    pub images: ImageIds,
 }
 
 #[derive(Default)]
@@ -83,13 +80,7 @@ impl DisplayRendererBuilder {
 }
 
 impl DisplayRenderer {
-    pub fn render(
-        &mut self,
-        display: &GliumDisplayWinitWrapper,
-        interface: &mut Ui,
-        mut image_map: &mut conrod_core::image::Map<texture::Texture2d>,
-        chip: &Chip,
-    ) {
+    pub fn render(&mut self, interface: &mut Ui, chip: &Chip) {
         match &chip.state {
             // Waiting for data from the motherboard, treat it as a 'connecting...' state
             ChipState::WaitingData(started_time) => {
@@ -105,9 +96,7 @@ impl DisplayRenderer {
             // Initializing, treat it as a 'connected' state
             ChipState::Initializing => self.initializing(interface, false),
             // Running or stopped, handle data
-            ChipState::Running | ChipState::Stopped => {
-                self.data(display, interface, &mut image_map, chip)
-            }
+            ChipState::Running | ChipState::Stopped => self.data(interface, chip),
             // An error occured
             ChipState::Error(err) => self.error(interface, err),
         };
@@ -191,24 +180,7 @@ impl DisplayRenderer {
         screen.render_error(screen_error);
     }
 
-    fn data(
-        &mut self,
-        display: &GliumDisplayWinitWrapper,
-        interface: &mut Ui,
-        image_map: &mut conrod_core::image::Map<texture::Texture2d>,
-        chip: &Chip,
-    ) {
-        // Create graph
-        let graph_image_texture =
-            DisplayImages::data_chart(&chip.data_pressure, &chip.last_machine_snapshot, display);
-
-        let (graph_width, graph_height) = (
-            graph_image_texture.get_width(),
-            graph_image_texture.get_height().unwrap(),
-        );
-
-        let graph_image_id = image_map.insert(graph_image_texture);
-
+    fn data(&mut self, interface: &mut Ui, chip: &Chip) {
         // Create widgets
         let mut ui = interface.set_widgets();
 
@@ -309,9 +281,9 @@ impl DisplayRenderer {
         };
 
         let screen_data_graph = DisplayDataGraph {
-            image_id: graph_image_id,
-            width: graph_width as _,
-            height: graph_height as _,
+            image_id: self.images.graph_pressure,
+            width: GRAPH_WIDTH as _,
+            height: GRAPH_HEIGHT as _,
         };
 
         let screen_data_telemetry = DisplayDataTelemetry {

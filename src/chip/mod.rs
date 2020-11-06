@@ -83,7 +83,7 @@ impl Chip {
         Chip {
             boot_time: None,
             last_tick: 0,
-            data_pressure: VecDeque::with_capacity(
+            data_pressure: ChipDataPressure::with_capacity(
                 GRAPH_NUMBER_OF_POINTS + TELEMETRY_POINTS_PER_SECOND,
             ),
             last_machine_snapshot,
