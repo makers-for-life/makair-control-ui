@@ -130,23 +130,12 @@ impl<'a> DisplayDrawer<'a> {
                 has_chip_state_change = true;
             }
 
+            // Refresh dynamic images shown while in running mode?
+            // Notice: this is done there, as the renderer called upon refreshing each frame does \
+            //   only have access to the image identifiers, and thus cannot re-allocate pixels for \
+            //   existing image identifiers (as we wish to do there).
             if last_chip_state == ChipState::Running {
-                // Clean expired pressure (this allows the graph from sliding from right to \
-                //   left)
-                self.chip.clean_expired_pressure();
-
-                // Re-draw the latest graph images
-                DisplayGraph::refresh(
-                    &self.display,
-                    &self.renderer,
-                    &mut self.image_map,
-                    &self.chip,
-                );
-
-                // Force redraw (as the graph has just been updated)
-                // For some reason, the redraw is not automatically forced, even if the graph \
-                //   image was replaced in the watched image map.
-                self.interface.needs_redraw();
+                self.refresh_images_running();
             }
 
             // Run events since the last render
@@ -316,6 +305,24 @@ impl<'a> DisplayDrawer<'a> {
         }
 
         has_poll_events
+    }
+
+    fn refresh_images_running(&mut self) {
+        // Clean expired pressure (this allows the graph from sliding from right to left)
+        self.chip.clean_expired_pressure();
+
+        // Re-draw the latest graph images
+        DisplayGraph::refresh(
+            &self.display,
+            &self.renderer,
+            &mut self.image_map,
+            &self.chip,
+        );
+
+        // Force redraw (as the graph has just been updated)
+        // For some reason, the redraw is not automatically forced, even if the graph \
+        //   image was replaced in the watched image map.
+        self.interface.needs_redraw();
     }
 
     fn refresh(&mut self) {
