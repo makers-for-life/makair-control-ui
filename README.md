@@ -66,7 +66,7 @@ You may also play a pre-recorded file, by passing it as an input (this is handy 
 
 The following options can be passed to the Control UI upon running it:
 
-* `--log={level}`: log level, where `{level}` is one of: `debug`, `info`, `warn`, `error` (defaults to `warn`);
+* `--log={level}`: log level, where `{level}` is one of: `debug`, `info`, `warn`, `error` (defaults to `warn` in `release`, else `debug`);
 * `--port={id}`: serial port identifier to connect to the firmware via the telemetry protocol, where `{id}` is a serial port ID, eg. `1`;
 * `--input={file}`: path to a telemetry record to play in the UI, where `{file}` is a record file (all UI controls will be inactive);
 * `--output={directory}`: path to directory in which telemetry records should be stored, where `{directory}` is a path (disabled by default);
