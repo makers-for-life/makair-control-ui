@@ -630,7 +630,7 @@ impl<'a> Screen<'a> {
             validate: Some((self.ids.modal_validate, self.ids.modal_validate_text)),
             width,
             height,
-            padding: padding,
+            padding,
             colors: None,
             background_sizes: None,
         }));
