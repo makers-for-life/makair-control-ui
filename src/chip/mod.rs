@@ -137,11 +137,11 @@ impl Chip {
             if let Some(tx) = &self.channel_for_settings {
                 if let Err(err) = tx.send(message.clone()) {
                     error!(
-                        "error sending message {:?} to the control unit: {:?}",
+                        "error sending event {:?} to the control unit: {:?}",
                         message, err
                     );
                 } else {
-                    debug!("setting message {:?} sent", message);
+                    debug!("setting event {:?} sent", message);
                 }
             }
         }
