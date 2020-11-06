@@ -119,7 +119,7 @@ impl DisplayRenderer {
         interface: &mut Ui,
         chip: &Chip,
     ) -> conrod_core::image::Map<texture::Texture2d> {
-        let image_map = conrod_core::image::Map::<texture::Texture2d>::new();
+        let mut image_map = conrod_core::image::Map::<texture::Texture2d>::new();
 
         match &chip.state {
             // Waiting for data from the motherboard, treat it as a 'connecting...' state
@@ -128,20 +128,22 @@ impl DisplayRenderer {
                 //   we are still waiting for data, so this may fix by itself. This is done for UI \
                 //   purposes, though the chip state is still 'ChipState::WaitingData'.
                 if started_time.elapsed() >= WAITING_FOR_DATA_TIMEOUT_AFTER {
-                    self.error(display, interface, image_map, &ChipError::TimedOut)
+                    self.error(display, interface, &mut image_map, &ChipError::TimedOut)
                 } else {
-                    self.initializing(display, interface, image_map, true)
+                    self.initializing(display, interface, &mut image_map, true)
                 }
             }
             // Initializing, treat it as a 'connected' state
-            ChipState::Initializing => self.initializing(display, interface, image_map, false),
+            ChipState::Initializing => self.initializing(display, interface, &mut image_map, false),
             // Running or stopped, handle data
             ChipState::Running | ChipState::Stopped => {
-                self.data(display, interface, image_map, chip)
+                self.data(display, interface, &mut image_map, chip)
             }
             // An error occured
-            ChipState::Error(err) => self.error(display, interface, image_map, err),
-        }
+            ChipState::Error(err) => self.error(display, interface, &mut image_map, err),
+        };
+
+        image_map
     }
 
     pub fn run_events(
@@ -164,13 +166,27 @@ impl DisplayRenderer {
         (has_heartbeat, has_user_events, user_events)
     }
 
+    pub fn has_state_throttle_framerate(&self) -> bool {
+        // Returns whether a current state value should result in a throttled framerate, so that \
+        //   resource usage is at a minimum.
+
+        // The advanced settings modal is quite heavy to re-render every time, and we do not need \
+        //   the values to be shown at full framerate. Plus values keep changing every millisecond \
+        //   or so. Throttle down FPS.
+        if self.states.advanced_settings.is_open() {
+            return true;
+        }
+
+        false
+    }
+
     fn initializing(
         &mut self,
         display: &GliumDisplayWinitWrapper,
         interface: &mut Ui,
-        mut image_map: conrod_core::image::Map<texture::Texture2d>,
+        image_map: &mut conrod_core::image::Map<texture::Texture2d>,
         is_connecting: bool,
-    ) -> conrod_core::image::Map<texture::Texture2d> {
+    ) {
         // Draw bootloader logo
         let bootloader_logo_image_texture = self.draw_bootloader_logo(display);
 
@@ -200,17 +216,15 @@ impl DisplayRenderer {
         );
 
         screen.render_initializing(screen_bootloader);
-
-        image_map
     }
 
     fn error(
         &mut self,
         display: &GliumDisplayWinitWrapper,
         interface: &mut Ui,
-        mut image_map: conrod_core::image::Map<texture::Texture2d>,
+        image_map: &mut conrod_core::image::Map<texture::Texture2d>,
         error: &ChipError,
-    ) -> conrod_core::image::Map<texture::Texture2d> {
+    ) {
         // Draw error icon
         let error_icon_image_texture = self.draw_error_icon(display);
 
@@ -240,17 +254,15 @@ impl DisplayRenderer {
         );
 
         screen.render_error(screen_error);
-
-        image_map
     }
 
     fn data(
         &mut self,
         display: &GliumDisplayWinitWrapper,
         interface: &mut Ui,
-        mut image_map: conrod_core::image::Map<texture::Texture2d>,
+        image_map: &mut conrod_core::image::Map<texture::Texture2d>,
         chip: &Chip,
-    ) -> conrod_core::image::Map<texture::Texture2d> {
+    ) {
         // Create branding
         let branding_image_texture = self.draw_branding(display);
 
@@ -418,8 +430,6 @@ impl DisplayRenderer {
 
             _ => unreachable!(),
         };
-
-        image_map
     }
 
     fn draw_bootloader_logo(
