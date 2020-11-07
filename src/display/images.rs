@@ -35,7 +35,7 @@ lazy_static! {
 }
 
 impl DisplayImages {
-    pub fn bootloader_logo(display: &GliumDisplayWinitWrapper) -> glium::texture::Texture2d {
+    pub fn bootloader_logo(display: &GliumDisplayWinitWrapper) -> glium::texture::SrgbTexture2d {
         // Create image from raw buffer (cached)
         gen_draw_cached_image!(
             display <= IMAGE_BOOTLOADER_LOGO_RGBA_RAW[
@@ -44,7 +44,7 @@ impl DisplayImages {
         )
     }
 
-    pub fn error_icon(display: &GliumDisplayWinitWrapper) -> glium::texture::Texture2d {
+    pub fn error_icon(display: &GliumDisplayWinitWrapper) -> glium::texture::SrgbTexture2d {
         // Create image from raw buffer (cached)
         gen_draw_cached_image!(
             display <= IMAGE_ERROR_ICON_RGBA_RAW[
@@ -53,7 +53,7 @@ impl DisplayImages {
         )
     }
 
-    pub fn header_stopped(display: &GliumDisplayWinitWrapper) -> glium::texture::Texture2d {
+    pub fn header_stopped(display: &GliumDisplayWinitWrapper) -> glium::texture::SrgbTexture2d {
         // Create image from raw buffer (cached)
         gen_draw_cached_image!(
             display <= IMAGE_HEADER_STOPPED_RGBA_RAW[
@@ -62,7 +62,7 @@ impl DisplayImages {
         )
     }
 
-    pub fn header_stopped_snoozed(display: &GliumDisplayWinitWrapper) -> glium::texture::Texture2d {
+    pub fn header_stopped_snoozed(display: &GliumDisplayWinitWrapper) -> glium::texture::SrgbTexture2d {
         // Create image from raw buffer (cached)
         gen_draw_cached_image!(
             display <= IMAGE_HEADER_STOPPED_SNOOZED_RGBA_RAW[
@@ -71,7 +71,7 @@ impl DisplayImages {
         )
     }
 
-    pub fn header_running(display: &GliumDisplayWinitWrapper) -> glium::texture::Texture2d {
+    pub fn header_running(display: &GliumDisplayWinitWrapper) -> glium::texture::SrgbTexture2d {
         // Create image from raw buffer (cached)
         gen_draw_cached_image!(
             display <= IMAGE_HEADER_RUNNING_RGBA_RAW[
@@ -80,7 +80,7 @@ impl DisplayImages {
         )
     }
 
-    pub fn header_running_snoozed(display: &GliumDisplayWinitWrapper) -> glium::texture::Texture2d {
+    pub fn header_running_snoozed(display: &GliumDisplayWinitWrapper) -> glium::texture::SrgbTexture2d {
         // Create image from raw buffer (cached)
         gen_draw_cached_image!(
             display <= IMAGE_HEADER_RUNNING_SNOOZED_RGBA_RAW[
@@ -89,7 +89,7 @@ impl DisplayImages {
         )
     }
 
-    pub fn telemetry_arrow(display: &GliumDisplayWinitWrapper) -> glium::texture::Texture2d {
+    pub fn telemetry_arrow(display: &GliumDisplayWinitWrapper) -> glium::texture::SrgbTexture2d {
         // Create image from raw buffer (cached)
         gen_draw_cached_image!(
             display <= IMAGE_TELEMETRY_ARROW_RGBA_RAW[
@@ -98,7 +98,7 @@ impl DisplayImages {
         )
     }
 
-    pub fn graph_pressure(display: &GliumDisplayWinitWrapper) -> glium::texture::Texture2d {
+    pub fn graph_pressure(display: &GliumDisplayWinitWrapper) -> glium::texture::SrgbTexture2d {
         // This draws an empty chart image, which is only used to reserve space in the shared \
         //   image map on start, and acquire a replaceable image identifier.
         // Notice: an empty pressure data vector is created, which is immediately dropped once \

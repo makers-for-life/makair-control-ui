@@ -31,7 +31,7 @@ impl DisplayGraph {
     pub fn refresh(
         display: &GliumDisplayWinitWrapper,
         renderer: &DisplayRenderer,
-        image_map: &mut conrod_core::image::Map<texture::Texture2d>,
+        image_map: &mut conrod_core::image::Map<texture::SrgbTexture2d>,
         chip: &Chip,
     ) {
         // Re-render pressure graph
@@ -42,7 +42,7 @@ impl DisplayGraph {
         display: &GliumDisplayWinitWrapper,
         data_pressure: &ChipDataPressure,
         machine_snapshot: Option<&MachineStateSnapshot>,
-    ) -> glium::texture::Texture2d {
+    ) -> glium::texture::SrgbTexture2d {
         let mut buffer_rgb: Vec<u8> = vec![0; (GRAPH_WIDTH * GRAPH_HEIGHT * 3) as usize];
 
         // Acquire values, or defaults (if not set)
@@ -161,7 +161,7 @@ impl DisplayGraph {
         // Build the final 2D texture from the raw image buffer in a 2D space
         // Notice: build the raw image directly using the texture internals, as to avoid cloning \
         //   the raw image bytes at every refresh.
-        glium::texture::Texture2d::new(
+        glium::texture::SrgbTexture2d::new(
             &display.0,
             glium::texture::RawImage2d {
                 data: Cow::Borrowed(&reversed_rgb),
@@ -176,7 +176,7 @@ impl DisplayGraph {
     fn render_pressure(
         display: &GliumDisplayWinitWrapper,
         renderer: &DisplayRenderer,
-        image_map: &mut conrod_core::image::Map<texture::Texture2d>,
+        image_map: &mut conrod_core::image::Map<texture::SrgbTexture2d>,
         chip: &Chip,
     ) {
         // Draw pressure graph

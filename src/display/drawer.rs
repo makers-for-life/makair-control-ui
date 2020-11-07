@@ -45,7 +45,7 @@ pub struct DisplayDrawer<'a> {
     display: GliumDisplayWinitWrapper,
     interface: &'a mut Ui,
     events_loop: EventsLoop,
-    image_map: conrod_core::image::Map<texture::Texture2d>,
+    image_map: conrod_core::image::Map<texture::SrgbTexture2d>,
     chip: Chip,
 }
 
@@ -69,7 +69,7 @@ impl<'a> DisplayDrawerBuilder<'a> {
         ids.allocate(&mut interface);
 
         // Create image IDs
-        let mut image_map = conrod_core::image::Map::<texture::Texture2d>::new();
+        let mut image_map = conrod_core::image::Map::<texture::SrgbTexture2d>::new();
 
         let images = ImageIds::new(&display, &mut image_map);
 

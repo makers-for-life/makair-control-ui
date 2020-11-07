@@ -14,7 +14,7 @@ macro_rules! image_ids {
         impl $name {
             pub fn new(
                 display: &GliumDisplayWinitWrapper,
-                image_map: &mut conrod_core::image::Map<texture::Texture2d>,
+                image_map: &mut conrod_core::image::Map<texture::SrgbTexture2d>,
             ) -> $name {
                 // Insert all images in the image map, returning re-usable image identifiers
                 $name {
@@ -59,7 +59,7 @@ macro_rules! gen_draw_cached_image {
     ($display:ident <= $logo_rgba:ident[$width:ident, $height:ident]) => {
         // Notice: build the raw image directly using the texture internals, as to avoid cloning \
         //   the raw image bytes at every refresh.
-        glium::texture::Texture2d::new(
+        glium::texture::SrgbTexture2d::new(
             &$display.0,
             glium::texture::RawImage2d {
                 data: Cow::Borrowed(&*$logo_rgba),
