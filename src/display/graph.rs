@@ -127,10 +127,10 @@ impl DisplayGraph {
 
         chart
             .configure_mesh()
-            .bold_line_style(&plotters::style::colors::WHITE.mix(0.04))
+            .bold_line_style(&plotters::style::colors::WHITE.mix(0.22))
             .light_line_style(&plotters::style::colors::BLACK)
             .y_labels(GRAPH_DRAW_LABEL_NUMBER_MAX)
-            .y_label_style(GRAPH_AXIS_Y_FONT.color(&WHITE.mix(0.65)))
+            .y_label_style(GRAPH_AXIS_Y_FONT.color(&WHITE.mix(0.9)))
             .y_label_formatter(&|y| {
                 // Convert high-precision point in mmH20 back to cmH20 (which measurements & \
                 //   targets both use)
@@ -144,7 +144,7 @@ impl DisplayGraph {
             .draw_series(
                 LineSeries::new(
                     data_pressure.iter().map(|x| (x.0, x.1 as i32)),
-                    ShapeStyle::from(&plotters::style::RGBColor(0, 137, 255))
+                    ShapeStyle::from(&plotters::style::RGBColor(0, 196, 255))
                         .filled()
                         .stroke_width(GRAPH_DRAW_LINE_SIZE),
                 )
