@@ -62,7 +62,9 @@ impl DisplayImages {
         )
     }
 
-    pub fn header_stopped_snoozed(display: &GliumDisplayWinitWrapper) -> glium::texture::SrgbTexture2d {
+    pub fn header_stopped_snoozed(
+        display: &GliumDisplayWinitWrapper,
+    ) -> glium::texture::SrgbTexture2d {
         // Create image from raw buffer (cached)
         gen_draw_cached_image!(
             display <= IMAGE_HEADER_STOPPED_SNOOZED_RGBA_RAW[
@@ -80,7 +82,9 @@ impl DisplayImages {
         )
     }
 
-    pub fn header_running_snoozed(display: &GliumDisplayWinitWrapper) -> glium::texture::SrgbTexture2d {
+    pub fn header_running_snoozed(
+        display: &GliumDisplayWinitWrapper,
+    ) -> glium::texture::SrgbTexture2d {
         // Create image from raw buffer (cached)
         gen_draw_cached_image!(
             display <= IMAGE_HEADER_RUNNING_SNOOZED_RGBA_RAW[
