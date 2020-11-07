@@ -7,7 +7,7 @@ use std::time::{Duration, Instant};
 
 use conrod_core::Ui;
 
-use crate::chip::settings::ChipSettingsEvent;
+use crate::chip::settings::{ChipSettingsEvent, SettingActionState};
 use crate::chip::{Chip, ChipError, ChipState};
 use crate::config::environment::*;
 use crate::utilities::parse::parse_version_number;
@@ -240,6 +240,17 @@ impl DisplayRenderer {
             chip.last_data_snapshot.as_ref(),
         );
 
+        let screen_data_layout = DisplayDataLayout {
+            texture_header_image_id: match (&chip.state, chip.settings.snooze.alarms) {
+                (&ChipState::Running, SettingActionState::Disabled) => self.images.header_running,
+                (&ChipState::Running, SettingActionState::Enabled) => {
+                    self.images.header_running_snoozed
+                }
+                (_, SettingActionState::Disabled) => self.images.header_stopped,
+                (_, SettingActionState::Enabled) => self.images.header_stopped_snoozed,
+            },
+        };
+
         let screen_data_branding = DisplayDataBranding {
             firmware_version: parse_version_number(
                 if chip.last_machine_snapshot.version.is_empty() {
@@ -248,7 +259,6 @@ impl DisplayRenderer {
                     &chip.last_machine_snapshot.version
                 },
             ),
-            image_id: self.images.branding,
             width: BRANDING_WIDTH as _,
             height: BRANDING_HEIGHT as _,
         };
@@ -257,15 +267,6 @@ impl DisplayRenderer {
             Some(self.images.status_save_icon)
         } else {
             None
-        };
-
-        let screen_data_controls = DisplayDataControls {
-            run_image_id: self.images.controls_run_icon,
-            snooze_inactive_image_id: self.images.controls_snooze_inactive_icon,
-            snooze_active_image_id: self.images.controls_snooze_active_icon,
-            advanced_image_id: self.images.controls_advanced_icon,
-            chip_state: &chip.state,
-            chip_settings: &chip.settings,
         };
 
         let screen_data_status = DisplayDataStatus {
@@ -293,8 +294,8 @@ impl DisplayRenderer {
         // Render screen data (depending on state, running or stopped)
         match chip.state {
             ChipState::Running => screen.render_running(
+                screen_data_layout,
                 screen_data_branding,
-                screen_data_controls,
                 screen_data_status,
                 screen_data_heartbeat,
                 screen_data_graph,
@@ -304,8 +305,8 @@ impl DisplayRenderer {
             ),
 
             ChipState::Stopped => screen.render_stop(
+                screen_data_layout,
                 screen_data_branding,
-                screen_data_controls,
                 screen_data_status,
                 screen_data_heartbeat,
                 screen_data_graph,

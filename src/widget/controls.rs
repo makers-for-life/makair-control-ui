@@ -4,46 +4,26 @@
 // License: Public Domain License
 
 use conrod_core::{
-    color::{self, Color},
+    color,
     widget::{self, Id as WidgetId},
     Positionable, Sizeable, Widget,
 };
 
-use crate::chip::{
-    settings::{snooze::SettingsSnooze, SettingActionState},
-    ChipState,
-};
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 
-const BUTTON_BASE_COLOR: Color = Color::Rgba(52.0 / 255.0, 52.0 / 255.0, 52.0 / 255.0, 1.0);
-
-const BUTTON_RUN_START_COLOR: Color = Color::Rgba(14.0 / 255.0, 132.0 / 255.0, 0.0, 1.0);
-const BUTTON_RUN_STOP_COLOR: Color = Color::Rgba(143.0 / 255.0, 19.0 / 255.0, 19.0 / 255.0, 1.0);
-const BUTTON_SNOOZE_INACTIVE_COLOR: Color = BUTTON_BASE_COLOR;
-const BUTTON_SNOOZE_ACTIVE_COLOR: Color = Color::Rgba(1.0, 1.0, 1.0, 1.0);
-const BUTTON_ADVANCED_COLOR: Color = BUTTON_BASE_COLOR;
-
-pub struct Config<'a> {
+pub struct Config {
     pub container: WidgetId,
     pub wrapper: WidgetId,
     pub run_button: WidgetId,
     pub snooze_button: WidgetId,
     pub advanced_button: WidgetId,
-    pub run_icon: WidgetId,
-    pub snooze_icon: WidgetId,
-    pub advanced_icon: WidgetId,
-
-    pub run_icon_image: conrod_core::image::Id,
-    pub snooze_active_icon_image: conrod_core::image::Id,
-    pub snooze_inactive_icon_image: conrod_core::image::Id,
-    pub advanced_icon_image: conrod_core::image::Id,
-
-    pub chip_state: &'a ChipState,
-    pub snooze_settings: &'a SettingsSnooze,
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
+    // Notice: all button circles must be transparent here, as they are drawn via the header \
+    //   layout texture, which is more optimal CPU-wise than rending sub-images of icons here.
+
     // Create wrapper canvas
     gen_widget_container!(
         master,
@@ -59,69 +39,19 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     );
 
     // Create run control button
-    widget::primitive::shape::circle::Circle::fill_with(
-        CONTROLS_BUTTON_RADIUS,
-        if config.chip_state == &ChipState::Stopped {
-            BUTTON_RUN_START_COLOR
-        } else {
-            BUTTON_RUN_STOP_COLOR
-        },
-    )
-    .top_left_of(config.wrapper)
-    .set(config.run_button, &mut master.ui);
-
-    // Append run icon
-    widget::image::Image::new(config.run_icon_image)
-        .w_h(
-            CONTROLS_BUTTON_ICON_HEIGHT as _,
-            CONTROLS_BUTTON_ICON_WIDTH as _,
-        )
-        .middle_of(config.run_button)
-        .set(config.run_icon, &mut master.ui);
+    widget::primitive::shape::circle::Circle::fill_with(CONTROLS_BUTTON_RADIUS, color::TRANSPARENT)
+        .top_left_of(config.wrapper)
+        .set(config.run_button, &mut master.ui);
 
     // Create snooze control button
-    widget::primitive::shape::circle::Circle::fill_with(
-        CONTROLS_BUTTON_RADIUS,
-        if config.snooze_settings.alarms == SettingActionState::Enabled {
-            BUTTON_SNOOZE_ACTIVE_COLOR
-        } else {
-            BUTTON_SNOOZE_INACTIVE_COLOR
-        },
-    )
-    .x_y_relative_to(config.run_button, CONTROLS_BUTTON_FOOTPRINT_WIDTH, 0.0)
-    .set(config.snooze_button, &mut master.ui);
-
-    // Append snooze icon
-    widget::image::Image::new(
-        if config.snooze_settings.alarms == SettingActionState::Enabled {
-            config.snooze_active_icon_image
-        } else {
-            config.snooze_inactive_icon_image
-        },
-    )
-    .w_h(
-        CONTROLS_BUTTON_ICON_HEIGHT as _,
-        CONTROLS_BUTTON_ICON_WIDTH as _,
-    )
-    .middle_of(config.snooze_button)
-    .set(config.snooze_icon, &mut master.ui);
+    widget::primitive::shape::circle::Circle::fill_with(CONTROLS_BUTTON_RADIUS, color::TRANSPARENT)
+        .x_y_relative_to(config.run_button, CONTROLS_BUTTON_FOOTPRINT_WIDTH, 0.0)
+        .set(config.snooze_button, &mut master.ui);
 
     // Create advanced control button
-    widget::primitive::shape::circle::Circle::fill_with(
-        CONTROLS_BUTTON_RADIUS,
-        BUTTON_ADVANCED_COLOR,
-    )
-    .x_y_relative_to(config.snooze_button, CONTROLS_BUTTON_FOOTPRINT_WIDTH, 0.0)
-    .set(config.advanced_button, &mut master.ui);
-
-    // Append advanced icon
-    widget::image::Image::new(config.advanced_icon_image)
-        .w_h(
-            CONTROLS_BUTTON_ICON_HEIGHT as _,
-            CONTROLS_BUTTON_ICON_WIDTH as _,
-        )
-        .middle_of(config.advanced_button)
-        .set(config.advanced_icon, &mut master.ui);
+    widget::primitive::shape::circle::Circle::fill_with(CONTROLS_BUTTON_RADIUS, color::TRANSPARENT)
+        .x_y_relative_to(config.snooze_button, CONTROLS_BUTTON_FOOTPRINT_WIDTH, 0.0)
+        .set(config.advanced_button, &mut master.ui);
 
     CONTROLS_WRAPPER_WIDTH
 }

@@ -6,7 +6,7 @@
 use conrod_core::{
     color,
     widget::{self, Id as WidgetId},
-    Colorable, Positionable, Sizeable, Widget,
+    Colorable, Positionable, Widget,
 };
 
 use crate::config::environment::*;
@@ -21,8 +21,7 @@ pub struct Config<'a> {
     pub width: f64,
     pub height: f64,
 
-    pub image: conrod_core::image::Id,
-    pub ids: (WidgetId, WidgetId, WidgetId),
+    pub ids: (WidgetId, WidgetId),
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
@@ -35,12 +34,6 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         )
         .set(config.ids.0, &mut master.ui);
 
-    // Display branding image
-    widget::Image::new(config.image)
-        .w_h(config.width, config.height)
-        .top_left_of(config.ids.0)
-        .set(config.ids.1, &mut master.ui);
-
     // Display branding text
     let branding_text = format!("F{} | C{}", config.version_firmware, config.version_control);
 
@@ -52,7 +45,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
             BRANDING_TEXT_MARGIN_LEFT,
         )
         .font_size(10)
-        .set(config.ids.2, &mut master.ui);
+        .set(config.ids.1, &mut master.ui);
 
     config.width
 }

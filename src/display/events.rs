@@ -112,21 +112,18 @@ impl DisplayUIEvents {
             {
                 "run", states.run_settings, [
                     ids.controls_button_run,
-                    ids.controls_image_run,
                 ]
             },
 
             {
                 "snooze", states.snooze_settings, [
                     ids.controls_button_snooze,
-                    ids.controls_image_snooze,
                 ]
             },
 
             {
                 "advanced", states.advanced_settings, [
                     ids.controls_button_advanced,
-                    ids.controls_image_advanced,
                 ]
             },
 

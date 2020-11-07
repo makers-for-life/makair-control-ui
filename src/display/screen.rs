@@ -85,7 +85,7 @@ impl<'a> Screen<'a> {
             }));
     }
 
-    pub fn render_layout(&mut self) {
+    pub fn render_layout(&mut self, layout_data: DisplayDataLayout) {
         self.widgets
             .render(ControlWidgetType::Layout(layout::Config {
                 width: DISPLAY_WINDOW_SIZE_WIDTH as _,
@@ -98,16 +98,26 @@ impl<'a> Screen<'a> {
                     layout: self.ids.layout_header,
                     top: 0.0,
                     height: LAYOUT_HEADER_SIZE_HEIGHT,
+                    texture: Some((
+                        self.ids.layout_texture_header,
+                        layout_data.texture_header_image_id,
+                        (
+                            LAYOUT_TEXTURE_HEADER_WIDTH as _,
+                            LAYOUT_TEXTURE_HEADER_HEIGHT as _,
+                        ),
+                    )),
                 },
                 body: layout::Slice {
                     layout: self.ids.layout_body,
                     top: LAYOUT_HEADER_SIZE_HEIGHT,
                     height: LAYOUT_BODY_SIZE_HEIGHT,
+                    texture: None,
                 },
                 footer: layout::Slice {
                     layout: self.ids.layout_footer,
                     top: LAYOUT_HEADER_SIZE_HEIGHT + LAYOUT_BODY_SIZE_HEIGHT,
                     height: LAYOUT_FOOTER_SIZE_HEIGHT,
+                    texture: None,
                 },
             }));
     }
@@ -116,7 +126,6 @@ impl<'a> Screen<'a> {
         &mut self,
         version_firmware: &'a str,
         version_control: &'a str,
-        image_id: conrod_core::image::Id,
         width: f64,
         height: f64,
     ) {
@@ -127,12 +136,7 @@ impl<'a> Screen<'a> {
                 version_control,
                 width,
                 height,
-                image: image_id,
-                ids: (
-                    self.ids.branding_container,
-                    self.ids.branding_image,
-                    self.ids.branding_text,
-                ),
+                ids: (self.ids.branding_container, self.ids.branding_text),
             }));
     }
 
@@ -182,7 +186,7 @@ impl<'a> Screen<'a> {
             }));
     }
 
-    pub fn render_controls(&mut self, controls_data: DisplayDataControls<'a>) {
+    pub fn render_controls(&mut self) {
         self.widgets
             .render(ControlWidgetType::Controls(controls::Config {
                 container: self.ids.layout_header,
@@ -190,15 +194,6 @@ impl<'a> Screen<'a> {
                 run_button: self.ids.controls_button_run,
                 snooze_button: self.ids.controls_button_snooze,
                 advanced_button: self.ids.controls_button_advanced,
-                run_icon: self.ids.controls_image_run,
-                snooze_icon: self.ids.controls_image_snooze,
-                advanced_icon: self.ids.controls_image_advanced,
-                run_icon_image: controls_data.run_image_id,
-                snooze_inactive_icon_image: controls_data.snooze_inactive_image_id,
-                snooze_active_icon_image: controls_data.snooze_active_image_id,
-                advanced_icon_image: controls_data.advanced_image_id,
-                chip_state: controls_data.chip_state,
-                snooze_settings: &controls_data.chip_settings.snooze,
             }));
     }
 
@@ -215,8 +210,8 @@ impl<'a> Screen<'a> {
     #[allow(clippy::too_many_arguments)]
     pub fn render_running(
         &mut self,
+        layout_data: DisplayDataLayout,
         branding_data: DisplayDataBranding<'a>,
-        controls_data: DisplayDataControls<'a>,
         status_data: DisplayDataStatus<'a>,
         heartbeat_data: DisplayDataHeartbeat<'a>,
         graph_data: DisplayDataGraph,
@@ -226,13 +221,12 @@ impl<'a> Screen<'a> {
     ) {
         // Render common background
         self.render_background();
-        self.render_layout();
+        self.render_layout(layout_data);
 
         // Render top left elements
         self.render_branding(
             branding_data.firmware_version,
             RUNTIME_VERSION,
-            branding_data.image_id,
             branding_data.width,
             branding_data.height,
         );
@@ -241,7 +235,7 @@ impl<'a> Screen<'a> {
         // Render top right elements
         self.render_heartbeat(heartbeat_data);
         self.render_status(status_data);
-        self.render_controls(controls_data);
+        self.render_controls();
 
         // Render middle elements
         self.render_graph(graph_data.image_id, graph_data.width, graph_data.height);
@@ -256,8 +250,8 @@ impl<'a> Screen<'a> {
     #[allow(clippy::too_many_arguments)]
     pub fn render_stop(
         &mut self,
+        layout_data: DisplayDataLayout,
         branding_data: DisplayDataBranding<'a>,
-        controls_data: DisplayDataControls<'a>,
         status_data: DisplayDataStatus<'a>,
         heartbeat_data: DisplayDataHeartbeat<'a>,
         graph_data: DisplayDataGraph,
@@ -267,8 +261,8 @@ impl<'a> Screen<'a> {
     ) {
         // Render regular data as background (alias the running screen)
         self.render_running(
+            layout_data,
             branding_data,
-            controls_data,
             status_data,
             heartbeat_data,
             graph_data,

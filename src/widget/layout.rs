@@ -17,6 +17,8 @@ pub struct Slice {
 
     pub top: f64,
     pub height: f64,
+
+    pub texture: Option<(WidgetId, conrod_core::image::Id, (f64, f64))>,
 }
 
 pub struct Config {
@@ -55,14 +57,24 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     .set(config.body.layout, &mut master.ui);
 
     // #2: Create header layout rectangle
-    // Notice: this block is defined after the body because we want it to overflow and be on top \
-    //   of the screen (this is important for alarms).
+    // Notice #1: this block is defined after the body because we want it to overflow and be on \
+    //   top of the screen (this is important for alarms).
+    // Notice #2: draw a texture containing all header images, as it was found that using a lot of \
+    //   small images for each header widget was sub-optional and generated a huge CPU overhead. \
+    //   Thus, it was decided to move everything in a single, large texture image.
     widget::Rectangle::fill_with(
         [DISPLAY_WINDOW_SIZE_WIDTH as _, config.header.height],
         color::TRANSPARENT,
     )
     .top_left_with_margins_on(config.container, config.header.top, 0.0)
     .set(config.header.layout, &mut master.ui);
+
+    if let Some(header_texture) = config.header.texture {
+        widget::Image::new(header_texture.1)
+            .w_h((header_texture.2).0, (header_texture.2).1)
+            .top_left_of(config.header.layout)
+            .set(header_texture.0, &mut master.ui);
+    }
 
     // #3: Create footer layout rectangle
     // Notice: this block is drawn at the very end, as we want to guarantee that telemetry values \

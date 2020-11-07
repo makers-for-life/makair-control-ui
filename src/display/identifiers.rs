@@ -16,6 +16,7 @@ widget_ids!(pub struct Ids {
   layout_header,
   layout_body,
   layout_footer,
+  layout_texture_header,
 
   alarm_container,
   alarm_title_wrapper,
@@ -32,16 +33,12 @@ widget_ids!(pub struct Ids {
   graph_pressure,
 
   branding_container,
-  branding_image,
   branding_text,
 
   controls_wrapper,
   controls_button_run,
   controls_button_snooze,
   controls_button_advanced,
-  controls_image_run,
-  controls_image_snooze,
-  controls_image_advanced,
 
   status_wrapper,
   status_unit_box,
@@ -191,13 +188,12 @@ widget_ids!(pub struct Ids {
 image_ids!(pub struct ImageIds {
   bootloader_logo,
   error_icon,
-  branding,
+  header_stopped,
+  header_stopped_snoozed,
+  header_running,
+  header_running_snoozed,
   telemetry_arrow,
   status_save_icon,
-  controls_run_icon,
-  controls_snooze_inactive_icon,
-  controls_snooze_active_icon,
-  controls_advanced_icon,
   graph_pressure,
 });
 
