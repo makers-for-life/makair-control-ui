@@ -3,6 +3,8 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+use std::borrow::Cow;
+
 use chrono::{DateTime, NaiveDateTime, Utc};
 use glium::texture;
 use plotters::prelude::*;
@@ -11,6 +13,7 @@ use telemetry::structures::MachineStateSnapshot;
 
 use crate::chip::{Chip, ChipDataPressure};
 use crate::config::environment::*;
+use crate::utilities::image::reverse_rgb_fast;
 #[cfg(feature = "graph-scaler")]
 use crate::utilities::pressure::process_max_allowed_pressure;
 
@@ -152,35 +155,20 @@ impl DisplayGraph {
         drop(chart);
         drop(drawing);
 
-        // Convert chart from an RGB to an RGBA image buffer
-        let (width_value, height_value) = (GRAPH_WIDTH as usize, GRAPH_HEIGHT as usize);
-
-        let mut buffer_rgba: Vec<u8> = vec![0; width_value * height_value * 4];
-
-        for row in 0..(height_value - 1) {
-            let (row_start_rgb, row_start_rgba) =
-                (row * width_value, (height_value - row - 1) * width_value);
-
-            for column in 0..(width_value - 1) {
-                let (rgb_index, rgba_index) =
-                    ((row_start_rgb + column) * 3, (row_start_rgba + column) * 4);
-
-                buffer_rgba[rgba_index] = buffer_rgb[rgb_index];
-                buffer_rgba[rgba_index + 1] = buffer_rgb[rgb_index + 1];
-                buffer_rgba[rgba_index + 2] = buffer_rgb[rgb_index + 2];
-                buffer_rgba[rgba_index + 3] = 255;
-            }
-        }
-
-        // Instantiate a raw image in a 2D space
-        let raw_image =
-            glium::texture::RawImage2d::from_raw_rgba(buffer_rgba, (GRAPH_WIDTH, GRAPH_HEIGHT));
+        // Reverse the chart image in an efficient way
+        let reversed_rgb = reverse_rgb_fast(&buffer_rgb, GRAPH_WIDTH, GRAPH_HEIGHT);
 
         // Build the final 2D texture from the raw image buffer in a 2D space
-        glium::texture::Texture2d::with_mipmaps(
+        // Notice: build the raw image directly using the texture internals, as to avoid cloning \
+        //   the raw image bytes at every refresh.
+        glium::texture::Texture2d::new(
             &display.0,
-            raw_image,
-            glium::texture::MipmapsOption::NoMipmap,
+            glium::texture::RawImage2d {
+                data: Cow::Borrowed(&reversed_rgb),
+                width: GRAPH_WIDTH,
+                height: GRAPH_HEIGHT,
+                format: glium::texture::ClientFormat::U8U8U8,
+            },
         )
         .unwrap()
     }
