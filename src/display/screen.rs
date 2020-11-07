@@ -16,7 +16,7 @@ use crate::chip::ChipError;
 use crate::config::environment::*;
 use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::widget::*;
-use crate::APP_I18N;
+use crate::{APP_ARGS, APP_I18N};
 
 use super::data::*;
 use super::fonts::Fonts;
@@ -178,11 +178,17 @@ impl<'a> Screen<'a> {
                 unit_text: self.ids.status_unit_text,
                 power_box: self.ids.status_power_box,
                 power_text: self.ids.status_power_text,
-                save_icon: self.ids.status_save_icon,
                 battery_level: status_data.battery_level,
                 chip_state: status_data.chip_state,
                 alarms: self.ongoing_alarms.unwrap(),
-                save_icon_id: status_data.save_image_id,
+                recording: if APP_ARGS.is_recording() {
+                    Some((
+                        self.ids.status_recording_outer,
+                        self.ids.status_recording_inner,
+                    ))
+                } else {
+                    None
+                },
             }));
     }
 

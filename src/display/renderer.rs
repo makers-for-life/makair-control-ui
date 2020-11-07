@@ -11,7 +11,6 @@ use crate::chip::settings::{ChipSettingsEvent, SettingActionState};
 use crate::chip::{Chip, ChipError, ChipState};
 use crate::config::environment::*;
 use crate::utilities::parse::parse_version_number;
-use crate::APP_ARGS;
 
 use super::data::*;
 use super::events::DisplayUIEvents;
@@ -263,19 +262,12 @@ impl DisplayRenderer {
             height: BRANDING_HEIGHT as _,
         };
 
-        let save_image_id = if APP_ARGS.is_recording() {
-            Some(self.images.status_save_icon)
-        } else {
-            None
-        };
-
         let screen_data_status = DisplayDataStatus {
             chip_state: &chip.state,
             battery_level: chip
                 .last_data_snapshot
                 .as_ref()
                 .map(|data| data.battery_level),
-            save_image_id,
         };
         let screen_data_heartbeat = DisplayDataHeartbeat {
             data_pressure: &chip.data_pressure,

@@ -31,12 +31,11 @@ pub struct Config<'a> {
     pub unit_text: WidgetId,
     pub power_box: WidgetId,
     pub power_text: WidgetId,
-    pub save_icon: WidgetId,
+    pub recording: Option<(WidgetId, WidgetId)>,
 
     pub battery_level: Option<u8>,
     pub chip_state: &'a ChipState,
     pub alarms: &'a [(AlarmCode, AlarmPriority)],
-    pub save_icon_id: Option<conrod_core::image::Id>,
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
@@ -97,7 +96,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     };
 
     // Create unit status text
-    if let Some(save_icon_id) = config.save_icon_id {
+    if let Some(recording) = config.recording {
         widget::text::Text::new(&unit_text_value)
             .with_style(unit_text_style)
             .top_left_with_margins_on(
@@ -107,10 +106,19 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
             )
             .set(config.unit_text, &mut master.ui);
 
-        widget::image::Image::new(save_icon_id)
-            .w_h(15.0, 15.0)
-            .mid_right_with_margin_on(config.unit_box, STATUS_BOX_RECORDING_PADDING_RIGHT)
-            .set(config.save_icon, &mut master.ui);
+        widget::primitive::shape::circle::Circle::fill_with(
+            STATUS_RECORDING_OUTER_RADIUS,
+            color::WHITE,
+        )
+        .mid_right_with_margin_on(config.unit_box, STATUS_BOX_RECORDING_PADDING_RIGHT)
+        .set(recording.0, &mut master.ui);
+
+        widget::primitive::shape::circle::Circle::fill_with(
+            STATUS_RECORDING_INNER_RADIUS,
+            color::RED,
+        )
+        .middle_of(recording.0)
+        .set(recording.1, &mut master.ui);
     } else {
         widget::text::Text::new(&unit_text_value)
             .with_style(unit_text_style)

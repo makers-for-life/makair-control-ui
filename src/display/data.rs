@@ -18,7 +18,6 @@ pub struct DisplayDataBranding<'a> {
 pub struct DisplayDataStatus<'a> {
     pub battery_level: Option<u8>,
     pub chip_state: &'a ChipState,
-    pub save_image_id: Option<conrod_core::image::Id>,
 }
 
 pub struct DisplayDataHeartbeat<'a> {

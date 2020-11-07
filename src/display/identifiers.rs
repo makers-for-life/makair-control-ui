@@ -45,7 +45,8 @@ widget_ids!(pub struct Ids {
   status_unit_text,
   status_power_box,
   status_power_text,
-  status_save_icon,
+  status_recording_outer,
+  status_recording_inner,
 
   heartbeat_ground,
   heartbeat_surround,
@@ -193,7 +194,6 @@ image_ids!(pub struct ImageIds {
   header_running,
   header_running_snoozed,
   telemetry_arrow,
-  status_save_icon,
   graph_pressure,
 });
 

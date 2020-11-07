@@ -32,8 +32,6 @@ lazy_static! {
         gen_load_image_reverse!("header-running-snoozed", LAYOUT_TEXTURE_HEADER_WIDTH);
     static ref IMAGE_TELEMETRY_ARROW_RGBA_RAW: Vec<u8> =
         gen_load_image_reverse!("telemetry-arrow", TELEMETRY_ARROW_WIDTH);
-    static ref IMAGE_STATUS_SAVE_RGBA_RAW: Vec<u8> =
-        gen_load_image_reverse!("save", STATUS_SAVE_ICON_WIDTH);
 }
 
 impl DisplayImages {
@@ -96,15 +94,6 @@ impl DisplayImages {
         gen_draw_cached_image!(
             display <= IMAGE_TELEMETRY_ARROW_RGBA_RAW[
                 TELEMETRY_ARROW_WIDTH, TELEMETRY_ARROW_HEIGHT
-            ]
-        )
-    }
-
-    pub fn status_save_icon(display: &GliumDisplayWinitWrapper) -> glium::texture::Texture2d {
-        // Create image from raw buffer (cached)
-        gen_draw_cached_image!(
-            display <= IMAGE_STATUS_SAVE_RGBA_RAW[
-                STATUS_SAVE_ICON_WIDTH, STATUS_SAVE_ICON_HEIGHT
             ]
         )
     }
