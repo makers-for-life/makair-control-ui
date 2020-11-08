@@ -221,7 +221,6 @@ impl<'a> Screen<'a> {
         status_data: DisplayDataStatus<'a>,
         heartbeat_data: DisplayDataHeartbeat<'a>,
         graph_data: DisplayDataGraph,
-        telemetry_data: DisplayDataTelemetry,
         settings: &'a ChipSettings,
         modals: &ScreenModalsOpen,
     ) {
@@ -247,7 +246,7 @@ impl<'a> Screen<'a> {
         self.render_graph(graph_data.image_id, graph_data.width, graph_data.height);
 
         // Render bottom elements
-        self.render_telemetry(telemetry_data, &settings.trigger, &settings.expiration_term);
+        self.render_telemetry(&settings.trigger, &settings.expiration_term);
 
         // Render modals (as needed)
         self.render_settings(settings, modals);
@@ -261,7 +260,6 @@ impl<'a> Screen<'a> {
         status_data: DisplayDataStatus<'a>,
         heartbeat_data: DisplayDataHeartbeat<'a>,
         graph_data: DisplayDataGraph,
-        telemetry_data: DisplayDataTelemetry,
         settings: &'a ChipSettings,
         modals: &ScreenModalsOpen,
     ) {
@@ -272,7 +270,6 @@ impl<'a> Screen<'a> {
             status_data,
             heartbeat_data,
             graph_data,
-            telemetry_data,
             settings,
             modals,
         );
@@ -344,7 +341,6 @@ impl<'a> Screen<'a> {
 
     pub fn render_telemetry(
         &mut self,
-        telemetry_data: DisplayDataTelemetry,
         trigger: &'a SettingsTrigger,
         expiration_term: &'a SettingsExpirationTerm,
     ) {
@@ -384,14 +380,16 @@ impl<'a> Screen<'a> {
                 } else {
                     Some(machine_snapshot.peak_command.to_string())
                 },
-                value_arrow: telemetry_data.arrow_image_id,
                 unit: APP_I18N.t("telemetry-unit-cmh2o"),
                 ids: (
                     self.ids.telemetry_widgets_right,
                     self.ids.peak_parent,
                     self.ids.peak_title,
                     self.ids.peak_value_measured,
-                    self.ids.peak_value_arrow,
+                    (
+                        self.ids.peak_value_arrow_main,
+                        self.ids.peak_value_arrow_line,
+                    ),
                     self.ids.peak_value_target,
                     Some(self.ids.peak_unit),
                 ),
@@ -421,14 +419,16 @@ impl<'a> Screen<'a> {
                 } else {
                     Some(machine_snapshot.plateau_command.to_string())
                 },
-                value_arrow: telemetry_data.arrow_image_id,
                 unit: APP_I18N.t("telemetry-unit-cmh2o"),
                 ids: (
                     self.ids.telemetry_widgets_right,
                     self.ids.plateau_parent,
                     self.ids.plateau_title,
                     self.ids.plateau_value_measured,
-                    self.ids.plateau_value_arrow,
+                    (
+                        self.ids.plateau_value_arrow_main,
+                        self.ids.plateau_value_arrow_line,
+                    ),
                     self.ids.plateau_value_target,
                     Some(self.ids.plateau_unit),
                 ),
@@ -459,14 +459,16 @@ impl<'a> Screen<'a> {
                 } else {
                     Some(machine_snapshot.peep_command.to_string())
                 },
-                value_arrow: telemetry_data.arrow_image_id,
                 unit: APP_I18N.t("telemetry-unit-cmh2o"),
                 ids: (
                     self.ids.telemetry_widgets_right,
                     self.ids.peep_parent,
                     self.ids.peep_title,
                     self.ids.peep_value_measured,
-                    self.ids.peep_value_arrow,
+                    (
+                        self.ids.peep_value_arrow_main,
+                        self.ids.peep_value_arrow_line,
+                    ),
                     self.ids.peep_value_target,
                     Some(self.ids.peep_unit),
                 ),
@@ -493,14 +495,16 @@ impl<'a> Screen<'a> {
                 } else {
                     machine_snapshot.cpm_command.to_string()
                 }),
-                value_arrow: telemetry_data.arrow_image_id,
                 unit: APP_I18N.t("telemetry-unit-per-minute"),
                 ids: (
                     self.ids.layout_footer,
                     self.ids.cycles_parent,
                     self.ids.cycles_title,
                     self.ids.cycles_value_measured,
-                    self.ids.cycles_value_arrow,
+                    (
+                        self.ids.cycles_value_arrow_main,
+                        self.ids.cycles_value_arrow_line,
+                    ),
                     self.ids.cycles_value_target,
                     Some(self.ids.cycles_unit),
                 ),
@@ -522,14 +526,16 @@ impl<'a> Screen<'a> {
                 title: APP_I18N.t("telemetry-label-tidal"),
                 value_measured: Some(previous_volume),
                 value_target: None,
-                value_arrow: telemetry_data.arrow_image_id,
                 unit: APP_I18N.t("telemetry-unit-milliliters"),
                 ids: (
                     self.ids.cycles_parent,
                     self.ids.tidal_parent,
                     self.ids.tidal_title,
                     self.ids.tidal_value_measured,
-                    self.ids.tidal_value_arrow,
+                    (
+                        self.ids.tidal_value_arrow_main,
+                        self.ids.tidal_value_arrow_line,
+                    ),
                     self.ids.tidal_value_target,
                     Some(self.ids.tidal_unit),
                 ),
@@ -567,7 +573,6 @@ impl<'a> Screen<'a> {
                     }
                 }),
                 value_target: None,
-                value_arrow: telemetry_data.arrow_image_id,
                 unit: format!(
                     "{} {}",
                     APP_I18N.t("telemetry-label-ratio-plateau"),
@@ -586,7 +591,10 @@ impl<'a> Screen<'a> {
                     self.ids.ratio_parent,
                     self.ids.ratio_title,
                     self.ids.ratio_value_measured,
-                    self.ids.ratio_value_arrow,
+                    (
+                        self.ids.ratio_value_arrow_main,
+                        self.ids.ratio_value_arrow_line,
+                    ),
                     self.ids.ratio_value_target,
                     Some(self.ids.ratio_unit),
                 ),

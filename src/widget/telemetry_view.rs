@@ -3,20 +3,23 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+use std::iter::once;
+
 use conrod_core::{
     color::{self, Color},
     widget::{self, Id as WidgetId},
-    Colorable, Positionable, Sizeable, Widget,
+    Colorable, Positionable, Widget,
 };
 
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 
+const ARROW_COLOR: Color = Color::Rgba(1.0, 1.0, 1.0, 0.25);
+
 pub struct Config {
     pub title: String,
     pub value_measured: Option<String>,
     pub value_target: Option<String>,
-    pub value_arrow: conrod_core::image::Id,
     pub unit: String,
 
     pub ids: (
@@ -24,7 +27,7 @@ pub struct Config {
         WidgetId,
         WidgetId,
         WidgetId,
-        WidgetId,
+        (WidgetId, WidgetId),
         WidgetId,
         Option<WidgetId>,
     ),
@@ -82,16 +85,34 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
                 .set(config.ids.3, &mut master.ui);
 
             // Draw arrow
-            widget::Image::new(config.value_arrow)
-                .w_h(TELEMETRY_ARROW_WIDTH as f64, TELEMETRY_ARROW_HEIGHT as f64)
-                .right_from(config.ids.3, TELEMETRY_ARROW_SPACING_SIDES)
-                .y_relative_to(config.ids.3, -7.0)
-                .set(config.ids.4, &mut master.ui);
+            widget::polygon::Polygon::centred_styled(
+                once([0.0, ((TELEMETRY_ARROW_MAIN_HEIGHT - 1) / 2) as _])
+                    .chain(once([(TELEMETRY_ARROW_MAIN_WIDTH - 1) as _, 0.0]))
+                    .chain(once([
+                        (TELEMETRY_ARROW_MAIN_WIDTH - 1) as _,
+                        (TELEMETRY_ARROW_MAIN_HEIGHT - 1) as _,
+                    ])),
+                widget::primitive::shape::Style::Fill(Some(ARROW_COLOR)),
+            )
+            .right_from(config.ids.3, TELEMETRY_ARROW_SPACING_SIDES)
+            .y_relative_to(config.ids.3, -7.0)
+            .set((config.ids.4).0, &mut master.ui);
+
+            widget::rectangle::Rectangle::fill_with(
+                [
+                    TELEMETRY_ARROW_LINE_WIDTH as _,
+                    TELEMETRY_ARROW_LINE_HEIGHT as _,
+                ],
+                ARROW_COLOR,
+            )
+            .right_from((config.ids.4).0, 0.0)
+            .y_relative_to((config.ids.4).0, 0.0)
+            .set((config.ids.4).1, &mut master.ui);
 
             // Draw target value
             widget::Text::new(&format!("({})", value_target))
                 .with_style(target_text_style)
-                .right_from(config.ids.4, TELEMETRY_ARROW_SPACING_SIDES)
+                .right_from((config.ids.4).1, TELEMETRY_ARROW_SPACING_SIDES)
                 .y_relative_to(config.ids.3, -1.0)
                 .set(config.ids.5, &mut master.ui);
         }

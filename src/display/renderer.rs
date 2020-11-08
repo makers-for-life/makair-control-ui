@@ -279,10 +279,6 @@ impl DisplayRenderer {
             height: GRAPH_HEIGHT as _,
         };
 
-        let screen_data_telemetry = DisplayDataTelemetry {
-            arrow_image_id: self.images.telemetry_arrow,
-        };
-
         // Render screen data (depending on state, running or stopped)
         match chip.state {
             ChipState::Running => screen.render_running(
@@ -291,7 +287,6 @@ impl DisplayRenderer {
                 screen_data_status,
                 screen_data_heartbeat,
                 screen_data_graph,
-                screen_data_telemetry,
                 &chip.settings,
                 &ScreenModalsOpen::from_states(&self.states),
             ),
@@ -302,7 +297,6 @@ impl DisplayRenderer {
                 screen_data_status,
                 screen_data_heartbeat,
                 screen_data_graph,
-                screen_data_telemetry,
                 &chip.settings,
                 &ScreenModalsOpen::from_states(&self.states),
             ),

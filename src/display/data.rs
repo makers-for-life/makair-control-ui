@@ -30,10 +30,6 @@ pub struct DisplayDataGraph {
     pub height: f64,
 }
 
-pub struct DisplayDataTelemetry {
-    pub arrow_image_id: conrod_core::image::Id,
-}
-
 pub struct DisplayDataBootloader {
     pub image_id: conrod_core::image::Id,
     pub width: f64,
