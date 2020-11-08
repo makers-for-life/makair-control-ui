@@ -488,7 +488,7 @@ impl<'a> Screen<'a> {
                 value_measured: if machine_snapshot.cpm_command == 0 {
                     None
                 } else {
-                    machine_snapshot.previous_cpm.map(|value| value.to_string())
+                    Some(machine_snapshot.previous_cpm.unwrap_or(0).to_string())
                 },
                 value_target: Some(if machine_snapshot.cpm_command == 0 {
                     TELEMETRY_WIDGET_VALUE_EMPTY.to_owned()
