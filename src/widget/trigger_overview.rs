@@ -18,7 +18,6 @@ use crate::APP_I18N;
 pub struct Config<'a> {
     pub parent: WidgetId,
     pub container: WidgetId,
-    pub border: WidgetId,
     pub title_widget: WidgetId,
     pub status_label_widget: WidgetId,
     pub status_value_widget: WidgetId,
@@ -47,11 +46,6 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     )
     .bottom_left_with_margins_on(config.parent, config.y_position, config.x_position)
     .set(config.container, &mut master.ui);
-
-    // Append left border
-    widget::rectangle::Rectangle::fill_with([1.0, config.height], color::BLACK.with_alpha(0.25))
-        .top_left_with_margins_on(config.container, 0.0, -1.0)
-        .set(config.border, &mut master.ui);
 
     // Append contents
     title(master, &config);

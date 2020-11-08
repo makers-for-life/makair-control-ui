@@ -610,7 +610,6 @@ impl<'a> Screen<'a> {
             trigger_overview::Config {
                 parent: self.ids.ratio_parent,
                 container: self.ids.trigger_overview_container,
-                border: self.ids.trigger_overview_border,
                 title_widget: self.ids.trigger_overview_title,
                 status_label_widget: self.ids.trigger_overview_status_label,
                 status_value_widget: self.ids.trigger_overview_status_value,
