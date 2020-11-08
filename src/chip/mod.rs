@@ -59,6 +59,7 @@ struct ChipSettingsUpdate {
     expiratory_term: Option<u8>,
     trigger_enabled: Option<bool>,
     trigger_offset: Option<u8>,
+    alarm_snoozed: Option<bool>,
 }
 
 pub struct Chip {
@@ -447,8 +448,14 @@ impl Chip {
             self.settings.pressure.peep = convert_cmh2o_to_mmh2o(peep_command);
         }
 
-        // TODO: add alarm_snoozed (StoppedMessage + MachineStateSnapshot) once available in the \
-        //   telemetry V2 protocol (BREAKING).
+        // Update alarms snooze values
+        if let Some(alarm_snoozed) = update.alarm_snoozed {
+            self.settings.snooze.alarms = if alarm_snoozed {
+                SettingActionState::Enabled
+            } else {
+                SettingActionState::Disabled
+            };
+        }
     }
 
     fn update_settings_from_snapshot(&mut self, snapshot: &MachineStateSnapshot) {
@@ -462,6 +469,7 @@ impl Chip {
             expiratory_term: Some(snapshot.expiratory_term),
             trigger_enabled: Some(snapshot.trigger_enabled),
             trigger_offset: Some(snapshot.trigger_offset),
+            alarm_snoozed: snapshot.alarm_snoozed,
         });
     }
 
@@ -536,12 +544,16 @@ impl Chip {
             expiratory_term: message.expiratory_term,
             trigger_enabled: message.trigger_enabled,
             trigger_offset: message.trigger_offset,
+            alarm_snoozed: message.alarm_snoozed,
         });
 
         // Assign non-optional message values to snapshot
         self.last_machine_snapshot.telemetry_version = message.telemetry_version;
         self.last_machine_snapshot.version = message.version.to_owned();
         self.last_machine_snapshot.device_id = message.device_id.to_owned();
+
+        // Assign optional message values to snapshot (those that share the same type on both sides)
+        self.last_machine_snapshot.alarm_snoozed = message.alarm_snoozed;
 
         // Assign optional message values to snapshot
         gen_override_snapshot_values_from_stopped!(
@@ -621,7 +633,13 @@ impl Chip {
             }
 
             ControlSetting::AlarmSnooze => {
-                self.settings.snooze.alarms = SettingActionState::from_value(ack.value as usize);
+                if ack.value == 0 {
+                    self.settings.snooze.alarms = SettingActionState::Disabled;
+                    self.last_machine_snapshot.alarm_snoozed = Some(false);
+                } else {
+                    self.settings.snooze.alarms = SettingActionState::Enabled;
+                    self.last_machine_snapshot.alarm_snoozed = Some(true);
+                }
             }
         }
     }

@@ -7,7 +7,7 @@ use std::time::{Duration, Instant};
 
 use conrod_core::Ui;
 
-use crate::chip::settings::{ChipSettingsEvent, SettingActionState};
+use crate::chip::settings::ChipSettingsEvent;
 use crate::chip::{Chip, ChipError, ChipState};
 use crate::config::environment::*;
 use crate::utilities::parse::parse_version_number;
@@ -240,13 +240,14 @@ impl DisplayRenderer {
         );
 
         let screen_data_layout = DisplayDataLayout {
-            texture_header_image_id: match (&chip.state, chip.settings.snooze.alarms) {
-                (&ChipState::Running, SettingActionState::Disabled) => self.images.header_running,
-                (&ChipState::Running, SettingActionState::Enabled) => {
-                    self.images.header_running_snoozed
-                }
-                (_, SettingActionState::Disabled) => self.images.header_stopped,
-                (_, SettingActionState::Enabled) => self.images.header_stopped_snoozed,
+            texture_header_image_id: match (
+                &chip.state,
+                chip.last_machine_snapshot.alarm_snoozed.unwrap_or(false),
+            ) {
+                (&ChipState::Running, false) => self.images.header_running,
+                (&ChipState::Running, true) => self.images.header_running_snoozed,
+                (_, false) => self.images.header_stopped,
+                (_, true) => self.images.header_stopped_snoozed,
             },
         };
 

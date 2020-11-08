@@ -190,9 +190,9 @@ checksum = "08c48aae112d48ed9f069b33538ea9e3e90aa263cfa3d1c24309612b1f7472de"
 
 [[package]]
 name = "cc"
-version = "1.0.61"
+version = "1.0.62"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ed67cbde08356238e75fc4656be4749481eeffb09e19f320a25237d5221c985d"
+checksum = "f1770ced377336a88a67c473594ccc14eca6f4559217c34f64aac8f83d641b40"
 
 [[package]]
 name = "cfg-if"
@@ -848,7 +848,7 @@ dependencies = [
  "byteorder",
  "color_quant",
  "num-iter",
- "num-rational 0.3.1",
+ "num-rational 0.3.2",
  "num-traits",
  "png",
 ]
@@ -1104,7 +1104,7 @@ dependencies = [
 [[package]]
 name = "makair-telemetry"
 version = "1.2.5"
-source = "git+https://github.com/makers-for-life/makair-telemetry?rev=c58b2e84f0a062d2eb00ed4f99d8cb66eef2ce0b#c58b2e84f0a062d2eb00ed4f99d8cb66eef2ce0b"
+source = "git+https://github.com/makers-for-life/makair-telemetry?rev=6771365e10ba906a6b1ff6b8eb111daeb86741a7#6771365e10ba906a6b1ff6b8eb111daeb86741a7"
 dependencies = [
  "base64 0.13.0",
  "crc32fast",
@@ -1269,9 +1269,9 @@ dependencies = [
 
 [[package]]
 name = "num-rational"
-version = "0.3.1"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e5fa6d5f418879385b213d905f7cf5bf4aa553d4c380f0152d1d4f2749186fa9"
+checksum = "12ac428b1cb17fce6f731001d307d351ec70a6d202fc2e60f7d4c5e42d8f4f07"
 dependencies = [
  "autocfg",
  "num-integer",
