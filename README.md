@@ -14,6 +14,7 @@
 | V1.4.x | Added internationalization capabilities | ✅
 | V1.5.x | Improve UI readability + allow to change MakAir's settings | ✅
 | V2.0.x | Telemetry protocol version update to V2 + large code rework + improved UI/UX + reduced CPU usage + translated alarms + regulatory compliance | ✅
+| V2.1.x | More performance improvements + added support for flow sensing + added new options | ❌
 
 ## How To Build?
 
