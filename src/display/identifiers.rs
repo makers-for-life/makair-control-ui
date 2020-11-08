@@ -187,6 +187,14 @@ widget_ids!(pub struct Ids {
 });
 
 image_ids!(pub struct ImageIds {
+  // Important: please use only a minimum number of images at the same time per view, as it has \
+  //   been found out that, under the 'smooth' framerate mode (which is around ~20 FPS), drawing \
+  //   a single image (no matter its size, tiny to huge), eats a constant 10% CPU. This all means \
+  //   that if you need to draw multiple images on different widgets at once, you should nest them \
+  //   all in textures. For instance, if the texture contains 5 different images, that would be a \
+  //   CPU saving of 40% (as 5 images would render using 50% of the CPU, while 1 would use 10%). \
+  //   All those measurements were made using a release mode build.
+
   bootloader_logo,
   error_icon,
   header_stopped,
