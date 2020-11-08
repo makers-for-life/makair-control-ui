@@ -231,7 +231,10 @@ impl DisplayUIEvents {
                         ids.snooze_alarms_button_text,
                     ],
 
-                    None
+                    // Auto-close the modal upon pressing the snooze alarms toggle button, as this \
+                    //   results in the user spending less time tapping on the UI as to proceed \
+                    //   quick actions.
+                    Some(DisplayRendererSettingsState::Closed)
                 }
             },
 
