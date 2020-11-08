@@ -195,8 +195,13 @@ image_ids!(pub struct ImageIds {
   //   CPU saving of 40% (as 5 images would render using 50% of the CPU, while 1 would use 10%). \
   //   All those measurements were made using a release mode build.
 
+  // Initializing screen
   bootloader_logo,
+
+  // Error screen
   error_icon,
+
+  // Running / stopped screens (most images are textures here)
   header_stopped,
   header_stopped_snoozed,
   header_running,
