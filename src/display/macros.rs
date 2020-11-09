@@ -137,6 +137,7 @@ macro_rules! gen_ui_events_modal_settings_clicks {
                 for _ in 0..DisplayUIEvents::count_clicks(
                     $interface,
                     &[
+                        $ids.modal_background,
                         $ids.modal_validate,
                         $ids.modal_validate_text,
                     ],
