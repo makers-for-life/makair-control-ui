@@ -84,6 +84,13 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
                     .map(|last_tick| (last_tick as usize) / 1000000),
             ),
         ),
+        // Runtime CPU load (in percents)
+        (
+            "runtime-cpu-load-percent",
+            &parse_optional_number_to_string(
+                config.machine_snapshot.cpu_load.map(|value| value as usize),
+            ),
+        ),
         // Runtime cycles (ie. respiratory cycles)
         (
             "runtime-cycles",
