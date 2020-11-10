@@ -55,6 +55,11 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
     // Generate line data
     let line_data: [(&str, &str); ADVANCED_SETTINGS_LINES_COUNT] = [
+        // Telemetry version
+        (
+            "telemetry-version",
+            &parse_non_empty_number_to_string(config.machine_snapshot.telemetry_version as usize),
+        ),
         // Control UI version
         ("control-ui-version", CONTROL_UI_VERSION),
         (
@@ -63,46 +68,33 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         ),
         // Firmware version
         ("firmware-version", &config.machine_snapshot.version),
-        // Telemetry version
+        // Firmware device identifier (randomly generated at each boot of the motherboard)
         (
-            "telemetry-version",
-            &parse_non_empty_number_to_string(config.machine_snapshot.telemetry_version as usize),
-        ),
-        // Runtime device identifier (randomly generated at each boot of the motherboard)
-        (
-            "runtime-device-id",
+            "firmware-device-id",
             &config.machine_snapshot.device_id.to_string(),
         ),
-        // Runtime uptime (in seconds), try to use the data snapshot systick which is refreshed \
+        // Firmware uptime (in seconds), try to use the data snapshot systick which is refreshed \
         //   almost instantly when the machine is running, otherwise fallback on the less-often \
         //   refreshed data snapshot systick.
         (
-            "runtime-uptime-seconds",
+            "firmware-uptime-seconds",
             &parse_optional_number_to_string(
                 config
                     .last_tick
                     .map(|last_tick| (last_tick as usize) / 1000000),
             ),
         ),
-        // Runtime CPU load (in percents)
+        // Firmware CPU load (in percents)
         (
-            "runtime-cpu-load-percent",
+            "firmware-cpu-load-percent",
             &parse_optional_number_to_string(
                 config.machine_snapshot.cpu_load.map(|value| value as usize),
             ),
         ),
-        // Runtime cycles (ie. respiratory cycles)
+        // Ventilation cycles count (ie. total number of respiratory cycles since system started)
         (
-            "runtime-cycles",
+            "ventilation-cycles-count",
             &parse_non_empty_number_to_string(config.machine_snapshot.cycle as usize),
-        ),
-        // Ventilation phase (ie. current respiration phase, called 'subphase' internally)
-        (
-            "ventilation-phase",
-            &config
-                .data_snapshot
-                .map(|data| format!("{:?}", data.subphase))
-                .unwrap_or_else(|| "".to_string()),
         ),
         // Time spent since the beginning of the current respiratory cycle (in milliseconds)
         (
@@ -112,6 +104,14 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
                     .data_snapshot
                     .map(|data| (data.centile * 10) as usize),
             ),
+        ),
+        // Ventilation phase (ie. current respiration phase, called 'phase' internally)
+        (
+            "ventilation-phase",
+            &config
+                .data_snapshot
+                .map(|data| format!("{:?}", data.phase))
+                .unwrap_or_else(|| "".to_string()),
         ),
         // Pinch valve angle (inhale circuit pinch valve)
         (
