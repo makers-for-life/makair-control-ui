@@ -275,9 +275,10 @@ impl DisplayRenderer {
         };
 
         let screen_data_graph = DisplayDataGraph {
-            image_id: self.images.graph_pressure,
             width: GRAPH_WIDTH as _,
             height: GRAPH_HEIGHT as _,
+            data_pressure: &chip.data_pressure,
+            machine_snapshot: &chip.last_machine_snapshot,
         };
 
         // Render screen data (depending on state, running or stopped)

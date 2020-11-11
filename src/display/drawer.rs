@@ -20,7 +20,6 @@ use crate::APP_ARGS;
 
 use super::events::{DisplayEventsBuilder, DisplayEventsHandleOutcome};
 use super::fonts::Fonts;
-use super::graph::DisplayGraph;
 use super::identifiers::{Ids, ImageIds};
 use super::renderer::{DisplayRenderer, DisplayRendererBuilder};
 use super::support::GliumDisplayWinitWrapper;
@@ -310,14 +309,6 @@ impl<'a> DisplayDrawer<'a> {
     fn refresh_images_running(&mut self) {
         // Clean expired pressure (this allows the graph from sliding from right to left)
         self.chip.clean_expired_pressure();
-
-        // Re-draw the latest graph images
-        DisplayGraph::refresh(
-            &self.display,
-            &self.renderer,
-            &mut self.image_map,
-            &self.chip,
-        );
 
         // Force redraw (as the graph has just been updated)
         // For some reason, the redraw is not automatically forced, even if the graph \

@@ -27,7 +27,7 @@ gen_widget_impls!(
     Status -> status['a],
     Heartbeat -> heartbeat['a],
     Initializing -> initializing,
-    Graph -> graph,
+    Graph -> graph['a],
     Modal -> modal,
     Stop -> stop,
     TelemetryContainer -> telemetry_container,

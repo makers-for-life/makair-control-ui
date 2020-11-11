@@ -1094,6 +1094,7 @@ dependencies = [
  "log",
  "makair-telemetry",
  "plotters",
+ "plotters-conrod",
  "rn2903",
  "rust-embed",
  "sysfs_gpio",
@@ -1472,6 +1473,15 @@ version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "59b0bdaf5194ad865c6225f5e82f5fdde700ce999d227471809551d6e0b1c557"
 dependencies = [
+ "plotters-backend",
+]
+
+[[package]]
+name = "plotters-conrod"
+version = "0.0.0"
+source = "git+https://github.com/valeriansaliou/plotters-conrod?rev=d267e3d8c4797598b1345a69fcef8c5bcd80c46e#d267e3d8c4797598b1345a69fcef8c5bcd80c46e"
+dependencies = [
+ "conrod_core",
  "plotters-backend",
 ]
 

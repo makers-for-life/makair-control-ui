@@ -31,6 +31,7 @@ widget_ids!(pub struct Ids {
   background,
 
   graph_pressure,
+  graph_pressure_points[],
 
   branding_container,
   branding_text,
@@ -211,11 +212,15 @@ image_ids!(pub struct ImageIds {
   header_stopped_snoozed,
   header_running,
   header_running_snoozed,
-  graph_pressure,
 });
 
 impl Ids {
     pub fn allocate(&mut self, interface: &mut Ui) {
+        self.graph_pressure_points.resize(
+            GRAPH_PRESSURE_POINT_IDS_MAXIMUM,
+            &mut interface.widget_id_generator(),
+        );
+
         self.advanced_line_labels.resize(
             ADVANCED_SETTINGS_LINES_COUNT,
             &mut interface.widget_id_generator(),

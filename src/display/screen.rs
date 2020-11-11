@@ -203,13 +203,15 @@ impl<'a> Screen<'a> {
             }));
     }
 
-    pub fn render_graph(&mut self, image_id: conrod_core::image::Id, width: f64, height: f64) {
+    pub fn render_graph(&mut self, graph_data: DisplayDataGraph<'a>) {
         self.widgets.render(ControlWidgetType::Graph(graph::Config {
-            width,
-            height,
-            image: image_id,
+            width: graph_data.width,
+            height: graph_data.height,
             parent: self.ids.layout_body,
             id: self.ids.graph_pressure,
+            plot_points: &self.ids.graph_pressure_points,
+            data_pressure: graph_data.data_pressure,
+            machine_snapshot: graph_data.machine_snapshot,
         }));
     }
 
@@ -220,7 +222,7 @@ impl<'a> Screen<'a> {
         branding_data: DisplayDataBranding<'a>,
         status_data: DisplayDataStatus<'a>,
         heartbeat_data: DisplayDataHeartbeat<'a>,
-        graph_data: DisplayDataGraph,
+        graph_data: DisplayDataGraph<'a>,
         settings: &'a ChipSettings,
         modals: &ScreenModalsOpen,
     ) {
@@ -243,7 +245,7 @@ impl<'a> Screen<'a> {
         self.render_controls();
 
         // Render middle elements
-        self.render_graph(graph_data.image_id, graph_data.width, graph_data.height);
+        self.render_graph(graph_data);
 
         // Render bottom elements
         self.render_telemetry(&settings.trigger, &settings.expiration_term);
@@ -259,7 +261,7 @@ impl<'a> Screen<'a> {
         branding_data: DisplayDataBranding<'a>,
         status_data: DisplayDataStatus<'a>,
         heartbeat_data: DisplayDataHeartbeat<'a>,
-        graph_data: DisplayDataGraph,
+        graph_data: DisplayDataGraph<'a>,
         settings: &'a ChipSettings,
         modals: &ScreenModalsOpen,
     ) {

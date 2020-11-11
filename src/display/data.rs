@@ -3,6 +3,8 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+use telemetry::structures::MachineStateSnapshot;
+
 use crate::chip::{ChipDataPressure, ChipError, ChipState};
 
 pub struct DisplayDataLayout {
@@ -24,10 +26,11 @@ pub struct DisplayDataHeartbeat<'a> {
     pub data_pressure: &'a ChipDataPressure,
 }
 
-pub struct DisplayDataGraph {
-    pub image_id: conrod_core::image::Id,
+pub struct DisplayDataGraph<'a> {
     pub width: f64,
     pub height: f64,
+    pub data_pressure: &'a ChipDataPressure,
+    pub machine_snapshot: &'a MachineStateSnapshot,
 }
 
 pub struct DisplayDataBootloader {
