@@ -134,7 +134,7 @@ impl<'a> DisplayDrawer<'a> {
             //   only have access to the image identifiers, and thus cannot re-allocate pixels for \
             //   existing image identifiers (as we wish to do there).
             if last_chip_state == ChipState::Running {
-                self.refresh_images_running();
+                self.refresh_running_data();
             }
 
             // Run events since the last render
@@ -306,14 +306,9 @@ impl<'a> DisplayDrawer<'a> {
         has_poll_events
     }
 
-    fn refresh_images_running(&mut self) {
+    fn refresh_running_data(&mut self) {
         // Clean expired pressure (this allows the graph from sliding from right to left)
         self.chip.clean_expired_pressure();
-
-        // Force redraw (as the graph has just been updated)
-        // For some reason, the redraw is not automatically forced, even if the graph \
-        //   image was replaced in the watched image map.
-        self.interface.needs_redraw();
     }
 
     fn refresh(&mut self) {
