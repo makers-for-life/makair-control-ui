@@ -140,7 +140,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config<'a>) -> f64 {
         .bold_line_style(&plotters::style::colors::WHITE.mix(0.22))
         .light_line_style(&plotters::style::colors::BLACK)
         .y_labels(GRAPH_DRAW_LABEL_NUMBER_MAX)
-        .y_label_style(GRAPH_AXIS_Y_FONT.color(&WHITE.mix(0.9)))
+        .y_label_style(GRAPH_AXIS_Y_FONT.color(&WHITE.mix(0.75)))
         .y_label_formatter(&|y| {
             // Convert high-precision point in mmH20 back to cmH20 (which measurements & \
             //   targets both use)

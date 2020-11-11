@@ -1479,7 +1479,7 @@ dependencies = [
 [[package]]
 name = "plotters-conrod"
 version = "0.0.0"
-source = "git+https://github.com/valeriansaliou/plotters-conrod?rev=02327ffb68f510b18fe89ec5c03197fb3c3ec3e5#02327ffb68f510b18fe89ec5c03197fb3c3ec3e5"
+source = "git+https://github.com/valeriansaliou/plotters-conrod?rev=8ab9035d31429d8c6914506cfdf6a94de3846f0e#8ab9035d31429d8c6914506cfdf6a94de3846f0e"
 dependencies = [
  "conrod_core",
  "plotters-backend",
