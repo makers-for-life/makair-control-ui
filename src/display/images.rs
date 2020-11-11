@@ -7,7 +7,6 @@ use std::borrow::Cow;
 
 use image::load_from_memory;
 
-use crate::chip::ChipDataPressure;
 use crate::config::environment::*;
 use crate::utilities::image::reverse_rgba;
 use crate::EmbeddedImages;

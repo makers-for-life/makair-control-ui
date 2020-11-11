@@ -5,7 +5,6 @@
 
 use std::cmp::max;
 
-use chrono::{DateTime, NaiveDateTime, Utc};
 use conrod_core::widget::id::List;
 use conrod_core::widget::Id as WidgetId;
 use conrod_core::{
@@ -15,7 +14,7 @@ use conrod_core::{
 };
 
 use telemetry::alarm::AlarmCode;
-use telemetry::structures::{AlarmPriority, MachineStateSnapshot};
+use telemetry::structures::AlarmPriority;
 
 use super::alarm;
 

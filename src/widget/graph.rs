@@ -14,7 +14,7 @@ use plotters::style::{Color, TextStyle};
 use plotters_conrod::ConrodBackend;
 use telemetry::structures::MachineStateSnapshot;
 
-use crate::chip::{Chip, ChipDataPressure};
+use crate::chip::ChipDataPressure;
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 #[cfg(feature = "graph-scaler")]
