@@ -1285,7 +1285,7 @@ checksum = "b07fffcddc1cb3a1de753caa4e4df03b79922ba43cf882acc1bdd7e8df9f4590"
 [[package]]
 name = "plotters-conrod"
 version = "0.0.0"
-source = "git+https://github.com/valeriansaliou/plotters-conrod?rev=8ab9035d31429d8c6914506cfdf6a94de3846f0e#8ab9035d31429d8c6914506cfdf6a94de3846f0e"
+source = "git+https://github.com/valeriansaliou/plotters-conrod?rev=14f6d2f9b28ba9ef5772022d5cc5df9c48072e0c#14f6d2f9b28ba9ef5772022d5cc5df9c48072e0c"
 dependencies = [
  "conrod_core",
  "plotters-backend",
