@@ -211,6 +211,7 @@ impl<'a> Screen<'a> {
             id: self.ids.graph_pressure,
             plot_points: (
                 &self.ids.graph_pressure_points_line,
+                &self.ids.graph_pressure_points_path,
                 &self.ids.graph_pressure_points_circle,
                 &self.ids.graph_pressure_points_text,
             ),

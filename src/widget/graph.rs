@@ -27,7 +27,7 @@ pub struct Config<'a> {
     pub parent: WidgetId,
     pub id: WidgetId,
 
-    pub plot_points: (&'a List, &'a List, &'a List),
+    pub plot_points: (&'a List, &'a List, &'a List, &'a List),
 
     pub data_pressure: &'a ChipDataPressure,
     pub machine_snapshot: &'a MachineStateSnapshot,
@@ -63,6 +63,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config<'a>) -> f64 {
         config.plot_points.0,
         config.plot_points.1,
         config.plot_points.2,
+        config.plot_points.3,
     )
     .into_drawing_area();
 

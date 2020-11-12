@@ -32,6 +32,7 @@ widget_ids!(pub struct Ids {
 
   graph_pressure,
   graph_pressure_points_line[],
+  graph_pressure_points_path[],
   graph_pressure_points_circle[],
   graph_pressure_points_text[],
 
@@ -220,6 +221,10 @@ impl Ids {
     pub fn allocate(&mut self, interface: &mut Ui) {
         // Allocate pressure points
         self.graph_pressure_points_line.resize(
+            GRAPH_PRESSURE_POINT_IDS_MAXIMUM,
+            &mut interface.widget_id_generator(),
+        );
+        self.graph_pressure_points_path.resize(
             GRAPH_PRESSURE_POINT_IDS_MAXIMUM,
             &mut interface.widget_id_generator(),
         );

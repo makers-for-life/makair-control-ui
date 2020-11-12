@@ -453,9 +453,9 @@ dependencies = [
 
 [[package]]
 name = "fluent-bundle"
-version = "0.13.1"
+version = "0.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a79916560098f0a57215a489e37b7fc83088949eab7f7977dcc329b254d50c17"
+checksum = "092ebd50cd3f8a6d664bf156e3550d2f7232fbe446da6707d727cca53f707ce2"
 dependencies = [
  "fluent-langneg",
  "fluent-syntax",
@@ -1285,7 +1285,7 @@ checksum = "b07fffcddc1cb3a1de753caa4e4df03b79922ba43cf882acc1bdd7e8df9f4590"
 [[package]]
 name = "plotters-conrod"
 version = "0.0.0"
-source = "git+https://github.com/valeriansaliou/plotters-conrod?rev=14f6d2f9b28ba9ef5772022d5cc5df9c48072e0c#14f6d2f9b28ba9ef5772022d5cc5df9c48072e0c"
+source = "git+https://github.com/valeriansaliou/plotters-conrod?rev=aac3b44d81ddcff9eae62c61b3c74dbbadf3fb6c#aac3b44d81ddcff9eae62c61b3c74dbbadf3fb6c"
 dependencies = [
  "conrod_core",
  "plotters-backend",
