@@ -6,12 +6,12 @@
 use chrono::{DateTime, NaiveDateTime, Utc};
 use conrod_core::{
     color,
-    widget::{self, id::List, Id as WidgetId},
+    widget::{self, Id as WidgetId},
     Positionable, Sizeable, Widget,
 };
 use plotters::prelude::*;
 use plotters::style::{Color, TextStyle};
-use plotters_conrod::ConrodBackend;
+use plotters_conrod::{ConrodBackend, ConrodBackendReusableGraph};
 use telemetry::structures::MachineStateSnapshot;
 
 use crate::chip::ChipDataPressure;
@@ -29,10 +29,10 @@ pub struct Config<'a> {
     pub parent: WidgetId,
     pub id: WidgetId,
 
-    pub plot_points: (&'a List, &'a List, &'a List, &'a List, &'a List, &'a List),
-
     pub data_pressure: &'a ChipDataPressure,
     pub machine_snapshot: &'a MachineStateSnapshot,
+
+    pub plot_graph: &'a mut ConrodBackendReusableGraph,
 }
 
 lazy_static! {
@@ -40,7 +40,7 @@ lazy_static! {
         TextStyle::from(("sans-serif", 15).into_font());
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config<'a>) -> f64 {
+pub fn render<'a>(master: &mut ControlWidget<'a>, mut config: Config<'a>) -> f64 {
     // Create container
     gen_widget_container!(
         master,
@@ -62,12 +62,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config<'a>) -> f64 {
         (config.width as u32, config.height as u32),
         config.id,
         master.fonts.regular,
-        config.plot_points.0,
-        config.plot_points.1,
-        config.plot_points.2,
-        config.plot_points.3,
-        config.plot_points.4,
-        config.plot_points.5,
+        &mut config.plot_graph,
     )
     .into_drawing_area();
 
@@ -161,7 +156,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config<'a>) -> f64 {
             AreaSeries::new(
                 config.data_pressure.iter().map(|x| (x.0, x.1 as i32)),
                 0,
-                &GRAPH_LINE_COLOR.mix(0.175),
+                &GRAPH_LINE_COLOR.mix(0.25),
             )
             .border_style(ShapeStyle::from(&GRAPH_LINE_COLOR).stroke_width(GRAPH_DRAW_LINE_SIZE)),
         )

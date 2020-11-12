@@ -209,16 +209,9 @@ impl<'a> Screen<'a> {
             height: graph_data.height,
             parent: self.ids.layout_body,
             id: self.ids.graph_pressure,
-            plot_points: (
-                &self.ids.graph_pressure_points_line,
-                &self.ids.graph_pressure_points_rect,
-                &self.ids.graph_pressure_points_path,
-                &self.ids.graph_pressure_points_circle,
-                &self.ids.graph_pressure_points_text,
-                &self.ids.graph_pressure_points_fill,
-            ),
             data_pressure: graph_data.data_pressure,
             machine_snapshot: graph_data.machine_snapshot,
+            plot_graph: graph_data.plot_graph,
         }));
     }
 

@@ -3,6 +3,7 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+use plotters_conrod::ConrodBackendReusableGraph;
 use telemetry::structures::MachineStateSnapshot;
 
 use crate::chip::{ChipDataPressure, ChipError, ChipState};
@@ -31,6 +32,7 @@ pub struct DisplayDataGraph<'a> {
     pub height: f64,
     pub data_pressure: &'a ChipDataPressure,
     pub machine_snapshot: &'a MachineStateSnapshot,
+    pub plot_graph: &'a mut ConrodBackendReusableGraph,
 }
 
 pub struct DisplayDataBootloader {

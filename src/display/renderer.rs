@@ -6,6 +6,7 @@
 use std::time::{Duration, Instant};
 
 use conrod_core::Ui;
+use plotters_conrod::ConrodBackendReusableGraph;
 
 use crate::chip::settings::ChipSettingsEvent;
 use crate::chip::{Chip, ChipError, ChipState};
@@ -33,6 +34,7 @@ pub struct DisplayRenderer {
     fonts: Fonts,
     ids: Ids,
     states: DisplayRendererStates,
+    plot_graph: ConrodBackendReusableGraph,
     pub images: ImageIds,
 }
 
@@ -72,8 +74,9 @@ impl DisplayRendererBuilder {
         DisplayRenderer {
             fonts,
             ids,
-            images,
             states: DisplayRendererStates::default(),
+            images,
+            plot_graph: ConrodBackendReusableGraph::build(),
         }
     }
 }
@@ -279,6 +282,7 @@ impl DisplayRenderer {
             height: GRAPH_HEIGHT as _,
             data_pressure: &chip.data_pressure,
             machine_snapshot: &chip.last_machine_snapshot,
+            plot_graph: &mut self.plot_graph,
         };
 
         // Render screen data (depending on state, running or stopped)

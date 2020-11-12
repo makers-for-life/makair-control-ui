@@ -31,12 +31,6 @@ widget_ids!(pub struct Ids {
   background,
 
   graph_pressure,
-  graph_pressure_points_line[],
-  graph_pressure_points_rect[],
-  graph_pressure_points_path[],
-  graph_pressure_points_circle[],
-  graph_pressure_points_text[],
-  graph_pressure_points_fill[],
 
   branding_container,
   branding_text,
@@ -221,32 +215,6 @@ image_ids!(pub struct ImageIds {
 
 impl Ids {
     pub fn allocate(&mut self, interface: &mut Ui) {
-        // Allocate pressure points
-        self.graph_pressure_points_line.resize(
-            GRAPH_PRESSURE_POINT_IDS_MAXIMUM,
-            &mut interface.widget_id_generator(),
-        );
-        self.graph_pressure_points_rect.resize(
-            GRAPH_PRESSURE_POINT_IDS_MAXIMUM,
-            &mut interface.widget_id_generator(),
-        );
-        self.graph_pressure_points_path.resize(
-            GRAPH_PRESSURE_POINT_IDS_MAXIMUM,
-            &mut interface.widget_id_generator(),
-        );
-        self.graph_pressure_points_circle.resize(
-            GRAPH_PRESSURE_POINT_IDS_MAXIMUM,
-            &mut interface.widget_id_generator(),
-        );
-        self.graph_pressure_points_text.resize(
-            GRAPH_PRESSURE_POINT_IDS_MAXIMUM,
-            &mut interface.widget_id_generator(),
-        );
-        self.graph_pressure_points_fill.resize(
-            GRAPH_PRESSURE_POINT_IDS_MAXIMUM,
-            &mut interface.widget_id_generator(),
-        );
-
         // Allocate advanced line
         self.advanced_line_labels.resize(
             ADVANCED_SETTINGS_LINES_COUNT,
