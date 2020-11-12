@@ -53,6 +53,13 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, mut config: Config<'a>) -> f64
         ]
     );
 
+    // Draw plot
+    plot(master, &mut config);
+
+    config.width
+}
+
+pub fn plot<'a>(master: &mut ControlWidget<'a>, config: &mut Config<'a>) {
     // Acquire values
     let peak_command_value = config.machine_snapshot.peak_command;
 
@@ -162,6 +169,4 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, mut config: Config<'a>) -> f64
             .point_size(0),
         )
         .expect("failed to draw chart data");
-
-    config.width
 }
