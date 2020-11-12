@@ -153,12 +153,13 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, mut config: Config<'a>) -> f64
 
     chart
         .draw_series(
-            AreaSeries::new(
+            LineSeries::new(
                 config.data_pressure.iter().map(|x| (x.0, x.1 as i32)),
-                0,
-                &GRAPH_LINE_COLOR.mix(0.25),
+                ShapeStyle::from(&GRAPH_LINE_COLOR)
+                    .filled()
+                    .stroke_width(GRAPH_DRAW_LINE_SIZE),
             )
-            .border_style(ShapeStyle::from(&GRAPH_LINE_COLOR).stroke_width(GRAPH_DRAW_LINE_SIZE)),
+            .point_size(0),
         )
         .expect("failed to draw chart data");
 
