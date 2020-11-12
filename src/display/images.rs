@@ -7,12 +7,10 @@ use std::borrow::Cow;
 
 use image::load_from_memory;
 
-use crate::chip::ChipDataPressure;
 use crate::config::environment::*;
 use crate::utilities::image::reverse_rgba;
 use crate::EmbeddedImages;
 
-use super::graph::DisplayGraph;
 use super::support::GliumDisplayWinitWrapper;
 
 pub struct DisplayImages;
@@ -89,13 +87,5 @@ impl DisplayImages {
                 LAYOUT_TEXTURE_HEADER_WIDTH, LAYOUT_TEXTURE_HEADER_HEIGHT
             ]
         )
-    }
-
-    pub fn graph_pressure(display: &GliumDisplayWinitWrapper) -> glium::texture::SrgbTexture2d {
-        // This draws an empty chart image, which is only used to reserve space in the shared \
-        //   image map on start, and acquire a replaceable image identifier.
-        // Notice: an empty pressure data vector is created, which is immediately dropped once \
-        //   this is rendered.
-        DisplayGraph::draw_pressure(display, &ChipDataPressure::new(), None)
     }
 }

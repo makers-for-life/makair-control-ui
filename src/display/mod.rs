@@ -10,7 +10,6 @@ mod data;
 mod drawer;
 mod events;
 mod fonts;
-mod graph;
 mod identifiers;
 mod images;
 mod renderer;

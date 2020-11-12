@@ -211,16 +211,15 @@ image_ids!(pub struct ImageIds {
   header_stopped_snoozed,
   header_running,
   header_running_snoozed,
-  graph_pressure,
 });
 
 impl Ids {
     pub fn allocate(&mut self, interface: &mut Ui) {
+        // Allocate advanced line
         self.advanced_line_labels.resize(
             ADVANCED_SETTINGS_LINES_COUNT,
             &mut interface.widget_id_generator(),
         );
-
         self.advanced_line_values.resize(
             ADVANCED_SETTINGS_LINES_COUNT,
             &mut interface.widget_id_generator(),
