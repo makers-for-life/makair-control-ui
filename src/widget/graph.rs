@@ -20,6 +20,8 @@ use crate::display::widget::ControlWidget;
 #[cfg(feature = "graph-scaler")]
 use crate::utilities::pressure::process_max_allowed_pressure;
 
+const GRAPH_LINE_COLOR: RGBColor = plotters::style::RGBColor(0, 196, 255);
+
 pub struct Config<'a> {
     pub width: f64,
     pub height: f64,
@@ -27,7 +29,7 @@ pub struct Config<'a> {
     pub parent: WidgetId,
     pub id: WidgetId,
 
-    pub plot_points: (&'a List, &'a List, &'a List, &'a List),
+    pub plot_points: (&'a List, &'a List, &'a List, &'a List, &'a List, &'a List),
 
     pub data_pressure: &'a ChipDataPressure,
     pub machine_snapshot: &'a MachineStateSnapshot,
@@ -64,6 +66,8 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config<'a>) -> f64 {
         config.plot_points.1,
         config.plot_points.2,
         config.plot_points.3,
+        config.plot_points.4,
+        config.plot_points.5,
     )
     .into_drawing_area();
 
@@ -154,13 +158,12 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config<'a>) -> f64 {
 
     chart
         .draw_series(
-            LineSeries::new(
+            AreaSeries::new(
                 config.data_pressure.iter().map(|x| (x.0, x.1 as i32)),
-                ShapeStyle::from(&plotters::style::RGBColor(0, 196, 255))
-                    .filled()
-                    .stroke_width(GRAPH_DRAW_LINE_SIZE),
+                0,
+                &GRAPH_LINE_COLOR.mix(0.175),
             )
-            .point_size(GRAPH_DRAW_POINT_SIZE),
+            .border_style(ShapeStyle::from(&GRAPH_LINE_COLOR).stroke_width(GRAPH_DRAW_LINE_SIZE)),
         )
         .expect("failed to draw chart data");
 
