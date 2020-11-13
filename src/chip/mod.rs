@@ -27,7 +27,7 @@ use crate::config::environment::*;
 use crate::utilities::parse::parse_text_lines_to_single;
 use crate::utilities::units::{convert_cmh2o_to_mmh2o, convert_mmh2o_to_cmh2o, ConvertMode};
 
-const DATA_PRESSURE_STORE_EVERY_MILLISECONDS: i64 = 1000 / DISPLAY_FRAMERATE_SMOOTH_HEAVY as i64;
+const DATA_PRESSURE_STORE_EVERY_MILLISECONDS: i64 = 1000 / (2 * DISPLAY_FRAMERATE_SMOOTH_HEAVY) as i64;
 
 pub type ChipDataPressure = VecDeque<(DateTime<Utc>, u16)>;
 
@@ -336,9 +336,9 @@ impl Chip {
             self.boot_time.unwrap() + Duration::microseconds(snapshot.systick as i64);
 
         // Fetch last pressure value in order to reduce noise, and check if the point should be \
-        //   stored as well (there is no need storing points faster than the framerate, as this \
-        //   is sufficient to ensure that the plot progresses in time smoothly, and that the \
-        //   curves look nice on screen)
+        //   stored as well (there is no need storing points faster than twice the framerate, \
+        //   as this is sufficient to ensure that the plot progresses in time smoothly, and that \
+        //   the curves look nice on screen)
         let (new_point, may_store) = if let Some(last_pressure_inner) = self.data_pressure.get(0) {
             let new_point = last_pressure_inner.1 as i16
                 - ((last_pressure_inner.1 as i16 - snapshot.pressure as i16)
