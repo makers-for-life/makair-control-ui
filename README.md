@@ -95,6 +95,9 @@ You can pass the desired locale code when running the `makair-control` binary, u
 * 🇱🇻 **[Latvian](./res/locales/lv.ftl)**: `lv`
 * 🇷🇺 **[Russian](./res/locales/ru.ftl)**: `ru`
 * 🇺🇦 **[Ukrainian](./res/locales/uk.ftl)**: `uk`
+
+**➡️ Some more languages are supported when building with the `fonts-cjk` feature:**
+
 * 🇨🇳 **[Chinese (Simplified)](./res/locales/zh.ftl)**: `zh`
 
 ℹ️ If your language does not appear in the list above, you may translate the [base English file](./res/locales/en.ftl), then [open a Pull Request](https://github.com/makers-for-life/makair-control-ui/pulls).
@@ -112,6 +115,11 @@ _Make sure to replace the `version` script argument with the current release ver
 ## Optional Features
 
 The Control UI behavior can be tuned at compile time, by enabling some optional features while building the binary:
+
+* **Support for CJK languages (eg. Chinese):**
+  * Feature name: `fonts-cjk`
+  * Build command: `cargo build --features=fonts-cjk`
+  * Purpose: enables font support for CJK languages. As the CJK font weights 10MB+, and given that all assets get bundled in the final release binary, this feature is disabled by default as an optimization on binary size. If you need to use CJK languages in your MakAir ventilator, please build the Control UI with this feature enabled.
 
 * **Automatic graph scaler:**
   * Feature name: `graph-scaler`

@@ -38,6 +38,10 @@ lazy_static! {
         gen_load_font!("default", "notosans_regular");
     static ref FONT_DEFAULT_NOTOSANS_BOLD: conrod_core::text::Font =
         gen_load_font!("default", "notosans_bold");
+}
+
+#[cfg(feature = "fonts-cjk")]
+lazy_static! {
     static ref FONT_CJK_NOTOSANS_ALL: conrod_core::text::Font =
         gen_load_font!("cjk", "notosans_cjk_regular");
 }
@@ -93,6 +97,7 @@ impl DisplayWindow {
         // Notice: this depends on the in-use translation, as eg. CJK glyphs are not included in \
         //   the default font; used only for Chinese, Korean and Japanese.
         let fonts = match APP_ARGS.translation.as_str() {
+            #[cfg(feature = "fonts-cjk")]
             "zh" | "ko" | "ja" => Fonts::new(
                 interface.fonts.insert(FONT_CJK_NOTOSANS_ALL.clone()),
                 interface.fonts.insert(FONT_CJK_NOTOSANS_ALL.clone()),
