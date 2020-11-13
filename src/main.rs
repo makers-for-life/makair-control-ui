@@ -48,8 +48,13 @@ use locale::loader::LocaleLoader;
 pub struct EmbeddedImages;
 
 #[derive(RustEmbed)]
-#[folder = "res/fonts/"]
-pub struct EmbeddedFonts;
+#[folder = "res/fonts/default/"]
+pub struct EmbeddedFontsDefault;
+
+#[cfg(feature = "fonts-cjk")]
+#[derive(RustEmbed)]
+#[folder = "res/fonts/cjk/"]
+pub struct EmbeddedFontsCJK;
 
 #[derive(RustEmbed)]
 #[folder = "res/locales/"]

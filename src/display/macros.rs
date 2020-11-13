@@ -28,12 +28,10 @@ macro_rules! image_ids {
 }
 
 macro_rules! gen_load_font {
-    ($family:expr, $name:expr) => {
+    ($embedded_fonts:ident, $name:expr) => {
         conrod_core::text::Font::from_bytes(
-            inflate_bytes_zlib(
-                &EmbeddedFonts::get(&format!("{}/{}.ttf.zz", $family, $name)).unwrap(),
-            )
-            .unwrap(),
+            inflate_bytes_zlib(&$embedded_fonts::get(&format!("{}.ttf.zz", $name)).unwrap())
+                .unwrap(),
         )
         .unwrap()
     };
