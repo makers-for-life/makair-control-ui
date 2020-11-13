@@ -97,7 +97,7 @@ impl DisplayWindow {
 
         // Load all required fonts to interface
         // Notice: this depends on the in-use translation, as eg. CJK glyphs are not included in \
-        //   the default font; used only for Chinese, Korean and Japanese.
+        //   the default font; used only for Chinese, Japanese and Korean (ie. CJK).
         let fonts = match APP_ARGS.translation.as_str() {
             #[cfg(feature = "fonts-cjk")]
             "zh" | "ko" | "ja" => Fonts::new(
