@@ -27,7 +27,7 @@ use crate::config::environment::*;
 use crate::utilities::parse::parse_text_lines_to_single;
 use crate::utilities::units::{convert_cmh2o_to_mmh2o, convert_mmh2o_to_cmh2o, ConvertMode};
 
-const DATA_PRESSURE_STORE_EVERY_MILLISECONDS: i64 = 1000 / (2 * DISPLAY_FRAMERATE_SMOOTH_HEAVY) as i64;
+const DATA_PRESSURE_STORE_EVERY_MILLISECONDS: i64 = 1000 / TELEMETRY_POINTS_PER_SECOND as i64;
 
 pub type ChipDataPressure = VecDeque<(DateTime<Utc>, u16)>;
 
@@ -86,9 +86,7 @@ impl Chip {
         Chip {
             boot_time: None,
             last_tick: 0,
-            data_pressure: ChipDataPressure::with_capacity(
-                GRAPH_NUMBER_OF_POINTS + TELEMETRY_POINTS_PER_SECOND,
-            ),
+            data_pressure: ChipDataPressure::with_capacity(GRAPH_NUMBER_OF_POINTS),
             last_machine_snapshot,
             last_data_snapshot: None,
             ongoing_alarms: HashMap::new(),
