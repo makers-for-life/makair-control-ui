@@ -340,8 +340,8 @@ impl Chip {
                 - ((last_pressure_inner.1 as i16 - snapshot.pressure as i16)
                     / TELEMETRY_POINTS_LOW_PASS_DEGREE as i16);
 
-            let may_store = (snapshot_time - last_pressure_inner.0) >=
-                chrono::Duration::milliseconds(DATA_PRESSURE_STORE_EVERY_MILLISECONDS);
+            let may_store = (snapshot_time - last_pressure_inner.0)
+                >= chrono::Duration::milliseconds(DATA_PRESSURE_STORE_EVERY_MILLISECONDS);
 
             (new_point as u16, may_store)
         } else {
@@ -351,8 +351,7 @@ impl Chip {
         // May we store this pressure point?
         if may_store {
             // Points are stored as mmH20 (for more precision; though we do work in cmH20)
-            self.data_pressure
-                .push_front((snapshot_time, new_point));
+            self.data_pressure.push_front((snapshot_time, new_point));
 
             // Clean any now-expired pressure
             self.clean_expired_pressure_from_time(snapshot_time);
