@@ -184,6 +184,12 @@ impl Chip {
         alarm_list
     }
 
+    pub fn clean_expired_pressure(&mut self) {
+        if !self.data_pressure.is_empty() {
+            self.clean_expired_pressure_from_time(self.data_pressure.front().unwrap().0);
+        }
+    }
+
     pub fn init_settings_receiver(&mut self) -> Receiver<ControlMessage> {
         let channel = mpsc::channel();
 
@@ -344,10 +350,10 @@ impl Chip {
             .push_front((snapshot_time, new_point as u16));
 
         // Clean any now-expired pressure
-        self.clean_expired_pressure(snapshot_time);
+        self.clean_expired_pressure_from_time(snapshot_time);
     }
 
-    fn clean_expired_pressure(&mut self, front_time: DateTime<Utc>) {
+    fn clean_expired_pressure_from_time(&mut self, front_time: DateTime<Utc>) {
         if !self.data_pressure.is_empty() {
             let expired_time = front_time - chrono::Duration::seconds(GRAPH_DRAW_SECONDS as _);
 
@@ -398,6 +404,12 @@ impl Chip {
     }
 
     fn update_state_running(&mut self) {
+        // Clean expired pressure? (this is required so that the pressure graph does not jitter \
+        //   when resuming from a stopped ventilation session)
+        if self.state != ChipState::Running {
+            self.clean_expired_pressure();
+        }
+
         self.settings.run.state = SettingActionState::Enabled;
         self.state = ChipState::Running;
     }
