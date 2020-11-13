@@ -187,9 +187,7 @@ impl Chip {
     }
 
     pub fn clean_expired_pressure(&mut self) {
-        if !self.data_pressure.is_empty() {
-            self.clean_expired_pressure_from_time(self.data_pressure.front().unwrap().0);
-        }
+        self.clean_expired_pressure_from_time(Utc::now());
     }
 
     pub fn init_settings_receiver(&mut self) -> Receiver<ControlMessage> {
