@@ -110,22 +110,6 @@ impl Chip {
         self.update_boot_time();
     }
 
-    pub fn clean_expired_pressure(&mut self) {
-        if !self.data_pressure.is_empty() {
-            let older = self.data_pressure.front().unwrap().0
-                - chrono::Duration::seconds(GRAPH_DRAW_SECONDS as _);
-
-            while self
-                .data_pressure
-                .back()
-                .map(|p| p.0 < older)
-                .unwrap_or(false)
-            {
-                self.data_pressure.pop_back();
-            }
-        }
-    }
-
     pub fn dispatch_heartbeat_event(&mut self) {
         if let Some(tx) = &self.channel_for_settings {
             if let Err(err) = tx.send(ControlMessage {
@@ -343,14 +327,6 @@ impl Chip {
         let snapshot_time =
             self.boot_time.unwrap() + Duration::microseconds(snapshot.systick as i64);
 
-        // Clean any expired pressures before we can push new ones
-        // Notice: this is typically done on the drawer-side, as the telemetry may not progress \
-        //   while screen drawing is still guaranteed to progress over time. Though, in case the \
-        //   framerate is heavily limited and the telemetry pushes faster than the drawer can \
-        //   clean, then we must ensure we do not push past object limits here (otherwise over a \
-        //   long run time this could result in an OOM / out-of-memory error).
-        self.clean_expired_pressure();
-
         // Fetch last pressure value in order to reduce noise
         let last_pressure = if let Some(last_pressure_inner) = self.data_pressure.get(0) {
             last_pressure_inner.1
@@ -366,6 +342,24 @@ impl Chip {
         // Points are stored as mmH20 (for more precision; though we do work in cmH20)
         self.data_pressure
             .push_front((snapshot_time, new_point as u16));
+
+        // Clean any now-expired pressure
+        self.clean_expired_pressure(snapshot_time);
+    }
+
+    fn clean_expired_pressure(&mut self, front_time: DateTime<Utc>) {
+        if !self.data_pressure.is_empty() {
+            let expired_time = front_time - chrono::Duration::seconds(GRAPH_DRAW_SECONDS as _);
+
+            while self
+                .data_pressure
+                .back()
+                .map(|p| p.0 < expired_time)
+                .unwrap_or(false)
+            {
+                self.data_pressure.pop_back();
+            }
+        }
     }
 
     fn update_boot_time(&mut self) {

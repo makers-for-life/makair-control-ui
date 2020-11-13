@@ -129,14 +129,6 @@ impl<'a> DisplayDrawer<'a> {
                 has_chip_state_change = true;
             }
 
-            // Refresh dynamic images shown while in running mode?
-            // Notice: this is done there, as the renderer called upon refreshing each frame does \
-            //   only have access to the image identifiers, and thus cannot re-allocate pixels for \
-            //   existing image identifiers (as we wish to do there).
-            if last_chip_state == ChipState::Running {
-                self.refresh_running_data();
-            }
-
             // Run events since the last render
             let (has_heartbeat, has_user_events, user_events) =
                 self.renderer
@@ -304,11 +296,6 @@ impl<'a> DisplayDrawer<'a> {
         }
 
         has_poll_events
-    }
-
-    fn refresh_running_data(&mut self) {
-        // Clean expired pressure (this allows the graph from sliding from right to left)
-        self.chip.clean_expired_pressure();
     }
 
     fn refresh(&mut self) {
