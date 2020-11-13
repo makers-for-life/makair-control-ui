@@ -160,13 +160,12 @@ pub fn plot<'a>(master: &mut ControlWidget<'a>, config: &mut Config<'a>) {
 
     chart
         .draw_series(
-            LineSeries::new(
+            AreaSeries::new(
                 config.data_pressure.iter().map(|x| (x.0, x.1 as i32)),
-                ShapeStyle::from(&GRAPH_LINE_COLOR)
-                    .filled()
-                    .stroke_width(GRAPH_DRAW_LINE_SIZE),
+                0,
+                &GRAPH_LINE_COLOR.mix(0.25),
             )
-            .point_size(0),
+            .border_style(ShapeStyle::from(&GRAPH_LINE_COLOR).stroke_width(GRAPH_DRAW_LINE_SIZE)),
         )
         .expect("failed to draw chart data");
 }
