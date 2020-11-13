@@ -96,7 +96,7 @@ You can pass the desired locale code when running the `makair-control` binary, u
 * 🇷🇺 **[Russian](./res/locales/ru.ftl)**: `ru`
 * 🇺🇦 **[Ukrainian](./res/locales/uk.ftl)**: `uk`
 
-**➡️ Some more languages are supported when building with the `fonts-cjk` feature:**
+**➡️ Some languages require building with the `fonts-cjk` feature in order to render properly:**
 
 * 🇨🇳 **[Chinese (Simplified)](./res/locales/zh.ftl)**: `zh`
 
@@ -119,7 +119,7 @@ The Control UI behavior can be tuned at compile time, by enabling some optional 
 * **Support for CJK languages (eg. Chinese):**
   * Feature name: `fonts-cjk`
   * Build command: `cargo build --features=fonts-cjk`
-  * Purpose: enables font support for CJK languages. As the CJK font weights 10MB+, and given that all assets get bundled in the final release binary, this feature is disabled by default as an optimization on binary size. If you need to use CJK languages in your MakAir ventilator, please build the Control UI with this feature enabled.
+  * Purpose: enables font support for CJK languages. As the CJK font weights 10MB+, and given that all assets get bundled in the final release binary, this feature is disabled by default as an optimization on binary size. If you need to use CJK languages in your MakAir ventilator, please build the Control UI with this feature enabled. Note that with this feature disabled, you will still be able to run with a CJK font, though all its glyphs will render as squares.
 
 * **Automatic graph scaler:**
   * Feature name: `graph-scaler`
