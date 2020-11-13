@@ -82,7 +82,7 @@ pub fn plot<'a>(master: &mut ControlWidget<'a>, config: &mut Config<'a>) {
             0,
         ))
         .0;
-    let oldest_time = newest_time - chrono::Duration::seconds(GRAPH_DRAW_SECONDS as _);
+    let oldest_time = newest_time - chrono::Duration::seconds(GRAPH_DRAW_SECONDS);
 
     // "Default" static graph maximum mode requested
     // Convert the "range high" value from cmH20 to mmH20, as this is the high-precision unit \

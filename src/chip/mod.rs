@@ -27,6 +27,8 @@ use crate::config::environment::*;
 use crate::utilities::parse::parse_text_lines_to_single;
 use crate::utilities::units::{convert_cmh2o_to_mmh2o, convert_mmh2o_to_cmh2o, ConvertMode};
 
+const DATA_PRESSURE_STORE_EVERY_MILLISECONDS: i64 = 1000 / DISPLAY_FRAMERATE_SMOOTH_HEAVY as i64;
+
 pub type ChipDataPressure = VecDeque<(DateTime<Utc>, u16)>;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -333,29 +335,37 @@ impl Chip {
         let snapshot_time =
             self.boot_time.unwrap() + Duration::microseconds(snapshot.systick as i64);
 
-        // Fetch last pressure value in order to reduce noise
-        let last_pressure = if let Some(last_pressure_inner) = self.data_pressure.get(0) {
-            last_pressure_inner.1
+        // Fetch last pressure value in order to reduce noise, and check if the point should be \
+        //   stored as well (there is no need storing points faster than the framerate, as this \
+        //   is sufficient to ensure that the plot progresses in time smoothly, and that the \
+        //   curves look nice on screen)
+        let (new_point, may_store) = if let Some(last_pressure_inner) = self.data_pressure.get(0) {
+            let new_point = last_pressure_inner.1 as i16
+                - ((last_pressure_inner.1 as i16 - snapshot.pressure as i16)
+                    / TELEMETRY_POINTS_LOW_PASS_DEGREE as i16);
+
+            let may_store = (snapshot_time - last_pressure_inner.0) >=
+                chrono::Duration::milliseconds(DATA_PRESSURE_STORE_EVERY_MILLISECONDS);
+
+            (new_point as u16, may_store)
         } else {
-            0
+            (snapshot.pressure, true)
         };
 
-        // Low-pass filter
-        let new_point = last_pressure as i16
-            - ((last_pressure as i16 - snapshot.pressure as i16)
-                / TELEMETRY_POINTS_LOW_PASS_DEGREE as i16);
+        // May we store this pressure point?
+        if may_store {
+            // Points are stored as mmH20 (for more precision; though we do work in cmH20)
+            self.data_pressure
+                .push_front((snapshot_time, new_point));
 
-        // Points are stored as mmH20 (for more precision; though we do work in cmH20)
-        self.data_pressure
-            .push_front((snapshot_time, new_point as u16));
-
-        // Clean any now-expired pressure
-        self.clean_expired_pressure_from_time(snapshot_time);
+            // Clean any now-expired pressure
+            self.clean_expired_pressure_from_time(snapshot_time);
+        }
     }
 
     fn clean_expired_pressure_from_time(&mut self, front_time: DateTime<Utc>) {
         if !self.data_pressure.is_empty() {
-            let expired_time = front_time - chrono::Duration::seconds(GRAPH_DRAW_SECONDS as _);
+            let expired_time = front_time - chrono::Duration::seconds(GRAPH_DRAW_SECONDS);
 
             while self
                 .data_pressure
