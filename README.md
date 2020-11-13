@@ -96,7 +96,7 @@ You can pass the desired locale code when running the `makair-control` binary, u
 * 🇷🇺 **[Russian](./res/locales/ru.ftl)**: `ru`
 * 🇺🇦 **[Ukrainian](./res/locales/uk.ftl)**: `uk`
 
-**➡️ Some languages require building with the `fonts-cjk` feature in order to render properly:**
+**➡️ Some CJK languages require building with the `fonts-cjk` feature in order to render properly:**
 
 * 🇨🇳 **[Chinese (Simplified)](./res/locales/zh.ftl)**: `zh`
 
