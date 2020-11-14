@@ -99,7 +99,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, mut config: Config<'a>) -> f64
     };
 
     // Acquire common graph time range
-    let newest_time = reference_time.unwrap_or(Utc::now());
+    let newest_time = reference_time.unwrap_or_else(Utc::now);
     let oldest_time = newest_time - chrono::Duration::seconds(GRAPH_DRAW_SECONDS);
 
     // Draw plots
