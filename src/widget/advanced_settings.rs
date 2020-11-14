@@ -81,7 +81,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
             &parse_optional_number_to_string(
                 config
                     .last_tick
-                    .map(|last_tick| (last_tick as usize) / 1000000),
+                    .map(|last_tick| (last_tick / 1000000) as usize),
             ),
         ),
         // Firmware CPU load (in percents)
@@ -157,7 +157,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     0 as _
 }
 
-pub fn lines<'a>(master: &mut ControlWidget<'a>, config: Config, line_data: &[(&str, &str)]) {
+fn lines<'a>(master: &mut ControlWidget<'a>, config: Config, line_data: &[(&str, &str)]) {
     for (index, container_line) in config.advanced_container_line_labels.iter().enumerate() {
         let line_text = line_data[index].0;
 
