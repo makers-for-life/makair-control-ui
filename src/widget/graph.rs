@@ -22,7 +22,8 @@ use crate::display::widget::ControlWidget;
 #[cfg(feature = "graph-scaler")]
 use crate::utilities::pressure::process_max_allowed_pressure;
 
-const GRAPH_LINE_COLOR: RGBColor = plotters::style::RGBColor(0, 196, 255);
+const GRAPH_PRESSURE_LINE_COLOR: RGBColor = plotters::style::RGBColor(0, 196, 255);
+const GRAPH_FLOW_LINE_COLOR: RGBColor = plotters::style::RGBColor(196, 37, 20);
 
 pub struct Config<'a> {
     pub width: f64,
@@ -45,7 +46,7 @@ pub struct Config<'a> {
 
 lazy_static! {
     static ref GRAPH_AXIS_Y_FONT: TextStyle<'static> =
-        TextStyle::from(("sans-serif", 15).into_font());
+        TextStyle::from(("sans-serif", 14).into_font());
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, mut config: Config<'a>) -> f64 {
@@ -111,7 +112,7 @@ fn pressure<'a>(
     // Convert the "range high" value from cmH20 to mmH20, as this is the high-precision unit \
     //   we work with for graphing purposes only.
     #[cfg(not(feature = "graph-scaler"))]
-    let range_high = GRAPH_DRAW_RANGE_HIGH_PRECISION_DIVIDED;
+    let range_high = GRAPH_DRAW_RANGE_PRESSURE_HIGH_PRECISION_DIVIDED;
 
     // "Graph scaler" auto-scale mode requested, will auto-process graph maximum
     #[cfg(feature = "graph-scaler")]
@@ -119,7 +120,7 @@ fn pressure<'a>(
         let peak_command_or_initial = if config.machine_snapshot.peak_command > 0 {
             config.machine_snapshot.peak_command
         } else {
-            GRAPH_DRAW_RANGE_HIGH_DYNAMIC_INITIAL
+            GRAPH_DRAW_RANGE_PRESSURE_HIGH_DYNAMIC_INITIAL
         };
 
         // Convert the "range high" value from cmH20 to mmH20, as this is the high-precision \
@@ -155,7 +156,10 @@ fn pressure<'a>(
         .margin_right(GRAPH_DRAW_MARGIN_RIGHT)
         .x_label_area_size(0)
         .y_label_area_size(GRAPH_DRAW_LABEL_WIDTH)
-        .build_cartesian_2d(time_range, GRAPH_DRAW_RANGE_LOW..range_high)
+        .build_cartesian_2d(
+            time_range,
+            GRAPH_DRAW_PRESSURE_RANGE_LOW_PRECISION_DIVIDED..range_high,
+        )
         .expect("failed to build pressure chart");
 
     chart
@@ -177,9 +181,11 @@ fn pressure<'a>(
             AreaSeries::new(
                 config.data_pressure.iter().map(|x| (x.0, x.1 as i32)),
                 0,
-                &GRAPH_LINE_COLOR.mix(0.25),
+                &GRAPH_PRESSURE_LINE_COLOR.mix(0.3),
             )
-            .border_style(ShapeStyle::from(&GRAPH_LINE_COLOR).stroke_width(GRAPH_DRAW_LINE_SIZE)),
+            .border_style(
+                ShapeStyle::from(&GRAPH_PRESSURE_LINE_COLOR).stroke_width(GRAPH_DRAW_LINE_SIZE),
+            ),
         )
         .expect("failed to draw pressure chart data");
 }
@@ -212,11 +218,6 @@ fn flow<'a>(
     )
     .into_drawing_area();
 
-    // "Default" static graph maximum mode requested
-    // Convert the "range high" value from cmH20 to mmH20, as this is the high-precision unit \
-    //   we work with for graphing purposes only.
-    let range_high = GRAPH_DRAW_RANGE_HIGH_PRECISION_DIVIDED;
-
     let mut chart = ChartBuilder::on(&drawing)
         .margin_top(GRAPH_DRAW_MARGIN_TOP)
         .margin_bottom(GRAPH_DRAW_MARGIN_BOTTOM)
@@ -224,7 +225,10 @@ fn flow<'a>(
         .margin_right(GRAPH_DRAW_MARGIN_RIGHT)
         .x_label_area_size(0)
         .y_label_area_size(GRAPH_DRAW_LABEL_WIDTH)
-        .build_cartesian_2d(time_range, GRAPH_DRAW_RANGE_LOW..range_high)
+        .build_cartesian_2d(
+            time_range,
+            GRAPH_DRAW_FLOW_RANGE_LOW..GRAPH_DRAW_FLOW_RANGE_HIGH,
+        )
         .expect("failed to build flow chart");
 
     chart
@@ -235,11 +239,6 @@ fn flow<'a>(
         .y_labels(GRAPH_DRAW_LABEL_NUMBER_MAX)
         // TODO: commonize those color mixs
         .y_label_style(GRAPH_AXIS_Y_FONT.color(&WHITE.mix(0.75)))
-        .y_label_formatter(&|y| {
-            // Convert high-precision point in mmH20 back to cmH20 (which measurements & \
-            //   targets both use)
-            (y / TELEMETRY_POINTS_PRECISION_DIVIDE as i32).to_string()
-        })
         .draw()
         .expect("failed to draw flow chart mesh");
 
@@ -249,10 +248,11 @@ fn flow<'a>(
                 // TODO
                 config.data_pressure.iter().map(|x| (x.0, x.1 as i32)),
                 0,
-                // TODO: commonize those color mixs
-                &GRAPH_LINE_COLOR.mix(0.25),
+                &GRAPH_FLOW_LINE_COLOR.mix(0.4),
             )
-            .border_style(ShapeStyle::from(&GRAPH_LINE_COLOR).stroke_width(GRAPH_DRAW_LINE_SIZE)),
+            .border_style(
+                ShapeStyle::from(&GRAPH_FLOW_LINE_COLOR).stroke_width(GRAPH_DRAW_LINE_SIZE),
+            ),
         )
         .expect("failed to draw flow chart data");
 }
