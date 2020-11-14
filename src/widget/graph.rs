@@ -19,8 +19,6 @@ use telemetry::structures::MachineStateSnapshot;
 use crate::chip::{ChipDataFlow, ChipDataPressure};
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
-#[cfg(feature = "graph-scaler")]
-use crate::utilities::pressure::process_max_allowed_pressure;
 
 const GRAPH_PRESSURE_LINE_COLOR: RGBColor = plotters::style::RGBColor(0, 196, 255);
 const GRAPH_FLOW_LINE_COLOR: RGBColor = plotters::style::RGBColor(196, 37, 20);
@@ -118,47 +116,6 @@ fn pressure<'a>(
     )
     .into_drawing_area();
 
-    // "Default" static graph maximum mode requested
-    // Convert the "range high" value from cmH20 to mmH20, as this is the high-precision unit \
-    //   we work with for graphing purposes only.
-    #[cfg(not(feature = "graph-scaler"))]
-    let range_high = GRAPH_DRAW_RANGE_PRESSURE_HIGH_PRECISION_DIVIDED;
-
-    // "Graph scaler" auto-scale mode requested, will auto-process graph maximum
-    #[cfg(feature = "graph-scaler")]
-    let range_high = {
-        let peak_command_or_initial = if config.machine_snapshot.peak_command > 0 {
-            config.machine_snapshot.peak_command
-        } else {
-            GRAPH_DRAW_RANGE_PRESSURE_HIGH_DYNAMIC_INITIAL
-        };
-
-        // Convert the "range high" value from cmH20 to mmH20, as this is the high-precision \
-        //   unit we work with for graphing purposes only.
-        let mut range_high = (process_max_allowed_pressure(peak_command_or_initial) as u16
-            * TELEMETRY_POINTS_PRESSURE_PRECISION_DIVIDE) as i32;
-
-        // Override "range high" with a larger value contained in graph (avoids \
-        //   larger-than-range-high graph points to flat out)
-        let graph_largest_point = {
-            let mut data_pressure_points_ordered = config
-                .data_pressure
-                .iter()
-                .map(|x| x.1 as i32)
-                .collect::<Vec<i32>>();
-
-            data_pressure_points_ordered.sort_unstable();
-
-            *data_pressure_points_ordered.last().unwrap_or(&0)
-        };
-
-        if graph_largest_point > range_high {
-            range_high = graph_largest_point;
-        }
-
-        range_high
-    };
-
     let mut chart = ChartBuilder::on(&drawing)
         .margin_top(GRAPH_DRAW_MARGIN_TOP)
         .margin_bottom(GRAPH_DRAW_MARGIN_BOTTOM)
@@ -168,7 +125,8 @@ fn pressure<'a>(
         .y_label_area_size(GRAPH_DRAW_LABEL_WIDTH)
         .build_cartesian_2d(
             time_range,
-            GRAPH_DRAW_PRESSURE_RANGE_LOW_PRECISION_DIVIDED..range_high,
+            GRAPH_DRAW_PRESSURE_RANGE_LOW_PRECISION_DIVIDED
+                ..GRAPH_DRAW_PRESSURE_RANGE_HIGH_PRECISION_DIVIDED,
         )
         .expect("failed to build pressure chart");
 

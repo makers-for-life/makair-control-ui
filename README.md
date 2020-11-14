@@ -121,11 +121,6 @@ The Control UI behavior can be tuned at compile time, by enabling some optional 
   * Build command: `cargo build --features=fonts-cjk`
   * Purpose: enables font support for CJK languages. As the CJK font weights 10MB+, and given that all assets get bundled in the final release binary, this feature is disabled by default as an optimization on binary size. If you need to use CJK languages in your MakAir ventilator, please build the Control UI with this feature enabled. Note that with this feature disabled, you will still be able to run with a CJK font, though all its glyphs will render as squares.
 
-* **Automatic graph scaler:**
-  * Feature name: `graph-scaler`
-  * Build command: `cargo build --features=graph-scaler`
-  * Purpose: enables automatic graph maximum calculation, and re-adjustments as the target peak pressure is adjusted by an operator, or the largest point pressure value on screen overflows the graph. This overrides the default static maximum pressure value, that is based on the theoretical saturation maximum in an human subject. While the dynamic graph scaler system was previously the default, based on medical staff feedback it has been made static in order to improve machine usability in real-world scenarios. The auto-scaler feature was confusing for them, as traditional respirator systems use an hardcoded maximum.
-
 * **Radio broadcasting of metrics over [LoRa / LoRaWAN](https://en.wikipedia.org/wiki/LoRa):**
   * Feature name: `lora`
   * Build command: `cargo build --features=lora`
