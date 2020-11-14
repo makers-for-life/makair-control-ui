@@ -52,6 +52,14 @@ pub struct Config<'a> {
     pub plot_graphs: &'a mut (ConrodBackendReusableGraph, ConrodBackendReusableGraph),
 }
 
+struct PlotContext<'a, 'b> {
+    value_range: Range<i32>,
+    plot_id: WidgetId,
+    precision_divide: i32,
+    line_color: &'a RGBColor,
+    data_values: &'b ChipDataGeneric,
+}
+
 lazy_static! {
     static ref GRAPH_AXIS_Y_FONT: TextStyle<'static> =
         TextStyle::from(("sans-serif", 14).into_font());
@@ -111,13 +119,15 @@ fn pressure<'a>(
         master,
         size,
         time_range,
-        GRAPH_DRAW_PRESSURE_RANGE_LOW_PRECISION_DIVIDED
-            ..GRAPH_DRAW_PRESSURE_RANGE_HIGH_PRECISION_DIVIDED,
-        config.pressure_id,
         &mut config.plot_graphs.0,
-        TELEMETRY_POINTS_PRESSURE_PRECISION_DIVIDE,
-        &GRAPH_PRESSURE_LINE_COLOR,
-        &config.data_pressure,
+        PlotContext {
+            value_range: GRAPH_DRAW_PRESSURE_RANGE_LOW_PRECISION_DIVIDED
+                ..GRAPH_DRAW_PRESSURE_RANGE_HIGH_PRECISION_DIVIDED,
+            plot_id: config.pressure_id,
+            precision_divide: TELEMETRY_POINTS_PRESSURE_PRECISION_DIVIDE,
+            line_color: &GRAPH_PRESSURE_LINE_COLOR,
+            data_values: &config.data_pressure,
+        },
     );
 }
 
@@ -144,12 +154,15 @@ fn flow<'a>(
         master,
         size,
         time_range,
-        GRAPH_DRAW_FLOW_RANGE_LOW_PRECISION_DIVIDED..GRAPH_DRAW_FLOW_RANGE_HIGH_PRECISION_DIVIDED,
-        config.flow_id,
         &mut config.plot_graphs.1,
-        TELEMETRY_POINTS_FLOW_PRECISION_DIVIDE,
-        &GRAPH_FLOW_LINE_COLOR,
-        &config.data_flow,
+        PlotContext {
+            value_range: GRAPH_DRAW_FLOW_RANGE_LOW_PRECISION_DIVIDED
+                ..GRAPH_DRAW_FLOW_RANGE_HIGH_PRECISION_DIVIDED,
+            plot_id: config.flow_id,
+            precision_divide: TELEMETRY_POINTS_FLOW_PRECISION_DIVIDE,
+            line_color: &GRAPH_FLOW_LINE_COLOR,
+            data_values: &config.data_flow,
+        },
     );
 }
 
@@ -157,18 +170,14 @@ fn plot<'a>(
     master: &mut ControlWidget<'a>,
     size: (f64, f64),
     time_range: Range<DateTime<Utc>>,
-    value_range: Range<i32>,
-    plot_id: WidgetId,
     plot_graph: &mut ConrodBackendReusableGraph,
-    precision_divide: i32,
-    line_color: &RGBColor,
-    data_values: &ChipDataGeneric,
+    context: PlotContext,
 ) {
     // Create drawing backend
     let drawing = ConrodBackend::new(
         &mut master.ui,
         (size.0 as u32, size.1 as u32),
-        plot_id,
+        context.plot_id,
         master.fonts.regular,
         plot_graph,
     )
@@ -182,10 +191,12 @@ fn plot<'a>(
         .margin_right(GRAPH_DRAW_MARGIN_RIGHT)
         .x_label_area_size(0)
         .y_label_area_size(GRAPH_DRAW_LABEL_WIDTH)
-        .build_cartesian_2d(time_range, value_range)
+        .build_cartesian_2d(time_range, context.value_range)
         .expect("failed to build chart");
 
     // Configure mesh
+    let precision_divide = context.precision_divide;
+
     chart
         .configure_mesh()
         .bold_line_style(&GRAPH_MESH_BOLD_COLOR_RGB.mix(GRAPH_MESH_BOLD_COLOR_ALPHA))
@@ -207,8 +218,8 @@ fn plot<'a>(
     chart
         .draw_series(
             LineSeries::new(
-                data_values.iter().map(|x| (x.0, x.1 as i32)),
-                ShapeStyle::from(line_color)
+                context.data_values.iter().map(|x| (x.0, x.1 as i32)),
+                ShapeStyle::from(context.line_color)
                     .filled()
                     .stroke_width(GRAPH_DRAW_LINE_SIZE),
             )
