@@ -285,6 +285,7 @@ impl DisplayRenderer {
             height: GRAPH_HEIGHT as _,
             data_pressure: &chip.data_pressure,
             data_flow: &chip.data_flow,
+            chip_state: &chip.state,
             machine_snapshot: &chip.last_machine_snapshot,
             plot_graphs: &mut self.plot_graphs,
         };

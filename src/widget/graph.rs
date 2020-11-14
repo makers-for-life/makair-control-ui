@@ -16,7 +16,7 @@ use plotters::style::{Color, ShapeStyle, TextStyle};
 use plotters_conrod::{ConrodBackend, ConrodBackendReusableGraph};
 use telemetry::structures::MachineStateSnapshot;
 
-use crate::chip::{ChipDataFlow, ChipDataGeneric, ChipDataPressure};
+use crate::chip::{ChipDataFlow, ChipDataGeneric, ChipDataPressure, ChipState};
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 
@@ -50,6 +50,7 @@ pub struct Config<'a> {
     pub data_pressure: &'a ChipDataPressure,
     pub data_flow: &'a ChipDataFlow,
 
+    pub chip_state: &'a ChipState,
     pub machine_snapshot: &'a MachineStateSnapshot,
 
     pub plot_graphs: &'a mut (ConrodBackendReusableGraph, ConrodBackendReusableGraph),
@@ -84,12 +85,21 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, mut config: Config<'a>) -> f64
     // Acquire common graph size
     let size = (config.width, config.height / 2.0);
 
-    // Acquire common graph time range
-    let newest_time = if let Some(boot_time) = config.boot_time {
-        boot_time + chrono::Duration::microseconds(config.last_tick.unwrap_or(0) as i64)
+    // Acquire graph reference time
+    // Notice: to prevent the graph from progressing in time periodically when stopped, use the \
+    //   latest pressure data as a reference (will also be used for the flow graph in that case). \
+    //   Using the last tick otherwise gives out much smoother graph results at high FPS, with \
+    //   less visual jitter.
+    let reference_time = if config.chip_state == &ChipState::Running {
+        config.boot_time.map(|boot_time| {
+            boot_time + chrono::Duration::microseconds(config.last_tick.unwrap_or(0) as i64)
+        })
     } else {
-        Utc::now()
+        config.data_pressure.front().map(|pressure| pressure.0)
     };
+
+    // Acquire common graph time range
+    let newest_time = reference_time.unwrap_or(Utc::now());
     let oldest_time = newest_time - chrono::Duration::seconds(GRAPH_DRAW_SECONDS);
 
     // Draw plots
