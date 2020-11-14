@@ -63,9 +63,6 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, mut config: Config<'a>) -> f64
 }
 
 pub fn plot<'a>(master: &mut ControlWidget<'a>, config: &mut Config<'a>) {
-    // Acquire values
-    let peak_command_value = config.machine_snapshot.peak_command;
-
     // Create drawing
     let drawing = ConrodBackend::new(
         &mut master.ui,
@@ -88,22 +85,13 @@ pub fn plot<'a>(master: &mut ControlWidget<'a>, config: &mut Config<'a>) {
     // Convert the "range high" value from cmH20 to mmH20, as this is the high-precision unit \
     //   we work with for graphing purposes only.
     #[cfg(not(feature = "graph-scaler"))]
-    let range_high = {
-        let range_high = (GRAPH_DRAW_RANGE_HIGH_STATIC_INITIAL as i32)
-            * (TELEMETRY_POINTS_PRECISION_DIVIDE as i32);
-
-        // Void statement to prevent the compiler from warning about unused \
-        //   'machine_snapshot', which is indeed used under feature 'graph-scaler'.
-        let _ = peak_command_value;
-
-        range_high
-    };
+    let range_high = GRAPH_DRAW_RANGE_HIGH_PRECISION_DIVIDED;
 
     // "Graph scaler" auto-scale mode requested, will auto-process graph maximum
     #[cfg(feature = "graph-scaler")]
     let range_high = {
-        let peak_command_or_initial = if peak_command_value > 0 {
-            peak_command_value
+        let peak_command_or_initial = if config.machine_snapshot.peak_command > 0 {
+            config.machine_snapshot.peak_command
         } else {
             GRAPH_DRAW_RANGE_HIGH_DYNAMIC_INITIAL
         };
