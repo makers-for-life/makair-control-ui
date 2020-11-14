@@ -3,6 +3,7 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+use chrono::{offset::Utc, DateTime};
 use conrod_core::color::{self, Color};
 
 use telemetry::alarm::AlarmCode;
@@ -36,10 +37,10 @@ pub struct ScreenModalsOpen {
 
 pub struct Screen<'a> {
     ids: &'a Ids,
-    last_tick: Option<u64>,
+    timers: (Option<DateTime<Utc>>, Option<u64>),
+    ongoing_alarms: Option<&'a [(AlarmCode, AlarmPriority)]>,
     machine_snapshot: Option<&'a MachineStateSnapshot>,
     data_snapshot: Option<&'a DataSnapshot>,
-    ongoing_alarms: Option<&'a [(AlarmCode, AlarmPriority)]>,
     widgets: ControlWidget<'a>,
 }
 
@@ -62,17 +63,17 @@ impl<'a> Screen<'a> {
         ui: conrod_core::UiCell<'a>,
         ids: &'a Ids,
         fonts: &'a Fonts,
+        timers: (Option<DateTime<Utc>>, Option<u64>),
         ongoing_alarms: Option<&'a [(AlarmCode, AlarmPriority)]>,
-        last_tick: Option<u64>,
         machine_snapshot: Option<&'a MachineStateSnapshot>,
         data_snapshot: Option<&'a DataSnapshot>,
     ) -> Screen<'a> {
         Screen {
             ids,
-            last_tick,
+            timers,
+            ongoing_alarms,
             machine_snapshot,
             data_snapshot,
-            ongoing_alarms,
             widgets: ControlWidget::new(ui, fonts),
         }
     }
@@ -209,6 +210,8 @@ impl<'a> Screen<'a> {
             height: graph_data.height,
             parent: self.ids.layout_body,
             id: self.ids.graph_pressure,
+            boot_time: self.timers.0,
+            last_tick: self.timers.1,
             data_pressure: graph_data.data_pressure,
             machine_snapshot: graph_data.machine_snapshot,
             plot_graph: graph_data.plot_graph,
@@ -723,7 +726,7 @@ impl<'a> Screen<'a> {
                     - MODAL_VALIDATE_BUTTON_HEIGHT
                     - (ADVANCED_SETTINGS_MODAL_PADDING * 2.0),
 
-                last_tick: self.last_tick,
+                last_tick: self.timers.1,
                 machine_snapshot: &self.machine_snapshot.unwrap(),
                 data_snapshot: self.data_snapshot,
 

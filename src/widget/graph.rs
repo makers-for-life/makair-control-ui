@@ -3,7 +3,7 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-use chrono::{DateTime, NaiveDateTime, Utc};
+use chrono::{DateTime, Utc};
 use conrod_core::{
     color,
     widget::{self, Id as WidgetId},
@@ -28,6 +28,9 @@ pub struct Config<'a> {
 
     pub parent: WidgetId,
     pub id: WidgetId,
+
+    pub boot_time: Option<DateTime<Utc>>,
+    pub last_tick: Option<u64>,
 
     pub data_pressure: &'a ChipDataPressure,
     pub machine_snapshot: &'a MachineStateSnapshot,
@@ -74,14 +77,11 @@ pub fn plot<'a>(master: &mut ControlWidget<'a>, config: &mut Config<'a>) {
     .into_drawing_area();
 
     // Acquire time range
-    let newest_time = config
-        .data_pressure
-        .front()
-        .unwrap_or(&(
-            DateTime::from_utc(NaiveDateTime::from_timestamp(0, 0), Utc),
-            0,
-        ))
-        .0;
+    let newest_time = if let Some(boot_time) = config.boot_time {
+        boot_time + chrono::Duration::microseconds(config.last_tick.unwrap_or(0) as i64)
+    } else {
+        Utc::now()
+    };
     let oldest_time = newest_time - chrono::Duration::seconds(GRAPH_DRAW_SECONDS);
 
     // "Default" static graph maximum mode requested
