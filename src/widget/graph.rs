@@ -12,7 +12,7 @@ use conrod_core::{
     Positionable, Sizeable, Widget,
 };
 use plotters::prelude::*;
-use plotters::style::{Color, TextStyle};
+use plotters::style::{Color, ShapeStyle, TextStyle};
 use plotters_conrod::{ConrodBackend, ConrodBackendReusableGraph};
 use telemetry::structures::MachineStateSnapshot;
 
@@ -22,6 +22,9 @@ use crate::display::widget::ControlWidget;
 
 const GRAPH_PRESSURE_LINE_COLOR: RGBColor = plotters::style::RGBColor(0, 196, 255);
 const GRAPH_FLOW_LINE_COLOR: RGBColor = plotters::style::RGBColor(196, 37, 20);
+
+const GRAPH_MESH_AXIS_COLOR_RGB: RGBColor = plotters::style::RGBColor(255, 255, 255);
+const GRAPH_MESH_AXIS_COLOR_ALPHA: f64 = 0.5;
 
 const GRAPH_MESH_BOLD_COLOR_RGB: RGBColor = plotters::style::RGBColor(255, 255, 255);
 const GRAPH_MESH_BOLD_COLOR_ALPHA: f64 = 0.22;
@@ -201,6 +204,11 @@ fn plot<'a>(
         .configure_mesh()
         .bold_line_style(&GRAPH_MESH_BOLD_COLOR_RGB.mix(GRAPH_MESH_BOLD_COLOR_ALPHA))
         .light_line_style(&GRAPH_MESH_LIGHT_COLOR_RGB)
+        .axis_style(ShapeStyle {
+            color: GRAPH_MESH_AXIS_COLOR_RGB.mix(GRAPH_MESH_AXIS_COLOR_ALPHA),
+            filled: true,
+            stroke_width: GRAPH_DRAW_AXIS_SIZE,
+        })
         .y_labels(GRAPH_DRAW_LABEL_NUMBER_MAX)
         .y_label_style(
             GRAPH_AXIS_Y_FONT
