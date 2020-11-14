@@ -273,6 +273,7 @@ impl Chip {
             TelemetryMessage::DataSnapshot(snapshot) => {
                 self.update_tick(snapshot.systick);
 
+                // Append time-series data
                 self.add_data_pressure(&snapshot);
                 self.add_data_flow(&snapshot);
 
