@@ -214,6 +214,8 @@ pub const LORA_GPIO_PIN_NUMBER: u64 = 25;
 
 #[cfg(not(feature = "graph-scaler"))]
 pub const GRAPH_DRAW_RANGE_HIGH_STATIC_INITIAL: u8 = 65;
+
+#[cfg(not(feature = "graph-scaler"))]
 pub const GRAPH_DRAW_RANGE_HIGH_PRECISION_DIVIDED: i32 =
     (GRAPH_DRAW_RANGE_HIGH_STATIC_INITIAL as i32) * (TELEMETRY_POINTS_PRECISION_DIVIDE as i32);
 
