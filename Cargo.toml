@@ -28,7 +28,7 @@ inflate = "0.4"
 winit = "0.19"
 image = { version = "0.23", default-features = false, features = ["png"] }
 glium = "0.24"
-plotters = { version = "0.3", default_features = false, features = ["chrono", "area_series"] }
+plotters = { version = "0.3", default_features = false, features = ["chrono", "line_series"] }
 plotters-conrod = "0.3"
 conrod_glium = "0.70"
 conrod_winit = "0.70"

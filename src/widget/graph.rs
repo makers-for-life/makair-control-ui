@@ -191,14 +191,13 @@ fn pressure<'a>(
 
     chart
         .draw_series(
-            AreaSeries::new(
+            LineSeries::new(
                 config.data_pressure.iter().map(|x| (x.0, x.1 as i32)),
-                0,
-                &GRAPH_PRESSURE_LINE_COLOR.mix(0.3),
+                ShapeStyle::from(&GRAPH_PRESSURE_LINE_COLOR)
+                    .filled()
+                    .stroke_width(GRAPH_DRAW_LINE_SIZE),
             )
-            .border_style(
-                ShapeStyle::from(&GRAPH_PRESSURE_LINE_COLOR).stroke_width(GRAPH_DRAW_LINE_SIZE),
-            ),
+            .point_size(0),
         )
         .expect("failed to draw pressure chart data");
 }
@@ -258,14 +257,13 @@ fn flow<'a>(
 
     chart
         .draw_series(
-            AreaSeries::new(
+            LineSeries::new(
                 config.data_flow.iter().map(|x| (x.0, x.1 as i32)),
-                0,
-                &GRAPH_FLOW_LINE_COLOR.mix(0.4),
+                ShapeStyle::from(&GRAPH_FLOW_LINE_COLOR)
+                    .filled()
+                    .stroke_width(GRAPH_DRAW_LINE_SIZE),
             )
-            .border_style(
-                ShapeStyle::from(&GRAPH_FLOW_LINE_COLOR).stroke_width(GRAPH_DRAW_LINE_SIZE),
-            ),
+            .point_size(0),
         )
         .expect("failed to draw flow chart data");
 }
