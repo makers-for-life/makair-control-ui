@@ -61,7 +61,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     let last_pressure = if let Some(last_pressure_inner) = config.data_pressure.get(0) {
         // Convert high-precision point in mmH20 back to cmH20 (which measurements & targets \
         //   both use)
-        last_pressure_inner.1 / TELEMETRY_POINTS_PRECISION_DIVIDE
+        last_pressure_inner.1 / TELEMETRY_POINTS_PRESSURE_PRECISION_DIVIDE
     } else {
         0
     };

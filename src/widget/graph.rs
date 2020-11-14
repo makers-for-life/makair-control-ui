@@ -136,7 +136,7 @@ fn pressure<'a>(
         // Convert the "range high" value from cmH20 to mmH20, as this is the high-precision \
         //   unit we work with for graphing purposes only.
         let mut range_high = (process_max_allowed_pressure(peak_command_or_initial) as u16
-            * TELEMETRY_POINTS_PRECISION_DIVIDE) as i32;
+            * TELEMETRY_POINTS_PRESSURE_PRECISION_DIVIDE) as i32;
 
         // Override "range high" with a larger value contained in graph (avoids \
         //   larger-than-range-high graph points to flat out)
@@ -184,7 +184,7 @@ fn pressure<'a>(
         .y_label_formatter(&|y| {
             // Convert high-precision point in mmH20 back to cmH20 (which measurements & \
             //   targets both use)
-            (y / TELEMETRY_POINTS_PRECISION_DIVIDE as i32).to_string()
+            (y / TELEMETRY_POINTS_PRESSURE_PRECISION_DIVIDE as i32).to_string()
         })
         .draw()
         .expect("failed to draw pressure chart mesh");
@@ -239,7 +239,8 @@ fn flow<'a>(
         .y_label_area_size(GRAPH_DRAW_LABEL_WIDTH)
         .build_cartesian_2d(
             time_range,
-            GRAPH_DRAW_FLOW_RANGE_LOW..GRAPH_DRAW_FLOW_RANGE_HIGH,
+            GRAPH_DRAW_FLOW_RANGE_LOW_PRECISION_DIVIDED
+                ..GRAPH_DRAW_FLOW_RANGE_HIGH_PRECISION_DIVIDED,
         )
         .expect("failed to build flow chart");
 
@@ -252,6 +253,10 @@ fn flow<'a>(
             GRAPH_AXIS_Y_FONT
                 .color(&GRAPH_AXIS_Y_FONT_COLOR_RGB.mix(GRAPH_AXIS_Y_FONT_COLOR_ALPHA)),
         )
+        .y_label_formatter(&|y| {
+            // Convert high-precision point in mL back to L (which measurements & targets both use)
+            (y / TELEMETRY_POINTS_FLOW_PRECISION_DIVIDE as i32).to_string()
+        })
         .draw()
         .expect("failed to draw flow chart mesh");
 
