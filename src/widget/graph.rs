@@ -3,6 +3,8 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+use std::ops::Range;
+
 use chrono::{DateTime, Utc};
 use conrod_core::{
     color,
@@ -27,7 +29,10 @@ pub struct Config<'a> {
     pub height: f64,
 
     pub parent: WidgetId,
-    pub id: WidgetId,
+
+    pub wrapper_id: WidgetId,
+    pub pressure_id: WidgetId,
+    pub flow_id: WidgetId,
 
     pub boot_time: Option<DateTime<Utc>>,
     pub last_tick: Option<u64>,
@@ -35,7 +40,7 @@ pub struct Config<'a> {
     pub data_pressure: &'a ChipDataPressure,
     pub machine_snapshot: &'a MachineStateSnapshot,
 
-    pub plot_graph: &'a mut ConrodBackendReusableGraph,
+    pub plot_graphs: &'a mut (ConrodBackendReusableGraph, ConrodBackendReusableGraph),
 }
 
 lazy_static! {
@@ -44,10 +49,10 @@ lazy_static! {
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, mut config: Config<'a>) -> f64 {
-    // Create container
+    // Create wrapper
     gen_widget_container!(
         master,
-        container_id: config.id,
+        container_id: config.wrapper_id,
         color: color::TRANSPARENT,
         width: config.width as _,
         height: config.height as _,
@@ -56,30 +61,51 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, mut config: Config<'a>) -> f64
         ]
     );
 
-    // Draw plot
-    plot(master, &mut config);
+    // Acquire common graph size
+    let size = (config.width, config.height / 2.0);
 
-    config.width
-}
-
-pub fn plot<'a>(master: &mut ControlWidget<'a>, config: &mut Config<'a>) {
-    // Create drawing
-    let drawing = ConrodBackend::new(
-        &mut master.ui,
-        (config.width as u32, config.height as u32),
-        config.id,
-        master.fonts.regular,
-        &mut config.plot_graph,
-    )
-    .into_drawing_area();
-
-    // Acquire time range
+    // Acquire common graph time range
     let newest_time = if let Some(boot_time) = config.boot_time {
         boot_time + chrono::Duration::microseconds(config.last_tick.unwrap_or(0) as i64)
     } else {
         Utc::now()
     };
     let oldest_time = newest_time - chrono::Duration::seconds(GRAPH_DRAW_SECONDS);
+
+    // Draw plots
+    pressure(master, &mut config, size, oldest_time..newest_time);
+    flow(master, &mut config, size, oldest_time..newest_time);
+
+    config.width
+}
+
+fn pressure<'a>(
+    master: &mut ControlWidget<'a>,
+    config: &mut Config<'a>,
+    size: (f64, f64),
+    time_range: Range<DateTime<Utc>>,
+) {
+    // Create container
+    gen_widget_container!(
+        master,
+        container_id: config.pressure_id,
+        color: color::TRANSPARENT,
+        width: size.0,
+        height: size.1,
+        positions: top_left_of[
+            config.wrapper_id,
+        ]
+    );
+
+    // Create drawing
+    let drawing = ConrodBackend::new(
+        &mut master.ui,
+        (size.0 as u32, size.1 as u32),
+        config.pressure_id,
+        master.fonts.regular,
+        &mut config.plot_graphs.0,
+    )
+    .into_drawing_area();
 
     // "Default" static graph maximum mode requested
     // Convert the "range high" value from cmH20 to mmH20, as this is the high-precision unit \
@@ -129,8 +155,8 @@ pub fn plot<'a>(master: &mut ControlWidget<'a>, config: &mut Config<'a>) {
         .margin_right(GRAPH_DRAW_MARGIN_RIGHT)
         .x_label_area_size(0)
         .y_label_area_size(GRAPH_DRAW_LABEL_WIDTH)
-        .build_cartesian_2d(oldest_time..newest_time, GRAPH_DRAW_RANGE_LOW..range_high)
-        .expect("failed to build chart");
+        .build_cartesian_2d(time_range, GRAPH_DRAW_RANGE_LOW..range_high)
+        .expect("failed to build pressure chart");
 
     chart
         .configure_mesh()
@@ -144,7 +170,7 @@ pub fn plot<'a>(master: &mut ControlWidget<'a>, config: &mut Config<'a>) {
             (y / TELEMETRY_POINTS_PRECISION_DIVIDE as i32).to_string()
         })
         .draw()
-        .expect("failed to draw chart mesh");
+        .expect("failed to draw pressure chart mesh");
 
     chart
         .draw_series(
@@ -155,5 +181,78 @@ pub fn plot<'a>(master: &mut ControlWidget<'a>, config: &mut Config<'a>) {
             )
             .border_style(ShapeStyle::from(&GRAPH_LINE_COLOR).stroke_width(GRAPH_DRAW_LINE_SIZE)),
         )
-        .expect("failed to draw chart data");
+        .expect("failed to draw pressure chart data");
+}
+
+fn flow<'a>(
+    master: &mut ControlWidget<'a>,
+    config: &mut Config<'a>,
+    size: (f64, f64),
+    time_range: Range<DateTime<Utc>>,
+) {
+    // Create container
+    gen_widget_container!(
+        master,
+        container_id: config.flow_id,
+        color: color::TRANSPARENT,
+        width: size.0,
+        height: size.1,
+        positions: bottom_left_of[
+            config.wrapper_id,
+        ]
+    );
+
+    // Create drawing
+    let drawing = ConrodBackend::new(
+        &mut master.ui,
+        (size.0 as u32, size.1 as u32),
+        config.flow_id,
+        master.fonts.regular,
+        &mut config.plot_graphs.1,
+    )
+    .into_drawing_area();
+
+    // "Default" static graph maximum mode requested
+    // Convert the "range high" value from cmH20 to mmH20, as this is the high-precision unit \
+    //   we work with for graphing purposes only.
+    let range_high = GRAPH_DRAW_RANGE_HIGH_PRECISION_DIVIDED;
+
+    let mut chart = ChartBuilder::on(&drawing)
+        .margin_top(GRAPH_DRAW_MARGIN_TOP)
+        .margin_bottom(GRAPH_DRAW_MARGIN_BOTTOM)
+        .margin_left(GRAPH_DRAW_MARGIN_LEFT)
+        .margin_right(GRAPH_DRAW_MARGIN_RIGHT)
+        .x_label_area_size(0)
+        .y_label_area_size(GRAPH_DRAW_LABEL_WIDTH)
+        .build_cartesian_2d(time_range, GRAPH_DRAW_RANGE_LOW..range_high)
+        .expect("failed to build flow chart");
+
+    chart
+        .configure_mesh()
+        // TODO: commonize those color mixs
+        .bold_line_style(&plotters::style::colors::WHITE.mix(0.22))
+        .light_line_style(&plotters::style::colors::BLACK)
+        .y_labels(GRAPH_DRAW_LABEL_NUMBER_MAX)
+        // TODO: commonize those color mixs
+        .y_label_style(GRAPH_AXIS_Y_FONT.color(&WHITE.mix(0.75)))
+        .y_label_formatter(&|y| {
+            // Convert high-precision point in mmH20 back to cmH20 (which measurements & \
+            //   targets both use)
+            (y / TELEMETRY_POINTS_PRECISION_DIVIDE as i32).to_string()
+        })
+        .draw()
+        .expect("failed to draw flow chart mesh");
+
+    chart
+        .draw_series(
+            AreaSeries::new(
+                // TODO
+                config.data_pressure.iter().map(|x| (x.0, x.1 as i32)),
+                0,
+                // TODO: commonize those color mixs
+                &GRAPH_LINE_COLOR.mix(0.25),
+            )
+            .border_style(ShapeStyle::from(&GRAPH_LINE_COLOR).stroke_width(GRAPH_DRAW_LINE_SIZE)),
+        )
+        .expect("failed to draw flow chart data");
 }

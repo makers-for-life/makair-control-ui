@@ -56,13 +56,13 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     0 as _
 }
 
-pub fn status<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn status<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Append sub-contents
     status_label(master, &config);
     status_form(master, &config);
 }
 
-pub fn status_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn status_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate status label
     gen_widget_label_form!(
         master,
@@ -74,7 +74,7 @@ pub fn status_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     );
 }
 
-pub fn status_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn status_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Acquire status button color & label
     let status_label = match config.trigger_settings.state {
         SettingActionState::Enabled => APP_I18N.t("trigger-state-enabled"),
@@ -106,7 +106,7 @@ pub fn status_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     );
 }
 
-pub fn offset<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn offset<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Create container
     gen_widget_container!(
         master,
@@ -125,7 +125,7 @@ pub fn offset<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     offset_form(master, &config);
 }
 
-pub fn offset_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn offset_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate offset label
     gen_widget_label_form!(
         master,
@@ -137,7 +137,7 @@ pub fn offset_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     );
 }
 
-pub fn offset_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn offset_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate offset navigation buttons
     gen_widget_button_navigate!(
         master,

@@ -30,7 +30,9 @@ widget_ids!(pub struct Ids {
 
   background,
 
+  graph_wrapper,
   graph_pressure,
+  graph_flow,
 
   branding_container,
   branding_text,

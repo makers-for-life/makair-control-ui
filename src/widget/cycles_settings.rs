@@ -49,7 +49,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     0 as _
 }
 
-pub fn cycles<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn cycles<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate cycles label
     gen_widget_label_form!(
         master,

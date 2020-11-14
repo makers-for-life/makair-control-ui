@@ -209,12 +209,14 @@ impl<'a> Screen<'a> {
             width: graph_data.width,
             height: graph_data.height,
             parent: self.ids.layout_body,
-            id: self.ids.graph_pressure,
+            wrapper_id: self.ids.graph_wrapper,
+            pressure_id: self.ids.graph_pressure,
+            flow_id: self.ids.graph_flow,
             boot_time: self.timers.0,
             last_tick: self.timers.1,
             data_pressure: graph_data.data_pressure,
             machine_snapshot: graph_data.machine_snapshot,
-            plot_graph: graph_data.plot_graph,
+            plot_graphs: graph_data.plot_graphs,
         }));
     }
 
@@ -281,7 +283,7 @@ impl<'a> Screen<'a> {
 
         // Render stop 'pseudo-modal'
         self.widgets.render(ControlWidgetType::Modal(modal::Config {
-            parent: self.ids.graph_pressure,
+            parent: self.ids.graph_wrapper,
             background: self.ids.stop_background,
             container_borders: self.ids.stop_container_borders,
             container: self.ids.stop_container,
@@ -356,7 +358,7 @@ impl<'a> Screen<'a> {
             telemetry_container::Config {
                 width: TELEMETRY_WIDGET_RIGHT_SIZE_WIDTH,
                 height: DISPLAY_WINDOW_SIZE_HEIGHT as f64 - LAYOUT_HEADER_SIZE_HEIGHT,
-                parent: self.ids.graph_pressure,
+                parent: self.ids.graph_wrapper,
                 id: self.ids.telemetry_widgets_right,
             },
         ));

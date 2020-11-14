@@ -59,7 +59,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     0 as _
 }
 
-pub fn plateau<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn plateau<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate plateau label
     gen_widget_label_form!(
         master,
@@ -94,7 +94,7 @@ pub fn plateau<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     );
 }
 
-pub fn peep<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn peep<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate PEEP label
     gen_widget_label_form!(
         master,

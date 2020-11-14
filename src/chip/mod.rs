@@ -29,7 +29,7 @@ use crate::utilities::units::{convert_cmh2o_to_mmh2o, convert_mmh2o_to_cmh2o, Co
 
 const DATA_PRESSURE_STORE_EVERY_MILLISECONDS: i64 = 1000 / TELEMETRY_POINTS_PER_SECOND as i64;
 
-pub type ChipDataPressure = VecDeque<(DateTime<Utc>, u16)>;
+pub type ChipDataPressure = VecDeque<(DateTime<Utc>, i16)>;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ChipState {
@@ -336,14 +336,13 @@ impl Chip {
         //   as this is sufficient to ensure that the plot progresses in time smoothly, and that \
         //   the curves look nice on screen)
         let (new_point, may_store) = if let Some(last_pressure_inner) = self.data_pressure.get(0) {
-            let new_point = last_pressure_inner.1 as i16
-                - ((last_pressure_inner.1 as i16 - snapshot.pressure as i16)
-                    / TELEMETRY_POINTS_LOW_PASS_DEGREE as i16);
+            let new_point = last_pressure_inner.1
+                - ((last_pressure_inner.1 - snapshot.pressure) / TELEMETRY_POINTS_LOW_PASS_DEGREE);
 
             let may_store = (snapshot_time - last_pressure_inner.0)
                 >= chrono::Duration::milliseconds(DATA_PRESSURE_STORE_EVERY_MILLISECONDS);
 
-            (new_point as u16, may_store)
+            (new_point, may_store)
         } else {
             (snapshot.pressure, true)
         };
@@ -593,11 +592,6 @@ impl Chip {
                 // Ignore heartbeat acknowledgements (stateless)
             }
 
-            ControlSetting::PeakPressure => {
-                self.last_machine_snapshot.peak_command =
-                    convert_mmh2o_to_cmh2o(ConvertMode::Rounded, ack.value as f64) as u8
-            }
-
             ControlSetting::PlateauPressure => {
                 self.settings.pressure.plateau = ack.value as usize;
                 self.last_machine_snapshot.plateau_command =
@@ -651,6 +645,50 @@ impl Chip {
                     self.settings.snooze.alarms = SettingActionState::Enabled;
                     self.last_machine_snapshot.alarm_snoozed = Some(true);
                 }
+            }
+
+            ControlSetting::VentilationMode => {
+                // TODO: to be implemented
+            }
+
+            ControlSetting::InspiratoryTriggerFlow => {
+                // TODO: to be implemented
+            }
+
+            ControlSetting::ExpiratoryTriggerFlow => {
+                // TODO: to be implemented
+            }
+
+            ControlSetting::TiMin => {
+                // TODO: to be implemented
+            }
+
+            ControlSetting::TiMax => {
+                // TODO: to be implemented
+            }
+
+            ControlSetting::LowInspiratoryMinuteVolumeAlarmThreshold => {
+                // TODO: to be implemented
+            }
+
+            ControlSetting::HighInspiratoryMinuteVolumeAlarmThreshold => {
+                // TODO: to be implemented
+            }
+
+            ControlSetting::LowExpiratoryMinuteVolumeAlarmThreshold => {
+                // TODO: to be implemented
+            }
+
+            ControlSetting::HighExpiratoryMinuteVolumeAlarmThreshold => {
+                // TODO: to be implemented
+            }
+
+            ControlSetting::LowExpiratoryRateAlarmThreshold => {
+                // TODO: to be implemented
+            }
+
+            ControlSetting::HighExpiratoryRateAlarmThreshold => {
+                // TODO: to be implemented
             }
         }
     }

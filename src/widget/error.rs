@@ -50,7 +50,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     0 as _
 }
 
-pub fn image<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn image<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Create image
     widget::Image::new(config.image)
         .w_h(config.width, config.height)
@@ -58,7 +58,7 @@ pub fn image<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         .set(config.icon, &mut master.ui);
 }
 
-pub fn text_wrapper<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn text_wrapper<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     gen_widget_container!(
         master,
         container_id: config.text_wrapper,
@@ -72,7 +72,7 @@ pub fn text_wrapper<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     );
 }
 
-pub fn text_title<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn text_title<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Initialize text style
     let mut text_style = conrod_core::widget::primitive::text::Style::default();
 
@@ -87,7 +87,7 @@ pub fn text_title<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         .set(config.text_title, &mut master.ui);
 }
 
-pub fn text_message<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn text_message<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Initialize text style
     let mut text_style = conrod_core::widget::primitive::text::Style::default();
 

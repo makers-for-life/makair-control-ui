@@ -34,7 +34,7 @@ pub struct DisplayRenderer {
     fonts: Fonts,
     ids: Ids,
     states: DisplayRendererStates,
-    plot_graph: ConrodBackendReusableGraph,
+    plot_graphs: (ConrodBackendReusableGraph, ConrodBackendReusableGraph),
     pub images: ImageIds,
 }
 
@@ -76,7 +76,10 @@ impl DisplayRendererBuilder {
             ids,
             states: DisplayRendererStates::default(),
             images,
-            plot_graph: ConrodBackendReusableGraph::build(),
+            plot_graphs: (
+                ConrodBackendReusableGraph::build(),
+                ConrodBackendReusableGraph::build(),
+            ),
         }
     }
 }
@@ -282,7 +285,7 @@ impl DisplayRenderer {
             height: GRAPH_HEIGHT as _,
             data_pressure: &chip.data_pressure,
             machine_snapshot: &chip.last_machine_snapshot,
-            plot_graph: &mut self.plot_graph,
+            plot_graphs: &mut self.plot_graphs,
         };
 
         // Render screen data (depending on state, running or stopped)

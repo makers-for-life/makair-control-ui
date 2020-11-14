@@ -52,13 +52,13 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     0 as _
 }
 
-pub fn alarms<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn alarms<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Append sub-contents
     alarms_label(master, &config);
     alarms_form(master, &config);
 }
 
-pub fn alarms_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn alarms_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate alarms label
     gen_widget_label_form!(
         master,
@@ -70,7 +70,7 @@ pub fn alarms_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     );
 }
 
-pub fn alarms_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn alarms_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Acquire alarms button color & label
     let alarms_label = match config.snooze_settings.alarms {
         SettingActionState::Disabled => APP_I18N.t("modal-snooze-alarms-active"),

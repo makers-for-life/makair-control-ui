@@ -32,7 +32,7 @@ pub struct DisplayDataGraph<'a> {
     pub height: f64,
     pub data_pressure: &'a ChipDataPressure,
     pub machine_snapshot: &'a MachineStateSnapshot,
-    pub plot_graph: &'a mut ConrodBackendReusableGraph,
+    pub plot_graphs: &'a mut (ConrodBackendReusableGraph, ConrodBackendReusableGraph),
 }
 
 pub struct DisplayDataBootloader {

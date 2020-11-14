@@ -51,13 +51,13 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     0 as _
 }
 
-pub fn status<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn status<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Append sub-contents
     status_label(master, &config);
     status_form(master, &config);
 }
 
-pub fn status_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn status_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate status label
     gen_widget_label_form!(
         master,
@@ -69,7 +69,7 @@ pub fn status_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     );
 }
 
-pub fn status_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn status_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Acquire status button color & label
     let status_label = match config.run_settings.state {
         SettingActionState::Enabled => APP_I18N.t("modal-run-status-started"),

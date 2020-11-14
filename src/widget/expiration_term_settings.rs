@@ -50,7 +50,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     0 as _
 }
 
-pub fn term<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn term<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate term label
     gen_widget_label_form!(
         master,
