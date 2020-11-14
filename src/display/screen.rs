@@ -215,6 +215,7 @@ impl<'a> Screen<'a> {
             boot_time: self.timers.0,
             last_tick: self.timers.1,
             data_pressure: graph_data.data_pressure,
+            data_flow: graph_data.data_flow,
             machine_snapshot: graph_data.machine_snapshot,
             plot_graphs: graph_data.plot_graphs,
         }));

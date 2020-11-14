@@ -284,6 +284,7 @@ impl DisplayRenderer {
             width: GRAPH_WIDTH as _,
             height: GRAPH_HEIGHT as _,
             data_pressure: &chip.data_pressure,
+            data_flow: &chip.data_flow,
             machine_snapshot: &chip.last_machine_snapshot,
             plot_graphs: &mut self.plot_graphs,
         };

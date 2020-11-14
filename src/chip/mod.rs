@@ -27,9 +27,12 @@ use crate::config::environment::*;
 use crate::utilities::parse::parse_text_lines_to_single;
 use crate::utilities::units::{convert_cmh2o_to_mmh2o, convert_mmh2o_to_cmh2o, ConvertMode};
 
-const DATA_PRESSURE_STORE_EVERY_MILLISECONDS: i64 = 1000 / TELEMETRY_POINTS_PER_SECOND as i64;
+const DATA_STORE_EVERY_MILLISECONDS: i64 = 1000 / TELEMETRY_POINTS_PER_SECOND as i64;
 
-pub type ChipDataPressure = VecDeque<(DateTime<Utc>, i16)>;
+type ChipDataGeneric = VecDeque<(DateTime<Utc>, i16)>;
+
+pub type ChipDataPressure = ChipDataGeneric;
+pub type ChipDataFlow = ChipDataGeneric;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ChipState {
@@ -68,6 +71,7 @@ pub struct Chip {
     pub boot_time: Option<DateTime<Utc>>,
     pub last_tick: u64,
     pub data_pressure: ChipDataPressure,
+    pub data_flow: ChipDataFlow,
     pub last_machine_snapshot: MachineStateSnapshot,
     pub last_data_snapshot: Option<DataSnapshot>,
     pub ongoing_alarms: HashMap<AlarmCode, AlarmPriority>,
@@ -87,6 +91,7 @@ impl Chip {
             boot_time: None,
             last_tick: 0,
             data_pressure: ChipDataPressure::with_capacity(GRAPH_NUMBER_OF_POINTS),
+            data_flow: ChipDataFlow::with_capacity(GRAPH_NUMBER_OF_POINTS),
             last_machine_snapshot,
             last_data_snapshot: None,
             ongoing_alarms: HashMap::new(),
@@ -101,6 +106,7 @@ impl Chip {
         self.last_tick = new_tick;
 
         self.data_pressure.clear();
+        self.data_flow.clear();
 
         self.last_machine_snapshot = MachineStateSnapshot::default();
         self.last_data_snapshot = None;
@@ -184,8 +190,11 @@ impl Chip {
         alarm_list
     }
 
-    pub fn clean_expired_pressure(&mut self) {
-        self.clean_expired_pressure_from_time(Utc::now());
+    pub fn clean_expired_data(&mut self) {
+        let time_now = Utc::now();
+
+        self.clean_expired_data_pressure_from_time(time_now);
+        self.clean_expired_data_flow_from_time(time_now);
     }
 
     pub fn init_settings_receiver(&mut self) -> Receiver<ControlMessage> {
@@ -263,7 +272,9 @@ impl Chip {
 
             TelemetryMessage::DataSnapshot(snapshot) => {
                 self.update_tick(snapshot.systick);
-                self.add_pressure(&snapshot);
+
+                self.add_data_pressure(&snapshot);
+                self.add_data_flow(&snapshot);
 
                 // Store last data snapshot
                 self.last_data_snapshot = Some(snapshot);
@@ -325,51 +336,32 @@ impl Chip {
         }
     }
 
-    fn add_pressure(&mut self, snapshot: &DataSnapshot) {
-        assert!(self.boot_time.is_some());
-
-        let snapshot_time =
-            self.boot_time.unwrap() + Duration::microseconds(snapshot.systick as i64);
-
-        // Fetch last pressure value in order to reduce noise, and check if the point should be \
-        //   stored as well (there is no need storing points faster than twice the framerate, \
-        //   as this is sufficient to ensure that the plot progresses in time smoothly, and that \
-        //   the curves look nice on screen)
-        let (new_point, may_store) = if let Some(last_pressure_inner) = self.data_pressure.get(0) {
-            let new_point = last_pressure_inner.1
-                - ((last_pressure_inner.1 - snapshot.pressure) / TELEMETRY_POINTS_LOW_PASS_DEGREE);
-
-            let may_store = (snapshot_time - last_pressure_inner.0)
-                >= chrono::Duration::milliseconds(DATA_PRESSURE_STORE_EVERY_MILLISECONDS);
-
-            (new_point, may_store)
-        } else {
-            (snapshot.pressure, true)
-        };
-
-        // May we store this pressure point?
-        if may_store {
-            // Points are stored as mmH20 (for more precision; though we do work in cmH20)
-            self.data_pressure.push_front((snapshot_time, new_point));
-
-            // Clean any now-expired pressure
-            self.clean_expired_pressure_from_time(snapshot_time);
-        }
+    fn add_data_pressure(&mut self, snapshot: &DataSnapshot) {
+        gen_add_data_generic!(
+            self,
+            data_pressure,
+            snapshot.pressure,
+            snapshot.systick,
+            clean_expired_data_pressure_from_time
+        );
     }
 
-    fn clean_expired_pressure_from_time(&mut self, front_time: DateTime<Utc>) {
-        if !self.data_pressure.is_empty() {
-            let expired_time = front_time - chrono::Duration::seconds(GRAPH_DRAW_SECONDS);
+    fn add_data_flow(&mut self, snapshot: &DataSnapshot) {
+        gen_add_data_generic!(
+            self,
+            data_flow,
+            snapshot.inspiratory_flow.unwrap_or(0) - snapshot.expiratory_flow.unwrap_or(0),
+            snapshot.systick,
+            clean_expired_data_flow_from_time
+        );
+    }
 
-            while self
-                .data_pressure
-                .back()
-                .map(|p| p.0 < expired_time)
-                .unwrap_or(false)
-            {
-                self.data_pressure.pop_back();
-            }
-        }
+    fn clean_expired_data_pressure_from_time(&mut self, front_time: DateTime<Utc>) {
+        gen_clean_expired_data_from_time_generic!(self, data_pressure, front_time);
+    }
+
+    fn clean_expired_data_flow_from_time(&mut self, front_time: DateTime<Utc>) {
+        gen_clean_expired_data_from_time_generic!(self, data_flow, front_time);
     }
 
     fn update_boot_time(&mut self) {
@@ -408,10 +400,10 @@ impl Chip {
     }
 
     fn update_state_running(&mut self) {
-        // Clean expired pressure? (this is required so that the pressure graph does not jitter \
-        //   when resuming from a stopped ventilation session)
+        // Clean expired pressure & flow data? (this is required so that the graphs does not \
+        //   jitter when resuming from a stopped ventilation session)
         if self.state != ChipState::Running {
-            self.clean_expired_pressure();
+            self.clean_expired_data();
         }
 
         self.settings.run.state = SettingActionState::Enabled;

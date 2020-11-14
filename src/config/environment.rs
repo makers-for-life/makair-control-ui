@@ -217,7 +217,7 @@ pub const LAYOUT_TEXTURE_HEADER_HEIGHT: u32 = 52;
 pub const LORA_GPIO_PIN_NUMBER: u64 = 25;
 
 #[cfg(not(feature = "graph-scaler"))]
-pub const GRAPH_DRAW_RANGE_PRESSURE_HIGH_STATIC_INITIAL: u8 = 55;
+pub const GRAPH_DRAW_RANGE_PRESSURE_HIGH_STATIC_INITIAL: u8 = 40;
 
 #[cfg(not(feature = "graph-scaler"))]
 pub const GRAPH_DRAW_RANGE_PRESSURE_HIGH_PRECISION_DIVIDED: i32 =

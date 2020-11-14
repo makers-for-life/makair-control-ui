@@ -16,7 +16,7 @@ use plotters::style::{Color, TextStyle};
 use plotters_conrod::{ConrodBackend, ConrodBackendReusableGraph};
 use telemetry::structures::MachineStateSnapshot;
 
-use crate::chip::ChipDataPressure;
+use crate::chip::{ChipDataFlow, ChipDataPressure};
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 #[cfg(feature = "graph-scaler")]
@@ -24,6 +24,14 @@ use crate::utilities::pressure::process_max_allowed_pressure;
 
 const GRAPH_PRESSURE_LINE_COLOR: RGBColor = plotters::style::RGBColor(0, 196, 255);
 const GRAPH_FLOW_LINE_COLOR: RGBColor = plotters::style::RGBColor(196, 37, 20);
+
+const GRAPH_MESH_BOLD_COLOR_RGB: RGBColor = plotters::style::RGBColor(255, 255, 255);
+const GRAPH_MESH_BOLD_COLOR_ALPHA: f64 = 0.22;
+
+const GRAPH_MESH_LIGHT_COLOR_RGB: RGBColor = plotters::style::RGBColor(0, 0, 0);
+
+const GRAPH_AXIS_Y_FONT_COLOR_RGB: RGBColor = plotters::style::RGBColor(255, 255, 255);
+const GRAPH_AXIS_Y_FONT_COLOR_ALPHA: f64 = 0.75;
 
 pub struct Config<'a> {
     pub width: f64,
@@ -39,6 +47,8 @@ pub struct Config<'a> {
     pub last_tick: Option<u64>,
 
     pub data_pressure: &'a ChipDataPressure,
+    pub data_flow: &'a ChipDataFlow,
+
     pub machine_snapshot: &'a MachineStateSnapshot,
 
     pub plot_graphs: &'a mut (ConrodBackendReusableGraph, ConrodBackendReusableGraph),
@@ -164,10 +174,13 @@ fn pressure<'a>(
 
     chart
         .configure_mesh()
-        .bold_line_style(&plotters::style::colors::WHITE.mix(0.22))
-        .light_line_style(&plotters::style::colors::BLACK)
+        .bold_line_style(&GRAPH_MESH_BOLD_COLOR_RGB.mix(GRAPH_MESH_BOLD_COLOR_ALPHA))
+        .light_line_style(&GRAPH_MESH_LIGHT_COLOR_RGB)
         .y_labels(GRAPH_DRAW_LABEL_NUMBER_MAX)
-        .y_label_style(GRAPH_AXIS_Y_FONT.color(&WHITE.mix(0.75)))
+        .y_label_style(
+            GRAPH_AXIS_Y_FONT
+                .color(&GRAPH_AXIS_Y_FONT_COLOR_RGB.mix(GRAPH_AXIS_Y_FONT_COLOR_ALPHA)),
+        )
         .y_label_formatter(&|y| {
             // Convert high-precision point in mmH20 back to cmH20 (which measurements & \
             //   targets both use)
@@ -233,20 +246,20 @@ fn flow<'a>(
 
     chart
         .configure_mesh()
-        // TODO: commonize those color mixs
-        .bold_line_style(&plotters::style::colors::WHITE.mix(0.22))
-        .light_line_style(&plotters::style::colors::BLACK)
+        .bold_line_style(&GRAPH_MESH_BOLD_COLOR_RGB.mix(GRAPH_MESH_BOLD_COLOR_ALPHA))
+        .light_line_style(&GRAPH_MESH_LIGHT_COLOR_RGB)
         .y_labels(GRAPH_DRAW_LABEL_NUMBER_MAX)
-        // TODO: commonize those color mixs
-        .y_label_style(GRAPH_AXIS_Y_FONT.color(&WHITE.mix(0.75)))
+        .y_label_style(
+            GRAPH_AXIS_Y_FONT
+                .color(&GRAPH_AXIS_Y_FONT_COLOR_RGB.mix(GRAPH_AXIS_Y_FONT_COLOR_ALPHA)),
+        )
         .draw()
         .expect("failed to draw flow chart mesh");
 
     chart
         .draw_series(
             AreaSeries::new(
-                // TODO
-                config.data_pressure.iter().map(|x| (x.0, x.1 as i32)),
+                config.data_flow.iter().map(|x| (x.0, x.1 as i32)),
                 0,
                 &GRAPH_FLOW_LINE_COLOR.mix(0.4),
             )
