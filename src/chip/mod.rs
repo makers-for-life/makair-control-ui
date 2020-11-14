@@ -29,7 +29,7 @@ use crate::utilities::units::{convert_cmh2o_to_mmh2o, convert_mmh2o_to_cmh2o, Co
 
 const DATA_STORE_EVERY_MILLISECONDS: i64 = 1000 / TELEMETRY_POINTS_PER_SECOND as i64;
 
-type ChipDataGeneric = VecDeque<(DateTime<Utc>, i16)>;
+pub type ChipDataGeneric = VecDeque<(DateTime<Utc>, i16)>;
 
 pub type ChipDataPressure = ChipDataGeneric;
 pub type ChipDataFlow = ChipDataGeneric;

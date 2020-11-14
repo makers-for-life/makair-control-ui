@@ -16,7 +16,7 @@ use plotters::style::{Color, TextStyle};
 use plotters_conrod::{ConrodBackend, ConrodBackendReusableGraph};
 use telemetry::structures::MachineStateSnapshot;
 
-use crate::chip::{ChipDataFlow, ChipDataPressure};
+use crate::chip::{ChipDataFlow, ChipDataGeneric, ChipDataPressure};
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 
@@ -94,7 +94,7 @@ fn pressure<'a>(
     size: (f64, f64),
     time_range: Range<DateTime<Utc>>,
 ) {
-    // Create container
+    // Create pressure container
     gen_widget_container!(
         master,
         container_id: config.pressure_id,
@@ -106,58 +106,19 @@ fn pressure<'a>(
         ]
     );
 
-    // Create drawing
-    let drawing = ConrodBackend::new(
-        &mut master.ui,
-        (size.0 as u32, size.1 as u32),
+    // Draw pressure plot
+    plot(
+        master,
+        size,
+        time_range,
+        GRAPH_DRAW_PRESSURE_RANGE_LOW_PRECISION_DIVIDED
+            ..GRAPH_DRAW_PRESSURE_RANGE_HIGH_PRECISION_DIVIDED,
         config.pressure_id,
-        master.fonts.regular,
         &mut config.plot_graphs.0,
-    )
-    .into_drawing_area();
-
-    let mut chart = ChartBuilder::on(&drawing)
-        .margin_top(GRAPH_DRAW_MARGIN_TOP)
-        .margin_bottom(GRAPH_DRAW_MARGIN_BOTTOM)
-        .margin_left(GRAPH_DRAW_MARGIN_LEFT)
-        .margin_right(GRAPH_DRAW_MARGIN_RIGHT)
-        .x_label_area_size(0)
-        .y_label_area_size(GRAPH_DRAW_LABEL_WIDTH)
-        .build_cartesian_2d(
-            time_range,
-            GRAPH_DRAW_PRESSURE_RANGE_LOW_PRECISION_DIVIDED
-                ..GRAPH_DRAW_PRESSURE_RANGE_HIGH_PRECISION_DIVIDED,
-        )
-        .expect("failed to build pressure chart");
-
-    chart
-        .configure_mesh()
-        .bold_line_style(&GRAPH_MESH_BOLD_COLOR_RGB.mix(GRAPH_MESH_BOLD_COLOR_ALPHA))
-        .light_line_style(&GRAPH_MESH_LIGHT_COLOR_RGB)
-        .y_labels(GRAPH_DRAW_LABEL_NUMBER_MAX)
-        .y_label_style(
-            GRAPH_AXIS_Y_FONT
-                .color(&GRAPH_AXIS_Y_FONT_COLOR_RGB.mix(GRAPH_AXIS_Y_FONT_COLOR_ALPHA)),
-        )
-        .y_label_formatter(&|y| {
-            // Convert high-precision point in mmH20 back to cmH20 (which measurements & \
-            //   targets both use)
-            (y / TELEMETRY_POINTS_PRESSURE_PRECISION_DIVIDE as i32).to_string()
-        })
-        .draw()
-        .expect("failed to draw pressure chart mesh");
-
-    chart
-        .draw_series(
-            LineSeries::new(
-                config.data_pressure.iter().map(|x| (x.0, x.1 as i32)),
-                ShapeStyle::from(&GRAPH_PRESSURE_LINE_COLOR)
-                    .filled()
-                    .stroke_width(GRAPH_DRAW_LINE_SIZE),
-            )
-            .point_size(0),
-        )
-        .expect("failed to draw pressure chart data");
+        TELEMETRY_POINTS_PRESSURE_PRECISION_DIVIDE,
+        &GRAPH_PRESSURE_LINE_COLOR,
+        &config.data_pressure,
+    );
 }
 
 fn flow<'a>(
@@ -166,7 +127,7 @@ fn flow<'a>(
     size: (f64, f64),
     time_range: Range<DateTime<Utc>>,
 ) {
-    // Create container
+    // Create flow container
     gen_widget_container!(
         master,
         container_id: config.flow_id,
@@ -178,16 +139,42 @@ fn flow<'a>(
         ]
     );
 
-    // Create drawing
+    // Draw flow plot
+    plot(
+        master,
+        size,
+        time_range,
+        GRAPH_DRAW_FLOW_RANGE_LOW_PRECISION_DIVIDED..GRAPH_DRAW_FLOW_RANGE_HIGH_PRECISION_DIVIDED,
+        config.flow_id,
+        &mut config.plot_graphs.1,
+        TELEMETRY_POINTS_FLOW_PRECISION_DIVIDE,
+        &GRAPH_FLOW_LINE_COLOR,
+        &config.data_flow,
+    );
+}
+
+fn plot<'a>(
+    master: &mut ControlWidget<'a>,
+    size: (f64, f64),
+    time_range: Range<DateTime<Utc>>,
+    value_range: Range<i32>,
+    plot_id: WidgetId,
+    plot_graph: &mut ConrodBackendReusableGraph,
+    precision_divide: i32,
+    line_color: &RGBColor,
+    data_values: &ChipDataGeneric,
+) {
+    // Create drawing backend
     let drawing = ConrodBackend::new(
         &mut master.ui,
         (size.0 as u32, size.1 as u32),
-        config.flow_id,
+        plot_id,
         master.fonts.regular,
-        &mut config.plot_graphs.1,
+        plot_graph,
     )
     .into_drawing_area();
 
+    // Configure chart
     let mut chart = ChartBuilder::on(&drawing)
         .margin_top(GRAPH_DRAW_MARGIN_TOP)
         .margin_bottom(GRAPH_DRAW_MARGIN_BOTTOM)
@@ -195,13 +182,10 @@ fn flow<'a>(
         .margin_right(GRAPH_DRAW_MARGIN_RIGHT)
         .x_label_area_size(0)
         .y_label_area_size(GRAPH_DRAW_LABEL_WIDTH)
-        .build_cartesian_2d(
-            time_range,
-            GRAPH_DRAW_FLOW_RANGE_LOW_PRECISION_DIVIDED
-                ..GRAPH_DRAW_FLOW_RANGE_HIGH_PRECISION_DIVIDED,
-        )
-        .expect("failed to build flow chart");
+        .build_cartesian_2d(time_range, value_range)
+        .expect("failed to build chart");
 
+    // Configure mesh
     chart
         .configure_mesh()
         .bold_line_style(&GRAPH_MESH_BOLD_COLOR_RGB.mix(GRAPH_MESH_BOLD_COLOR_ALPHA))
@@ -212,21 +196,23 @@ fn flow<'a>(
                 .color(&GRAPH_AXIS_Y_FONT_COLOR_RGB.mix(GRAPH_AXIS_Y_FONT_COLOR_ALPHA)),
         )
         .y_label_formatter(&|y| {
-            // Convert high-precision point in mL back to L (which measurements & targets both use)
-            (y / TELEMETRY_POINTS_FLOW_PRECISION_DIVIDE as i32).to_string()
+            // Convert high-precision point to low-precision point (which measurements & targets \
+            //   both use), eg. mL to L or mmH2O to cmH2O.
+            (y / precision_divide).to_string()
         })
         .draw()
-        .expect("failed to draw flow chart mesh");
+        .expect("failed to draw chart mesh");
 
+    // Draw plot
     chart
         .draw_series(
             LineSeries::new(
-                config.data_flow.iter().map(|x| (x.0, x.1 as i32)),
-                ShapeStyle::from(&GRAPH_FLOW_LINE_COLOR)
+                data_values.iter().map(|x| (x.0, x.1 as i32)),
+                ShapeStyle::from(line_color)
                     .filled()
                     .stroke_width(GRAPH_DRAW_LINE_SIZE),
             )
             .point_size(0),
         )
-        .expect("failed to draw flow chart data");
+        .expect("failed to draw chart data");
 }
