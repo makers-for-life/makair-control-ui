@@ -235,13 +235,12 @@ fn plot<'a>(
     // Draw plot
     chart
         .draw_series(
-            LineSeries::new(
+            AreaSeries::new(
                 context.data_values.iter().map(|x| (x.0, x.1 as i32)),
-                ShapeStyle::from(context.line_color)
-                    .filled()
-                    .stroke_width(GRAPH_DRAW_LINE_SIZE),
+                0,
+                &context.line_color.mix(0.3),
             )
-            .point_size(0),
+            .border_style(ShapeStyle::from(context.line_color).stroke_width(GRAPH_DRAW_LINE_SIZE)),
         )
         .expect("failed to draw chart data");
 }
