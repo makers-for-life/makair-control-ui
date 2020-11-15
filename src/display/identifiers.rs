@@ -34,6 +34,12 @@ widget_ids!(pub struct Ids {
   graph_pressure,
   graph_flow,
 
+  graph_pressure_label_box,
+  graph_pressure_label_text,
+
+  graph_flow_label_box,
+  graph_flow_label_text,
+
   branding_container,
   branding_text,
 

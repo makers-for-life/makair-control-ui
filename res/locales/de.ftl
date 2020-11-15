@@ -8,6 +8,7 @@ telemetry-label-tidal = Atemzugvolumen
 
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-mmh2o = mmH2O
+telemetry-unit-lpm = L/min
 telemetry-unit-per-minute = /minute
 telemetry-unit-milliliters = mL (milliliter)
 telemetry-unit-milliseconds = ms

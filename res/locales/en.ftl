@@ -8,6 +8,7 @@ telemetry-label-tidal = Tidal volume
 
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-mmh2o = mmH2O
+telemetry-unit-lpm = L/min
 telemetry-unit-per-minute = /minute
 telemetry-unit-milliliters = mL (milliliters)
 telemetry-unit-milliseconds = ms

@@ -19,6 +19,7 @@ use telemetry::structures::MachineStateSnapshot;
 use crate::chip::{ChipDataFlow, ChipDataGeneric, ChipDataPressure, ChipState};
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
+use crate::APP_I18N;
 
 const GRAPH_PRESSURE_LINE_COLOR: RGBColor = plotters::style::RGBColor(0, 196, 255);
 const GRAPH_FLOW_LINE_COLOR: RGBColor = plotters::style::RGBColor(196, 37, 20);
@@ -44,6 +45,11 @@ pub struct Config<'a> {
     pub pressure_id: WidgetId,
     pub flow_id: WidgetId,
 
+    pub pressure_label_box_id: WidgetId,
+    pub pressure_label_text_id: WidgetId,
+    pub flow_label_box_id: WidgetId,
+    pub flow_label_text_id: WidgetId,
+
     pub boot_time: Option<DateTime<Utc>>,
     pub last_tick: Option<u64>,
 
@@ -66,7 +72,7 @@ struct PlotContext<'a, 'b> {
 
 lazy_static! {
     static ref GRAPH_AXIS_Y_FONT: TextStyle<'static> =
-        TextStyle::from(("sans-serif", 14).into_font());
+        TextStyle::from(("sans-serif", GRAPH_DRAW_AXIS_FONT_SIZE).into_font());
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, mut config: Config<'a>) -> f64 {
@@ -142,6 +148,15 @@ fn pressure<'a>(
             data_values: &config.data_pressure,
         },
     );
+
+    // Create label box
+    label(
+        master,
+        config.pressure_id,
+        config.pressure_label_box_id,
+        config.pressure_label_text_id,
+        &APP_I18N.t("telemetry-unit-cmh2o"),
+    );
 }
 
 fn flow<'a>(
@@ -176,6 +191,15 @@ fn flow<'a>(
             line_color: &GRAPH_FLOW_LINE_COLOR,
             data_values: &config.data_flow,
         },
+    );
+
+    // Create label box
+    label(
+        master,
+        config.flow_id,
+        config.flow_label_box_id,
+        config.flow_label_text_id,
+        &APP_I18N.t("telemetry-unit-lpm"),
     );
 }
 
@@ -243,4 +267,36 @@ fn plot<'a>(
             .border_style(ShapeStyle::from(context.line_color).stroke_width(GRAPH_DRAW_LINE_SIZE)),
         )
         .expect("failed to draw chart data");
+}
+
+fn label<'a>(
+    master: &mut ControlWidget<'a>,
+    parent_id: WidgetId,
+    box_id: WidgetId,
+    text_id: WidgetId,
+    text: &str,
+) {
+    // Draw label box
+    gen_widget_container!(
+        master,
+        container_id: box_id,
+        color: color::BLACK,
+        width: GRAPH_LABEL_BOX_WIDTH,
+        height: GRAPH_LABEL_BOX_HEIGHT,
+        positions: top_left_of[
+            parent_id,
+        ]
+    );
+
+    // Draw label text
+    let mut text_style = conrod_core::widget::primitive::text::Style::default();
+
+    text_style.font_id = Some(Some(master.fonts.bold));
+    text_style.color = Some(color::WHITE);
+    text_style.font_size = Some(GRAPH_LABEL_BOX_FONT_SIZE);
+
+    widget::Text::new(text)
+        .mid_top_with_margin_on(box_id, 5.0)
+        .with_style(text_style)
+        .set(text_id, &mut master.ui);
 }

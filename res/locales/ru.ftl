@@ -8,6 +8,7 @@ telemetry-label-tidal = Дыхательный объем
 
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-mmh2o = mmH2O
+telemetry-unit-lpm = Л/мин
 telemetry-unit-per-minute = /минута
 telemetry-unit-milliliters = миллилитров
 telemetry-unit-milliseconds = миллисекунды
