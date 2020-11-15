@@ -40,6 +40,11 @@ widget_ids!(pub struct Ids {
   graph_flow_label_box,
   graph_flow_label_text,
 
+  graph_pressure_saturate_low,
+  graph_pressure_saturate_high,
+  graph_flow_saturate_low,
+  graph_flow_saturate_high,
+
   branding_container,
   branding_text,
 

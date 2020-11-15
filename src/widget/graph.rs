@@ -35,6 +35,9 @@ const GRAPH_MESH_LIGHT_COLOR_RGB: RGBColor = plotters::style::RGBColor(0, 0, 0);
 const GRAPH_AXIS_Y_FONT_COLOR_RGB: RGBColor = plotters::style::RGBColor(255, 255, 255);
 const GRAPH_AXIS_Y_FONT_COLOR_ALPHA: f64 = 0.75;
 
+const GRAPH_SATURATE_COLOR: color::Color =
+    color::Color::Rgba(184.0 / 255.0, 1.0 / 255.0, 24.0 / 255.0, 1.0);
+
 pub struct Config<'a> {
     pub width: f64,
     pub height: f64,
@@ -49,6 +52,9 @@ pub struct Config<'a> {
     pub pressure_label_text_id: WidgetId,
     pub flow_label_box_id: WidgetId,
     pub flow_label_text_id: WidgetId,
+
+    pub pressure_saturate_ids: (WidgetId, WidgetId),
+    pub flow_saturate_ids: (WidgetId, WidgetId),
 
     pub boot_time: Option<DateTime<Utc>>,
     pub last_tick: Option<u64>,
@@ -157,6 +163,21 @@ fn pressure<'a>(
         config.pressure_label_text_id,
         &APP_I18N.t("telemetry-unit-cmh2o"),
     );
+
+    // Create saturate lines? (as needed)
+    if config.chip_state == &ChipState::Running {
+        saturate(
+            master,
+            size,
+            config.pressure_id,
+            config.pressure_saturate_ids,
+            (
+                GRAPH_DRAW_PRESSURE_RANGE_LOW_PRECISION_DIVIDED as _,
+                GRAPH_DRAW_PRESSURE_RANGE_HIGH_PRECISION_DIVIDED as _,
+            ),
+            &config.data_pressure,
+        );
+    }
 }
 
 fn flow<'a>(
@@ -201,6 +222,21 @@ fn flow<'a>(
         config.flow_label_text_id,
         &APP_I18N.t("telemetry-unit-lpm"),
     );
+
+    // Create saturate lines? (as needed)
+    if config.chip_state == &ChipState::Running {
+        saturate(
+            master,
+            size,
+            config.flow_id,
+            config.flow_saturate_ids,
+            (
+                GRAPH_DRAW_FLOW_RANGE_LOW_PRECISION_DIVIDED as _,
+                GRAPH_DRAW_FLOW_RANGE_HIGH_PRECISION_DIVIDED as _,
+            ),
+            &config.data_flow,
+        );
+    }
 }
 
 fn plot<'a>(
@@ -299,4 +335,59 @@ fn label<'a>(
         .mid_top_with_margin_on(box_id, 5.0)
         .with_style(text_style)
         .set(text_id, &mut master.ui);
+}
+
+fn saturate<'a>(
+    master: &mut ControlWidget<'a>,
+    size: (f64, f64),
+    parent_id: WidgetId,
+    saturate_ids: (WidgetId, WidgetId),
+    high_low: (i16, i16),
+    data_values: &ChipDataGeneric,
+) {
+    // Check if should draw saturation indicators?
+    let (mut saturate_low, mut saturate_high) = (false, false);
+
+    for data_value in data_values {
+        if data_value.1 < high_low.0 {
+            saturate_low = true;
+        }
+
+        if data_value.1 > high_low.1 {
+            saturate_high = true;
+        }
+
+        // All saturation indicators will be visible, we can already stop searching there.
+        if saturate_low && saturate_high {
+            break;
+        }
+    }
+
+    if saturate_low {
+        widget::Rectangle::fill_with(
+            [
+                size.0 - GRAPH_DRAW_LABEL_WIDTH as f64,
+                GRAPH_SATURATE_LINE_THICKNESS,
+            ],
+            GRAPH_SATURATE_COLOR,
+        )
+        .bottom_left_with_margins_on(
+            parent_id,
+            GRAPH_SPACING + GRAPH_SATURATE_LINE_THICKNESS,
+            GRAPH_DRAW_LABEL_WIDTH as _,
+        )
+        .set(saturate_ids.0, &mut master.ui);
+    }
+
+    if saturate_high {
+        widget::Rectangle::fill_with(
+            [
+                size.0 - GRAPH_DRAW_LABEL_WIDTH as f64,
+                GRAPH_SATURATE_LINE_THICKNESS,
+            ],
+            GRAPH_SATURATE_COLOR,
+        )
+        .top_left_with_margins_on(parent_id, -1.0, GRAPH_DRAW_LABEL_WIDTH as _)
+        .set(saturate_ids.1, &mut master.ui);
+    }
 }
