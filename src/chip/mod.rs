@@ -348,10 +348,25 @@ impl Chip {
     }
 
     fn add_data_flow(&mut self, snapshot: &DataSnapshot) {
+        let (inspiratory_flow, expiratory_flow) = (
+            snapshot.inspiratory_flow.unwrap_or(0),
+            snapshot.expiratory_flow.unwrap_or(0),
+        );
+
+        // Compute a value that is capped in case of an overflow, as this could result in a panic \
+        //   if the telemetry channel sends unusual values.
+        let mut net_flow = inspiratory_flow as i32 - expiratory_flow as i32;
+
+        if net_flow > i16::max_value() as i32 {
+            net_flow = i16::max_value() as i32;
+        } else if net_flow < i16::min_value() as i32 {
+            net_flow = i16::min_value() as i32;
+        }
+
         gen_add_data_generic!(
             self,
             data_flow,
-            snapshot.inspiratory_flow.unwrap_or(0) - snapshot.expiratory_flow.unwrap_or(0),
+            net_flow as i16,
             snapshot.systick,
             clean_expired_data_flow_from_time
         );
