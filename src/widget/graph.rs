@@ -250,7 +250,7 @@ fn plot<'a>(
         )
         .y_label_formatter(&|y| {
             // Convert high-precision point to low-precision point (which measurements & targets \
-            //   both use), eg. mL to L or mmH2O to cmH2O.
+            //   both use), eg. cL to L or mmH2O to cmH2O.
             (y / precision_divide).to_string()
         })
         .draw()
