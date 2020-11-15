@@ -83,7 +83,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, mut config: Config<'a>) -> f64
     );
 
     // Acquire common graph size
-    let size = (config.width, config.height / 2.0);
+    let size = (config.width, (config.height - GRAPH_SPACING) / 2.0);
 
     // Acquire graph reference time
     // Notice: to prevent the graph from progressing in time periodically when stopped, use the \
