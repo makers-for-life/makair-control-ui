@@ -1,7 +1,7 @@
 # MakAir Control UI
 
 <p align="center">
-  <img alt="Respiratory Cycle With An Alarm" src="./doc/screens/cycle-alarm.gif">
+  <img alt="UI When Ventilation Unit Is Running" src="./doc/screens/unit-running.jpg">
 </p>
 
 ## Versions
