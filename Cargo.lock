@@ -518,12 +518,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "gcc"
-version = "0.3.55"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f5f3913fa0bfe7ee1fd8248b6b9f42a5af4b9d65ec2dd2c3c26132b950ecfc2"
-
-[[package]]
 name = "getrandom"
 version = "0.1.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1296,14 +1290,15 @@ checksum = "b07fffcddc1cb3a1de753caa4e4df03b79922ba43cf882acc1bdd7e8df9f4590"
 
 [[package]]
 name = "plotters-conrod"
-version = "0.3.7"
+version = "0.3.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "946f1726270a298185b9a25c549cbc088ad6796fb4a68b4d34de827d906076b9"
+checksum = "63b60a02a9ae20187db780c2c8bda9313c7042e37c8438be07aefe7f747acfc0"
 dependencies = [
+ "cc",
  "conrod_core",
+ "libc 0.1.12",
  "num-traits",
  "plotters-backend",
- "poly2tri",
 ]
 
 [[package]]
@@ -1316,16 +1311,6 @@ dependencies = [
  "crc32fast",
  "deflate",
  "miniz_oxide 0.3.7",
-]
-
-[[package]]
-name = "poly2tri"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0aac15dfab7e8bbc0e9597441017b5273b6487290f49d561ff53b25ba80d9f00"
-dependencies = [
- "gcc",
- "libc 0.1.12",
 ]
 
 [[package]]
