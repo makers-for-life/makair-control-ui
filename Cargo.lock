@@ -1290,9 +1290,9 @@ checksum = "b07fffcddc1cb3a1de753caa4e4df03b79922ba43cf882acc1bdd7e8df9f4590"
 
 [[package]]
 name = "plotters-conrod"
-version = "0.3.8"
+version = "0.3.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "63b60a02a9ae20187db780c2c8bda9313c7042e37c8438be07aefe7f747acfc0"
+checksum = "1dd71610cfe789aa9c0ac9f57ea690ebd37a6dae45a577e6c28418f34ddb5ed3"
 dependencies = [
  "cc",
  "conrod_core",
