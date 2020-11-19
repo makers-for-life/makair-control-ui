@@ -52,7 +52,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 fn separator<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     widget::Rectangle::fill_with(
         [1.0, TELEMETRY_WIDGET_RIGHT_MODE_FONT_SIZE as _],
-        color::BLACK.alpha(0.35),
+        color::BLACK.alpha(0.5),
     )
     .middle_of(config.container)
     .x_relative(11.0)
@@ -82,7 +82,7 @@ fn kind<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Initialize text style
     let mut text_style = conrod_core::widget::primitive::text::Style::default();
 
-    text_style.font_id = Some(Some(master.fonts.regular));
+    text_style.font_id = Some(Some(master.fonts.bold));
     text_style.color = Some(color::BLACK);
     text_style.font_size = Some(TELEMETRY_WIDGET_RIGHT_MODE_FONT_SIZE);
 
