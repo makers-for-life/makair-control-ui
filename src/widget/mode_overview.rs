@@ -4,15 +4,13 @@
 // License: Public Domain License
 
 use conrod_core::{
-    color::{self, Color},
+    color::Color,
     widget::{self, Id as WidgetId},
     Positionable, Widget,
 };
 
-use crate::chip::settings::{trigger::SettingsTrigger, SettingActionState};
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
-use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::APP_I18N;
 
 pub struct Config {
