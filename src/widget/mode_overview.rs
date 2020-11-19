@@ -18,9 +18,9 @@ use crate::locale::modes::{
 };
 
 const CLASS_PRESSURE_COLOR: color::Color =
-    color::Color::Rgba(29.0 / 255.0, 138.0 / 255.0, 216.0 / 255.0, 1.0);
+    color::Color::Rgba(14.0 / 255.0, 112.0 / 255.0, 182.0 / 255.0, 1.0);
 const CLASS_FLOW_COLOR: color::Color =
-    color::Color::Rgba(196.0 / 255.0, 37.0 / 255.0, 20.0 / 255.0, 1.0);
+    color::Color::Rgba(150.0 / 255.0, 20.0 / 255.0, 6.0 / 255.0, 1.0);
 
 pub struct Config<'a> {
     pub background_color: Color,
@@ -58,7 +58,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 fn separator<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     widget::Rectangle::fill_with(
         [1.0, TELEMETRY_WIDGET_RIGHT_MODE_FONT_SIZE as _],
-        color::BLACK.alpha(0.5),
+        color::BLACK.alpha(0.65),
     )
     .middle_of(config.container)
     .x_relative(13.0)
