@@ -21,6 +21,7 @@ pub mod initializing;
 pub mod layout;
 pub mod modal;
 pub mod mode_overview;
+pub mod mode_settings;
 pub mod pressure_settings;
 pub mod run_settings;
 pub mod snooze_settings;

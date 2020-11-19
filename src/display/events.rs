@@ -139,6 +139,15 @@ impl DisplayUIEvents {
             },
 
             {
+                "mode", states.mode_settings, [
+                    ids.mode_overview_container,
+                    ids.mode_overview_separator,
+                    ids.mode_overview_text_class,
+                    ids.mode_overview_text_type,
+                ]
+            },
+
+            {
                 "expiratory term", states.expiration_term_settings, [
                     ids.ratio_parent,
                     ids.ratio_title,
@@ -277,6 +286,10 @@ impl DisplayUIEvents {
 
                     None
                 }
+            },
+
+            {
+                "mode", Mode, states.mode_settings,
             },
 
             {

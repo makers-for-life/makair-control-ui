@@ -31,6 +31,7 @@ pub struct ScreenModalsOpen {
     snooze: bool,
     advanced: bool,
     trigger: bool,
+    mode: bool,
     expiration_term: bool,
     pressure: bool,
     cycles: bool,
@@ -52,6 +53,7 @@ impl ScreenModalsOpen {
             snooze: states.snooze_settings.is_open(),
             advanced: states.advanced_settings.is_open(),
             trigger: states.trigger_settings.is_open(),
+            mode: states.mode_settings.is_open(),
             expiration_term: states.expiration_term_settings.is_open(),
             pressure: states.pressure_settings.is_open(),
             cycles: states.cycles_settings.is_open(),
@@ -689,6 +691,8 @@ impl<'a> Screen<'a> {
             self.render_advanced_settings();
         } else if modals.trigger {
             self.render_trigger_settings(&settings.trigger);
+        } else if modals.mode {
+            self.render_mode_settings(&settings.mode);
         } else if modals.expiration_term {
             self.render_expiration_term_settings(&settings.expiration_term);
         } else if modals.pressure {
@@ -804,6 +808,16 @@ impl<'a> Screen<'a> {
                 inspiratory_offset_value_widget: self.ids.trigger_offset_value,
             },
         ));
+    }
+
+    fn render_mode_settings(&mut self, settings: &'a SettingsMode) {
+        self.render_modal(
+            MODE_SETTINGS_MODAL_WIDTH,
+            MODE_SETTINGS_MODAL_HEIGTH,
+            Some(MODE_SETTINGS_MODAL_PADDING),
+        );
+
+        // TODO: fill modal w/ form
     }
 
     fn render_expiration_term_settings(&mut self, settings: &'a SettingsExpirationTerm) {
