@@ -17,18 +17,10 @@ use crate::locale::modes::{
     class_to_locale as mode_class_to_locale, kind_to_locale as mode_kind_to_locale,
 };
 
-const CLASS_PRESSURE_COLOR: color::Color = color::Color::Rgba(
-    GRAPH_COLOR_PRESSURE_RGB.0 as f32 / 255.0,
-    GRAPH_COLOR_PRESSURE_RGB.1 as f32 / 255.0,
-    GRAPH_COLOR_PRESSURE_RGB.2 as f32 / 255.0,
-    1.0,
-);
-const CLASS_FLOW_COLOR: color::Color = color::Color::Rgba(
-    GRAPH_COLOR_FLOW_RGB.0 as f32 / 255.0,
-    GRAPH_COLOR_FLOW_RGB.1 as f32 / 255.0,
-    GRAPH_COLOR_FLOW_RGB.2 as f32 / 255.0,
-    1.0,
-);
+const CLASS_PRESSURE_COLOR: color::Color =
+    color::Color::Rgba(29.0 / 255.0, 138.0 / 255.0, 216.0 / 255.0, 1.0);
+const CLASS_FLOW_COLOR: color::Color =
+    color::Color::Rgba(196.0 / 255.0, 37.0 / 255.0, 20.0 / 255.0, 1.0);
 
 pub struct Config<'a> {
     pub background_color: Color,

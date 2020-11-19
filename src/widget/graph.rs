@@ -21,16 +21,8 @@ use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::APP_I18N;
 
-const GRAPH_PRESSURE_LINE_COLOR: RGBColor = plotters::style::RGBColor(
-    GRAPH_COLOR_PRESSURE_RGB.0,
-    GRAPH_COLOR_PRESSURE_RGB.1,
-    GRAPH_COLOR_PRESSURE_RGB.2,
-);
-const GRAPH_FLOW_LINE_COLOR: RGBColor = plotters::style::RGBColor(
-    GRAPH_COLOR_FLOW_RGB.0,
-    GRAPH_COLOR_FLOW_RGB.1,
-    GRAPH_COLOR_FLOW_RGB.2,
-);
+const GRAPH_PRESSURE_LINE_COLOR: RGBColor = plotters::style::RGBColor(0, 196, 255);
+const GRAPH_FLOW_LINE_COLOR: RGBColor = plotters::style::RGBColor(196, 37, 20);
 
 const GRAPH_MESH_AXIS_COLOR_RGB: RGBColor = plotters::style::RGBColor(255, 255, 255);
 const GRAPH_MESH_AXIS_COLOR_ALPHA: f64 = 0.5;
