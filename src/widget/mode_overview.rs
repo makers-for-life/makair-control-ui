@@ -8,6 +8,7 @@ use conrod_core::{
     widget::{self, Id as WidgetId},
     Positionable, Widget,
 };
+use telemetry::structures::VentilationModeClass;
 
 use crate::chip::settings::mode::SettingsMode;
 use crate::config::environment::*;
@@ -15,6 +16,19 @@ use crate::display::widget::ControlWidget;
 use crate::locale::modes::{
     class_to_locale as mode_class_to_locale, kind_to_locale as mode_kind_to_locale,
 };
+
+const CLASS_PRESSURE_COLOR: color::Color = color::Color::Rgba(
+    GRAPH_COLOR_PRESSURE_RGB.0 as f32 / 255.0,
+    GRAPH_COLOR_PRESSURE_RGB.1 as f32 / 255.0,
+    GRAPH_COLOR_PRESSURE_RGB.2 as f32 / 255.0,
+    1.0,
+);
+const CLASS_FLOW_COLOR: color::Color = color::Color::Rgba(
+    GRAPH_COLOR_FLOW_RGB.0 as f32 / 255.0,
+    GRAPH_COLOR_FLOW_RGB.1 as f32 / 255.0,
+    GRAPH_COLOR_FLOW_RGB.2 as f32 / 255.0,
+    1.0,
+);
 
 pub struct Config<'a> {
     pub background_color: Color,
@@ -60,15 +74,21 @@ fn separator<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 }
 
 fn class<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+    // Acquire mode class
+    let mode_class = config.mode_settings.mode.class();
+
     // Initialize text style
     let mut text_style = conrod_core::widget::primitive::text::Style::default();
 
     text_style.font_id = Some(Some(master.fonts.bold));
-    text_style.color = Some(color::BLACK);
+    text_style.color = Some(match mode_class {
+        VentilationModeClass::Pressure => CLASS_PRESSURE_COLOR,
+        VentilationModeClass::Volume => CLASS_FLOW_COLOR,
+    });
     text_style.font_size = Some(TELEMETRY_WIDGET_RIGHT_MODE_FONT_SIZE);
 
     // Create text
-    widget::Text::new(&mode_class_to_locale(config.mode_settings.mode.class()))
+    widget::Text::new(&mode_class_to_locale(mode_class))
         .mid_right_with_margin_on(
             config.separator,
             TELEMETRY_WIDGET_RIGHT_MODE_SEPARATOR_SPACING,

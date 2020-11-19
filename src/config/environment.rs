@@ -171,6 +171,8 @@ pub const GRAPH_NUMBER_OF_POINTS: usize = GRAPH_DRAW_SECONDS as usize * TELEMETR
 pub const GRAPH_WIDTH: u32 = 650;
 pub const GRAPH_HEIGHT: u32 = 315;
 pub const GRAPH_SPACING: f64 = 6.0;
+pub const GRAPH_COLOR_PRESSURE_RGB: (u8, u8, u8) = (0, 196, 255);
+pub const GRAPH_COLOR_FLOW_RGB: (u8, u8, u8) = (196, 37, 20);
 
 pub const MAX_ALLOWED_PRESSURE_INITIAL_MINIMUM: f64 = 0.0;
 pub const MAX_ALLOWED_PRESSURE_ALERT_ERROR_RATIO: f64 = 0.15;
