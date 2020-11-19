@@ -86,7 +86,7 @@ fn status<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Create label text
     widget::Text::new(&APP_I18N.t("trigger-label-state"))
         .with_style(label_text_style)
-        .down_from(config.title_widget, 13.0)
+        .down_from(config.title_widget, 9.0)
         .set(config.status_label_widget, &mut master.ui);
 
     // Generate value text
@@ -131,7 +131,7 @@ fn offset<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Create text
     widget::Text::new(&APP_I18N.t("trigger-label-offset"))
         .with_style(label_text_style)
-        .down_from(config.status_label_widget, 5.0)
+        .down_from(config.status_label_widget, 4.0)
         .set(config.offset_label_widget, &mut master.ui);
 
     // Initialize value text style
