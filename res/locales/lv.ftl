@@ -37,6 +37,12 @@ trigger-label-configure = Pieskarieties, lai atvērtu
 trigger-state-enabled = Iespējots
 trigger-state-disabled = Atspējots
 
+mode-class-pc = Spiediens
+mode-class-vc = Skaļums
+mode-type-cmv = CMV
+mode-type-ac = AC
+mode-type-bipap = BIPAP
+
 modal-run-status = Ventilatora bloka statuss
 modal-run-status-started = Skriet - apstāties?
 modal-run-status-stopped = Apturēts - sākt?

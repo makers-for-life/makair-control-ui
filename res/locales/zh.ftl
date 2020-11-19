@@ -37,6 +37,12 @@ trigger-label-configure = 点击配置
 trigger-state-enabled = 已启用
 trigger-state-disabled = 残障人士
 
+mode-class-pc = 压力
+mode-class-vc = 卷
+mode-type-cmv = CMV
+mode-type-ac = AC
+mode-type-bipap = BIPAP
+
 modal-run-status = 呼吸机状态
 modal-run-status-started = 跑步-停下来吗？
 modal-run-status-stopped = 已停止-开始吗？

@@ -37,6 +37,12 @@ trigger-label-configure = Налаштуйте
 trigger-state-enabled = Увімкнено
 trigger-state-disabled = Інваліди
 
+mode-class-pc = Тиск
+mode-class-vc = Гучність
+mode-type-cmv = CMV
+mode-type-ac = AC
+mode-type-bipap = BIPAP
+
 modal-run-status = Статус блоку вентилятора
 modal-run-status-started = Біг - зупинка?
 modal-run-status-stopped = Зупинився - почати?

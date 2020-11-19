@@ -37,6 +37,12 @@ trigger-label-configure = Toque para configurar
 trigger-state-enabled = ativado
 trigger-state-disabled = Desativado
 
+mode-class-pc = Pressão
+mode-class-vc = Volume
+mode-type-cmv = CMV
+mode-type-ac = AC
+mode-type-bipap = BIPAP
+
 modal-run-status = Status da unidade de ventilação
 modal-run-status-started = Correndo - pare?
 modal-run-status-stopped = Parado - Iniciar?

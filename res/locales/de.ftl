@@ -37,6 +37,12 @@ trigger-label-configure = Antippen zum Öffnen
 trigger-state-enabled = aktiviert
 trigger-state-disabled = Behindert
 
+mode-class-pc = Druck
+mode-class-vc = Volumen
+mode-type-cmv = CMV
+mode-type-ac = AC
+mode-type-bipap = BIPAP
+
 modal-run-status = Status der Beatmungseinheit
 modal-run-status-started = Laufen - aufhören?
 modal-run-status-stopped = Gestoppt - Starten?

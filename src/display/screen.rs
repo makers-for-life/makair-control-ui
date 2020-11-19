@@ -388,9 +388,13 @@ impl<'a> Screen<'a> {
             .render(ControlWidgetType::ModeOverview(mode_overview::Config {
                 parent: self.ids.telemetry_widgets_right,
                 container: self.ids.mode_overview_container,
-                background_color: Color::Rgba(52.0 / 255.0, 52.0 / 255.0, 52.0 / 255.0, 1.0),
+                separator: self.ids.mode_overview_separator,
+                text_class: self.ids.mode_overview_text_class,
+                text_type: self.ids.mode_overview_text_type,
+                background_color: Color::Rgba(1.0, 1.0, 1.0, 1.0),
                 width: TELEMETRY_WIDGET_RIGHT_SIZE_WIDTH,
                 height: TELEMETRY_WIDGET_RIGHT_MODE_HEIGHT,
+                mode_settings: (),
             }));
 
         // Initialize the peak widget
