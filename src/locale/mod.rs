@@ -6,3 +6,4 @@
 pub mod accessor;
 pub mod alarms;
 pub mod loader;
+pub mod modes;

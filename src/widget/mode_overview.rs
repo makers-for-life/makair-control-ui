@@ -9,11 +9,14 @@ use conrod_core::{
     Positionable, Widget,
 };
 
+use crate::chip::settings::mode::SettingsMode;
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
-use crate::APP_I18N;
+use crate::locale::modes::{
+    class_to_locale as mode_class_to_locale, kind_to_locale as mode_kind_to_locale,
+};
 
-pub struct Config {
+pub struct Config<'a> {
     pub background_color: Color,
 
     pub width: f64,
@@ -25,7 +28,7 @@ pub struct Config {
     pub text_class: WidgetId,
     pub text_type: WidgetId,
 
-    pub mode_settings: (),
+    pub mode_settings: &'a SettingsMode,
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
@@ -39,8 +42,6 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     .set(config.container, &mut master.ui);
 
     // Append contents
-    // TODO: pass ventilation mode from chip settings (which is itself synchronized from the last \
-    //   snapshot)
     separator(master, &config);
     class(master, &config);
     kind(master, &config);
@@ -67,8 +68,7 @@ fn class<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     text_style.font_size = Some(TELEMETRY_WIDGET_RIGHT_MODE_FONT_SIZE);
 
     // Create text
-    // TODO: dynamic text please
-    widget::Text::new(&APP_I18N.t("mode-class-pc"))
+    widget::Text::new(&mode_class_to_locale(config.mode_settings.mode.class()))
         .mid_right_with_margin_on(
             config.separator,
             TELEMETRY_WIDGET_RIGHT_MODE_SEPARATOR_SPACING,
@@ -87,8 +87,7 @@ fn kind<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     text_style.font_size = Some(TELEMETRY_WIDGET_RIGHT_MODE_FONT_SIZE);
 
     // Create text
-    // TODO: dynamic text please
-    widget::Text::new(&APP_I18N.t("mode-type-cmv"))
+    widget::Text::new(&mode_kind_to_locale(config.mode_settings.mode.kind()))
         .mid_left_with_margin_on(
             config.separator,
             TELEMETRY_WIDGET_RIGHT_MODE_SEPARATOR_SPACING,

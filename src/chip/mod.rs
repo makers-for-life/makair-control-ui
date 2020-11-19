@@ -20,7 +20,7 @@ use telemetry::control::{ControlMessage, ControlSetting};
 use telemetry::serial::core;
 use telemetry::structures::{
     AlarmPriority, ControlAck, DataSnapshot, HighLevelError, MachineStateSnapshot, StoppedMessage,
-    TelemetryMessage,
+    TelemetryMessage, VentilationMode,
 };
 
 use crate::config::environment::*;
@@ -65,6 +65,7 @@ struct ChipSettingsUpdate {
     trigger_enabled: Option<bool>,
     trigger_offset: Option<u8>,
     alarm_snoozed: Option<bool>,
+    ventilation_mode: Option<VentilationMode>,
 }
 
 pub struct Chip {
@@ -474,6 +475,11 @@ impl Chip {
                 SettingActionState::Disabled
             };
         }
+
+        // Update ventilation mode value
+        if let Some(ventilation_mode) = update.ventilation_mode {
+            self.settings.mode.mode = ventilation_mode;
+        }
     }
 
     fn update_settings_from_snapshot(&mut self, snapshot: &MachineStateSnapshot) {
@@ -488,6 +494,7 @@ impl Chip {
             trigger_enabled: Some(snapshot.trigger_enabled),
             trigger_offset: Some(snapshot.trigger_offset),
             alarm_snoozed: snapshot.alarm_snoozed,
+            ventilation_mode: Some(snapshot.ventilation_mode),
         });
     }
 
@@ -563,6 +570,7 @@ impl Chip {
             trigger_enabled: message.trigger_enabled,
             trigger_offset: message.trigger_offset,
             alarm_snoozed: message.alarm_snoozed,
+            ventilation_mode: None,
         });
 
         // Assign non-optional message values to snapshot
@@ -656,7 +664,10 @@ impl Chip {
             }
 
             ControlSetting::VentilationMode => {
-                // TODO: to be implemented
+                if let Ok(ventilation_mode) = VentilationMode::try_from(ack.value as u8) {
+                    self.settings.mode.mode = ventilation_mode;
+                    self.last_machine_snapshot.ventilation_mode = ventilation_mode;
+                }
             }
 
             ControlSetting::InspiratoryTriggerFlow => {

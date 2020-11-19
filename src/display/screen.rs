@@ -10,8 +10,9 @@ use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot};
 
 use crate::chip::settings::{
-    cycles::SettingsCycles, expiration_term::SettingsExpirationTerm, pressure::SettingsPressure,
-    run::SettingsRun, snooze::SettingsSnooze, trigger::SettingsTrigger, ChipSettings,
+    cycles::SettingsCycles, expiration_term::SettingsExpirationTerm, mode::SettingsMode,
+    pressure::SettingsPressure, run::SettingsRun, snooze::SettingsSnooze, trigger::SettingsTrigger,
+    ChipSettings,
 };
 use crate::chip::ChipError;
 use crate::config::environment::*;
@@ -267,7 +268,7 @@ impl<'a> Screen<'a> {
         self.render_graph(graph_data);
 
         // Render bottom elements
-        self.render_telemetry(&settings.trigger, &settings.expiration_term);
+        self.render_telemetry(&settings.mode, &settings.trigger, &settings.expiration_term);
 
         // Render modals (as needed)
         self.render_settings(settings, modals);
@@ -362,6 +363,7 @@ impl<'a> Screen<'a> {
 
     pub fn render_telemetry(
         &mut self,
+        mode: &'a SettingsMode,
         trigger: &'a SettingsTrigger,
         expiration_term: &'a SettingsExpirationTerm,
     ) {
@@ -394,7 +396,7 @@ impl<'a> Screen<'a> {
                 background_color: Color::Rgba(1.0, 1.0, 1.0, 1.0),
                 width: TELEMETRY_WIDGET_RIGHT_SIZE_WIDTH,
                 height: TELEMETRY_WIDGET_RIGHT_MODE_HEIGHT,
-                mode_settings: (),
+                mode_settings: mode,
             }));
 
         // Initialize the peak widget

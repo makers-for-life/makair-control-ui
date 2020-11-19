@@ -5,6 +5,7 @@
 
 pub mod cycles;
 pub mod expiration_term;
+pub mod mode;
 pub mod pressure;
 pub mod run;
 pub mod snooze;
@@ -14,6 +15,7 @@ use telemetry::control::{ControlMessage, ControlSetting};
 
 use cycles::*;
 use expiration_term::*;
+use mode::*;
 use pressure::*;
 use run::*;
 use snooze::*;
@@ -24,6 +26,7 @@ pub enum ChipSettingsEvent {
     Run(SettingsRunEvent),
     Snooze(SettingsSnoozeEvent),
     Trigger(SettingsTriggerEvent),
+    Mode(SettingsModeEvent),
     ExpirationTerm(SettingsExpirationTermEvent),
     Cycles(SettingsCyclesEvent),
     Pressure(SettingsPressureEvent),
@@ -92,6 +95,7 @@ pub struct ChipSettings {
     pub run: SettingsRun,
     pub snooze: SettingsSnooze,
     pub trigger: SettingsTrigger,
+    pub mode: SettingsMode,
     pub expiration_term: SettingsExpirationTerm,
     pub cycles: SettingsCycles,
     pub pressure: SettingsPressure,
@@ -103,6 +107,7 @@ impl ChipSettings {
             run: SettingsRun::new(),
             snooze: SettingsSnooze::new(),
             trigger: SettingsTrigger::new(),
+            mode: SettingsMode::new(),
             expiration_term: SettingsExpirationTerm::new(cycles_per_minute),
             cycles: SettingsCycles::new(),
             pressure: SettingsPressure::new(),
@@ -114,6 +119,7 @@ impl ChipSettings {
             ChipSettingsEvent::Run(event) => self.run.new_event(event),
             ChipSettingsEvent::Snooze(event) => self.snooze.new_event(event),
             ChipSettingsEvent::Trigger(event) => self.trigger.new_event(event),
+            ChipSettingsEvent::Mode(event) => self.mode.new_event(event),
             ChipSettingsEvent::ExpirationTerm(event) => self.expiration_term.new_event(event),
             ChipSettingsEvent::Cycles(event) => self.cycles.new_event(event),
             ChipSettingsEvent::Pressure(event) => self.pressure.new_event(event),

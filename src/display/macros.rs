@@ -46,7 +46,7 @@ macro_rules! gen_load_image_reverse {
                     .to_mut(),
             )
             .unwrap()
-            .into_rgba()
+            .into_rgba8()
             .into_raw(),
             $width,
         )
