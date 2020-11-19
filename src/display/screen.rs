@@ -383,6 +383,16 @@ impl<'a> Screen<'a> {
             || machine_snapshot.plateau_command > 0
             || machine_snapshot.peep_command > 0;
 
+        // Initialize the mode widget
+        self.widgets
+            .render(ControlWidgetType::ModeOverview(mode_overview::Config {
+                parent: self.ids.telemetry_widgets_right,
+                container: self.ids.mode_overview_container,
+                background_color: Color::Rgba(52.0 / 255.0, 52.0 / 255.0, 52.0 / 255.0, 1.0),
+                width: TELEMETRY_WIDGET_RIGHT_SIZE_WIDTH,
+                height: TELEMETRY_WIDGET_RIGHT_MODE_HEIGHT,
+            }));
+
         // Initialize the peak widget
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
@@ -415,7 +425,7 @@ impl<'a> Screen<'a> {
                     Some(self.ids.peak_unit),
                 ),
                 x_position: 0.0,
-                y_position: GRAPH_HEIGHT as f64 + LAYOUT_FOOTER_SIZE_HEIGHT
+                y_position: TELEMETRY_WIDGET_RIGHT_POSITION_Y_BASE
                     - TELEMETRY_WIDGET_RIGHT_SIZE_HEIGHT * 1.0,
                 background_color: Color::Rgba(39.0 / 255.0, 66.0 / 255.0, 100.0 / 255.0, 1.0),
                 width: TELEMETRY_WIDGET_RIGHT_SIZE_WIDTH,
@@ -454,7 +464,7 @@ impl<'a> Screen<'a> {
                     Some(self.ids.plateau_unit),
                 ),
                 x_position: 0.0,
-                y_position: GRAPH_HEIGHT as f64 + LAYOUT_FOOTER_SIZE_HEIGHT
+                y_position: TELEMETRY_WIDGET_RIGHT_POSITION_Y_BASE
                     - TELEMETRY_WIDGET_RIGHT_SIZE_HEIGHT * 2.0
                     - TELEMETRY_WIDGET_SPACING_SIDES,
                 background_color: Color::Rgba(66.0 / 255.0, 44.0 / 255.0, 85.0 / 255.0, 1.0),
@@ -494,7 +504,7 @@ impl<'a> Screen<'a> {
                     Some(self.ids.peep_unit),
                 ),
                 x_position: 0.0,
-                y_position: GRAPH_HEIGHT as f64 + LAYOUT_FOOTER_SIZE_HEIGHT
+                y_position: TELEMETRY_WIDGET_RIGHT_POSITION_Y_BASE
                     - TELEMETRY_WIDGET_RIGHT_SIZE_HEIGHT * 3.0
                     - TELEMETRY_WIDGET_SPACING_SIDES * 2.0,
                 background_color: Color::Rgba(76.0 / 255.0, 73.0 / 255.0, 25.0 / 255.0, 1.0),
