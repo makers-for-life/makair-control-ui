@@ -25,7 +25,7 @@ pub struct SettingsMode {
     pub trigger_inspiratory_flow: usize,
     pub trigger_expiratory_flow: usize,
     pub pressure_plateau: usize,
-    pub pressure_peep: usize,
+    pub pressure_expiratory: usize,
     pub volume_tidal: usize,
 }
 
@@ -41,7 +41,7 @@ impl SettingsMode {
             trigger_inspiratory_flow: ControlSetting::InspiratoryTriggerFlow.default(),
             trigger_expiratory_flow: ControlSetting::ExpiratoryTriggerFlow.default(),
             pressure_plateau: ControlSetting::PlateauPressure.default(),
-            pressure_peep: ControlSetting::PEEP.default(),
+            pressure_expiratory: ControlSetting::PEEP.default(),
             volume_tidal: 0, // TODO: not implemented in telemetry yet
         }
     }

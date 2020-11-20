@@ -16,6 +16,7 @@ use crate::display::widget::ControlWidget;
 use crate::locale::modes::{
     class_to_locale as mode_class_to_locale, kind_to_locale as mode_kind_to_locale,
 };
+use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::APP_I18N;
 
 const SELECTOR_BORDER_COLOR: Color = Color::Rgba(81.0 / 255.0, 81.0 / 255.0, 81.0 / 255.0, 1.0);
@@ -216,7 +217,14 @@ fn field_pressure_inspiratory<'a>(index: usize, master: &mut ControlWidget<'a>, 
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-pressure-inspiratory"),
-            value_text: "--".to_string(), // TODO
+            value_text: format!(
+                "{} {}",
+                convert_mmh2o_to_cmh2o(
+                    ConvertMode::Rounded,
+                    config.mode_settings.pressure_plateau as f64
+                ),
+                APP_I18N.t("telemetry-unit-cmh2o")
+            ),
             ids: config.field_pressure_inspiratory_ids,
         },
     )
@@ -229,7 +237,14 @@ fn field_pressure_expiratory<'a>(index: usize, master: &mut ControlWidget<'a>, c
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-pressure-expiratory"),
-            value_text: "--".to_string(), // TODO
+            value_text: format!(
+                "{} {}",
+                convert_mmh2o_to_cmh2o(
+                    ConvertMode::Rounded,
+                    config.mode_settings.pressure_expiratory as f64
+                ),
+                APP_I18N.t("telemetry-unit-cmh2o")
+            ),
             ids: config.field_pressure_expiratory_ids,
         },
     )
@@ -242,7 +257,11 @@ fn field_time_inspiratory<'a>(index: usize, master: &mut ControlWidget<'a>, conf
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-time-inspiratory"),
-            value_text: "--".to_string(), // TODO
+            value_text: format!(
+                "{} {}",
+                config.mode_settings.inspiratory_time,
+                APP_I18N.t("telemetry-unit-milliseconds")
+            ),
             ids: config.field_time_inspiratory_ids,
         },
     )
@@ -259,7 +278,11 @@ fn field_time_inspiratory_minimum<'a>(
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-time-inspiratory-minimum"),
-            value_text: "--".to_string(), // TODO
+            value_text: format!(
+                "{} {}",
+                config.mode_settings.inspiratory_time_minimum,
+                APP_I18N.t("telemetry-unit-milliseconds")
+            ),
             ids: config.field_time_inspiratory_minimum_ids,
         },
     )
@@ -276,7 +299,11 @@ fn field_time_inspiratory_maximum<'a>(
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-time-inspiratory-maximum"),
-            value_text: "--".to_string(), // TODO
+            value_text: format!(
+                "{} {}",
+                config.mode_settings.inspiratory_time_maximum,
+                APP_I18N.t("telemetry-unit-milliseconds")
+            ),
             ids: config.field_time_inspiratory_maximum_ids,
         },
     )
@@ -289,7 +316,11 @@ fn field_cycles_per_minute<'a>(index: usize, master: &mut ControlWidget<'a>, con
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-cycles-per-minute"),
-            value_text: "--".to_string(), // TODO
+            value_text: format!(
+                "{}{}",
+                config.mode_settings.cycles_per_minute,
+                APP_I18N.t("telemetry-unit-per-minute")
+            ),
             ids: config.field_cycles_per_minute_ids,
         },
     )
@@ -302,7 +333,11 @@ fn field_tidal_volume<'a>(index: usize, master: &mut ControlWidget<'a>, config: 
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-tidal-volume"),
-            value_text: "--".to_string(), // TODO
+            value_text: format!(
+                "{} {}",
+                config.mode_settings.volume_tidal,
+                APP_I18N.t("telemetry-unit-milliliters")
+            ),
             ids: config.field_tidal_volume_ids,
         },
     )
@@ -315,7 +350,14 @@ fn field_trigger_offset<'a>(index: usize, master: &mut ControlWidget<'a>, config
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-trigger-offset"),
-            value_text: "--".to_string(), // TODO
+            value_text: format!(
+                "{:.1} {}",
+                convert_mmh2o_to_cmh2o(
+                    ConvertMode::WithDecimals,
+                    config.mode_settings.trigger_inspiratory_offset as f64
+                ),
+                APP_I18N.t("telemetry-unit-cmh2o")
+            ),
             ids: config.field_trigger_offset_ids,
         },
     )
@@ -328,7 +370,7 @@ fn field_trigger_inspiratory<'a>(index: usize, master: &mut ControlWidget<'a>, c
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-trigger-inspiratory"),
-            value_text: "--".to_string(), // TODO
+            value_text: format!("{}%", config.mode_settings.trigger_inspiratory_flow),
             ids: config.field_trigger_inspiratory_ids,
         },
     )
@@ -341,7 +383,7 @@ fn field_trigger_expiratory<'a>(index: usize, master: &mut ControlWidget<'a>, co
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-trigger-expiratory"),
-            value_text: "--".to_string(), // TODO
+            value_text: format!("{}%", config.mode_settings.trigger_expiratory_flow),
             ids: config.field_trigger_expiratory_ids,
         },
     )

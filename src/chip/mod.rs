@@ -486,7 +486,7 @@ impl Chip {
             self.settings.pressure.plateau = convert_cmh2o_to_mmh2o(plateau_command);
         }
         if let Some(peep_command) = update.peep_command {
-            self.settings.mode.pressure_peep = convert_cmh2o_to_mmh2o(peep_command);
+            self.settings.mode.pressure_expiratory = convert_cmh2o_to_mmh2o(peep_command);
             self.settings.pressure.peep = convert_cmh2o_to_mmh2o(peep_command);
         }
 
@@ -668,7 +668,7 @@ impl Chip {
             }
 
             ControlSetting::PEEP => {
-                self.settings.mode.pressure_peep = ack.value as usize;
+                self.settings.mode.pressure_expiratory = ack.value as usize;
                 self.settings.pressure.peep = ack.value as usize;
                 self.last_machine_snapshot.peep_command =
                     convert_mmh2o_to_cmh2o(ConvertMode::Rounded, ack.value as f64) as u8
