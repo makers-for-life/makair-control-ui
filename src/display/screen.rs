@@ -5,6 +5,7 @@
 
 use chrono::{offset::Utc, DateTime};
 use conrod_core::color::{self, Color};
+use paste::paste;
 
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot};
@@ -841,6 +842,42 @@ impl<'a> Screen<'a> {
                     self.ids.mode_settings_selector_texts_pc_bipap,
                     self.ids.mode_settings_selector_texts_vc_cmv,
                 ],
+                form_wrapper: self.ids.mode_settings_form_wrapper,
+
+                field_pressure_inspiratory_ids: gen_render_mode_settings_field_ids!(
+                    self,
+                    pressure_inspiratory
+                ),
+                field_pressure_expiratory_ids: gen_render_mode_settings_field_ids!(
+                    self,
+                    pressure_expiratory
+                ),
+                field_time_inspiratory_ids: gen_render_mode_settings_field_ids!(
+                    self,
+                    time_inspiratory
+                ),
+                field_time_inspiratory_minimum_ids: gen_render_mode_settings_field_ids!(
+                    self,
+                    time_inspiratory_minimum
+                ),
+                field_time_inspiratory_maximum_ids: gen_render_mode_settings_field_ids!(
+                    self,
+                    time_inspiratory_maximum
+                ),
+                field_cycles_per_minute_ids: gen_render_mode_settings_field_ids!(
+                    self,
+                    cycles_per_minute
+                ),
+                field_tidal_volume_ids: gen_render_mode_settings_field_ids!(self, tidal_volume),
+                field_trigger_offset_ids: gen_render_mode_settings_field_ids!(self, trigger_offset),
+                field_trigger_inspiratory_ids: gen_render_mode_settings_field_ids!(
+                    self,
+                    trigger_inspiratory
+                ),
+                field_trigger_expiratory_ids: gen_render_mode_settings_field_ids!(
+                    self,
+                    trigger_expiratory
+                ),
             }));
     }
 

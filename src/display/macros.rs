@@ -177,3 +177,18 @@ macro_rules! gen_ui_events_modal_settings_clicks {
         )+
     }
 }
+
+macro_rules! gen_render_mode_settings_field_ids {
+    ($self:ident, $name:tt) => {
+        paste! {
+            (
+                $self.ids.[<mode_settings_field_ $name _text>],
+                $self.ids.[<mode_settings_field_ $name _value>],
+                $self.ids.[<mode_settings_field_ $name _more>],
+                $self.ids.[<mode_settings_field_ $name _more_text>],
+                $self.ids.[<mode_settings_field_ $name _less>],
+                $self.ids.[<mode_settings_field_ $name _less_text>],
+            )
+        }
+    };
+}

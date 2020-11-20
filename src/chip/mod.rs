@@ -570,7 +570,9 @@ impl Chip {
             trigger_enabled: message.trigger_enabled,
             trigger_offset: message.trigger_offset,
             alarm_snoozed: message.alarm_snoozed,
-            ventilation_mode: Some(message.ventilation_mode),
+            // TODO: re-enable this after telemetry library update
+            // ventilation_mode: Some(message.ventilation_mode),
+            ventilation_mode: None,
         });
 
         // Assign same-type message values to snapshot (that must be cloned)
@@ -584,23 +586,22 @@ impl Chip {
         gen_override_snapshot_values_from_stopped_identity!(
             self.last_machine_snapshot,
             message,
-            [
-                telemetry_version,
-                ventilation_mode,
-                alarm_snoozed,
-                cpu_load,
-                inspiratory_trigger_flow,
-                expiratory_trigger_flow,
-                ti_min,
-                ti_max,
-                low_inspiratory_minute_volume_alarm_threshold,
-                high_inspiratory_minute_volume_alarm_threshold,
-                low_expiratory_minute_volume_alarm_threshold,
-                high_expiratory_minute_volume_alarm_threshold,
-                low_expiratory_rate_alarm_threshold,
-                high_expiratory_rate_alarm_threshold
-            ]
+            [telemetry_version, alarm_snoozed]
         );
+
+        // TODO: re-enable this after telemetry library update (right above)
+        // cpu_load,
+        // ventilation_mode,
+        // inspiratory_trigger_flow,
+        // expiratory_trigger_flow,
+        // ti_min,
+        // ti_max,
+        // low_inspiratory_minute_volume_alarm_threshold,
+        // high_inspiratory_minute_volume_alarm_threshold,
+        // low_expiratory_minute_volume_alarm_threshold,
+        // high_expiratory_minute_volume_alarm_threshold,
+        // low_expiratory_rate_alarm_threshold,
+        // high_expiratory_rate_alarm_threshold
 
         // Assign optional message values to snapshot
         gen_override_snapshot_values_from_stopped_optional!(
