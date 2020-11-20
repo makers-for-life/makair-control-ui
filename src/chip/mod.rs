@@ -573,17 +573,37 @@ impl Chip {
             ventilation_mode: Some(message.ventilation_mode),
         });
 
-        // Assign non-optional message values to snapshot
-        self.last_machine_snapshot.telemetry_version = message.telemetry_version;
-        self.last_machine_snapshot.version = message.version.to_owned();
-        self.last_machine_snapshot.device_id = message.device_id.to_owned();
+        // Assign same-type message values to snapshot (that must be cloned)
+        gen_override_snapshot_values_from_stopped_identity_clone!(
+            self.last_machine_snapshot,
+            message,
+            [version, device_id]
+        );
 
-        // Assign optional message values to snapshot (those that share the same type on both sides)
-        self.last_machine_snapshot.alarm_snoozed = message.alarm_snoozed;
-        self.last_machine_snapshot.cpu_load = message.cpu_load;
+        // Assign same-type message values to snapshot (ie. same type on both sides)
+        gen_override_snapshot_values_from_stopped_identity!(
+            self.last_machine_snapshot,
+            message,
+            [
+                telemetry_version,
+                ventilation_mode,
+                alarm_snoozed,
+                cpu_load,
+                inspiratory_trigger_flow,
+                expiratory_trigger_flow,
+                ti_min,
+                ti_max,
+                low_inspiratory_minute_volume_alarm_threshold,
+                high_inspiratory_minute_volume_alarm_threshold,
+                low_expiratory_minute_volume_alarm_threshold,
+                high_expiratory_minute_volume_alarm_threshold,
+                low_expiratory_rate_alarm_threshold,
+                high_expiratory_rate_alarm_threshold
+            ]
+        );
 
         // Assign optional message values to snapshot
-        gen_override_snapshot_values_from_stopped!(
+        gen_override_snapshot_values_from_stopped_optional!(
             self.last_machine_snapshot,
             message,
             [
