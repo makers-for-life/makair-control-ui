@@ -482,11 +482,11 @@ impl Chip {
 
         // Update pressure values
         if let Some(plateau_command) = update.plateau_command {
-            self.settings.mode.pressure_plateau = plateau_command as usize;
+            self.settings.mode.pressure_plateau = convert_cmh2o_to_mmh2o(plateau_command);
             self.settings.pressure.plateau = convert_cmh2o_to_mmh2o(plateau_command);
         }
         if let Some(peep_command) = update.peep_command {
-            self.settings.mode.pressure_peep = peep_command as usize;
+            self.settings.mode.pressure_peep = convert_cmh2o_to_mmh2o(peep_command);
             self.settings.pressure.peep = convert_cmh2o_to_mmh2o(peep_command);
         }
 
