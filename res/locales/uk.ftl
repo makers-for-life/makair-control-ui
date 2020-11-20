@@ -61,6 +61,17 @@ modal-cycles-cycles-per-minute = Цикли в хвилину:
 modal-pressure-plateau = Тиск на плато:
 modal-pressure-expiratory = Тиск на видиху:
 
+modal-mode-pressure-inspiratory = Інспіраторний тиск
+modal-mode-pressure-expiratory = Тиск на видиху
+modal-mode-time-inspiratory = Час надихання
+modal-mode-time-inspiratory-minimum = Час вдиху (мінімум)
+modal-mode-time-inspiratory-maximum = Час вдиху (максимум)
+modal-mode-cycles-per-minute = Цикли в хвилину
+modal-mode-tidal-volume = Дихальний об’єм
+modal-mode-trigger-offset = Зсув тригера
+modal-mode-trigger-inspiratory = Інспіраторний тригер
+modal-mode-trigger-expiratory = Тригер видиху
+
 initializing-connecting = Запуск...
 initializing-connected = Ініціалізація...
 

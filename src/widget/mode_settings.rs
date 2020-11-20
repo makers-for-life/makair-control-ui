@@ -107,23 +107,34 @@ fn selector<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         let index_mode = tab_index_to_mode(index);
 
         // Create rectangle (selected if index mode matches ongoing mode)
-        let (rectangle_color, rectangle_offset) = if Some(config.mode_settings.mode) == index_mode {
-            (SELECTOR_COLOR_SELECTED, 0.0)
-        } else {
-            (SELECTOR_COLOR_DEFAULT, 1.0)
-        };
+        let (rectangle_color, rectangle_height_offset, rectangle_width_offset, selection_offset) =
+            if Some(config.mode_settings.mode) == index_mode {
+                (
+                    SELECTOR_COLOR_SELECTED,
+                    0.0,
+                    0.0,
+                    if index == 0 { 0.0 } else { 1.0 },
+                )
+            } else {
+                (
+                    SELECTOR_COLOR_DEFAULT,
+                    1.0,
+                    if index == 0 { 0.0 } else { 1.0 },
+                    0.0,
+                )
+            };
 
         widget::rectangle::Rectangle::fill_with(
             [
-                tab_width - rectangle_offset,
-                MODE_SETTINGS_SELECTOR_TABS_HEIGHT - rectangle_offset,
+                tab_width - rectangle_width_offset - selection_offset,
+                MODE_SETTINGS_SELECTOR_TABS_HEIGHT - rectangle_height_offset,
             ],
             rectangle_color,
         )
         .top_left_with_margins_on(
             config.selector_wrapper,
             0.0,
-            rectangle_offset + index as f64 * tab_width,
+            rectangle_width_offset + selection_offset + index as f64 * tab_width,
         )
         .set(config.selector_tabs[index], &mut master.ui);
 
@@ -204,8 +215,8 @@ fn field_pressure_inspiratory<'a>(index: usize, master: &mut ControlWidget<'a>, 
         master,
         config,
         Field {
-            label_text: "TODO label".to_string(),
-            value_text: "TODO value".to_string(),
+            label_text: APP_I18N.t("modal-mode-pressure-inspiratory"),
+            value_text: "--".to_string(),
             ids: config.field_pressure_inspiratory_ids,
         },
     )
@@ -217,8 +228,8 @@ fn field_pressure_expiratory<'a>(index: usize, master: &mut ControlWidget<'a>, c
         master,
         config,
         Field {
-            label_text: "TODO label".to_string(),
-            value_text: "TODO value".to_string(),
+            label_text: APP_I18N.t("modal-mode-pressure-expiratory"),
+            value_text: "--".to_string(),
             ids: config.field_pressure_expiratory_ids,
         },
     )
@@ -230,8 +241,8 @@ fn field_time_inspiratory<'a>(index: usize, master: &mut ControlWidget<'a>, conf
         master,
         config,
         Field {
-            label_text: "TODO label".to_string(),
-            value_text: "TODO value".to_string(),
+            label_text: APP_I18N.t("modal-mode-time-inspiratory"),
+            value_text: "--".to_string(),
             ids: config.field_time_inspiratory_ids,
         },
     )
@@ -247,8 +258,8 @@ fn field_time_inspiratory_minimum<'a>(
         master,
         config,
         Field {
-            label_text: "TODO label".to_string(),
-            value_text: "TODO value".to_string(),
+            label_text: APP_I18N.t("modal-mode-time-inspiratory-minimum"),
+            value_text: "--".to_string(),
             ids: config.field_time_inspiratory_minimum_ids,
         },
     )
@@ -264,8 +275,8 @@ fn field_time_inspiratory_maximum<'a>(
         master,
         config,
         Field {
-            label_text: "TODO label".to_string(),
-            value_text: "TODO value".to_string(),
+            label_text: APP_I18N.t("modal-mode-time-inspiratory-maximum"),
+            value_text: "--".to_string(),
             ids: config.field_time_inspiratory_maximum_ids,
         },
     )
@@ -277,8 +288,8 @@ fn field_cycles_per_minute<'a>(index: usize, master: &mut ControlWidget<'a>, con
         master,
         config,
         Field {
-            label_text: "TODO label".to_string(),
-            value_text: "TODO value".to_string(),
+            label_text: APP_I18N.t("modal-mode-cycles-per-minute"),
+            value_text: "--".to_string(),
             ids: config.field_cycles_per_minute_ids,
         },
     )
@@ -290,8 +301,8 @@ fn field_tidal_volume<'a>(index: usize, master: &mut ControlWidget<'a>, config: 
         master,
         config,
         Field {
-            label_text: "TODO label".to_string(),
-            value_text: "TODO value".to_string(),
+            label_text: APP_I18N.t("modal-mode-tidal-volume"),
+            value_text: "--".to_string(),
             ids: config.field_tidal_volume_ids,
         },
     )
@@ -303,8 +314,8 @@ fn field_trigger_offset<'a>(index: usize, master: &mut ControlWidget<'a>, config
         master,
         config,
         Field {
-            label_text: "TODO label".to_string(),
-            value_text: "TODO value".to_string(),
+            label_text: APP_I18N.t("modal-mode-trigger-offset"),
+            value_text: "--".to_string(),
             ids: config.field_trigger_offset_ids,
         },
     )
@@ -316,8 +327,8 @@ fn field_trigger_inspiratory<'a>(index: usize, master: &mut ControlWidget<'a>, c
         master,
         config,
         Field {
-            label_text: "TODO label".to_string(),
-            value_text: "TODO value".to_string(),
+            label_text: APP_I18N.t("modal-mode-trigger-inspiratory"),
+            value_text: "--".to_string(),
             ids: config.field_trigger_inspiratory_ids,
         },
     )
@@ -329,8 +340,8 @@ fn field_trigger_expiratory<'a>(index: usize, master: &mut ControlWidget<'a>, co
         master,
         config,
         Field {
-            label_text: "TODO label".to_string(),
-            value_text: "TODO value".to_string(),
+            label_text: APP_I18N.t("modal-mode-trigger-expiratory"),
+            value_text: "--".to_string(),
             ids: config.field_trigger_expiratory_ids,
         },
     )

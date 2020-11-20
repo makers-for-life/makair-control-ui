@@ -61,6 +61,17 @@ modal-cycles-cycles-per-minute = 每分钟循环数：
 modal-pressure-plateau = 高原压力：
 modal-pressure-expiratory = 呼气压力：
 
+modal-mode-pressure-inspiratory = 吸气压力
+modal-mode-pressure-expiratory = 呼气压力
+modal-mode-time-inspiratory = 吸气时间
+modal-mode-time-inspiratory-minimum = 吸气时间（最短）
+modal-mode-time-inspiratory-maximum = 吸气时间（最大）
+modal-mode-cycles-per-minute = 每分钟循环
+modal-mode-tidal-volume = 潮量
+modal-mode-trigger-offset = 触发偏移
+modal-mode-trigger-inspiratory = 吸气触发器
+modal-mode-trigger-expiratory = 呼气触发
+
 initializing-connecting = 启动...
 initializing-connected = 初始化中...
 

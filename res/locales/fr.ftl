@@ -61,6 +61,17 @@ modal-cycles-cycles-per-minute = Cycles par minute :
 modal-pressure-plateau = Pression de plateau :
 modal-pressure-expiratory = Pression d'expiration :
 
+modal-mode-pressure-inspiratory = Pression inspiratoire
+modal-mode-pressure-expiratory = Pression expiratoire
+modal-mode-time-inspiratory = Temps inspiratoire
+modal-mode-time-inspiratory-minimum = Temps inspiratoire (minimum)
+modal-mode-time-inspiratory-maximum = Temps inspiratoire (maximum)
+modal-mode-cycles-per-minute = Cycles par minute
+modal-mode-tidal-volume = Volume courant
+modal-mode-trigger-offset = Seuil de déclenchement
+modal-mode-trigger-inspiratory = Trigger inspiratoire
+modal-mode-trigger-expiratory = Trigger expiratoire
+
 initializing-connecting = Démarrage en cours...
 initializing-connected = Préparation en cours...
 

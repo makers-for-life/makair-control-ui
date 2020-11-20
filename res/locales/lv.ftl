@@ -61,6 +61,17 @@ modal-cycles-cycles-per-minute = Cikli minūtē:
 modal-pressure-plateau = Plato spiediens:
 modal-pressure-expiratory = Izelpas spiediens:
 
+modal-mode-pressure-inspiratory = Ieelpošanas spiediens
+modal-mode-pressure-expiratory = Izelpas spiediens
+modal-mode-time-inspiratory = Ieelpošanas laiks
+modal-mode-time-inspiratory-minimum = Ieelpošanas laiks (minimums)
+modal-mode-time-inspiratory-maximum = Ieelpošanas laiks (maksimums)
+modal-mode-cycles-per-minute = Cikli minūtē
+modal-mode-tidal-volume = Plūdmaiņu apjoms
+modal-mode-trigger-offset = Aktivizētāja nobīde
+modal-mode-trigger-inspiratory = Ieelpas sprūda
+modal-mode-trigger-expiratory = Derīguma termiņš
+
 initializing-connecting = Notiek palaišana...
 initializing-connected = Notiek inicializēšana...
 

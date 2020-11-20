@@ -61,6 +61,17 @@ modal-cycles-cycles-per-minute = Ciclos por minuto:
 modal-pressure-plateau = Presión meseta:
 modal-pressure-expiratory = Presión espiratoria:
 
+modal-mode-pressure-inspiratory = Presión inspiratoria
+modal-mode-pressure-expiratory = Presión espiratoria
+modal-mode-time-inspiratory = Tiempo inspiratorio
+modal-mode-time-inspiratory-minimum = Tiempo inspiratorio (mínimo)
+modal-mode-time-inspiratory-maximum = Tiempo inspiratorio (máximo)
+modal-mode-cycles-per-minute = Ciclos por minuto
+modal-mode-tidal-volume = Volumen corriente
+modal-mode-trigger-offset = Desplazamiento del disparador
+modal-mode-trigger-inspiratory = Gatillo inspiratorio
+modal-mode-trigger-expiratory = Gatillo espiratorio
+
 initializing-connecting = Empezando...
 initializing-connected = Inicializando...
 

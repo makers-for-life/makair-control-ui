@@ -61,6 +61,17 @@ modal-cycles-cycles-per-minute = Zyklen pro Minute:
 modal-pressure-plateau = Plateaudruck:
 modal-pressure-expiratory = Ausatmungsdruck:
 
+modal-mode-pressure-inspiratory = Inspirationsdruck
+modal-mode-pressure-expiratory = Ausatmungsdruck
+modal-mode-time-inspiratory = Inspirationszeit
+modal-mode-time-inspiratory-minimum = Inspirationszeit (minimum)
+modal-mode-time-inspiratory-maximum = Inspirationszeit (maximal)
+modal-mode-cycles-per-minute = Zyklen pro Minute
+modal-mode-tidal-volume = Atemzugvolumen
+modal-mode-trigger-offset = Offset auslösen
+modal-mode-trigger-inspiratory = Inspirierender Auslöser
+modal-mode-trigger-expiratory = Exspiratorischer Auslöser
+
 initializing-connecting = Inbetriebnahme...
 initializing-connected = Initialisierung...
 
