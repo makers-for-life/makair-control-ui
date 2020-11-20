@@ -174,8 +174,14 @@ widget_ids!(pub struct Ids {
 
   mode_settings_container,
   mode_settings_selector_wrapper,
-  mode_settings_selector_tabs[],
-  mode_settings_selector_texts[],
+  mode_settings_selector_tab_pc_cmv,
+  mode_settings_selector_tab_pc_ac,
+  mode_settings_selector_tab_pc_bipap,
+  mode_settings_selector_tab_vc_cmv,
+  mode_settings_selector_texts_pc_cmv,
+  mode_settings_selector_texts_pc_ac,
+  mode_settings_selector_texts_pc_bipap,
+  mode_settings_selector_texts_vc_cmv,
 
   run_status_container,
   run_status_text,
@@ -238,16 +244,6 @@ image_ids!(pub struct ImageIds {
 
 impl Ids {
     pub fn allocate(&mut self, interface: &mut Ui) {
-        // Allocate mode settings
-        self.mode_settings_selector_tabs.resize(
-            MODE_SETTINGS_SELECTOR_TABS_COUNT,
-            &mut interface.widget_id_generator(),
-        );
-        self.mode_settings_selector_texts.resize(
-            MODE_SETTINGS_SELECTOR_TABS_COUNT,
-            &mut interface.widget_id_generator(),
-        );
-
         // Allocate advanced line
         self.advanced_line_labels.resize(
             ADVANCED_SETTINGS_LINES_COUNT,

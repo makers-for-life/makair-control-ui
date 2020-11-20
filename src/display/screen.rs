@@ -829,8 +829,18 @@ impl<'a> Screen<'a> {
                 container_parent: self.ids.modal_container,
                 container_widget: self.ids.mode_settings_container,
                 selector_wrapper: self.ids.mode_settings_selector_wrapper,
-                selector_tabs: &self.ids.mode_settings_selector_tabs,
-                selector_texts: &self.ids.mode_settings_selector_texts,
+                selector_tabs: [
+                    self.ids.mode_settings_selector_tab_pc_cmv,
+                    self.ids.mode_settings_selector_tab_pc_ac,
+                    self.ids.mode_settings_selector_tab_pc_bipap,
+                    self.ids.mode_settings_selector_tab_vc_cmv,
+                ],
+                selector_texts: [
+                    self.ids.mode_settings_selector_texts_pc_cmv,
+                    self.ids.mode_settings_selector_texts_pc_ac,
+                    self.ids.mode_settings_selector_texts_pc_bipap,
+                    self.ids.mode_settings_selector_texts_vc_cmv,
+                ],
             }));
     }
 
