@@ -66,6 +66,10 @@ struct ChipSettingsUpdate {
     trigger_offset: Option<u8>,
     alarm_snoozed: Option<bool>,
     ventilation_mode: Option<VentilationMode>,
+    inspiratory_trigger_flow: Option<u8>,
+    expiratory_trigger_flow: Option<u8>,
+    ti_min: Option<u16>,
+    ti_max: Option<u16>,
 }
 
 pub struct Chip {
@@ -439,6 +443,14 @@ impl Chip {
             self.settings.expiration_term.expiratory_term = expiratory_term as usize;
         }
 
+        if let Some(ti_min) = update.ti_min {
+            self.settings.mode.inspiratory_time_minimum = ti_min as usize;
+        }
+
+        if let Some(ti_max) = update.ti_max {
+            self.settings.mode.inspiratory_time_maximum = ti_max as usize;
+        }
+
         // Update trigger values
         if let Some(trigger_enabled) = update.trigger_enabled {
             self.settings.trigger.state = if trigger_enabled {
@@ -451,6 +463,14 @@ impl Chip {
         if let Some(trigger_offset) = update.trigger_offset {
             self.settings.mode.trigger_inspiratory_offset = trigger_offset as usize;
             self.settings.trigger.inspiratory_trigger_offset = trigger_offset as usize;
+        }
+
+        if let Some(inspiratory_trigger_flow) = update.inspiratory_trigger_flow {
+            self.settings.mode.trigger_inspiratory_flow = inspiratory_trigger_flow as usize;
+        }
+
+        if let Some(expiratory_trigger_flow) = update.expiratory_trigger_flow {
+            self.settings.mode.trigger_expiratory_flow = expiratory_trigger_flow as usize;
         }
 
         // Update cycle values
@@ -483,8 +503,6 @@ impl Chip {
         if let Some(ventilation_mode) = update.ventilation_mode {
             self.settings.mode.mode = ventilation_mode;
         }
-
-        // TODO: add settings configuration of all mode-related values, eg. ti_max
     }
 
     fn update_settings_from_snapshot(&mut self, snapshot: &MachineStateSnapshot) {
@@ -500,6 +518,10 @@ impl Chip {
             trigger_offset: Some(snapshot.trigger_offset),
             alarm_snoozed: snapshot.alarm_snoozed,
             ventilation_mode: Some(snapshot.ventilation_mode),
+            inspiratory_trigger_flow: snapshot.inspiratory_trigger_flow,
+            expiratory_trigger_flow: snapshot.expiratory_trigger_flow,
+            ti_min: snapshot.ti_min,
+            ti_max: snapshot.ti_max,
         });
     }
 
@@ -576,6 +598,10 @@ impl Chip {
             trigger_offset: message.trigger_offset,
             alarm_snoozed: message.alarm_snoozed,
             ventilation_mode: Some(message.ventilation_mode),
+            inspiratory_trigger_flow: message.inspiratory_trigger_flow,
+            expiratory_trigger_flow: message.expiratory_trigger_flow,
+            ti_min: message.ti_min,
+            ti_max: message.ti_max,
         });
 
         // Assign same-type message values to snapshot (that must be cloned)
@@ -702,22 +728,22 @@ impl Chip {
             }
 
             ControlSetting::InspiratoryTriggerFlow => {
-                // TODO: settings update to be implemented
+                self.settings.mode.trigger_inspiratory_flow = ack.value as usize;
                 self.last_machine_snapshot.inspiratory_trigger_flow = Some(ack.value as _);
             }
 
             ControlSetting::ExpiratoryTriggerFlow => {
-                // TODO: settings update to be implemented
+                self.settings.mode.trigger_expiratory_flow = ack.value as usize;
                 self.last_machine_snapshot.expiratory_trigger_flow = Some(ack.value as _);
             }
 
             ControlSetting::TiMin => {
-                // TODO: settings update to be implemented
+                self.settings.mode.inspiratory_time_minimum = ack.value as usize;
                 self.last_machine_snapshot.ti_min = Some(ack.value);
             }
 
             ControlSetting::TiMax => {
-                // TODO: settings update to be implemented
+                self.settings.mode.inspiratory_time_maximum = ack.value as usize;
                 self.last_machine_snapshot.ti_max = Some(ack.value);
             }
 
