@@ -17,12 +17,22 @@ pub enum SettingsModeEvent {
 #[derive(Debug)]
 pub struct SettingsMode {
     pub mode: VentilationMode,
+    pub inspiratory_time: usize,
+    pub cycles_per_minute: usize,
+    pub trigger_inspiratory_offset: usize,
+    pub pressure_plateau: usize,
+    pub pressure_peep: usize,
 }
 
 impl SettingsMode {
     pub fn new() -> SettingsMode {
         SettingsMode {
             mode: VentilationMode::default(),
+            inspiratory_time: ControlSetting::ExpiratoryTerm.default(),
+            cycles_per_minute: ControlSetting::CyclesPerMinute.default(),
+            trigger_inspiratory_offset: ControlSetting::TriggerOffset.default(),
+            pressure_plateau: ControlSetting::PlateauPressure.default(),
+            pressure_peep: ControlSetting::PEEP.default(),
         }
     }
 

@@ -435,10 +435,8 @@ impl Chip {
     fn update_settings_from_parameters(&mut self, update: ChipSettingsUpdate) {
         // Update expiratory term values
         if let Some(expiratory_term) = update.expiratory_term {
+            self.settings.mode.inspiratory_time = expiratory_term as usize;
             self.settings.expiration_term.expiratory_term = expiratory_term as usize;
-        }
-        if let Some(cpm_command) = update.cpm_command {
-            self.settings.expiration_term.cycles_per_minute = cpm_command as usize;
         }
 
         // Update trigger values
@@ -451,19 +449,24 @@ impl Chip {
         }
 
         if let Some(trigger_offset) = update.trigger_offset {
+            self.settings.mode.trigger_inspiratory_offset = trigger_offset as usize;
             self.settings.trigger.inspiratory_trigger_offset = trigger_offset as usize;
         }
 
         // Update cycle values
         if let Some(cpm_command) = update.cpm_command {
+            self.settings.mode.cycles_per_minute = cpm_command as usize;
             self.settings.cycles.cycles_per_minute = cpm_command as usize;
+            self.settings.expiration_term.cycles_per_minute = cpm_command as usize;
         }
 
         // Update pressure values
         if let Some(plateau_command) = update.plateau_command {
+            self.settings.mode.pressure_plateau = plateau_command as usize;
             self.settings.pressure.plateau = convert_cmh2o_to_mmh2o(plateau_command);
         }
         if let Some(peep_command) = update.peep_command {
+            self.settings.mode.pressure_peep = peep_command as usize;
             self.settings.pressure.peep = convert_cmh2o_to_mmh2o(peep_command);
         }
 
@@ -480,6 +483,8 @@ impl Chip {
         if let Some(ventilation_mode) = update.ventilation_mode {
             self.settings.mode.mode = ventilation_mode;
         }
+
+        // TODO: add settings configuration of all mode-related values, eg. ti_max
     }
 
     fn update_settings_from_snapshot(&mut self, snapshot: &MachineStateSnapshot) {
@@ -630,18 +635,21 @@ impl Chip {
             }
 
             ControlSetting::PlateauPressure => {
+                self.settings.mode.pressure_plateau = ack.value as usize;
                 self.settings.pressure.plateau = ack.value as usize;
                 self.last_machine_snapshot.plateau_command =
                     convert_mmh2o_to_cmh2o(ConvertMode::Rounded, ack.value as f64) as u8
             }
 
             ControlSetting::PEEP => {
+                self.settings.mode.pressure_peep = ack.value as usize;
                 self.settings.pressure.peep = ack.value as usize;
                 self.last_machine_snapshot.peep_command =
                     convert_mmh2o_to_cmh2o(ConvertMode::Rounded, ack.value as f64) as u8
             }
 
             ControlSetting::CyclesPerMinute => {
+                self.settings.mode.cycles_per_minute = ack.value as usize;
                 self.settings.cycles.cycles_per_minute = ack.value as usize;
                 self.last_machine_snapshot.cpm_command = ack.value as u8
             }
@@ -657,11 +665,13 @@ impl Chip {
             }
 
             ControlSetting::TriggerOffset => {
+                self.settings.mode.trigger_inspiratory_offset = ack.value as usize;
                 self.settings.trigger.inspiratory_trigger_offset = ack.value as usize;
                 self.last_machine_snapshot.trigger_offset = ack.value as u8;
             }
 
             ControlSetting::ExpiratoryTerm => {
+                self.settings.mode.inspiratory_time = ack.value as usize;
                 self.settings.expiration_term.expiratory_term = ack.value as usize;
                 self.last_machine_snapshot.expiratory_term = ack.value as u8;
             }
