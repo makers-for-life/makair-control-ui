@@ -8,8 +8,9 @@ use glium::glutin::{Event, EventsLoop, KeyboardInput, WindowEvent};
 
 use crate::chip::settings::{
     cycles::SettingsCyclesEvent, expiration_term::SettingsExpirationTermEvent,
-    pressure::SettingsPressureEvent, run::SettingsRunEvent, snooze::SettingsSnoozeEvent,
-    trigger::SettingsTriggerEvent, ChipSettingsEvent, SettingActionRange,
+    mode::SettingsModeEvent, pressure::SettingsPressureEvent, run::SettingsRunEvent,
+    snooze::SettingsSnoozeEvent, trigger::SettingsTriggerEvent, ChipSettingsEvent,
+    SettingActionRange,
 };
 
 use super::identifiers::Ids;
@@ -290,6 +291,50 @@ impl DisplayUIEvents {
 
             {
                 "mode", Mode, states.mode_settings,
+
+                {
+                    SettingsModeEvent::ModePcCmv, "mode pc cmv",
+
+                    [
+                        ids.mode_settings_selector_tab_pc_cmv,
+                        ids.mode_settings_selector_texts_pc_cmv,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::ModePcAc, "mode pc ac",
+
+                    [
+                        ids.mode_settings_selector_tab_pc_ac,
+                        ids.mode_settings_selector_texts_pc_ac,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::ModePcBipap, "mode pc bipap",
+
+                    [
+                        ids.mode_settings_selector_tab_pc_bipap,
+                        ids.mode_settings_selector_texts_pc_bipap,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::ModeVcCmv, "mode vc cmv",
+
+                    [
+                        ids.mode_settings_selector_tab_vc_cmv,
+                        ids.mode_settings_selector_texts_vc_cmv,
+                    ],
+
+                    None
+                }
             },
 
             {

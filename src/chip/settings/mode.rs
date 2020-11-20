@@ -8,7 +8,10 @@ use telemetry::structures::VentilationMode;
 
 #[derive(Debug)]
 pub enum SettingsModeEvent {
-    Mode,
+    ModePcCmv,
+    ModePcAc,
+    ModePcBipap,
+    ModeVcCmv,
 }
 
 #[derive(Debug)]
@@ -25,14 +28,17 @@ impl SettingsMode {
 
     pub fn new_event(&self, event: SettingsModeEvent) -> ControlMessage {
         match event {
-            SettingsModeEvent::Mode => self.toggle_mode(),
+            SettingsModeEvent::ModePcCmv => self.switch_mode(VentilationMode::PC_CMV),
+            SettingsModeEvent::ModePcAc => self.switch_mode(VentilationMode::PC_AC),
+            SettingsModeEvent::ModePcBipap => self.switch_mode(VentilationMode::PC_BIPAP),
+            SettingsModeEvent::ModeVcCmv => self.switch_mode(VentilationMode::VC_CMV),
         }
     }
 
-    fn toggle_mode(&self) -> ControlMessage {
+    fn switch_mode(&self, mode: VentilationMode) -> ControlMessage {
         ControlMessage {
             setting: ControlSetting::VentilationMode,
-            value: 0, // TODO
+            value: u8::from(&mode) as _,
         }
     }
 }

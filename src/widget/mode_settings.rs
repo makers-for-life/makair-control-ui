@@ -6,7 +6,7 @@
 use conrod_core::{
     color::{self, Color},
     widget::{self, Id as WidgetId},
-    Colorable, Positionable, Sizeable, Widget,
+    Positionable, Sizeable, Widget,
 };
 use telemetry::structures::VentilationMode;
 
@@ -48,6 +48,9 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
             config.container_parent,
         ]
     );
+
+    // TODO: do not save values (mode + its options) right away once it gets changed
+    // TODO: add save button
 
     // Append contents
     selector(master, &config);
@@ -119,6 +122,8 @@ pub fn selector<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 }
 
 pub fn form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+    // TODO: option becomes eg. blue when it is changed and not saved
+
     // Append form depending on current ventilation mode
     match config.mode_settings.mode {
         VentilationMode::PC_CMV => form_pc_cmv(master, config),
