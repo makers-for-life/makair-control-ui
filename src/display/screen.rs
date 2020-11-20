@@ -817,7 +817,21 @@ impl<'a> Screen<'a> {
             Some(MODE_SETTINGS_MODAL_PADDING),
         );
 
-        // TODO: fill modal w/ form
+        self.widgets
+            .render(ControlWidgetType::ModeSettings(mode_settings::Config {
+                width: MODE_SETTINGS_MODAL_WIDTH,
+                height: MODE_SETTINGS_MODAL_HEIGTH
+                    - MODAL_VALIDATE_BUTTON_HEIGHT
+                    - (MODE_SETTINGS_MODAL_PADDING * 2.0),
+
+                mode_settings: settings,
+
+                container_parent: self.ids.modal_container,
+                container_widget: self.ids.mode_settings_container,
+                selector_wrapper: self.ids.mode_settings_selector_wrapper,
+                selector_tabs: &self.ids.mode_settings_selector_tabs,
+                selector_texts: &self.ids.mode_settings_selector_texts,
+            }));
     }
 
     fn render_expiration_term_settings(&mut self, settings: &'a SettingsExpirationTerm) {

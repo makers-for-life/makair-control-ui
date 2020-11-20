@@ -172,6 +172,11 @@ widget_ids!(pub struct Ids {
   mode_overview_text_class,
   mode_overview_text_type,
 
+  mode_settings_container,
+  mode_settings_selector_wrapper,
+  mode_settings_selector_tabs[],
+  mode_settings_selector_texts[],
+
   run_status_container,
   run_status_text,
   run_status_button,
@@ -233,6 +238,16 @@ image_ids!(pub struct ImageIds {
 
 impl Ids {
     pub fn allocate(&mut self, interface: &mut Ui) {
+        // Allocate mode settings
+        self.mode_settings_selector_tabs.resize(
+            MODE_SETTINGS_SELECTOR_TABS_COUNT,
+            &mut interface.widget_id_generator(),
+        );
+        self.mode_settings_selector_texts.resize(
+            MODE_SETTINGS_SELECTOR_TABS_COUNT,
+            &mut interface.widget_id_generator(),
+        );
+
         // Allocate advanced line
         self.advanced_line_labels.resize(
             ADVANCED_SETTINGS_LINES_COUNT,

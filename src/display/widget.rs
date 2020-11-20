@@ -38,6 +38,7 @@ gen_widget_impls!(
     AdvancedSettings -> advanced_settings['a],
     TriggerSettings -> trigger_settings['a],
     TriggerOverview -> trigger_overview['a],
+    ModeSettings -> mode_settings['a],
     ModeOverview -> mode_overview['a],
     ExpirationTermSettings -> expiration_term_settings['a],
     PressureSettings -> pressure_settings['a],
