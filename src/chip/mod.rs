@@ -692,43 +692,59 @@ impl Chip {
             }
 
             ControlSetting::InspiratoryTriggerFlow => {
-                // TODO: to be implemented
+                // TODO: settings update to be implemented
+                self.last_machine_snapshot.inspiratory_trigger_flow = Some(ack.value as _);
             }
 
             ControlSetting::ExpiratoryTriggerFlow => {
-                // TODO: to be implemented
+                // TODO: settings update to be implemented
+                self.last_machine_snapshot.expiratory_trigger_flow = Some(ack.value as _);
             }
 
             ControlSetting::TiMin => {
-                // TODO: to be implemented
+                // TODO: settings update to be implemented
+                self.last_machine_snapshot.ti_min = Some(ack.value);
             }
 
             ControlSetting::TiMax => {
-                // TODO: to be implemented
+                // TODO: settings update to be implemented
+                self.last_machine_snapshot.ti_max = Some(ack.value);
             }
 
             ControlSetting::LowInspiratoryMinuteVolumeAlarmThreshold => {
-                // TODO: to be implemented
+                // TODO: settings update to be implemented
+                self.last_machine_snapshot
+                    .low_inspiratory_minute_volume_alarm_threshold = Some(ack.value as _);
             }
 
             ControlSetting::HighInspiratoryMinuteVolumeAlarmThreshold => {
-                // TODO: to be implemented
+                // TODO: settings update to be implemented
+                self.last_machine_snapshot
+                    .high_inspiratory_minute_volume_alarm_threshold = Some(ack.value as _);
             }
 
             ControlSetting::LowExpiratoryMinuteVolumeAlarmThreshold => {
-                // TODO: to be implemented
+                // TODO: settings update to be implemented
+                self.last_machine_snapshot
+                    .low_expiratory_minute_volume_alarm_threshold = Some(ack.value as _);
             }
 
             ControlSetting::HighExpiratoryMinuteVolumeAlarmThreshold => {
-                // TODO: to be implemented
+                // TODO: settings update to be implemented
+                self.last_machine_snapshot
+                    .high_expiratory_minute_volume_alarm_threshold = Some(ack.value as _);
             }
 
             ControlSetting::LowExpiratoryRateAlarmThreshold => {
-                // TODO: to be implemented
+                // TODO: settings update to be implemented
+                self.last_machine_snapshot
+                    .low_expiratory_rate_alarm_threshold = Some(ack.value as _);
             }
 
             ControlSetting::HighExpiratoryRateAlarmThreshold => {
-                // TODO: to be implemented
+                // TODO: settings update to be implemented
+                self.last_machine_snapshot
+                    .high_expiratory_rate_alarm_threshold = Some(ack.value as _);
             }
         }
     }
