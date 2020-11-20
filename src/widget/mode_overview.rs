@@ -61,7 +61,7 @@ fn separator<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         color::BLACK.alpha(0.65),
     )
     .middle_of(config.container)
-    .x_relative(13.0)
+    .x_relative(11.0)
     .set(config.separator, &mut master.ui);
 }
 
