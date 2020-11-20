@@ -216,7 +216,7 @@ fn field_pressure_inspiratory<'a>(index: usize, master: &mut ControlWidget<'a>, 
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-pressure-inspiratory"),
-            value_text: "--".to_string(),
+            value_text: "--".to_string(), // TODO
             ids: config.field_pressure_inspiratory_ids,
         },
     )
@@ -229,7 +229,7 @@ fn field_pressure_expiratory<'a>(index: usize, master: &mut ControlWidget<'a>, c
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-pressure-expiratory"),
-            value_text: "--".to_string(),
+            value_text: "--".to_string(), // TODO
             ids: config.field_pressure_expiratory_ids,
         },
     )
@@ -242,7 +242,7 @@ fn field_time_inspiratory<'a>(index: usize, master: &mut ControlWidget<'a>, conf
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-time-inspiratory"),
-            value_text: "--".to_string(),
+            value_text: "--".to_string(), // TODO
             ids: config.field_time_inspiratory_ids,
         },
     )
@@ -259,7 +259,7 @@ fn field_time_inspiratory_minimum<'a>(
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-time-inspiratory-minimum"),
-            value_text: "--".to_string(),
+            value_text: "--".to_string(), // TODO
             ids: config.field_time_inspiratory_minimum_ids,
         },
     )
@@ -276,7 +276,7 @@ fn field_time_inspiratory_maximum<'a>(
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-time-inspiratory-maximum"),
-            value_text: "--".to_string(),
+            value_text: "--".to_string(), // TODO
             ids: config.field_time_inspiratory_maximum_ids,
         },
     )
@@ -289,7 +289,7 @@ fn field_cycles_per_minute<'a>(index: usize, master: &mut ControlWidget<'a>, con
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-cycles-per-minute"),
-            value_text: "--".to_string(),
+            value_text: "--".to_string(), // TODO
             ids: config.field_cycles_per_minute_ids,
         },
     )
@@ -302,7 +302,7 @@ fn field_tidal_volume<'a>(index: usize, master: &mut ControlWidget<'a>, config: 
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-tidal-volume"),
-            value_text: "--".to_string(),
+            value_text: "--".to_string(), // TODO
             ids: config.field_tidal_volume_ids,
         },
     )
@@ -315,7 +315,7 @@ fn field_trigger_offset<'a>(index: usize, master: &mut ControlWidget<'a>, config
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-trigger-offset"),
-            value_text: "--".to_string(),
+            value_text: "--".to_string(), // TODO
             ids: config.field_trigger_offset_ids,
         },
     )
@@ -328,7 +328,7 @@ fn field_trigger_inspiratory<'a>(index: usize, master: &mut ControlWidget<'a>, c
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-trigger-inspiratory"),
-            value_text: "--".to_string(),
+            value_text: "--".to_string(), // TODO
             ids: config.field_trigger_inspiratory_ids,
         },
     )
@@ -341,7 +341,7 @@ fn field_trigger_expiratory<'a>(index: usize, master: &mut ControlWidget<'a>, co
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-trigger-expiratory"),
-            value_text: "--".to_string(),
+            value_text: "--".to_string(), // TODO
             ids: config.field_trigger_expiratory_ids,
         },
     )
