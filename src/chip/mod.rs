@@ -570,7 +570,7 @@ impl Chip {
             trigger_enabled: message.trigger_enabled,
             trigger_offset: message.trigger_offset,
             alarm_snoozed: message.alarm_snoozed,
-            ventilation_mode: None,
+            ventilation_mode: Some(message.ventilation_mode),
         });
 
         // Assign non-optional message values to snapshot
@@ -580,6 +580,7 @@ impl Chip {
 
         // Assign optional message values to snapshot (those that share the same type on both sides)
         self.last_machine_snapshot.alarm_snoozed = message.alarm_snoozed;
+        self.last_machine_snapshot.cpu_load = message.cpu_load;
 
         // Assign optional message values to snapshot
         gen_override_snapshot_values_from_stopped!(
