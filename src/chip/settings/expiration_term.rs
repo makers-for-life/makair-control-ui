@@ -47,12 +47,11 @@ impl SettingsExpirationTerm {
     }
 
     fn set_expiratory_term(&self, action: SettingActionRange) -> ControlMessage {
-        let setting = ControlSetting::ExpiratoryTerm;
-        let new_value = action.to_new_value(&setting, self.expiratory_term, EXPIRATORY_TERM_STEP);
-
-        ControlMessage {
-            setting,
-            value: new_value as u16,
-        }
+        gen_set_new_value!(
+            ControlSetting::ExpiratoryTerm,
+            action,
+            self.expiratory_term,
+            EXPIRATORY_TERM_STEP
+        )
     }
 }

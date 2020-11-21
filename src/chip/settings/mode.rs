@@ -6,12 +6,29 @@
 use telemetry::control::{ControlMessage, ControlSetting};
 use telemetry::structures::VentilationMode;
 
+use crate::chip::settings::SettingActionRange;
+
+const INSPIRATORY_TIME_STEP: usize = 1;
+const CYCLES_PER_MINUTE_STEP: usize = 1;
+const TRIGGER_OFFSET_STEP: usize = 1;
+const TRIGGER_FLOW_STEP: usize = 1;
+const PRESSURE_STEP: usize = 10;
+
 #[derive(Debug)]
 pub enum SettingsModeEvent {
     ModePcCmv,
     ModePcAc,
     ModePcBipap,
     ModeVcCmv,
+    InspiratoryTime(SettingActionRange),
+    InspiratoryTimeMinimum(SettingActionRange),
+    InspiratoryTimeMaximum(SettingActionRange),
+    CyclesPerMinute(SettingActionRange),
+    TriggerInspiratoryOffset(SettingActionRange),
+    TriggerInspiratoryFlow(SettingActionRange),
+    TriggerExpiratoryFlow(SettingActionRange),
+    PressurePlateau(SettingActionRange),
+    PressureExpiratory(SettingActionRange),
 }
 
 #[derive(Debug)]
@@ -52,6 +69,25 @@ impl SettingsMode {
             SettingsModeEvent::ModePcAc => self.switch_mode(VentilationMode::PC_AC),
             SettingsModeEvent::ModePcBipap => self.switch_mode(VentilationMode::PC_BIPAP),
             SettingsModeEvent::ModeVcCmv => self.switch_mode(VentilationMode::VC_CMV),
+            SettingsModeEvent::InspiratoryTime(action) => self.set_inspiratory_time(action),
+            SettingsModeEvent::InspiratoryTimeMinimum(action) => {
+                self.set_inspiratory_time_minimum(action)
+            }
+            SettingsModeEvent::InspiratoryTimeMaximum(action) => {
+                self.set_inspiratory_time_maximum(action)
+            }
+            SettingsModeEvent::CyclesPerMinute(action) => self.set_cycles_per_minute(action),
+            SettingsModeEvent::TriggerInspiratoryOffset(action) => {
+                self.set_trigger_inspiratory_offset(action)
+            }
+            SettingsModeEvent::TriggerInspiratoryFlow(action) => {
+                self.set_trigger_inspiratory_flow(action)
+            }
+            SettingsModeEvent::TriggerExpiratoryFlow(action) => {
+                self.set_trigger_expiratory_flow(action)
+            }
+            SettingsModeEvent::PressurePlateau(action) => self.set_pressure_plateau(action),
+            SettingsModeEvent::PressureExpiratory(action) => self.set_pressure_expiratory(action),
         }
     }
 
@@ -60,5 +96,86 @@ impl SettingsMode {
             setting: ControlSetting::VentilationMode,
             value: u8::from(&mode) as _,
         }
+    }
+
+    fn set_inspiratory_time(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::ExpiratoryTerm,
+            action,
+            self.inspiratory_time,
+            INSPIRATORY_TIME_STEP
+        )
+    }
+
+    fn set_inspiratory_time_minimum(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::TiMin,
+            action,
+            self.inspiratory_time_minimum,
+            INSPIRATORY_TIME_STEP
+        )
+    }
+
+    fn set_inspiratory_time_maximum(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::TiMax,
+            action,
+            self.inspiratory_time_maximum,
+            INSPIRATORY_TIME_STEP
+        )
+    }
+
+    fn set_cycles_per_minute(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::CyclesPerMinute,
+            action,
+            self.cycles_per_minute,
+            CYCLES_PER_MINUTE_STEP
+        )
+    }
+
+    fn set_trigger_inspiratory_offset(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::TriggerOffset,
+            action,
+            self.trigger_inspiratory_offset,
+            TRIGGER_OFFSET_STEP
+        )
+    }
+
+    fn set_trigger_inspiratory_flow(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::InspiratoryTriggerFlow,
+            action,
+            self.trigger_inspiratory_flow,
+            TRIGGER_FLOW_STEP
+        )
+    }
+
+    fn set_trigger_expiratory_flow(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::ExpiratoryTriggerFlow,
+            action,
+            self.trigger_expiratory_flow,
+            TRIGGER_FLOW_STEP
+        )
+    }
+
+    fn set_pressure_plateau(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::PlateauPressure,
+            action,
+            self.pressure_plateau,
+            PRESSURE_STEP
+        )
+    }
+
+    fn set_pressure_expiratory(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::PEEP,
+            action,
+            self.pressure_expiratory,
+            PRESSURE_STEP
+        )
     }
 }

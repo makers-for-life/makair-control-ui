@@ -33,14 +33,11 @@ impl SettingsCycles {
     }
 
     fn set_cycles_per_minute(&self, action: SettingActionRange) -> ControlMessage {
-        let setting = ControlSetting::CyclesPerMinute;
-
-        let new_value =
-            action.to_new_value(&setting, self.cycles_per_minute, CYCLES_PER_MINUTE_STEP);
-
-        ControlMessage {
-            setting,
-            value: new_value as u16,
-        }
+        gen_set_new_value!(
+            ControlSetting::CyclesPerMinute,
+            action,
+            self.cycles_per_minute,
+            CYCLES_PER_MINUTE_STEP
+        )
     }
 }
