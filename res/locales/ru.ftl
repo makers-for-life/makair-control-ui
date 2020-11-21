@@ -68,6 +68,7 @@ modal-mode-time-inspiratory-minimum = Время вдоха (минимум)
 modal-mode-time-inspiratory-maximum = Время вдоха (максимальное)
 modal-mode-cycles-per-minute = Циклов в минуту
 modal-mode-tidal-volume = Дыхательный объем
+modal-mode-plateau-duration = Продолжительность плато
 modal-mode-trigger-offset = Смещение триггера
 modal-mode-trigger-inspiratory = Триггер вдоха
 modal-mode-trigger-expiratory = Триггер выдоха

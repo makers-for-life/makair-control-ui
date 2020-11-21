@@ -13,6 +13,8 @@ const CYCLES_PER_MINUTE_STEP: usize = 1;
 const TRIGGER_OFFSET_STEP: usize = 1;
 const TRIGGER_FLOW_STEP: usize = 1;
 const PRESSURE_STEP: usize = 10;
+const VOLUME_STEP: usize = 1;
+const DURATION_STEP: usize = 1;
 
 #[derive(Debug)]
 pub enum SettingsModeEvent {
@@ -30,6 +32,8 @@ pub enum SettingsModeEvent {
     TriggerExpiratoryFlow(SettingActionRange),
     PressurePlateau(SettingActionRange),
     PressureExpiratory(SettingActionRange),
+    VolumeTidal(SettingActionRange),
+    DurationPlateau(SettingActionRange),
 }
 
 #[derive(Debug)]
@@ -45,6 +49,7 @@ pub struct SettingsMode {
     pub pressure_plateau: usize,
     pub pressure_expiratory: usize,
     pub volume_tidal: usize,
+    pub duration_plateau: usize,
 }
 
 impl SettingsMode {
@@ -60,7 +65,8 @@ impl SettingsMode {
             trigger_expiratory_flow: ControlSetting::ExpiratoryTriggerFlow.default(),
             pressure_plateau: ControlSetting::PlateauPressure.default(),
             pressure_expiratory: ControlSetting::PEEP.default(),
-            volume_tidal: 0, // TODO: not implemented in telemetry yet
+            volume_tidal: ControlSetting::TargetTidalVolume.default(),
+            duration_plateau: ControlSetting::PlateauDuration.default(),
         }
     }
 
@@ -90,6 +96,8 @@ impl SettingsMode {
             }
             SettingsModeEvent::PressurePlateau(action) => self.set_pressure_plateau(action),
             SettingsModeEvent::PressureExpiratory(action) => self.set_pressure_expiratory(action),
+            SettingsModeEvent::VolumeTidal(action) => self.set_volume_tidal(action),
+            SettingsModeEvent::DurationPlateau(action) => self.set_duration_plateau(action),
         }
     }
 
@@ -178,6 +186,24 @@ impl SettingsMode {
             action,
             self.pressure_expiratory,
             PRESSURE_STEP
+        )
+    }
+
+    fn set_volume_tidal(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::TargetTidalVolume,
+            action,
+            self.volume_tidal,
+            VOLUME_STEP
+        )
+    }
+
+    fn set_duration_plateau(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::PlateauDuration,
+            action,
+            self.duration_plateau,
+            DURATION_STEP
         )
     }
 }

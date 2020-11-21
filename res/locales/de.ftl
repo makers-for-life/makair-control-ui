@@ -68,6 +68,7 @@ modal-mode-time-inspiratory-minimum = Inspirationszeit (minimum)
 modal-mode-time-inspiratory-maximum = Inspirationszeit (maximal)
 modal-mode-cycles-per-minute = Zyklen pro Minute
 modal-mode-tidal-volume = Atemzugvolumen
+modal-mode-plateau-duration = Plateaudauer
 modal-mode-trigger-offset = Offset auslösen
 modal-mode-trigger-inspiratory = Inspirierender Auslöser
 modal-mode-trigger-expiratory = Exspiratorischer Auslöser

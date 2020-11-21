@@ -68,6 +68,7 @@ modal-mode-time-inspiratory-minimum = Tempo inspiratório (mínimo)
 modal-mode-time-inspiratory-maximum = Tempo inspiratório (máximo)
 modal-mode-cycles-per-minute = Ciclos por minuto
 modal-mode-tidal-volume = Volume corrente
+modal-mode-plateau-duration = Duração do planalto
 modal-mode-trigger-offset = Deslocamento do gatilho
 modal-mode-trigger-inspiratory = Gatilho inspiratório
 modal-mode-trigger-expiratory = Gatilho expiratório

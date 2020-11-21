@@ -444,6 +444,54 @@ impl DisplayUIEvents {
                 },
 
                 {
+                    SettingsModeEvent::VolumeTidal(SettingActionRange::Less),
+                    "volume tidal less",
+
+                    [
+                        ids.mode_settings_field_tidal_volume_less,
+                        ids.mode_settings_field_tidal_volume_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::VolumeTidal(SettingActionRange::More),
+                    "volume tidal more",
+
+                    [
+                        ids.mode_settings_field_tidal_volume_more,
+                        ids.mode_settings_field_tidal_volume_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::DurationPlateau(SettingActionRange::Less),
+                    "duration plateau less",
+
+                    [
+                        ids.mode_settings_field_plateau_duration_less,
+                        ids.mode_settings_field_plateau_duration_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::DurationPlateau(SettingActionRange::More),
+                    "duration plateau more",
+
+                    [
+                        ids.mode_settings_field_plateau_duration_more,
+                        ids.mode_settings_field_plateau_duration_more_text,
+                    ],
+
+                    None
+                },
+
+                {
                     SettingsModeEvent::TriggerInspiratoryOffset(SettingActionRange::Less),
                     "trigger inspiratory offset less",
 

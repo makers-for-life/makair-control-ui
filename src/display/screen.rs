@@ -871,6 +871,10 @@ impl<'a> Screen<'a> {
                     cycles_per_minute
                 ),
                 field_tidal_volume_ids: gen_render_mode_settings_field_ids!(self, tidal_volume),
+                field_plateau_duration_ids: gen_render_mode_settings_field_ids!(
+                    self,
+                    plateau_duration
+                ),
                 field_trigger_offset_ids: gen_render_mode_settings_field_ids!(self, trigger_offset),
                 field_trigger_inspiratory_ids: gen_render_mode_settings_field_ids!(
                     self,

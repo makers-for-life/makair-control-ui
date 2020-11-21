@@ -68,6 +68,7 @@ modal-mode-time-inspiratory-minimum = Inspiratory time (minimum)
 modal-mode-time-inspiratory-maximum = Inspiratory time (maximum)
 modal-mode-cycles-per-minute = Cycles per minute
 modal-mode-tidal-volume = Tidal volume
+modal-mode-plateau-duration = Plateau duration
 modal-mode-trigger-offset = Trigger offset
 modal-mode-trigger-inspiratory = Inspiratory trigger
 modal-mode-trigger-expiratory = Expiratory trigger

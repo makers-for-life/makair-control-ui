@@ -68,6 +68,7 @@ modal-mode-time-inspiratory-minimum = Ieelpošanas laiks (minimums)
 modal-mode-time-inspiratory-maximum = Ieelpošanas laiks (maksimums)
 modal-mode-cycles-per-minute = Cikli minūtē
 modal-mode-tidal-volume = Plūdmaiņu apjoms
+modal-mode-plateau-duration = Plato ilgums
 modal-mode-trigger-offset = Aktivizētāja nobīde
 modal-mode-trigger-inspiratory = Ieelpas sprūda
 modal-mode-trigger-expiratory = Derīguma termiņš

@@ -70,6 +70,8 @@ struct ChipSettingsUpdate {
     expiratory_trigger_flow: Option<u8>,
     ti_min: Option<u16>,
     ti_max: Option<u16>,
+    target_tidal_volume: Option<u16>,
+    plateau_duration: Option<u16>,
 }
 
 pub struct Chip {
@@ -490,6 +492,16 @@ impl Chip {
             self.settings.pressure.peep = convert_cmh2o_to_mmh2o(peep_command);
         }
 
+        // Update target tidal volume values
+        if let Some(target_tidal_volume) = update.target_tidal_volume {
+            self.settings.mode.volume_tidal = target_tidal_volume as usize;
+        }
+
+        // Update plateau duration values
+        if let Some(plateau_duration) = update.plateau_duration {
+            self.settings.mode.duration_plateau = plateau_duration as usize;
+        }
+
         // Update alarms snooze values
         if let Some(alarm_snoozed) = update.alarm_snoozed {
             self.settings.snooze.alarms = if alarm_snoozed {
@@ -503,6 +515,9 @@ impl Chip {
         if let Some(ventilation_mode) = update.ventilation_mode {
             self.settings.mode.mode = ventilation_mode;
         }
+
+        // TODO: implement all settings updates for alarm values, eg. \
+        //   'low_tidal_volume_alarm_treshold'
     }
 
     fn update_settings_from_snapshot(&mut self, snapshot: &MachineStateSnapshot) {
@@ -522,6 +537,8 @@ impl Chip {
             expiratory_trigger_flow: snapshot.expiratory_trigger_flow,
             ti_min: snapshot.ti_min,
             ti_max: snapshot.ti_max,
+            target_tidal_volume: snapshot.target_tidal_volume,
+            plateau_duration: snapshot.plateau_duration,
         });
     }
 
@@ -602,6 +619,8 @@ impl Chip {
             expiratory_trigger_flow: message.expiratory_trigger_flow,
             ti_min: message.ti_min,
             ti_max: message.ti_max,
+            target_tidal_volume: message.target_tidal_volume,
+            plateau_duration: message.plateau_duration,
         });
 
         // Assign same-type message values to snapshot (that must be cloned)
@@ -784,28 +803,28 @@ impl Chip {
             }
 
             ControlSetting::TargetTidalVolume => {
-                // TODO: settings update to be implemented
-                // TODO: snapshot update to be implemented
+                self.settings.mode.volume_tidal = ack.value as usize;
+                self.last_machine_snapshot.target_tidal_volume = Some(ack.value);
             }
 
             ControlSetting::LowTidalVolumeAlarmTreshold => {
                 // TODO: settings update to be implemented
-                // TODO: snapshot update to be implemented
+                self.last_machine_snapshot.low_tidal_volume_alarm_treshold = Some(ack.value as _);
             }
 
             ControlSetting::HighTidalVolumeAlarmTreshold => {
                 // TODO: settings update to be implemented
-                // TODO: snapshot update to be implemented
+                self.last_machine_snapshot.high_tidal_volume_alarm_treshold = Some(ack.value as _);
             }
 
             ControlSetting::PlateauDuration => {
-                // TODO: settings update to be implemented
-                // TODO: snapshot update to be implemented
+                self.settings.mode.duration_plateau = ack.value as usize;
+                self.last_machine_snapshot.plateau_duration = Some(ack.value);
             }
 
             ControlSetting::LeakAlarmThreshold => {
                 // TODO: settings update to be implemented
-                // TODO: snapshot update to be implemented
+                self.last_machine_snapshot.leak_alarm_threshold = Some(ack.value as _);
             }
         }
     }

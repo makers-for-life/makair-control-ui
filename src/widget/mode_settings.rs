@@ -45,6 +45,7 @@ pub struct Config<'a> {
     pub field_time_inspiratory_maximum_ids: FieldWidgetIds,
     pub field_cycles_per_minute_ids: FieldWidgetIds,
     pub field_tidal_volume_ids: FieldWidgetIds,
+    pub field_plateau_duration_ids: FieldWidgetIds,
     pub field_trigger_offset_ids: FieldWidgetIds,
     pub field_trigger_inspiratory_ids: FieldWidgetIds,
     pub field_trigger_expiratory_ids: FieldWidgetIds,
@@ -212,7 +213,11 @@ fn form_vc_cmv<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 }
 
 fn form_vc_ac<'a>(master: &mut ControlWidget<'a>, config: &Config) {
-    // TODO
+    field_tidal_volume(0, master, config);
+    field_pressure_expiratory(1, master, config);
+    field_time_inspiratory(2, master, config);
+    field_cycles_per_minute(3, master, config);
+    field_duration_plateau(4, master, config);
 }
 
 fn field_pressure_inspiratory<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config) {
@@ -344,6 +349,23 @@ fn field_tidal_volume<'a>(index: usize, master: &mut ControlWidget<'a>, config: 
                 APP_I18N.t("telemetry-unit-milliliters")
             ),
             ids: config.field_tidal_volume_ids,
+        },
+    )
+}
+
+fn field_duration_plateau<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config) {
+    draw_field(
+        index,
+        master,
+        config,
+        Field {
+            label_text: APP_I18N.t("modal-mode-plateau-duration"),
+            value_text: format!(
+                "{} {}",
+                config.mode_settings.duration_plateau,
+                APP_I18N.t("telemetry-unit-milliseconds")
+            ),
+            ids: config.field_plateau_duration_ids,
         },
     )
 }

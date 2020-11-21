@@ -235,6 +235,13 @@ widget_ids!(pub struct Ids {
   mode_settings_field_tidal_volume_less,
   mode_settings_field_tidal_volume_less_text,
 
+  mode_settings_field_plateau_duration_text,
+  mode_settings_field_plateau_duration_value,
+  mode_settings_field_plateau_duration_more,
+  mode_settings_field_plateau_duration_more_text,
+  mode_settings_field_plateau_duration_less,
+  mode_settings_field_plateau_duration_less_text,
+
   mode_settings_field_trigger_offset_text,
   mode_settings_field_trigger_offset_value,
   mode_settings_field_trigger_offset_more,
