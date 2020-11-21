@@ -13,7 +13,7 @@ const CYCLES_PER_MINUTE_STEP: usize = 1;
 const TRIGGER_OFFSET_STEP: usize = 1;
 const TRIGGER_FLOW_STEP: usize = 1;
 const PRESSURE_STEP: usize = 10;
-const VOLUME_STEP: usize = 1;
+const VOLUME_STEP: usize = 10;
 const DURATION_STEP: usize = 1;
 
 #[derive(Debug)]
