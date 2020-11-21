@@ -157,6 +157,7 @@ fn selector<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 
 fn form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // TODO: option becomes eg. blue when it is changed and not saved
+    // TODO: implement alarm settings (might need to make some space for them)
 
     // Create form wrapper
     gen_widget_container!(
