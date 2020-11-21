@@ -334,6 +334,220 @@ impl DisplayUIEvents {
                     ],
 
                     None
+                },
+
+                {
+                    SettingsModeEvent::InspiratoryTime(SettingActionRange::Less),
+                    "inspiratory time less",
+
+                    [
+                        ids.mode_settings_field_time_inspiratory_less,
+                        ids.mode_settings_field_time_inspiratory_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::InspiratoryTime(SettingActionRange::More),
+                    "inspiratory time more",
+
+                    [
+                        ids.mode_settings_field_time_inspiratory_more,
+                        ids.mode_settings_field_time_inspiratory_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::InspiratoryTimeMinimum(SettingActionRange::Less),
+                    "inspiratory time minimum less",
+
+                    [
+                        ids.mode_settings_field_time_inspiratory_minimum_less,
+                        ids.mode_settings_field_time_inspiratory_minimum_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::InspiratoryTimeMinimum(SettingActionRange::More),
+                    "inspiratory time minimum more",
+
+                    [
+                        ids.mode_settings_field_time_inspiratory_minimum_more,
+                        ids.mode_settings_field_time_inspiratory_minimum_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::InspiratoryTimeMaximum(SettingActionRange::Less),
+                    "inspiratory time maximum less",
+
+                    [
+                        ids.mode_settings_field_time_inspiratory_maximum_less,
+                        ids.mode_settings_field_time_inspiratory_maximum_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::InspiratoryTimeMaximum(SettingActionRange::More),
+                    "inspiratory time maximum more",
+
+                    [
+                        ids.mode_settings_field_time_inspiratory_maximum_more,
+                        ids.mode_settings_field_time_inspiratory_maximum_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::CyclesPerMinute(SettingActionRange::Less),
+                    "cycles per minute less",
+
+                    [
+                        ids.mode_settings_field_cycles_per_minute_less,
+                        ids.mode_settings_field_cycles_per_minute_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::CyclesPerMinute(SettingActionRange::More),
+                    "cycles per minute more",
+
+                    [
+                        ids.mode_settings_field_cycles_per_minute_more,
+                        ids.mode_settings_field_cycles_per_minute_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::TriggerInspiratoryOffset(SettingActionRange::Less),
+                    "trigger inspiratory offset less",
+
+                    [
+                        ids.mode_settings_field_trigger_offset_less,
+                        ids.mode_settings_field_trigger_offset_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::TriggerInspiratoryOffset(SettingActionRange::More),
+                    "trigger inspiratory offset more",
+
+                    [
+                        ids.mode_settings_field_trigger_offset_more,
+                        ids.mode_settings_field_trigger_offset_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::TriggerInspiratoryFlow(SettingActionRange::Less),
+                    "trigger inspiratory flow less",
+
+                    [
+                        ids.mode_settings_field_trigger_inspiratory_less,
+                        ids.mode_settings_field_trigger_inspiratory_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::TriggerInspiratoryFlow(SettingActionRange::More),
+                    "trigger inspiratory flow more",
+
+                    [
+                        ids.mode_settings_field_trigger_inspiratory_more,
+                        ids.mode_settings_field_trigger_inspiratory_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::TriggerExpiratoryFlow(SettingActionRange::Less),
+                    "trigger expiratory flow less",
+
+                    [
+                        ids.mode_settings_field_trigger_expiratory_less,
+                        ids.mode_settings_field_trigger_expiratory_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::TriggerExpiratoryFlow(SettingActionRange::More),
+                    "trigger expiratory flow more",
+
+                    [
+                        ids.mode_settings_field_trigger_expiratory_more,
+                        ids.mode_settings_field_trigger_expiratory_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::PressurePlateau(SettingActionRange::Less),
+                    "pressure plateau less",
+
+                    [
+                        ids.mode_settings_field_pressure_inspiratory_less,
+                        ids.mode_settings_field_pressure_inspiratory_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::PressurePlateau(SettingActionRange::More),
+                    "pressure plateau more",
+
+                    [
+                        ids.mode_settings_field_pressure_inspiratory_more,
+                        ids.mode_settings_field_pressure_inspiratory_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::PressureExpiratory(SettingActionRange::Less), "pressure expiratory less",
+
+                    [
+                        ids.mode_settings_field_pressure_expiratory_less,
+                        ids.mode_settings_field_pressure_expiratory_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::PressureExpiratory(SettingActionRange::More), "pressure expiratory more",
+
+                    [
+                        ids.mode_settings_field_pressure_expiratory_more,
+                        ids.mode_settings_field_pressure_expiratory_more_text,
+                    ],
+
+                    None
                 }
             },
 
