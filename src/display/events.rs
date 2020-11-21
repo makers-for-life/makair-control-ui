@@ -315,11 +315,11 @@ impl DisplayUIEvents {
                 },
 
                 {
-                    SettingsModeEvent::ModePcBipap, "mode pc bipap",
+                    SettingsModeEvent::ModePcVsai, "mode pc vsai",
 
                     [
-                        ids.mode_settings_selector_tab_pc_bipap,
-                        ids.mode_settings_selector_texts_pc_bipap,
+                        ids.mode_settings_selector_tab_pc_vsai,
+                        ids.mode_settings_selector_texts_pc_vsai,
                     ],
 
                     None
@@ -331,6 +331,17 @@ impl DisplayUIEvents {
                     [
                         ids.mode_settings_selector_tab_vc_cmv,
                         ids.mode_settings_selector_texts_vc_cmv,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::ModeVcAc, "mode vc ac",
+
+                    [
+                        ids.mode_settings_selector_tab_vc_ac,
+                        ids.mode_settings_selector_texts_vc_ac,
                     ],
 
                     None

@@ -41,7 +41,7 @@ mode-class-pc = Pression
 mode-class-vc = Volume
 mode-type-cmv = CMV
 mode-type-ac = AC
-mode-type-bipap = BIPAP
+mode-type-vsai = VSAI
 
 modal-run-status = Unité de ventilation
 modal-run-status-started = Active — La stopper ?

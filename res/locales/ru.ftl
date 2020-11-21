@@ -41,7 +41,7 @@ mode-class-pc = Давление
 mode-class-vc = Объем
 mode-type-cmv = CMV
 mode-type-ac = AC
-mode-type-bipap = BIPAP
+mode-type-vsai = VSAI
 
 modal-run-status = Состояние вентиляционной установки
 modal-run-status-started = Бег - Стоп?

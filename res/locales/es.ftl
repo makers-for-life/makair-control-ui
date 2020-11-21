@@ -41,7 +41,7 @@ mode-class-pc = Presión
 mode-class-vc = Volumen
 mode-type-cmv = CMV
 mode-type-ac = AC
-mode-type-bipap = BIPAP
+mode-type-vsai = VSAI
 
 modal-run-status = Estado de la unidad de ventilación
 modal-run-status-started = Corriendo - ¿Parar?

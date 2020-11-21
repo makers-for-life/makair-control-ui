@@ -20,7 +20,7 @@ pub fn kind_to_locale(mode_kind: VentilationModeKind) -> String {
     let locale_key = match mode_kind {
         VentilationModeKind::Cmv => "cmv",
         VentilationModeKind::Ac => "ac",
-        VentilationModeKind::Bipap => "bipap",
+        VentilationModeKind::Vsai => "vsai",
     };
 
     APP_I18N.t(&format!("mode-type-{}", locale_key))

@@ -41,7 +41,7 @@ mode-class-pc = Тиск
 mode-class-vc = Гучність
 mode-type-cmv = CMV
 mode-type-ac = AC
-mode-type-bipap = BIPAP
+mode-type-vsai = VSAI
 
 modal-run-status = Статус блоку вентилятора
 modal-run-status-started = Біг - зупинка?

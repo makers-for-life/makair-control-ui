@@ -41,7 +41,7 @@ mode-class-pc = Spiediens
 mode-class-vc = Skaļums
 mode-type-cmv = CMV
 mode-type-ac = AC
-mode-type-bipap = BIPAP
+mode-type-vsai = VSAI
 
 modal-run-status = Ventilatora bloka statuss
 modal-run-status-started = Skriet - apstāties?

@@ -782,6 +782,31 @@ impl Chip {
                 self.last_machine_snapshot
                     .high_expiratory_rate_alarm_threshold = Some(ack.value as _);
             }
+
+            ControlSetting::TargetTidalVolume => {
+                // TODO: settings update to be implemented
+                // TODO: snapshot update to be implemented
+            }
+
+            ControlSetting::LowTidalVolumeAlarmTreshold => {
+                // TODO: settings update to be implemented
+                // TODO: snapshot update to be implemented
+            }
+
+            ControlSetting::HighTidalVolumeAlarmTreshold => {
+                // TODO: settings update to be implemented
+                // TODO: snapshot update to be implemented
+            }
+
+            ControlSetting::PlateauDuration => {
+                // TODO: settings update to be implemented
+                // TODO: snapshot update to be implemented
+            }
+
+            ControlSetting::LeakAlarmThreshold => {
+                // TODO: settings update to be implemented
+                // TODO: snapshot update to be implemented
+            }
         }
     }
 }

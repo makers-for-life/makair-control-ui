@@ -18,8 +18,9 @@ const PRESSURE_STEP: usize = 10;
 pub enum SettingsModeEvent {
     ModePcCmv,
     ModePcAc,
-    ModePcBipap,
+    ModePcVsai,
     ModeVcCmv,
+    ModeVcAc,
     InspiratoryTime(SettingActionRange),
     InspiratoryTimeMinimum(SettingActionRange),
     InspiratoryTimeMaximum(SettingActionRange),
@@ -67,8 +68,9 @@ impl SettingsMode {
         match event {
             SettingsModeEvent::ModePcCmv => self.switch_mode(VentilationMode::PC_CMV),
             SettingsModeEvent::ModePcAc => self.switch_mode(VentilationMode::PC_AC),
-            SettingsModeEvent::ModePcBipap => self.switch_mode(VentilationMode::PC_BIPAP),
+            SettingsModeEvent::ModePcVsai => self.switch_mode(VentilationMode::PC_VSAI),
             SettingsModeEvent::ModeVcCmv => self.switch_mode(VentilationMode::VC_CMV),
+            SettingsModeEvent::ModeVcAc => self.switch_mode(VentilationMode::VC_AC),
             SettingsModeEvent::InspiratoryTime(action) => self.set_inspiratory_time(action),
             SettingsModeEvent::InspiratoryTimeMinimum(action) => {
                 self.set_inspiratory_time_minimum(action)

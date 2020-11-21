@@ -173,8 +173,9 @@ fn form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     match config.mode_settings.mode {
         VentilationMode::PC_CMV => form_pc_cmv(master, config),
         VentilationMode::PC_AC => form_pc_ac(master, config),
+        VentilationMode::PC_VSAI => form_pc_vsai(master, config),
         VentilationMode::VC_CMV => form_vc_cmv(master, config),
-        VentilationMode::PC_BIPAP => form_pc_bipap(master, config),
+        VentilationMode::VC_AC => form_vc_ac(master, config),
     }
 }
 
@@ -193,14 +194,7 @@ fn form_pc_ac<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     field_trigger_offset(4, master, config);
 }
 
-fn form_vc_cmv<'a>(master: &mut ControlWidget<'a>, config: &Config) {
-    field_tidal_volume(0, master, config);
-    field_pressure_expiratory(1, master, config);
-    field_time_inspiratory(2, master, config);
-    field_cycles_per_minute(3, master, config);
-}
-
-fn form_pc_bipap<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn form_pc_vsai<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     field_pressure_inspiratory(0, master, config);
     field_pressure_expiratory(1, master, config);
     field_time_inspiratory_minimum(2, master, config);
@@ -208,6 +202,17 @@ fn form_pc_bipap<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     field_cycles_per_minute(4, master, config);
     field_trigger_inspiratory(5, master, config);
     field_trigger_expiratory(6, master, config);
+}
+
+fn form_vc_cmv<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+    field_tidal_volume(0, master, config);
+    field_pressure_expiratory(1, master, config);
+    field_time_inspiratory(2, master, config);
+    field_cycles_per_minute(3, master, config);
+}
+
+fn form_vc_ac<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+    // TODO
 }
 
 fn field_pressure_inspiratory<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config) {
@@ -421,8 +426,9 @@ fn tab_index_to_mode(index: usize) -> Option<VentilationMode> {
     match index {
         0 => Some(VentilationMode::PC_CMV),
         1 => Some(VentilationMode::PC_AC),
-        2 => Some(VentilationMode::PC_BIPAP),
+        2 => Some(VentilationMode::PC_VSAI),
         3 => Some(VentilationMode::VC_CMV),
+        4 => Some(VentilationMode::VC_AC),
         _ => None,
     }
 }

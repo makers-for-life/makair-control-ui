@@ -833,14 +833,16 @@ impl<'a> Screen<'a> {
                 selector_tabs: [
                     self.ids.mode_settings_selector_tab_pc_cmv,
                     self.ids.mode_settings_selector_tab_pc_ac,
-                    self.ids.mode_settings_selector_tab_pc_bipap,
+                    self.ids.mode_settings_selector_tab_pc_vsai,
                     self.ids.mode_settings_selector_tab_vc_cmv,
+                    self.ids.mode_settings_selector_tab_vc_ac,
                 ],
                 selector_texts: [
                     self.ids.mode_settings_selector_texts_pc_cmv,
                     self.ids.mode_settings_selector_texts_pc_ac,
-                    self.ids.mode_settings_selector_texts_pc_bipap,
+                    self.ids.mode_settings_selector_texts_pc_vsai,
                     self.ids.mode_settings_selector_texts_vc_cmv,
+                    self.ids.mode_settings_selector_texts_vc_ac,
                 ],
                 form_wrapper: self.ids.mode_settings_form_wrapper,
 

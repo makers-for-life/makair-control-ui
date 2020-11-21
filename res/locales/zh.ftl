@@ -41,7 +41,7 @@ mode-class-pc = 压力
 mode-class-vc = 卷
 mode-type-cmv = CMV
 mode-type-ac = AC
-mode-type-bipap = BIPAP
+mode-type-vsai = VSAI
 
 modal-run-status = 呼吸机状态
 modal-run-status-started = 跑步-停下来吗？
