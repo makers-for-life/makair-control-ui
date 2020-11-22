@@ -14,7 +14,7 @@ const TRIGGER_OFFSET_STEP: usize = 1;
 const TRIGGER_FLOW_STEP: usize = 1;
 const PRESSURE_STEP: usize = 10;
 const VOLUME_STEP: usize = 10;
-const DURATION_STEP: usize = 1;
+const DURATION_STEP: usize = 10;
 
 #[derive(Debug)]
 pub enum SettingsModeEvent {

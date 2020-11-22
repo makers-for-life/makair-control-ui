@@ -211,6 +211,7 @@ fn form_vc_cmv<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     field_pressure_expiratory(1, master, config);
     field_time_inspiratory(2, master, config);
     field_cycles_per_minute(3, master, config);
+    field_duration_plateau(4, master, config);
 }
 
 fn form_vc_ac<'a>(master: &mut ControlWidget<'a>, config: &Config) {
