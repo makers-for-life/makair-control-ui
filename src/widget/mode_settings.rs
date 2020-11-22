@@ -202,7 +202,7 @@ fn form_pc_vsai<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     field_time_inspiratory_minimum(2, master, config);
     field_time_inspiratory_maximum(3, master, config);
     field_cycles_per_minute(4, master, config);
-    field_trigger_inspiratory(5, master, config);
+    field_trigger_offset(5, master, config);
     field_trigger_expiratory(6, master, config);
 }
 
@@ -394,6 +394,8 @@ fn field_trigger_offset<'a>(index: usize, master: &mut ControlWidget<'a>, config
 }
 
 fn field_trigger_inspiratory<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config) {
+    // TODO: this is not used atm, but will be re-enabled whenever algorithms get better and \
+    //   we can use this option.
     draw_field(
         index,
         master,
