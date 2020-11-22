@@ -220,6 +220,7 @@ fn form_vc_ac<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     field_time_inspiratory(2, master, config);
     field_cycles_per_minute(3, master, config);
     field_duration_plateau(4, master, config);
+    field_trigger_offset(5, master, config);
 }
 
 fn field_pressure_inspiratory<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config) {
