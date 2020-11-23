@@ -66,6 +66,7 @@ modal-mode-pressure-expiratory = Izelpas spiediens
 modal-mode-time-inspiratory = Ieelpošanas laiks
 modal-mode-time-inspiratory-minimum = Ieelpošanas laiks (minimums)
 modal-mode-time-inspiratory-maximum = Ieelpošanas laiks (maksimums)
+modal-mode-flow-inspiratory = Ieelpas plūsma
 modal-mode-cycles-per-minute = Cikli minūtē
 modal-mode-tidal-volume = Plūdmaiņu apjoms
 modal-mode-plateau-duration = Plato ilgums

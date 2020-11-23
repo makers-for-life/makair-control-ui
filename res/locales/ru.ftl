@@ -66,6 +66,7 @@ modal-mode-pressure-expiratory = Давление на выдохе
 modal-mode-time-inspiratory = Время вдоха
 modal-mode-time-inspiratory-minimum = Время вдоха (минимум)
 modal-mode-time-inspiratory-maximum = Время вдоха (максимальное)
+modal-mode-flow-inspiratory = Вдыхаемый поток
 modal-mode-cycles-per-minute = Циклов в минуту
 modal-mode-tidal-volume = Дыхательный объем
 modal-mode-plateau-duration = Продолжительность плато

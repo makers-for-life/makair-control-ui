@@ -66,6 +66,7 @@ modal-mode-pressure-expiratory = Presión espiratoria
 modal-mode-time-inspiratory = Tiempo inspiratorio
 modal-mode-time-inspiratory-minimum = Tiempo inspiratorio (mínimo)
 modal-mode-time-inspiratory-maximum = Tiempo inspiratorio (máximo)
+modal-mode-flow-inspiratory = Flujo inspiratorio
 modal-mode-cycles-per-minute = Ciclos por minuto
 modal-mode-tidal-volume = Volumen corriente
 modal-mode-plateau-duration = Duración de la meseta

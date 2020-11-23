@@ -66,6 +66,7 @@ modal-mode-pressure-expiratory = 呼气压力
 modal-mode-time-inspiratory = 吸气时间
 modal-mode-time-inspiratory-minimum = 吸气时间（最短）
 modal-mode-time-inspiratory-maximum = 吸气时间（最大）
+modal-mode-flow-inspiratory = 吸气流量
 modal-mode-cycles-per-minute = 每分钟循环
 modal-mode-tidal-volume = 潮量
 modal-mode-plateau-duration = 高原持续时间

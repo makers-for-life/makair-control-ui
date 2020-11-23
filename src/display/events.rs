@@ -348,30 +348,6 @@ impl DisplayUIEvents {
                 },
 
                 {
-                    SettingsModeEvent::InspiratoryTime(SettingActionRange::Less),
-                    "inspiratory time less",
-
-                    [
-                        ids.mode_settings_field_time_inspiratory_less,
-                        ids.mode_settings_field_time_inspiratory_less_text,
-                    ],
-
-                    None
-                },
-
-                {
-                    SettingsModeEvent::InspiratoryTime(SettingActionRange::More),
-                    "inspiratory time more",
-
-                    [
-                        ids.mode_settings_field_time_inspiratory_more,
-                        ids.mode_settings_field_time_inspiratory_more_text,
-                    ],
-
-                    None
-                },
-
-                {
                     SettingsModeEvent::InspiratoryTimeMinimum(SettingActionRange::Less),
                     "inspiratory time minimum less",
 
@@ -462,6 +438,54 @@ impl DisplayUIEvents {
                     [
                         ids.mode_settings_field_tidal_volume_more,
                         ids.mode_settings_field_tidal_volume_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::FlowInspiration(SettingActionRange::Less),
+                    "flow inspiration less",
+
+                    [
+                        ids.mode_settings_field_inspiratory_flow_less,
+                        ids.mode_settings_field_inspiratory_flow_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::FlowInspiration(SettingActionRange::More),
+                    "flow inspiration more",
+
+                    [
+                        ids.mode_settings_field_inspiratory_flow_more,
+                        ids.mode_settings_field_inspiratory_flow_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::DurationInspiration(SettingActionRange::Less),
+                    "duration inspiration less",
+
+                    [
+                        ids.mode_settings_field_inspiratory_duration_less,
+                        ids.mode_settings_field_inspiratory_duration_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::DurationInspiration(SettingActionRange::More),
+                    "duration inspiration more",
+
+                    [
+                        ids.mode_settings_field_inspiratory_duration_more,
+                        ids.mode_settings_field_inspiratory_duration_more_text,
                     ],
 
                     None

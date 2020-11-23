@@ -71,6 +71,8 @@ struct ChipSettingsUpdate {
     ti_min: Option<u16>,
     ti_max: Option<u16>,
     target_tidal_volume: Option<u16>,
+    target_inspiratory_flow: Option<u8>,
+    inspiratory_duration: Option<u16>,
     plateau_duration: Option<u16>,
 }
 
@@ -441,7 +443,6 @@ impl Chip {
     fn update_settings_from_parameters(&mut self, update: ChipSettingsUpdate) {
         // Update expiratory term values
         if let Some(expiratory_term) = update.expiratory_term {
-            self.settings.mode.inspiratory_time = expiratory_term as usize;
             self.settings.expiration_term.expiratory_term = expiratory_term as usize;
         }
 
@@ -497,6 +498,16 @@ impl Chip {
             self.settings.mode.volume_tidal = target_tidal_volume as usize;
         }
 
+        // Update target inspiratory flow values
+        if let Some(target_inspiratory_flow) = update.target_inspiratory_flow {
+            self.settings.mode.flow_inspiration = target_inspiratory_flow as usize;
+        }
+
+        // Update inspiratory duration values
+        if let Some(inspiratory_duration) = update.inspiratory_duration {
+            self.settings.mode.duration_inspiration = inspiratory_duration as usize;
+        }
+
         // Update plateau duration values
         if let Some(plateau_duration) = update.plateau_duration {
             self.settings.mode.duration_plateau = plateau_duration as usize;
@@ -538,6 +549,8 @@ impl Chip {
             ti_min: snapshot.ti_min,
             ti_max: snapshot.ti_max,
             target_tidal_volume: snapshot.target_tidal_volume,
+            target_inspiratory_flow: snapshot.target_inspiratory_flow,
+            inspiratory_duration: snapshot.inspiratory_duration,
             plateau_duration: snapshot.plateau_duration,
         });
     }
@@ -620,6 +633,8 @@ impl Chip {
             ti_min: message.ti_min,
             ti_max: message.ti_max,
             target_tidal_volume: message.target_tidal_volume,
+            target_inspiratory_flow: message.target_inspiratory_flow,
+            inspiratory_duration: message.inspiratory_duration,
             plateau_duration: message.plateau_duration,
         });
 
@@ -716,7 +731,6 @@ impl Chip {
             }
 
             ControlSetting::ExpiratoryTerm => {
-                self.settings.mode.inspiratory_time = ack.value as usize;
                 self.settings.expiration_term.expiratory_term = ack.value as usize;
                 self.last_machine_snapshot.expiratory_term = ack.value as u8;
             }
@@ -825,6 +839,16 @@ impl Chip {
             ControlSetting::LeakAlarmThreshold => {
                 // TODO: settings update to be implemented
                 self.last_machine_snapshot.leak_alarm_threshold = Some(ack.value as _);
+            }
+
+            ControlSetting::TargetInspiratoryFlow => {
+                self.settings.mode.flow_inspiration = ack.value as usize;
+                self.last_machine_snapshot.target_inspiratory_flow = Some(ack.value as _);
+            }
+
+            ControlSetting::InspiratoryDuration => {
+                self.settings.mode.duration_inspiration = ack.value as usize;
+                self.last_machine_snapshot.inspiratory_duration = Some(ack.value);
             }
         }
     }

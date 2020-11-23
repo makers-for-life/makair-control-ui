@@ -66,6 +66,7 @@ modal-mode-pressure-expiratory = Expiratory pressure
 modal-mode-time-inspiratory = Inspiratory time
 modal-mode-time-inspiratory-minimum = Inspiratory time (minimum)
 modal-mode-time-inspiratory-maximum = Inspiratory time (maximum)
+modal-mode-flow-inspiratory = Inspiratory flow
 modal-mode-cycles-per-minute = Cycles per minute
 modal-mode-tidal-volume = Tidal volume
 modal-mode-plateau-duration = Plateau duration

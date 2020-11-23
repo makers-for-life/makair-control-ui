@@ -66,6 +66,7 @@ modal-mode-pressure-expiratory = Ausatmungsdruck
 modal-mode-time-inspiratory = Inspirationszeit
 modal-mode-time-inspiratory-minimum = Inspirationszeit (minimum)
 modal-mode-time-inspiratory-maximum = Inspirationszeit (maximal)
+modal-mode-flow-inspiratory = Inspirationsfluss
 modal-mode-cycles-per-minute = Zyklen pro Minute
 modal-mode-tidal-volume = Atemzugvolumen
 modal-mode-plateau-duration = Plateaudauer

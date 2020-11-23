@@ -13,6 +13,7 @@ const CYCLES_PER_MINUTE_STEP: usize = 1;
 const TRIGGER_OFFSET_STEP: usize = 1;
 const TRIGGER_FLOW_STEP: usize = 1;
 const PRESSURE_STEP: usize = 10;
+const FLOW_STEP: usize = 1;
 const VOLUME_STEP: usize = 10;
 const DURATION_STEP: usize = 10;
 
@@ -23,7 +24,6 @@ pub enum SettingsModeEvent {
     ModePcVsai,
     ModeVcCmv,
     ModeVcAc,
-    InspiratoryTime(SettingActionRange),
     InspiratoryTimeMinimum(SettingActionRange),
     InspiratoryTimeMaximum(SettingActionRange),
     CyclesPerMinute(SettingActionRange),
@@ -33,13 +33,14 @@ pub enum SettingsModeEvent {
     PressurePlateau(SettingActionRange),
     PressureExpiratory(SettingActionRange),
     VolumeTidal(SettingActionRange),
+    FlowInspiration(SettingActionRange),
+    DurationInspiration(SettingActionRange),
     DurationPlateau(SettingActionRange),
 }
 
 #[derive(Debug)]
 pub struct SettingsMode {
     pub mode: VentilationMode,
-    pub inspiratory_time: usize,
     pub inspiratory_time_minimum: usize,
     pub inspiratory_time_maximum: usize,
     pub cycles_per_minute: usize,
@@ -49,6 +50,8 @@ pub struct SettingsMode {
     pub pressure_plateau: usize,
     pub pressure_expiratory: usize,
     pub volume_tidal: usize,
+    pub flow_inspiration: usize,
+    pub duration_inspiration: usize,
     pub duration_plateau: usize,
 }
 
@@ -56,7 +59,6 @@ impl SettingsMode {
     pub fn new() -> SettingsMode {
         SettingsMode {
             mode: VentilationMode::default(),
-            inspiratory_time: ControlSetting::ExpiratoryTerm.default(),
             inspiratory_time_minimum: ControlSetting::TiMin.default(),
             inspiratory_time_maximum: ControlSetting::TiMax.default(),
             cycles_per_minute: ControlSetting::CyclesPerMinute.default(),
@@ -66,6 +68,8 @@ impl SettingsMode {
             pressure_plateau: ControlSetting::PlateauPressure.default(),
             pressure_expiratory: ControlSetting::PEEP.default(),
             volume_tidal: ControlSetting::TargetTidalVolume.default(),
+            flow_inspiration: ControlSetting::TargetInspiratoryFlow.default(),
+            duration_inspiration: ControlSetting::InspiratoryDuration.default(),
             duration_plateau: ControlSetting::PlateauDuration.default(),
         }
     }
@@ -77,7 +81,6 @@ impl SettingsMode {
             SettingsModeEvent::ModePcVsai => self.switch_mode(VentilationMode::PC_VSAI),
             SettingsModeEvent::ModeVcCmv => self.switch_mode(VentilationMode::VC_CMV),
             SettingsModeEvent::ModeVcAc => self.switch_mode(VentilationMode::VC_AC),
-            SettingsModeEvent::InspiratoryTime(action) => self.set_inspiratory_time(action),
             SettingsModeEvent::InspiratoryTimeMinimum(action) => {
                 self.set_inspiratory_time_minimum(action)
             }
@@ -97,6 +100,8 @@ impl SettingsMode {
             SettingsModeEvent::PressurePlateau(action) => self.set_pressure_plateau(action),
             SettingsModeEvent::PressureExpiratory(action) => self.set_pressure_expiratory(action),
             SettingsModeEvent::VolumeTidal(action) => self.set_volume_tidal(action),
+            SettingsModeEvent::FlowInspiration(action) => self.set_flow_inspiration(action),
+            SettingsModeEvent::DurationInspiration(action) => self.set_duration_inspiration(action),
             SettingsModeEvent::DurationPlateau(action) => self.set_duration_plateau(action),
         }
     }
@@ -106,15 +111,6 @@ impl SettingsMode {
             setting: ControlSetting::VentilationMode,
             value: u8::from(&mode) as _,
         }
-    }
-
-    fn set_inspiratory_time(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
-            ControlSetting::ExpiratoryTerm,
-            action,
-            self.inspiratory_time,
-            INSPIRATORY_TIME_STEP
-        )
     }
 
     fn set_inspiratory_time_minimum(&self, action: SettingActionRange) -> ControlMessage {
@@ -195,6 +191,24 @@ impl SettingsMode {
             action,
             self.volume_tidal,
             VOLUME_STEP
+        )
+    }
+
+    fn set_flow_inspiration(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::TargetInspiratoryFlow,
+            action,
+            self.flow_inspiration,
+            FLOW_STEP
+        )
+    }
+
+    fn set_duration_inspiration(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::InspiratoryDuration,
+            action,
+            self.duration_inspiration,
+            DURATION_STEP
         )
     }
 

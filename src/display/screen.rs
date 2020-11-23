@@ -854,10 +854,6 @@ impl<'a> Screen<'a> {
                     self,
                     pressure_expiratory
                 ),
-                field_time_inspiratory_ids: gen_render_mode_settings_field_ids!(
-                    self,
-                    time_inspiratory
-                ),
                 field_time_inspiratory_minimum_ids: gen_render_mode_settings_field_ids!(
                     self,
                     time_inspiratory_minimum
@@ -871,6 +867,14 @@ impl<'a> Screen<'a> {
                     cycles_per_minute
                 ),
                 field_tidal_volume_ids: gen_render_mode_settings_field_ids!(self, tidal_volume),
+                field_inspiratory_flow_ids: gen_render_mode_settings_field_ids!(
+                    self,
+                    inspiratory_flow
+                ),
+                field_inspiratory_duration_ids: gen_render_mode_settings_field_ids!(
+                    self,
+                    inspiratory_duration
+                ),
                 field_plateau_duration_ids: gen_render_mode_settings_field_ids!(
                     self,
                     plateau_duration
