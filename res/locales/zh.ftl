@@ -10,7 +10,7 @@ telemetry-unit-cmh2o = 厘米水
 telemetry-unit-mmh2o = 毫米水柱
 telemetry-unit-lpm = 升/分
 telemetry-unit-per-minute = /分钟
-telemetry-unit-milliliters = 毫升（毫升）
+telemetry-unit-milliliters = 毫升
 telemetry-unit-milliseconds = 毫秒
 
 alarms-title = 警报
