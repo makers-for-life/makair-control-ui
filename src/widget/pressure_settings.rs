@@ -29,6 +29,7 @@ pub struct Config<'a> {
     pub pressure_plateau_less_button_text_widget: WidgetId,
     pub pressure_plateau_more_button_widget: WidgetId,
     pub pressure_plateau_more_button_text_widget: WidgetId,
+    pub pressure_plateau_value_wrapper_widget: WidgetId,
     pub pressure_plateau_value_widget: WidgetId,
 
     pub pressure_peep_text_widget: WidgetId,
@@ -36,6 +37,7 @@ pub struct Config<'a> {
     pub pressure_peep_less_button_text_widget: WidgetId,
     pub pressure_peep_more_button_widget: WidgetId,
     pub pressure_peep_more_button_text_widget: WidgetId,
+    pub pressure_peep_value_wrapper_widget: WidgetId,
     pub pressure_peep_value_widget: WidgetId,
 }
 
@@ -77,6 +79,7 @@ fn plateau<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         button_less_text_id: config.pressure_plateau_less_button_text_widget,
         button_more_id: config.pressure_plateau_more_button_widget,
         button_more_text_id: config.pressure_plateau_more_button_text_widget,
+        value_wrapper_id: config.pressure_plateau_value_wrapper_widget,
         value_id: config.pressure_plateau_value_widget,
         value: &format!(
             "{} {}",
@@ -113,6 +116,7 @@ fn peep<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         button_less_text_id: config.pressure_peep_less_button_text_widget,
         button_more_id: config.pressure_peep_more_button_widget,
         button_more_text_id: config.pressure_peep_more_button_text_widget,
+        value_wrapper_id: config.pressure_peep_value_wrapper_widget,
         value_id: config.pressure_peep_value_widget,
         value: &format!(
             "{} {}",

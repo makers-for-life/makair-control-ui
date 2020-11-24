@@ -33,6 +33,7 @@ pub struct Config<'a> {
     pub inspiratory_offset_less_button_text_widget: WidgetId,
     pub inspiratory_offset_more_button_widget: WidgetId,
     pub inspiratory_offset_more_button_text_widget: WidgetId,
+    pub inspiratory_offset_value_wrapper_widget: WidgetId,
     pub inspiratory_offset_value_widget: WidgetId,
 }
 
@@ -145,6 +146,7 @@ fn offset_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         button_less_text_id: config.inspiratory_offset_less_button_text_widget,
         button_more_id: config.inspiratory_offset_more_button_widget,
         button_more_text_id: config.inspiratory_offset_more_button_text_widget,
+        value_wrapper_id: config.inspiratory_offset_value_wrapper_widget,
         value_id: config.inspiratory_offset_value_widget,
         value: &format!(
             "{:.1} {}",

@@ -806,6 +806,7 @@ impl<'a> Screen<'a> {
                     .ids
                     .trigger_offset_less_button_text,
                 inspiratory_offset_text_widget: self.ids.trigger_offset_text,
+                inspiratory_offset_value_wrapper_widget: self.ids.trigger_offset_value_wrapper,
                 inspiratory_offset_value_widget: self.ids.trigger_offset_value,
             },
         ));
@@ -918,6 +919,7 @@ impl<'a> Screen<'a> {
                         .ids
                         .expiration_term_less_button_text,
                     expiration_term_text_widget: self.ids.expiration_term_text,
+                    expiration_term_value_wrapper_widget: self.ids.expiration_term_value_wrapper,
                     expiration_term_value_widget: self.ids.expiration_term_value,
                 },
             ));
@@ -949,12 +951,14 @@ impl<'a> Screen<'a> {
                     .ids
                     .pressure_plateau_less_button_text,
                 pressure_plateau_text_widget: self.ids.pressure_plateau_text,
+                pressure_plateau_value_wrapper_widget: self.ids.pressure_plateau_value_wrapper,
                 pressure_plateau_value_widget: self.ids.pressure_plateau_value,
                 pressure_peep_more_button_widget: self.ids.pressure_peep_more_button,
                 pressure_peep_more_button_text_widget: self.ids.pressure_peep_more_button_text,
                 pressure_peep_less_button_widget: self.ids.pressure_peep_less_button,
                 pressure_peep_less_button_text_widget: self.ids.pressure_peep_less_button_text,
                 pressure_peep_text_widget: self.ids.pressure_peep_text,
+                pressure_peep_value_wrapper_widget: self.ids.pressure_peep_value_wrapper,
                 pressure_peep_value_widget: self.ids.pressure_peep_value,
             },
         ));
@@ -982,6 +986,7 @@ impl<'a> Screen<'a> {
                 cycles_less_button_widget: self.ids.cycles_less_button,
                 cycles_less_button_text_widget: self.ids.cycles_less_button_text,
                 cycles_text_widget: self.ids.cycles_text,
+                cycles_value_wrapper_widget: self.ids.cycles_value_wrapper,
                 cycles_value_widget: self.ids.cycles_value,
             }));
     }

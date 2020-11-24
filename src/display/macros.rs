@@ -183,6 +183,7 @@ macro_rules! gen_render_mode_settings_field_ids {
         paste! {
             (
                 $self.ids.[<mode_settings_field_ $name _text>],
+                $self.ids.[<mode_settings_field_ $name _value_wrapper>],
                 $self.ids.[<mode_settings_field_ $name _value>],
                 $self.ids.[<mode_settings_field_ $name _more>],
                 $self.ids.[<mode_settings_field_ $name _more_text>],

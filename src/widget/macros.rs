@@ -116,6 +116,7 @@ macro_rules! gen_widget_button_navigate {
         button_less_text_id: $button_less_text_id:expr,
         button_more_id: $button_more_id:expr,
         button_more_text_id: $button_more_text_id:expr,
+        value_wrapper_id: $value_wrapper_id:expr,
         value_id: $value_id:expr,
         value: $value:expr,
         positions: $position_call:tt[$($position_arguments:expr,)*]
@@ -133,6 +134,18 @@ macro_rules! gen_widget_button_navigate {
             positions: ($position_call[$($position_arguments,)*])
         );
 
+        // Create value wrapper
+        gen_widget_container!(
+            $master,
+            container_id: $value_wrapper_id,
+            color: color::TRANSPARENT,
+            width: MODAL_BUTTON_NAVIGATE_VALUE_WIDTH,
+            height: MODAL_BUTTON_NAVIGATE_VALUE_HEIGHT,
+            positions: right_from[
+                $button_less_id, MODAL_BUTTON_NAVIGATE_PADDING_INNER,
+            ]
+        );
+
         // Initialize text style for value
         let mut value_style = widget::text::Style::default();
 
@@ -143,8 +156,8 @@ macro_rules! gen_widget_button_navigate {
         // Create text for value
         widget::Text::new($value)
         .with_style(value_style)
-        .right_from($button_less_id, MODAL_BUTTON_NAVIGATE_PADDING_INNER)
-        .y_relative(0.0)
+        .middle_of($value_wrapper_id)
+        .y_relative(3.0)
         .set($value_id, &mut $master.ui);
 
         // Create more button
@@ -160,7 +173,7 @@ macro_rules! gen_widget_button_navigate {
 
             positions: (
                 right_from[
-                    $value_id,
+                    $value_wrapper_id,
                     MODAL_BUTTON_NAVIGATE_PADDING_INNER,
                 ],
                 y_relative[

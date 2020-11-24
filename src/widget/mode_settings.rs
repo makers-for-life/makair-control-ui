@@ -23,7 +23,15 @@ const SELECTOR_BORDER_COLOR: Color = Color::Rgba(81.0 / 255.0, 81.0 / 255.0, 81.
 const SELECTOR_COLOR_DEFAULT: Color = Color::Rgba(0.0, 0.0, 0.0, 0.975);
 const SELECTOR_COLOR_SELECTED: Color = Color::Rgba(26.0 / 255.0, 26.0 / 255.0, 26.0 / 255.0, 1.0);
 
-type FieldWidgetIds = (WidgetId, WidgetId, WidgetId, WidgetId, WidgetId, WidgetId);
+type FieldWidgetIds = (
+    WidgetId,
+    WidgetId,
+    WidgetId,
+    WidgetId,
+    WidgetId,
+    WidgetId,
+    WidgetId,
+);
 
 pub struct Config<'a> {
     pub width: f64,
@@ -453,11 +461,12 @@ fn draw_field<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config,
     // Generate navigation buttons
     gen_widget_button_navigate!(
         master,
-        button_less_id: field.ids.4,
-        button_less_text_id: field.ids.5,
-        button_more_id: field.ids.2,
-        button_more_text_id: field.ids.3,
-        value_id: field.ids.1,
+        button_less_id: field.ids.5,
+        button_less_text_id: field.ids.6,
+        button_more_id: field.ids.3,
+        button_more_text_id: field.ids.4,
+        value_wrapper_id: field.ids.1,
+        value_id: field.ids.2,
         value: &field.value_text,
         positions: top_left_with_margins_on[
             field.ids.0,

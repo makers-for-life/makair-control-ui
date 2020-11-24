@@ -27,6 +27,7 @@ pub struct Config<'a> {
     pub cycles_less_button_text_widget: WidgetId,
     pub cycles_more_button_widget: WidgetId,
     pub cycles_more_button_text_widget: WidgetId,
+    pub cycles_value_wrapper_widget: WidgetId,
     pub cycles_value_widget: WidgetId,
 }
 
@@ -67,6 +68,7 @@ fn cycles<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         button_less_text_id: config.cycles_less_button_text_widget,
         button_more_id: config.cycles_more_button_widget,
         button_more_text_id: config.cycles_more_button_text_widget,
+        value_wrapper_id: config.cycles_value_wrapper_widget,
         value_id: config.cycles_value_widget,
         value: &format!(
             "{}{}",

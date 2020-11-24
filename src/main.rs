@@ -4,7 +4,7 @@
 // License: Public Domain License
 
 // Notice: increasing the recursion limit is required for all display identifiers to be used
-#![recursion_limit = "256"]
+#![recursion_limit = "512"]
 
 #[macro_use]
 extern crate log;

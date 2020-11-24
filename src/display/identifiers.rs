@@ -114,6 +114,7 @@ widget_ids!(pub struct Ids {
   expiration_term_less_button_text,
   expiration_term_text,
   expiration_term_value,
+  expiration_term_value_wrapper,
 
   pressure_container,
   pressure_plateau_more_button,
@@ -122,12 +123,14 @@ widget_ids!(pub struct Ids {
   pressure_plateau_less_button_text,
   pressure_plateau_text,
   pressure_plateau_value,
+  pressure_plateau_value_wrapper,
   pressure_peep_more_button,
   pressure_peep_more_button_text,
   pressure_peep_less_button,
   pressure_peep_less_button_text,
   pressure_peep_text,
   pressure_peep_value,
+  pressure_peep_value_wrapper,
 
   cycles_container,
   cycles_more_button,
@@ -136,6 +139,7 @@ widget_ids!(pub struct Ids {
   cycles_less_button_text,
   cycles_text,
   cycles_value,
+  cycles_value_wrapper,
 
   tidal_parent,
   tidal_title,
@@ -166,6 +170,7 @@ widget_ids!(pub struct Ids {
   trigger_offset_less_button_text,
   trigger_offset_text,
   trigger_offset_value,
+  trigger_offset_value_wrapper,
 
   mode_overview_container,
   mode_overview_separator,
@@ -188,6 +193,7 @@ widget_ids!(pub struct Ids {
 
   mode_settings_field_pressure_inspiratory_text,
   mode_settings_field_pressure_inspiratory_value,
+  mode_settings_field_pressure_inspiratory_value_wrapper,
   mode_settings_field_pressure_inspiratory_more,
   mode_settings_field_pressure_inspiratory_more_text,
   mode_settings_field_pressure_inspiratory_less,
@@ -195,6 +201,7 @@ widget_ids!(pub struct Ids {
 
   mode_settings_field_pressure_expiratory_text,
   mode_settings_field_pressure_expiratory_value,
+  mode_settings_field_pressure_expiratory_value_wrapper,
   mode_settings_field_pressure_expiratory_more,
   mode_settings_field_pressure_expiratory_more_text,
   mode_settings_field_pressure_expiratory_less,
@@ -202,6 +209,7 @@ widget_ids!(pub struct Ids {
 
   mode_settings_field_time_inspiratory_minimum_text,
   mode_settings_field_time_inspiratory_minimum_value,
+  mode_settings_field_time_inspiratory_minimum_value_wrapper,
   mode_settings_field_time_inspiratory_minimum_more,
   mode_settings_field_time_inspiratory_minimum_more_text,
   mode_settings_field_time_inspiratory_minimum_less,
@@ -209,6 +217,7 @@ widget_ids!(pub struct Ids {
 
   mode_settings_field_time_inspiratory_maximum_text,
   mode_settings_field_time_inspiratory_maximum_value,
+  mode_settings_field_time_inspiratory_maximum_value_wrapper,
   mode_settings_field_time_inspiratory_maximum_more,
   mode_settings_field_time_inspiratory_maximum_more_text,
   mode_settings_field_time_inspiratory_maximum_less,
@@ -216,6 +225,7 @@ widget_ids!(pub struct Ids {
 
   mode_settings_field_cycles_per_minute_text,
   mode_settings_field_cycles_per_minute_value,
+  mode_settings_field_cycles_per_minute_value_wrapper,
   mode_settings_field_cycles_per_minute_more,
   mode_settings_field_cycles_per_minute_more_text,
   mode_settings_field_cycles_per_minute_less,
@@ -223,6 +233,7 @@ widget_ids!(pub struct Ids {
 
   mode_settings_field_tidal_volume_text,
   mode_settings_field_tidal_volume_value,
+  mode_settings_field_tidal_volume_value_wrapper,
   mode_settings_field_tidal_volume_more,
   mode_settings_field_tidal_volume_more_text,
   mode_settings_field_tidal_volume_less,
@@ -230,6 +241,7 @@ widget_ids!(pub struct Ids {
 
   mode_settings_field_inspiratory_flow_text,
   mode_settings_field_inspiratory_flow_value,
+  mode_settings_field_inspiratory_flow_value_wrapper,
   mode_settings_field_inspiratory_flow_more,
   mode_settings_field_inspiratory_flow_more_text,
   mode_settings_field_inspiratory_flow_less,
@@ -237,6 +249,7 @@ widget_ids!(pub struct Ids {
 
   mode_settings_field_inspiratory_duration_text,
   mode_settings_field_inspiratory_duration_value,
+  mode_settings_field_inspiratory_duration_value_wrapper,
   mode_settings_field_inspiratory_duration_more,
   mode_settings_field_inspiratory_duration_more_text,
   mode_settings_field_inspiratory_duration_less,
@@ -244,6 +257,7 @@ widget_ids!(pub struct Ids {
 
   mode_settings_field_plateau_duration_text,
   mode_settings_field_plateau_duration_value,
+  mode_settings_field_plateau_duration_value_wrapper,
   mode_settings_field_plateau_duration_more,
   mode_settings_field_plateau_duration_more_text,
   mode_settings_field_plateau_duration_less,
@@ -251,6 +265,7 @@ widget_ids!(pub struct Ids {
 
   mode_settings_field_trigger_offset_text,
   mode_settings_field_trigger_offset_value,
+  mode_settings_field_trigger_offset_value_wrapper,
   mode_settings_field_trigger_offset_more,
   mode_settings_field_trigger_offset_more_text,
   mode_settings_field_trigger_offset_less,
@@ -258,6 +273,7 @@ widget_ids!(pub struct Ids {
 
   mode_settings_field_trigger_inspiratory_text,
   mode_settings_field_trigger_inspiratory_value,
+  mode_settings_field_trigger_inspiratory_value_wrapper,
   mode_settings_field_trigger_inspiratory_more,
   mode_settings_field_trigger_inspiratory_more_text,
   mode_settings_field_trigger_inspiratory_less,
@@ -265,6 +281,7 @@ widget_ids!(pub struct Ids {
 
   mode_settings_field_trigger_expiratory_text,
   mode_settings_field_trigger_expiratory_value,
+  mode_settings_field_trigger_expiratory_value_wrapper,
   mode_settings_field_trigger_expiratory_more,
   mode_settings_field_trigger_expiratory_more_text,
   mode_settings_field_trigger_expiratory_less,

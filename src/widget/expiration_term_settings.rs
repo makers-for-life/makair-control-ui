@@ -28,6 +28,7 @@ pub struct Config<'a> {
     pub expiration_term_less_button_text_widget: WidgetId,
     pub expiration_term_more_button_widget: WidgetId,
     pub expiration_term_more_button_text_widget: WidgetId,
+    pub expiration_term_value_wrapper_widget: WidgetId,
     pub expiration_term_value_widget: WidgetId,
 }
 
@@ -68,6 +69,7 @@ fn term<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         button_less_text_id: config.expiration_term_less_button_text_widget,
         button_more_id: config.expiration_term_more_button_widget,
         button_more_text_id: config.expiration_term_more_button_text_widget,
+        value_wrapper_id: config.expiration_term_value_wrapper_widget,
         value_id: config.expiration_term_value_widget,
         value: &format!(
             "{:.1}",
