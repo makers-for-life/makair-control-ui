@@ -36,11 +36,15 @@ pub enum SettingsModeEvent {
     FlowInspiration(SettingActionRange),
     DurationInspiration(SettingActionRange),
     DurationPlateau(SettingActionRange),
+    // TODO: implement alarm commands
 }
 
 #[derive(Debug)]
 pub struct SettingsMode {
+    // Mode
     pub mode: VentilationMode,
+
+    // Commands
     pub inspiratory_time_minimum: usize,
     pub inspiratory_time_maximum: usize,
     pub cycles_per_minute: usize,
@@ -53,6 +57,17 @@ pub struct SettingsMode {
     pub flow_inspiration: usize,
     pub duration_inspiration: usize,
     pub duration_plateau: usize,
+
+    // Alarm thresholds
+    pub alarm_threshold_low_inspiratory_minute_volume: usize,
+    pub alarm_threshold_high_inspiratory_minute_volume: usize,
+    pub alarm_threshold_low_expiratory_minute_volume: usize,
+    pub alarm_threshold_high_expiratory_minute_volume: usize,
+    pub alarm_threshold_low_expiratory_rate: usize,
+    pub alarm_threshold_high_expiratory_rate: usize,
+    pub alarm_threshold_low_tidal_volume: usize,
+    pub alarm_threshold_high_tidal_volume: usize,
+    pub alarm_threshold_leak: usize,
 }
 
 impl SettingsMode {
@@ -71,6 +86,16 @@ impl SettingsMode {
             flow_inspiration: ControlSetting::TargetInspiratoryFlow.default(),
             duration_inspiration: ControlSetting::InspiratoryDuration.default(),
             duration_plateau: ControlSetting::PlateauDuration.default(),
+            // TODO: implement alarm commands defaults (all below)
+            alarm_threshold_low_inspiratory_minute_volume: 0,
+            alarm_threshold_high_inspiratory_minute_volume: 0,
+            alarm_threshold_low_expiratory_minute_volume: 0,
+            alarm_threshold_high_expiratory_minute_volume: 0,
+            alarm_threshold_low_expiratory_rate: 0,
+            alarm_threshold_high_expiratory_rate: 0,
+            alarm_threshold_low_tidal_volume: 0,
+            alarm_threshold_high_tidal_volume: 0,
+            alarm_threshold_leak: 0,
         }
     }
 

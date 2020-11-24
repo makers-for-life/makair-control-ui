@@ -58,6 +58,7 @@ pub enum ChipEventUpdate {
 }
 
 struct ChipSettingsUpdate {
+    // Commands
     plateau_command: Option<u8>,
     peep_command: Option<u8>,
     cpm_command: Option<u8>,
@@ -74,6 +75,17 @@ struct ChipSettingsUpdate {
     target_inspiratory_flow: Option<u8>,
     inspiratory_duration: Option<u16>,
     plateau_duration: Option<u16>,
+
+    // Alarm thresholds
+    low_inspiratory_minute_volume_alarm_threshold: Option<u8>,
+    high_inspiratory_minute_volume_alarm_threshold: Option<u8>,
+    low_expiratory_minute_volume_alarm_threshold: Option<u8>,
+    high_expiratory_minute_volume_alarm_threshold: Option<u8>,
+    low_expiratory_rate_alarm_threshold: Option<u8>,
+    high_expiratory_rate_alarm_threshold: Option<u8>,
+    low_tidal_volume_alarm_treshold: Option<u16>,
+    high_tidal_volume_alarm_treshold: Option<u16>,
+    leak_alarm_threshold: Option<u16>,
 }
 
 pub struct Chip {
@@ -527,8 +539,70 @@ impl Chip {
             self.settings.mode.mode = ventilation_mode;
         }
 
-        // TODO: implement all settings updates for alarm values, eg. \
-        //   'low_tidal_volume_alarm_treshold'
+        // Update all alarm threshold values
+        if let Some(low_inspiratory_minute_volume_alarm_threshold) =
+            update.low_inspiratory_minute_volume_alarm_threshold
+        {
+            self.settings
+                .mode
+                .alarm_threshold_low_inspiratory_minute_volume =
+                low_inspiratory_minute_volume_alarm_threshold as usize;
+        }
+
+        if let Some(high_inspiratory_minute_volume_alarm_threshold) =
+            update.high_inspiratory_minute_volume_alarm_threshold
+        {
+            self.settings
+                .mode
+                .alarm_threshold_high_inspiratory_minute_volume =
+                high_inspiratory_minute_volume_alarm_threshold as usize;
+        }
+
+        if let Some(low_expiratory_minute_volume_alarm_threshold) =
+            update.low_expiratory_minute_volume_alarm_threshold
+        {
+            self.settings
+                .mode
+                .alarm_threshold_low_expiratory_minute_volume =
+                low_expiratory_minute_volume_alarm_threshold as usize;
+        }
+
+        if let Some(high_expiratory_minute_volume_alarm_threshold) =
+            update.high_expiratory_minute_volume_alarm_threshold
+        {
+            self.settings
+                .mode
+                .alarm_threshold_high_expiratory_minute_volume =
+                high_expiratory_minute_volume_alarm_threshold as usize;
+        }
+
+        if let Some(low_expiratory_rate_alarm_threshold) =
+            update.low_expiratory_rate_alarm_threshold
+        {
+            self.settings.mode.alarm_threshold_low_expiratory_rate =
+                low_expiratory_rate_alarm_threshold as usize;
+        }
+
+        if let Some(high_expiratory_rate_alarm_threshold) =
+            update.high_expiratory_rate_alarm_threshold
+        {
+            self.settings.mode.alarm_threshold_high_expiratory_rate =
+                high_expiratory_rate_alarm_threshold as usize;
+        }
+
+        if let Some(low_tidal_volume_alarm_treshold) = update.low_tidal_volume_alarm_treshold {
+            self.settings.mode.alarm_threshold_low_tidal_volume =
+                low_tidal_volume_alarm_treshold as usize;
+        }
+
+        if let Some(high_tidal_volume_alarm_treshold) = update.high_tidal_volume_alarm_treshold {
+            self.settings.mode.alarm_threshold_high_tidal_volume =
+                high_tidal_volume_alarm_treshold as usize;
+        }
+
+        if let Some(leak_alarm_threshold) = update.leak_alarm_threshold {
+            self.settings.mode.alarm_threshold_leak = leak_alarm_threshold as usize;
+        }
     }
 
     fn update_settings_from_snapshot(&mut self, snapshot: &MachineStateSnapshot) {
@@ -536,6 +610,7 @@ impl Chip {
         //   'TelemetryMessage::MachineStateSnapshot' message from the firmware.
 
         self.update_settings_from_parameters(ChipSettingsUpdate {
+            // Commands
             plateau_command: Some(snapshot.plateau_command),
             peep_command: Some(snapshot.peep_command),
             cpm_command: Some(snapshot.cpm_command),
@@ -552,6 +627,21 @@ impl Chip {
             target_inspiratory_flow: snapshot.target_inspiratory_flow,
             inspiratory_duration: snapshot.inspiratory_duration,
             plateau_duration: snapshot.plateau_duration,
+
+            // Alarm thresholds
+            low_inspiratory_minute_volume_alarm_threshold: snapshot
+                .low_inspiratory_minute_volume_alarm_threshold,
+            high_inspiratory_minute_volume_alarm_threshold: snapshot
+                .high_inspiratory_minute_volume_alarm_threshold,
+            low_expiratory_minute_volume_alarm_threshold: snapshot
+                .low_expiratory_minute_volume_alarm_threshold,
+            high_expiratory_minute_volume_alarm_threshold: snapshot
+                .high_expiratory_minute_volume_alarm_threshold,
+            low_expiratory_rate_alarm_threshold: snapshot.low_expiratory_rate_alarm_threshold,
+            high_expiratory_rate_alarm_threshold: snapshot.high_expiratory_rate_alarm_threshold,
+            low_tidal_volume_alarm_treshold: snapshot.low_tidal_volume_alarm_treshold,
+            high_tidal_volume_alarm_treshold: snapshot.high_tidal_volume_alarm_treshold,
+            leak_alarm_threshold: snapshot.leak_alarm_threshold,
         });
     }
 
@@ -620,6 +710,7 @@ impl Chip {
 
         // Update local settings from message
         self.update_settings_from_parameters(ChipSettingsUpdate {
+            // Commands
             plateau_command: message.plateau_command,
             peep_command: message.peep_command,
             cpm_command: message.cpm_command,
@@ -636,6 +727,21 @@ impl Chip {
             target_inspiratory_flow: message.target_inspiratory_flow,
             inspiratory_duration: message.inspiratory_duration,
             plateau_duration: message.plateau_duration,
+
+            // Alarm thresholds
+            low_inspiratory_minute_volume_alarm_threshold: message
+                .low_inspiratory_minute_volume_alarm_threshold,
+            high_inspiratory_minute_volume_alarm_threshold: message
+                .high_inspiratory_minute_volume_alarm_threshold,
+            low_expiratory_minute_volume_alarm_threshold: message
+                .low_expiratory_minute_volume_alarm_threshold,
+            high_expiratory_minute_volume_alarm_threshold: message
+                .high_expiratory_minute_volume_alarm_threshold,
+            low_expiratory_rate_alarm_threshold: message.low_expiratory_rate_alarm_threshold,
+            high_expiratory_rate_alarm_threshold: message.high_expiratory_rate_alarm_threshold,
+            low_tidal_volume_alarm_treshold: message.low_tidal_volume_alarm_treshold,
+            high_tidal_volume_alarm_treshold: message.high_tidal_volume_alarm_treshold,
+            leak_alarm_threshold: message.leak_alarm_threshold,
         });
 
         // Assign same-type message values to snapshot (that must be cloned)
@@ -781,37 +887,45 @@ impl Chip {
             }
 
             ControlSetting::LowInspiratoryMinuteVolumeAlarmThreshold => {
-                // TODO: settings update to be implemented
+                self.settings
+                    .mode
+                    .alarm_threshold_low_inspiratory_minute_volume = ack.value as usize;
                 self.last_machine_snapshot
                     .low_inspiratory_minute_volume_alarm_threshold = Some(ack.value as _);
             }
 
             ControlSetting::HighInspiratoryMinuteVolumeAlarmThreshold => {
-                // TODO: settings update to be implemented
+                self.settings
+                    .mode
+                    .alarm_threshold_high_inspiratory_minute_volume = ack.value as usize;
                 self.last_machine_snapshot
                     .high_inspiratory_minute_volume_alarm_threshold = Some(ack.value as _);
             }
 
             ControlSetting::LowExpiratoryMinuteVolumeAlarmThreshold => {
-                // TODO: settings update to be implemented
+                self.settings
+                    .mode
+                    .alarm_threshold_low_expiratory_minute_volume = ack.value as usize;
                 self.last_machine_snapshot
                     .low_expiratory_minute_volume_alarm_threshold = Some(ack.value as _);
             }
 
             ControlSetting::HighExpiratoryMinuteVolumeAlarmThreshold => {
-                // TODO: settings update to be implemented
+                self.settings
+                    .mode
+                    .alarm_threshold_high_expiratory_minute_volume = ack.value as usize;
                 self.last_machine_snapshot
                     .high_expiratory_minute_volume_alarm_threshold = Some(ack.value as _);
             }
 
             ControlSetting::LowExpiratoryRateAlarmThreshold => {
-                // TODO: settings update to be implemented
+                self.settings.mode.alarm_threshold_low_expiratory_rate = ack.value as usize;
                 self.last_machine_snapshot
                     .low_expiratory_rate_alarm_threshold = Some(ack.value as _);
             }
 
             ControlSetting::HighExpiratoryRateAlarmThreshold => {
-                // TODO: settings update to be implemented
+                self.settings.mode.alarm_threshold_high_expiratory_rate = ack.value as usize;
                 self.last_machine_snapshot
                     .high_expiratory_rate_alarm_threshold = Some(ack.value as _);
             }
@@ -822,12 +936,12 @@ impl Chip {
             }
 
             ControlSetting::LowTidalVolumeAlarmTreshold => {
-                // TODO: settings update to be implemented
+                self.settings.mode.alarm_threshold_low_tidal_volume = ack.value as usize;
                 self.last_machine_snapshot.low_tidal_volume_alarm_treshold = Some(ack.value as _);
             }
 
             ControlSetting::HighTidalVolumeAlarmTreshold => {
-                // TODO: settings update to be implemented
+                self.settings.mode.alarm_threshold_high_tidal_volume = ack.value as usize;
                 self.last_machine_snapshot.high_tidal_volume_alarm_treshold = Some(ack.value as _);
             }
 
@@ -837,7 +951,7 @@ impl Chip {
             }
 
             ControlSetting::LeakAlarmThreshold => {
-                // TODO: settings update to be implemented
+                self.settings.mode.alarm_threshold_leak = ack.value as usize;
                 self.last_machine_snapshot.leak_alarm_threshold = Some(ack.value as _);
             }
 
