@@ -9,6 +9,7 @@ mod macros;
 pub mod settings;
 
 use chrono::{offset::Utc, DateTime, Duration};
+use paste::paste;
 use std::collections::{HashMap, VecDeque};
 use std::convert::TryFrom;
 use std::sync::mpsc::{self, Receiver, Sender};
@@ -540,69 +541,21 @@ impl Chip {
         }
 
         // Update all alarm threshold values
-        if let Some(low_inspiratory_minute_volume_alarm_threshold) =
-            update.low_inspiratory_minute_volume_alarm_threshold
-        {
-            self.settings
-                .mode
-                .alarm_threshold_low_inspiratory_minute_volume =
-                low_inspiratory_minute_volume_alarm_threshold as usize;
-        }
-
-        if let Some(high_inspiratory_minute_volume_alarm_threshold) =
-            update.high_inspiratory_minute_volume_alarm_threshold
-        {
-            self.settings
-                .mode
-                .alarm_threshold_high_inspiratory_minute_volume =
-                high_inspiratory_minute_volume_alarm_threshold as usize;
-        }
-
-        if let Some(low_expiratory_minute_volume_alarm_threshold) =
-            update.low_expiratory_minute_volume_alarm_threshold
-        {
-            self.settings
-                .mode
-                .alarm_threshold_low_expiratory_minute_volume =
-                low_expiratory_minute_volume_alarm_threshold as usize;
-        }
-
-        if let Some(high_expiratory_minute_volume_alarm_threshold) =
-            update.high_expiratory_minute_volume_alarm_threshold
-        {
-            self.settings
-                .mode
-                .alarm_threshold_high_expiratory_minute_volume =
-                high_expiratory_minute_volume_alarm_threshold as usize;
-        }
-
-        if let Some(low_expiratory_rate_alarm_threshold) =
-            update.low_expiratory_rate_alarm_threshold
-        {
-            self.settings.mode.alarm_threshold_low_expiratory_rate =
-                low_expiratory_rate_alarm_threshold as usize;
-        }
-
-        if let Some(high_expiratory_rate_alarm_threshold) =
-            update.high_expiratory_rate_alarm_threshold
-        {
-            self.settings.mode.alarm_threshold_high_expiratory_rate =
-                high_expiratory_rate_alarm_threshold as usize;
-        }
-
-        if let Some(low_tidal_volume_alarm_threshold) = update.low_tidal_volume_alarm_threshold {
-            self.settings.mode.alarm_threshold_low_tidal_volume =
-                low_tidal_volume_alarm_threshold as usize;
-        }
-
-        if let Some(high_tidal_volume_alarm_threshold) = update.high_tidal_volume_alarm_threshold {
-            self.settings.mode.alarm_threshold_high_tidal_volume =
-                high_tidal_volume_alarm_threshold as usize;
-        }
-
-        if let Some(leak_alarm_threshold) = update.leak_alarm_threshold {
-            self.settings.mode.alarm_threshold_leak = leak_alarm_threshold as usize;
-        }
+        gen_settings_from_parameters_alarm_thresholds!(
+            update,
+            self.settings.mode,
+            [
+                low_inspiratory_minute_volume,
+                high_inspiratory_minute_volume,
+                low_expiratory_minute_volume,
+                high_expiratory_minute_volume,
+                low_expiratory_rate,
+                high_expiratory_rate,
+                low_tidal_volume,
+                high_tidal_volume,
+                leak
+            ]
+        );
     }
 
     fn update_settings_from_snapshot(&mut self, snapshot: &MachineStateSnapshot) {

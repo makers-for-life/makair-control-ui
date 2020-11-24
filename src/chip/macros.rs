@@ -29,6 +29,18 @@ macro_rules! gen_override_snapshot_values_from_stopped_optional {
     };
 }
 
+macro_rules! gen_settings_from_parameters_alarm_thresholds {
+    ($update:expr, $mode_settings:expr, [$($name:tt),+]) => {
+        $(
+            paste! {
+                if let Some(value) = $update.[<$name _alarm_threshold>] {
+                    $mode_settings.[<alarm_threshold_ $name>] = value as usize;
+                }
+            }
+        )+
+    };
+}
+
 macro_rules! gen_add_data_generic {
     ($self:ident, $container:tt, $value:expr, $systick:expr, $clean_fn:tt) => {
         let snapshot_time = $self.boot_time.unwrap() + Duration::microseconds($systick as i64);
