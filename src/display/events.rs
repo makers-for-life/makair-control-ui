@@ -129,36 +129,37 @@ impl DisplayUIEvents {
             },
 
             {
-                "trigger", states.trigger_settings, [
+                "mode", states.mode_settings, [
+                    // From: 'mode'
+                    ids.mode_overview_container,
+                    ids.mode_overview_separator,
+                    ids.mode_overview_text_class,
+                    ids.mode_overview_text_type,
+
+                    // From: 'trigger'
                     ids.trigger_overview_container,
                     ids.trigger_overview_title,
                     ids.trigger_overview_status_label,
                     ids.trigger_overview_status_value,
                     ids.trigger_overview_offset_label,
                     ids.trigger_overview_offset_value,
-                ]
-            },
 
-            {
-                "mode", states.mode_settings, [
-                    ids.mode_overview_container,
-                    ids.mode_overview_separator,
-                    ids.mode_overview_text_class,
-                    ids.mode_overview_text_type,
-                ]
-            },
-
-            {
-                "expiratory term", states.expiration_term_settings, [
+                    // From: 'expiratory term'
                     ids.ratio_parent,
                     ids.ratio_title,
                     ids.ratio_value_measured,
                     ids.ratio_unit,
-                ]
-            },
 
-            {
-                "cycles", states.cycles_settings, [
+                    // From: 'tidal volume'
+                    ids.tidal_parent,
+                    ids.tidal_title,
+                    ids.tidal_value_measured,
+                    ids.tidal_value_arrow_main,
+                    ids.tidal_value_arrow_line,
+                    ids.tidal_value_target,
+                    ids.tidal_unit,
+
+                    // From: 'cycles'
                     ids.cycles_parent,
                     ids.cycles_title,
                     ids.cycles_value_measured,
@@ -166,11 +167,8 @@ impl DisplayUIEvents {
                     ids.cycles_value_arrow_line,
                     ids.cycles_value_target,
                     ids.cycles_unit,
-                ]
-            },
 
-            {
-                "pressure", states.pressure_settings, [
+                    // From: 'pressure'
                     ids.peak_parent,
                     ids.peak_title,
                     ids.peak_value_measured,
