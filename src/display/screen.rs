@@ -415,11 +415,7 @@ impl<'a> Screen<'a> {
                     )
                     .to_string()
                 }),
-                value_target: if !has_target_pressure {
-                    None
-                } else {
-                    Some(machine_snapshot.peak_command.to_string())
-                },
+                value_target: None,
                 unit: APP_I18N.t("telemetry-unit-cmh2o"),
                 ids: (
                     self.ids.telemetry_widgets_right,
