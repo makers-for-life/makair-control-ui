@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+systemctl stop cage@tty1.service
+
+sleep 2
+
+systemctl restart makair-setup.service
+
+sync
+
+systemctl daemon-reload
+systemctl start cage@tty1.service

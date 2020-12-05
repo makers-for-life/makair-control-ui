@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+ENV_FILE="/etc/makair-env"
+
+if USB_KEY=$(find /media -mount -mindepth 1 -type d -not -name makair); then
+  # USB KEY detected, setup output
+  AVAILABLE_SIZE=$(df --output=avail $USB_KEY | tail -n 1)
+
+  if [ $AVAILABLE_SIZE -gt 1000000 ]; then
+    OUTPUT_DIR="$USB_KEY/MAKAIR_DATA"
+
+    echo "Setting up output dir"
+
+    mkdir -p "$OUTPUT_DIR"
+
+    echo "OUTPUT_DIR=$OUTPUT_DIR" > $ENV_FILE
+    echo "RUST_LOG=info" >> $ENV_FILE
+  else
+    # NOT ENOUGH SIZE
+    echo "Not enough available space on $USB_KEY"
+    echo "RUST_LOG=info" > $ENV_FILE
+  fi
+else
+  # NO USB KEY, do not output
+  echo "No USB key detected"
+  echo "RUST_LOG=info" > $ENV_FILE
+fi

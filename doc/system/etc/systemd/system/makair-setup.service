@@ -1,0 +1,12 @@
+[Unit]
+Description=Makair environment setup
+Before=cage@.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/makair-setup-env
+User=makair
+Group=uucp
+
+[Install]
+WantedBy=cage@.service
