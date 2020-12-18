@@ -5,7 +5,7 @@
 
 use telemetry::structures::{VentilationModeClass, VentilationModeKind};
 
-use crate::widget::mode_settings::GroupTab;
+use crate::chip::settings::mode::SettingsModeGroupTab;
 
 use crate::APP_I18N;
 
@@ -28,10 +28,10 @@ pub fn kind_to_locale(mode_kind: VentilationModeKind) -> String {
     APP_I18N.t(&format!("mode-type-{}", locale_key))
 }
 
-pub fn group_tab_to_locale(group_tab: GroupTab) -> String {
+pub fn group_tab_to_locale(group_tab: SettingsModeGroupTab) -> String {
     let locale_key = match group_tab {
-        GroupTab::General => "general",
-        GroupTab::Alarms => "alarms",
+        SettingsModeGroupTab::General => "general",
+        SettingsModeGroupTab::Alarms => "alarms",
     };
 
     APP_I18N.t(&format!("mode-group-{}", locale_key))

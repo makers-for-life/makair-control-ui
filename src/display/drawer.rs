@@ -130,9 +130,12 @@ impl<'a> DisplayDrawer<'a> {
             }
 
             // Run events since the last render
-            let (has_heartbeat, has_user_events, user_events) =
-                self.renderer
-                    .run_events(&mut self.interface, &last_heartbeat, &tick_start_time);
+            let (has_heartbeat, has_user_events, user_events) = self.renderer.run_events(
+                &mut self.interface,
+                &mut self.chip,
+                &last_heartbeat,
+                &tick_start_time,
+            );
 
             // Dispatch heartbeat?
             // Notice: heartbeats are critical, as they indicate the firmware that the Control UI \

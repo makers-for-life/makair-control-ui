@@ -6,11 +6,18 @@
 use conrod_core::{widget::Id as WidgetId, Ui};
 use glium::glutin::{Event, EventsLoop, KeyboardInput, WindowEvent};
 
-use crate::chip::settings::{
-    cycles::SettingsCyclesEvent, expiration_term::SettingsExpirationTermEvent,
-    mode::SettingsModeEvent, pressure::SettingsPressureEvent, run::SettingsRunEvent,
-    snooze::SettingsSnoozeEvent, trigger::SettingsTriggerEvent, ChipSettingsEvent,
-    SettingActionRange,
+use crate::chip::{
+    settings::{
+        cycles::SettingsCyclesEvent,
+        expiration_term::SettingsExpirationTermEvent,
+        mode::{SettingsModeEvent, SettingsModeGroupTab},
+        pressure::SettingsPressureEvent,
+        run::SettingsRunEvent,
+        snooze::SettingsSnoozeEvent,
+        trigger::SettingsTriggerEvent,
+        ChipSettingsEvent, SettingActionRange,
+    },
+    Chip,
 };
 
 use super::identifiers::Ids;
@@ -79,6 +86,7 @@ impl DisplayUIEvents {
     pub fn run(
         interface: &mut Ui,
         ids: &Ids,
+        chip: &mut Chip,
         states: &mut DisplayRendererStates,
     ) -> (bool, Vec<ChipSettingsEvent>) {
         let (mut has_events, mut events) = (false, Vec::new());
@@ -90,6 +98,11 @@ impl DisplayUIEvents {
 
         // Handle modal settings clicks
         if Self::run_modal_settings_clicks(interface, ids, states, &mut events) {
+            has_events = true;
+        }
+
+        // Handle modal local clicks
+        if Self::run_modal_local_clicks(interface, ids, chip, states) {
             has_events = true;
         }
 
@@ -731,6 +744,45 @@ impl DisplayUIEvents {
                     ],
 
                     None
+                }
+            },
+        );
+
+        has_events
+    }
+
+    fn run_modal_local_clicks(
+        interface: &mut Ui,
+        ids: &Ids,
+        chip: &mut Chip,
+        states: &mut DisplayRendererStates,
+    ) -> bool {
+        let mut has_events = false;
+
+        // Generate all event handlers for local modal clicks (ie. clicks that should not result \
+        //   in a telemetry event being sent)
+        gen_ui_events_modal_local_clicks!(
+            interface, ids, has_events,
+
+            {
+                "mode", chip.settings.mode, states.mode_settings,
+
+                {
+                    SettingsModeGroupTab::General, group, "group general",
+
+                    [
+                        ids.mode_settings_group_tab_general_button,
+                        ids.mode_settings_group_tab_general_text,
+                    ]
+                },
+
+                {
+                    SettingsModeGroupTab::Alarms, group, "group alarms",
+
+                    [
+                        ids.mode_settings_group_tab_alarms_button,
+                        ids.mode_settings_group_tab_alarms_text,
+                    ]
                 }
             },
         );

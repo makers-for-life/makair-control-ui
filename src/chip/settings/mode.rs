@@ -44,6 +44,9 @@ pub struct SettingsMode {
     // Mode
     pub mode: VentilationMode,
 
+    // Group
+    pub group: SettingsModeGroupTab,
+
     // Commands
     pub inspiratory_time_minimum: usize,
     pub inspiratory_time_maximum: usize,
@@ -70,10 +73,33 @@ pub struct SettingsMode {
     pub alarm_threshold_leak: usize,
 }
 
+#[derive(Debug, PartialEq)]
+pub enum SettingsModeGroupTab {
+    General,
+    Alarms,
+}
+
+impl SettingsModeGroupTab {
+    pub fn from_index(index: usize) -> Option<Self> {
+        match index {
+            0 => Some(Self::General),
+            1 => Some(Self::Alarms),
+            _ => None,
+        }
+    }
+}
+
+impl Default for SettingsModeGroupTab {
+    fn default() -> Self {
+        Self::General
+    }
+}
+
 impl SettingsMode {
     pub fn new() -> SettingsMode {
         SettingsMode {
             mode: VentilationMode::default(),
+            group: SettingsModeGroupTab::default(),
             inspiratory_time_minimum: ControlSetting::TiMin.default(),
             inspiratory_time_maximum: ControlSetting::TiMax.default(),
             cycles_per_minute: ControlSetting::CyclesPerMinute.default(),

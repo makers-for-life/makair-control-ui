@@ -10,7 +10,7 @@ use conrod_core::{
 };
 use telemetry::structures::VentilationMode;
 
-use crate::chip::settings::mode::SettingsMode;
+use crate::chip::settings::mode::{SettingsMode, SettingsModeGroupTab};
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::locale::modes::{
@@ -75,21 +75,6 @@ struct Field {
     label_text: String,
     value_text: String,
     ids: FieldWidgetIds,
-}
-
-pub enum GroupTab {
-    General,
-    Alarms,
-}
-
-impl GroupTab {
-    pub fn from_index(index: usize) -> Option<Self> {
-        match index {
-            0 => Some(Self::General),
-            1 => Some(Self::Alarms),
-            _ => None,
-        }
-    }
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
@@ -228,24 +213,30 @@ fn group<'a>(master: &mut ControlWidget<'a>, config: &Config, parent_size: (f64,
         group_tab(
             master,
             config,
-            GroupTab::from_index(index).expect("invalid group tab index"),
+            SettingsModeGroupTab::from_index(index).expect("invalid group tab index"),
             index,
         );
     }
 }
 
-fn group_tab<'a>(master: &mut ControlWidget<'a>, config: &Config, tab: GroupTab, index: usize) {
-    // TODO: make it dynamic
-    let selected = index == 0;
-
+fn group_tab<'a>(
+    master: &mut ControlWidget<'a>,
+    config: &Config,
+    tab: SettingsModeGroupTab,
+    index: usize,
+) {
     // Acquire button colors
     let (color_button, color_text) = (
-        if selected {
+        if config.mode_settings.group == tab {
             GROUP_TAB_COLOR_SELECTED
         } else {
             GROUP_TAB_COLOR_DEFAULT
         },
-        if selected { color::BLACK } else { color::WHITE },
+        if config.mode_settings.group == tab {
+            color::BLACK
+        } else {
+            color::WHITE
+        },
     );
 
     // Create rectangle (selected if group tab matches ongoing group)
@@ -308,45 +299,80 @@ fn form<'a>(master: &mut ControlWidget<'a>, config: &Config, parent_size: (f64, 
 }
 
 fn form_pc_cmv<'a>(master: &mut ControlWidget<'a>, config: &Config) {
-    field_pressure_inspiratory(0, master, config);
-    field_pressure_expiratory(1, master, config);
-    field_duration_inspiration(2, master, config);
-    field_cycles_per_minute(3, master, config);
+    match config.mode_settings.group {
+        SettingsModeGroupTab::General => {
+            field_pressure_inspiratory(0, master, config);
+            field_pressure_expiratory(1, master, config);
+            field_duration_inspiration(2, master, config);
+            field_cycles_per_minute(3, master, config);
+        }
+        SettingsModeGroupTab::Alarms => {
+            // TODO
+        }
+    }
 }
 
 fn form_pc_ac<'a>(master: &mut ControlWidget<'a>, config: &Config) {
-    field_pressure_inspiratory(0, master, config);
-    field_pressure_expiratory(1, master, config);
-    field_duration_inspiration(2, master, config);
-    field_cycles_per_minute(3, master, config);
-    field_trigger_offset(4, master, config);
+    match config.mode_settings.group {
+        SettingsModeGroupTab::General => {
+            field_pressure_inspiratory(0, master, config);
+            field_pressure_expiratory(1, master, config);
+            field_duration_inspiration(2, master, config);
+            field_cycles_per_minute(3, master, config);
+            field_trigger_offset(4, master, config);
+        }
+        SettingsModeGroupTab::Alarms => {
+            // TODO
+        }
+    }
 }
 
 fn form_pc_vsai<'a>(master: &mut ControlWidget<'a>, config: &Config) {
-    field_pressure_inspiratory(0, master, config);
-    field_pressure_expiratory(1, master, config);
-    field_time_inspiratory_minimum(2, master, config);
-    field_time_inspiratory_maximum(3, master, config);
-    field_cycles_per_minute(4, master, config);
-    field_trigger_offset(5, master, config);
-    field_trigger_expiratory(6, master, config);
+    match config.mode_settings.group {
+        SettingsModeGroupTab::General => {
+            field_pressure_inspiratory(0, master, config);
+            field_pressure_expiratory(1, master, config);
+            field_time_inspiratory_minimum(2, master, config);
+            field_time_inspiratory_maximum(3, master, config);
+            field_cycles_per_minute(4, master, config);
+            field_trigger_offset(5, master, config);
+            field_trigger_expiratory(6, master, config);
+        }
+        SettingsModeGroupTab::Alarms => {
+            // TODO
+        }
+    }
 }
 
 fn form_vc_cmv<'a>(master: &mut ControlWidget<'a>, config: &Config) {
-    field_tidal_volume(0, master, config);
-    field_pressure_expiratory(1, master, config);
-    field_cycles_per_minute(2, master, config);
-    field_duration_plateau(3, master, config);
-    field_inspiratory_flow(4, master, config);
+    match config.mode_settings.group {
+        SettingsModeGroupTab::General => {
+            field_tidal_volume(0, master, config);
+            field_pressure_expiratory(1, master, config);
+            field_cycles_per_minute(2, master, config);
+            field_duration_plateau(3, master, config);
+            field_inspiratory_flow(4, master, config);
+        }
+        SettingsModeGroupTab::Alarms => {
+            // TODO
+        }
+    }
 }
 
 fn form_vc_ac<'a>(master: &mut ControlWidget<'a>, config: &Config) {
-    field_tidal_volume(0, master, config);
-    field_pressure_expiratory(1, master, config);
-    field_cycles_per_minute(2, master, config);
-    field_duration_plateau(3, master, config);
-    field_trigger_offset(4, master, config);
-    field_inspiratory_flow(5, master, config);
+    match config.mode_settings.group {
+        SettingsModeGroupTab::General => {
+            field_tidal_volume(0, master, config);
+            field_pressure_expiratory(1, master, config);
+            field_cycles_per_minute(2, master, config);
+            field_duration_plateau(3, master, config);
+            field_trigger_offset(4, master, config);
+            field_inspiratory_flow(5, master, config);
+        }
+        SettingsModeGroupTab::Alarms => {
+            // TODO
+        }
+    }
 }
 
 fn field_pressure_inspiratory<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config) {

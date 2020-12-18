@@ -111,12 +111,13 @@ impl DisplayRenderer {
     pub fn run_events(
         &mut self,
         interface: &mut Ui,
+        chip: &mut Chip,
         last_heartbeat: &Instant,
         tick_time: &Instant,
     ) -> (bool, bool, Vec<ChipSettingsEvent>) {
         // Run all UI events (defer to sub-handler)
         let (has_user_events, user_events) =
-            DisplayUIEvents::run(interface, &self.ids, &mut self.states);
+            DisplayUIEvents::run(interface, &self.ids, chip, &mut self.states);
 
         // Check if should run heartbeat? (ie. if it should be sent to the firmware)
         let mut has_heartbeat = false;

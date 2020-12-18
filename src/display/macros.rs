@@ -178,6 +178,46 @@ macro_rules! gen_ui_events_modal_settings_clicks {
     }
 }
 
+macro_rules! gen_ui_events_modal_local_clicks {
+    (
+        $interface:ident,
+        $ids:ident,
+        $has:ident,
+
+        $({
+            $name:expr,
+            $settings_chip:expr,
+            $settings_state:expr,
+
+            $({
+                $target_value:expr,
+                $field_key:tt,
+                $field_name:expr,
+                $widget_ids:expr
+            }),*
+        }),+,
+    ) => {
+        $(
+            if $settings_state == DisplayRendererSettingsState::Opened {
+                // Handle clicks on local elements
+                $(
+                    for _ in 0..DisplayUIEvents::count_clicks(
+                        $interface,
+                        &$widget_ids,
+                    ) {
+                        debug!("pressed the {} local {} field button once", $name, $field_name);
+
+                        // Force state to target value
+                        $settings_chip.$field_key = $target_value;
+
+                        $has = true;
+                    }
+                )*
+            }
+        )+
+    }
+}
+
 macro_rules! gen_render_mode_settings_field_ids {
     ($self:ident, $name:tt) => {
         paste! {
