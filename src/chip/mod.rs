@@ -24,6 +24,7 @@ use telemetry::structures::{
     TelemetryMessage, VentilationMode,
 };
 
+use crate::chip::settings::mode::SettingsModeGroupTab;
 use crate::config::environment::*;
 use crate::utilities::parse::parse_text_lines_to_single;
 use crate::utilities::units::{convert_cmh2o_to_mmh2o, convert_mmh2o_to_cmh2o, ConvertMode};
@@ -808,8 +809,12 @@ impl Chip {
 
             ControlSetting::VentilationMode => {
                 if let Ok(ventilation_mode) = VentilationMode::try_from(ack.value as u8) {
-                    self.settings.mode.mode = ventilation_mode;
                     self.last_machine_snapshot.ventilation_mode = ventilation_mode;
+
+                    if self.settings.mode.mode != ventilation_mode {
+                        self.settings.mode.mode = ventilation_mode;
+                        self.settings.mode.group = SettingsModeGroupTab::default();
+                    }
                 }
             }
 
