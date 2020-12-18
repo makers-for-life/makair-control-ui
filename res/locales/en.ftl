@@ -24,10 +24,10 @@ alarms-message-battery-low = Battery is low
 alarms-message-battery-very-low = Battery is very low
 alarms-message-power-cable-unplugged = Power cable is unplugged
 alarms-message-pressure-too-high = Pressure is too high
-alarms-message-inspiratory-minute-volume-low = Inspiratory minute volume is too low
-alarms-message-inspiratory-minute-volume-high = Inspiratory minute volume is too high
-alarms-message-expiratory-minute-volume-low = Expiratory minute volume is too low
-alarms-message-expiratory-minute-volume-high = Expiratory minute volume is too high
+alarms-message-inspiratory-minute-volume-low = Insp. minute volume is too low
+alarms-message-inspiratory-minute-volume-high = Insp. minute volume is too high
+alarms-message-expiratory-minute-volume-low = Exp. minute volume is too low
+alarms-message-expiratory-minute-volume-high = Exp. minute volume is too high
 alarms-message-unknown = Unknown alarm (check code)
 
 status-unit-stopped = Unit stopped
