@@ -24,6 +24,10 @@ alarms-message-battery-low = Batterie ist fast leer
 alarms-message-battery-very-low = Die Batterie ist sehr schwach
 alarms-message-power-cable-unplugged = Das Netzkabel ist nicht angeschlossen
 alarms-message-pressure-too-high = Der Druck ist zu hoch
+alarms-message-inspiratory-minute-volume-low = Das inspiratorische Minutenvolumen ist zu niedrig
+alarms-message-inspiratory-minute-volume-high = Das inspiratorische Minutenvolumen ist zu hoch
+alarms-message-expiratory-minute-volume-low = Das exspiratorische Minutenvolumen ist zu gering
+alarms-message-expiratory-minute-volume-high = Das exspiratorische Minutenvolumen ist zu hoch
 alarms-message-unknown = Unbekannter Alarm (Code prüfen)
 
 status-unit-stopped = Gerät gestoppt

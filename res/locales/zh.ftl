@@ -24,6 +24,10 @@ alarms-message-battery-low = 电池电量低
 alarms-message-battery-very-low = 电池电量很低
 alarms-message-power-cable-unplugged = 拔下电源线
 alarms-message-pressure-too-high = 压力太高
+alarms-message-inspiratory-minute-volume-low = 吸气分钟量太低
+alarms-message-inspiratory-minute-volume-high = 吸气分钟量过高
+alarms-message-expiratory-minute-volume-low = 呼气分钟音量太低
+alarms-message-expiratory-minute-volume-high = 呼气分钟量过高
 alarms-message-unknown = 未知警报（校验码）
 
 status-unit-stopped = 单位停止

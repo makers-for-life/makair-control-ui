@@ -24,6 +24,10 @@ alarms-message-battery-low = Baterijas līmenis ir zems
 alarms-message-battery-very-low = Baterijas līmenis ir ļoti zems
 alarms-message-power-cable-unplugged = Strāvas kabelis ir atvienots
 alarms-message-pressure-too-high = Spiediens ir pārāk augsts
+alarms-message-inspiratory-minute-volume-low = Ieelpošanas minūtes tilpums ir pārāk mazs
+alarms-message-inspiratory-minute-volume-high = Ieelpotās minūtes tilpums ir pārāk liels
+alarms-message-expiratory-minute-volume-low = Izejas minūtes skaļums ir pārāk mazs
+alarms-message-expiratory-minute-volume-high = Izejas minūtes skaļums ir pārāk liels
 alarms-message-unknown = Nezināms trauksme (pārbaudes kods)
 
 status-unit-stopped = Ierīce apstājās

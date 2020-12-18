@@ -24,6 +24,10 @@ alarms-message-battery-low = Заряд акумулятора низький
 alarms-message-battery-very-low = Батарея дуже низька
 alarms-message-power-cable-unplugged = Кабель живлення від'єднано
 alarms-message-pressure-too-high = Тиск занадто високий
+alarms-message-inspiratory-minute-volume-low = Хвилинний об'єм надиху занадто низький
+alarms-message-inspiratory-minute-volume-high = Хвилинний об'єм надихання занадто високий
+alarms-message-expiratory-minute-volume-low = Хвилинний обсяг на видиху занадто низький
+alarms-message-expiratory-minute-volume-high = Хвилинний обсяг на видиху занадто високий
 alarms-message-unknown = Невідомий сигнал тривоги
 
 status-unit-stopped = Зупинився

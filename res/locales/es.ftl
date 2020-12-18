@@ -24,6 +24,10 @@ alarms-message-battery-low = La batería está baja
 alarms-message-battery-very-low = La batería está muy baja
 alarms-message-power-cable-unplugged = El cable de alimentación está desenchufado
 alarms-message-pressure-too-high = La presión es demasiado alta
+alarms-message-inspiratory-minute-volume-low = El volumen minuto inspiratorio es demasiado bajo
+alarms-message-inspiratory-minute-volume-high = El volumen minuto inspiratorio es demasiado alto
+alarms-message-expiratory-minute-volume-low = El volumen minuto espiratorio es demasiado bajo
+alarms-message-expiratory-minute-volume-high = El volumen minuto espiratorio es demasiado alto
 alarms-message-unknown = Alarma desconocida (código de verificación)
 
 status-unit-stopped = Unidad detenida

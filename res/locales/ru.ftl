@@ -24,6 +24,10 @@ alarms-message-battery-low = Батарея разряжена
 alarms-message-battery-very-low = Батарея очень разряжена
 alarms-message-power-cable-unplugged = Кабель питания отключен
 alarms-message-pressure-too-high = Давление слишком высокое
+alarms-message-inspiratory-minute-volume-low = Минутный объем вдоха слишком низкий
+alarms-message-inspiratory-minute-volume-high = Минутный объем вдоха слишком велик
+alarms-message-expiratory-minute-volume-low = Минутный объем выдоха слишком мал
+alarms-message-expiratory-minute-volume-high = Минутный объем выдоха слишком велик
 alarms-message-unknown = Неизвестный сигнал тревоги
 
 status-unit-stopped = Остановлен
