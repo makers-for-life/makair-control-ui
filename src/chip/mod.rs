@@ -377,18 +377,12 @@ impl Chip {
 
         // Compute a value that is capped in case of an overflow, as this could result in a panic \
         //   if the telemetry channel sends unusual values.
-        let mut net_flow = inspiratory_flow as i32 - expiratory_flow as i32;
-
-        if net_flow > i16::max_value() as i32 {
-            net_flow = i16::max_value() as i32;
-        } else if net_flow < i16::min_value() as i32 {
-            net_flow = i16::min_value() as i32;
-        }
+        let net_flow = gen_cap_number_substract!(inspiratory_flow, expiratory_flow, i16, i32);
 
         gen_add_data_generic!(
             self,
             data_flow,
-            net_flow as i16,
+            net_flow,
             snapshot.systick,
             clean_expired_data_flow_from_time
         );

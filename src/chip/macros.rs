@@ -50,8 +50,14 @@ macro_rules! gen_add_data_generic {
         //   as this is sufficient to ensure that the plot progresses in time smoothly, and that \
         //   the curves look nice on screen)
         let (new_point, may_store) = if let Some(last_value_inner) = $self.$container.get(0) {
-            let new_point = last_value_inner.1
-                - ((last_value_inner.1 - $value) / TELEMETRY_POINTS_LOW_PASS_DEGREE);
+            // Compute a value that is capped in case of an overflow, as this could result \
+            //   in a panic in some rare cases.
+            let new_point = gen_cap_number_substract!(
+                last_value_inner.1,
+                ((last_value_inner.1 - $value) / TELEMETRY_POINTS_LOW_PASS_DEGREE),
+                i16,
+                i32
+            );
 
             let may_store = (snapshot_time - last_value_inner.0)
                 >= chrono::Duration::milliseconds(DATA_STORE_EVERY_MILLISECONDS);
@@ -87,4 +93,18 @@ macro_rules! gen_clean_expired_data_from_time_generic {
             }
         }
     };
+}
+
+macro_rules! gen_cap_number_substract {
+    ($value_left:expr, $value_right:expr, $return_type:ty, $internal_type:ty) => {{
+        let mut result = $value_left as $internal_type - $value_right as $internal_type;
+
+        if result > <$return_type>::max_value() as $internal_type {
+            result = <$return_type>::max_value() as $internal_type;
+        } else if result < <$return_type>::min_value() as $internal_type {
+            result = <$return_type>::min_value() as $internal_type;
+        }
+
+        result as $return_type
+    }};
 }
