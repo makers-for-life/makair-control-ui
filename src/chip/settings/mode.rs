@@ -40,8 +40,8 @@ pub enum SettingsModeEvent {
     HighInspiratoryMinuteVolumeAlarm(SettingActionRange),
     LowExpiratoryMinuteVolumeAlarm(SettingActionRange),
     HighExpiratoryMinuteVolumeAlarm(SettingActionRange),
-    LowExpiratoryRateAlarm(SettingActionRange),
-    HighExpiratoryRateAlarm(SettingActionRange),
+    LowRespiratoryRateAlarm(SettingActionRange),
+    HighRespiratoryRateAlarm(SettingActionRange),
     LowTidalVolumeAlarm(SettingActionRange),
     HighTidalVolumeAlarm(SettingActionRange),
     LeakAlarm(SettingActionRange),
@@ -128,9 +128,9 @@ impl SettingsMode {
                 ControlSetting::LowExpiratoryMinuteVolumeAlarmThreshold.default(),
             alarm_threshold_high_expiratory_minute_volume:
                 ControlSetting::HighExpiratoryMinuteVolumeAlarmThreshold.default(),
-            alarm_threshold_low_expiratory_rate: ControlSetting::LowExpiratoryRateAlarmThreshold
+            alarm_threshold_low_expiratory_rate: ControlSetting::LowRespiratoryRateAlarmThreshold
                 .default(),
-            alarm_threshold_high_expiratory_rate: ControlSetting::HighExpiratoryRateAlarmThreshold
+            alarm_threshold_high_expiratory_rate: ControlSetting::HighRespiratoryRateAlarmThreshold
                 .default(),
             alarm_threshold_low_tidal_volume: ControlSetting::LowTidalVolumeAlarmThreshold
                 .default(),
@@ -181,10 +181,10 @@ impl SettingsMode {
             SettingsModeEvent::HighExpiratoryMinuteVolumeAlarm(action) => {
                 self.set_high_expiratory_minute_volume_alarm(action)
             }
-            SettingsModeEvent::LowExpiratoryRateAlarm(action) => {
+            SettingsModeEvent::LowRespiratoryRateAlarm(action) => {
                 self.set_low_expiratory_rate_alarm(action)
             }
-            SettingsModeEvent::HighExpiratoryRateAlarm(action) => {
+            SettingsModeEvent::HighRespiratoryRateAlarm(action) => {
                 self.set_high_expiratory_rate_alarm(action)
             }
             SettingsModeEvent::LowTidalVolumeAlarm(action) => {
@@ -359,7 +359,7 @@ impl SettingsMode {
 
     fn set_low_expiratory_rate_alarm(&self, action: SettingActionRange) -> ControlMessage {
         gen_set_new_value!(
-            ControlSetting::LowExpiratoryRateAlarmThreshold,
+            ControlSetting::LowRespiratoryRateAlarmThreshold,
             action,
             self.alarm_threshold_low_expiratory_rate,
             CYCLES_PER_MINUTE_STEP
@@ -368,7 +368,7 @@ impl SettingsMode {
 
     fn set_high_expiratory_rate_alarm(&self, action: SettingActionRange) -> ControlMessage {
         gen_set_new_value!(
-            ControlSetting::HighExpiratoryRateAlarmThreshold,
+            ControlSetting::HighRespiratoryRateAlarmThreshold,
             action,
             self.alarm_threshold_high_expiratory_rate,
             CYCLES_PER_MINUTE_STEP

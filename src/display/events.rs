@@ -741,7 +741,7 @@ impl DisplayUIEvents {
                 },
 
                 {
-                    SettingsModeEvent::LowExpiratoryRateAlarm(SettingActionRange::More),
+                    SettingsModeEvent::LowRespiratoryRateAlarm(SettingActionRange::More),
                     "alarm low expiratory rate more",
 
                     [
@@ -753,7 +753,7 @@ impl DisplayUIEvents {
                 },
 
                 {
-                    SettingsModeEvent::LowExpiratoryRateAlarm(SettingActionRange::Less),
+                    SettingsModeEvent::LowRespiratoryRateAlarm(SettingActionRange::Less),
                     "alarm low expiratory rate less",
 
                     [
@@ -765,7 +765,7 @@ impl DisplayUIEvents {
                 },
 
                 {
-                    SettingsModeEvent::HighExpiratoryRateAlarm(SettingActionRange::More),
+                    SettingsModeEvent::HighRespiratoryRateAlarm(SettingActionRange::More),
                     "alarm high expiratory rate more",
 
                     [
@@ -777,7 +777,7 @@ impl DisplayUIEvents {
                 },
 
                 {
-                    SettingsModeEvent::HighExpiratoryRateAlarm(SettingActionRange::Less),
+                    SettingsModeEvent::HighRespiratoryRateAlarm(SettingActionRange::Less),
                     "alarm high expiratory rate less",
 
                     [

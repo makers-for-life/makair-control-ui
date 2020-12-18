@@ -865,13 +865,13 @@ impl Chip {
                     .high_expiratory_minute_volume_alarm_threshold = Some(ack.value as _);
             }
 
-            ControlSetting::LowExpiratoryRateAlarmThreshold => {
+            ControlSetting::LowRespiratoryRateAlarmThreshold => {
                 self.settings.mode.alarm_threshold_low_expiratory_rate = ack.value as usize;
                 self.last_machine_snapshot
                     .low_expiratory_rate_alarm_threshold = Some(ack.value as _);
             }
 
-            ControlSetting::HighExpiratoryRateAlarmThreshold => {
+            ControlSetting::HighRespiratoryRateAlarmThreshold => {
                 self.settings.mode.alarm_threshold_high_expiratory_rate = ack.value as usize;
                 self.last_machine_snapshot
                     .high_expiratory_rate_alarm_threshold = Some(ack.value as _);
