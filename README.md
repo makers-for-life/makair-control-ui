@@ -63,7 +63,7 @@ Take note of the serial port used as an input on your Control UI board, and call
 You may also play a pre-recorded file, by passing it as an input (this is handy while developing; example records are available in the telemetry library repository):
 
 1. Pull the telemetry library (in the parent directory): `git pull https://github.com/makers-for-life/makair-telemetry.git`
-2. Run an example (from the Control UI directory): `./makair-control --input=../makair-telemetry/records/short_with_errors` (where `--input` is an UNIX file path)
+2. Run an example (from the Control UI directory): `./makair-control --input=../makair-telemetry/records/v2/short` (where `--input` is an UNIX file path)
 
 ### Available options
 
