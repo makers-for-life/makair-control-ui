@@ -42,6 +42,8 @@ mode-class-vc = Volumen
 mode-type-cmv = CMV
 mode-type-ac = AC
 mode-type-vsai = VSAI
+mode-group-general = Allgemeines
+mode-group-alarms = Alarm
 
 modal-run-status = Status der Beatmungseinheit
 modal-run-status-started = Laufen - aufhören?

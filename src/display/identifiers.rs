@@ -189,7 +189,14 @@ widget_ids!(pub struct Ids {
   mode_settings_selector_texts_pc_vsai,
   mode_settings_selector_texts_vc_cmv,
   mode_settings_selector_texts_vc_ac,
+  mode_settings_group_wrapper,
+  mode_settings_content_wrapper,
   mode_settings_form_wrapper,
+
+  mode_settings_group_tab_general_button,
+  mode_settings_group_tab_general_text,
+  mode_settings_group_tab_alarms_button,
+  mode_settings_group_tab_alarms_text,
 
   mode_settings_field_pressure_inspiratory_text,
   mode_settings_field_pressure_inspiratory_value,

@@ -42,6 +42,8 @@ mode-class-vc = 卷
 mode-type-cmv = CMV
 mode-type-ac = AC
 mode-type-vsai = VSAI
+mode-group-general = 一般
+mode-group-alarms = 警报器
 
 modal-run-status = 呼吸机状态
 modal-run-status-started = 跑步-停下来吗？

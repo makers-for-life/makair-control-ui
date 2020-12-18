@@ -827,6 +827,7 @@ impl<'a> Screen<'a> {
                 container_parent: self.ids.modal_container,
                 container_widget: self.ids.mode_settings_container,
                 selector_wrapper: self.ids.mode_settings_selector_wrapper,
+
                 selector_tabs: [
                     self.ids.mode_settings_selector_tab_pc_cmv,
                     self.ids.mode_settings_selector_tab_pc_ac,
@@ -834,6 +835,7 @@ impl<'a> Screen<'a> {
                     self.ids.mode_settings_selector_tab_vc_cmv,
                     self.ids.mode_settings_selector_tab_vc_ac,
                 ],
+
                 selector_texts: [
                     self.ids.mode_settings_selector_texts_pc_cmv,
                     self.ids.mode_settings_selector_texts_pc_ac,
@@ -841,7 +843,20 @@ impl<'a> Screen<'a> {
                     self.ids.mode_settings_selector_texts_vc_cmv,
                     self.ids.mode_settings_selector_texts_vc_ac,
                 ],
+
+                group_wrapper: self.ids.mode_settings_group_wrapper,
+                content_wrapper: self.ids.mode_settings_content_wrapper,
                 form_wrapper: self.ids.mode_settings_form_wrapper,
+
+                group_tab_buttons: [
+                    self.ids.mode_settings_group_tab_general_button,
+                    self.ids.mode_settings_group_tab_alarms_button,
+                ],
+
+                group_tab_texts: [
+                    self.ids.mode_settings_group_tab_general_text,
+                    self.ids.mode_settings_group_tab_alarms_text,
+                ],
 
                 field_pressure_inspiratory_ids: gen_render_mode_settings_field_ids!(
                     self,

@@ -42,6 +42,8 @@ mode-class-vc = Гучність
 mode-type-cmv = CMV
 mode-type-ac = AC
 mode-type-vsai = VSAI
+mode-group-general = Загальні
+mode-group-alarms = Сигналізація
 
 modal-run-status = Статус блоку вентилятора
 modal-run-status-started = Біг - зупинка?

@@ -42,6 +42,8 @@ mode-class-vc = Volume
 mode-type-cmv = CMV
 mode-type-ac = AC
 mode-type-vsai = VSAI
+mode-group-general = General
+mode-group-alarms = Alarms
 
 modal-run-status = Ventilator unit status
 modal-run-status-started = Running — Tap to stop

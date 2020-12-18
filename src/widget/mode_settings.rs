@@ -14,7 +14,8 @@ use crate::chip::settings::mode::SettingsMode;
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::locale::modes::{
-    class_to_locale as mode_class_to_locale, kind_to_locale as mode_kind_to_locale,
+    class_to_locale as mode_class_to_locale, group_tab_to_locale as mode_group_tab_to_locale,
+    kind_to_locale as mode_kind_to_locale,
 };
 use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::APP_I18N;
@@ -22,6 +23,9 @@ use crate::APP_I18N;
 const SELECTOR_BORDER_COLOR: Color = Color::Rgba(81.0 / 255.0, 81.0 / 255.0, 81.0 / 255.0, 1.0);
 const SELECTOR_COLOR_DEFAULT: Color = Color::Rgba(0.0, 0.0, 0.0, 0.975);
 const SELECTOR_COLOR_SELECTED: Color = Color::Rgba(26.0 / 255.0, 26.0 / 255.0, 26.0 / 255.0, 1.0);
+
+const GROUP_TAB_COLOR_DEFAULT: Color = Color::Rgba(48.0 / 255.0, 48.0 / 255.0, 48.0 / 255.0, 1.0);
+const GROUP_TAB_COLOR_SELECTED: Color = Color::Rgba(1.0, 1.0, 1.0, 1.0);
 
 type FieldWidgetIds = (
     WidgetId,
@@ -59,13 +63,33 @@ pub struct Config<'a> {
     pub field_trigger_inspiratory_ids: FieldWidgetIds,
     pub field_trigger_expiratory_ids: FieldWidgetIds,
 
+    pub group_wrapper: WidgetId,
+    pub content_wrapper: WidgetId,
     pub form_wrapper: WidgetId,
+
+    pub group_tab_buttons: [WidgetId; MODE_SETTINGS_GROUP_TABS_COUNT],
+    pub group_tab_texts: [WidgetId; MODE_SETTINGS_GROUP_TABS_COUNT],
 }
 
 struct Field {
     label_text: String,
     value_text: String,
     ids: FieldWidgetIds,
+}
+
+pub enum GroupTab {
+    General,
+    Alarms,
+}
+
+impl GroupTab {
+    pub fn from_index(index: usize) -> Option<Self> {
+        match index {
+            0 => Some(Self::General),
+            1 => Some(Self::Alarms),
+            _ => None,
+        }
+    }
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
@@ -86,7 +110,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
     // Append contents
     selector(master, &config);
-    form(master, &config);
+    content(master, &config);
 
     0 as _
 }
@@ -164,19 +188,112 @@ fn selector<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     }
 }
 
-fn form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+fn content<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+    let size = (
+        config.width - (2.0 * MODE_SETTINGS_MODAL_PADDING),
+        config.height - MODE_SETTINGS_SELECTOR_TABS_HEIGHT - MODE_SETTINGS_MODAL_PADDING,
+    );
+
+    // Create content wrapper
+    gen_widget_container!(
+        master,
+        container_id: config.content_wrapper,
+        color: color::TRANSPARENT,
+        width: size.0,
+        height: size.1,
+        positions: top_left_with_margins_on[
+            config.container_widget, MODE_SETTINGS_SELECTOR_TABS_HEIGHT, 0.0,
+        ]
+    );
+
+    group(master, config, size);
+    form(master, config, size);
+}
+
+fn group<'a>(master: &mut ControlWidget<'a>, config: &Config, parent_size: (f64, f64)) {
+    // Create group wrapper
+    gen_widget_container!(
+        master,
+        container_id: config.group_wrapper,
+        color: color::TRANSPARENT,
+        width: MODE_SETTINGS_GROUP_TABS_WIDTH,
+        height: parent_size.1,
+        positions: top_left_of[
+            config.content_wrapper,
+        ]
+    );
+
+    // Render all group tabs
+    for index in 0..MODE_SETTINGS_GROUP_TABS_COUNT {
+        group_tab(
+            master,
+            config,
+            GroupTab::from_index(index).expect("invalid group tab index"),
+            index,
+        );
+    }
+}
+
+fn group_tab<'a>(master: &mut ControlWidget<'a>, config: &Config, tab: GroupTab, index: usize) {
+    // TODO: make it dynamic
+    let selected = index == 0;
+
+    // Acquire button colors
+    let (color_button, color_text) = (
+        if selected {
+            GROUP_TAB_COLOR_SELECTED
+        } else {
+            GROUP_TAB_COLOR_DEFAULT
+        },
+        if selected { color::BLACK } else { color::WHITE },
+    );
+
+    // Create rectangle (selected if group tab matches ongoing group)
+    widget::rounded_rectangle::RoundedRectangle::fill_with(
+        [
+            MODE_SETTINGS_GROUP_TABS_WIDTH,
+            MODE_SETTINGS_GROUP_TABS_HEIGHT,
+        ],
+        MODE_SETTINGS_GROUP_TABS_BORDER_RADIUS,
+        color_button,
+    )
+    .top_left_with_margins_on(
+        config.group_wrapper,
+        index as f64 * (MODE_SETTINGS_GROUP_TABS_HEIGHT + MODE_SETTINGS_GROUP_TABS_MARGIN_TOP),
+        0.0,
+    )
+    .set(config.group_tab_buttons[index], &mut master.ui);
+
+    // Generate text style
+    let mut text_style = widget::text::Style::default();
+
+    text_style.font_id = Some(Some(master.fonts.bold));
+    text_style.color = Some(color_text);
+    text_style.font_size = Some(14);
+
+    // Append text
+    widget::Text::new(&mode_group_tab_to_locale(tab))
+        .with_style(text_style)
+        .middle_of(config.group_tab_buttons[index])
+        .y_relative(2.0)
+        .set(config.group_tab_texts[index], &mut master.ui);
+}
+
+fn form<'a>(master: &mut ControlWidget<'a>, config: &Config, parent_size: (f64, f64)) {
     // TODO: option becomes eg. blue when it is changed and not saved
-    // TODO: implement alarm settings (might need to make some space for them)
+
+    // Compute total tabs width
+    let tabs_total_width = MODE_SETTINGS_GROUP_TABS_WIDTH + MODE_SETTINGS_GROUP_TABS_MARGIN_RIGHT;
 
     // Create form wrapper
     gen_widget_container!(
         master,
         container_id: config.form_wrapper,
         color: color::TRANSPARENT,
-        width: config.width - (2.0 * MODE_SETTINGS_MODAL_PADDING),
-        height: config.height - MODE_SETTINGS_SELECTOR_TABS_HEIGHT - MODE_SETTINGS_MODAL_PADDING,
-        positions: top_left_with_margins_on[
-            config.container_widget, MODE_SETTINGS_SELECTOR_TABS_HEIGHT, 0.0,
+        width: parent_size.0 - tabs_total_width,
+        height: parent_size.1,
+        positions: top_right_of[
+            config.content_wrapper,
         ]
     );
 

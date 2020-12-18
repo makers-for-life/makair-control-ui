@@ -42,6 +42,8 @@ mode-class-vc = Skaļums
 mode-type-cmv = CMV
 mode-type-ac = AC
 mode-type-vsai = VSAI
+mode-group-general = Vispārīgi
+mode-group-alarms = Signāli
 
 modal-run-status = Ventilatora bloka statuss
 modal-run-status-started = Skriet - apstāties?

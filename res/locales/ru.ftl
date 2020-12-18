@@ -42,6 +42,8 @@ mode-class-vc = Объем
 mode-type-cmv = CMV
 mode-type-ac = AC
 mode-type-vsai = VSAI
+mode-group-general = Генеральный
+mode-group-alarms = Будильники
 
 modal-run-status = Состояние вентиляционной установки
 modal-run-status-started = Бег - Стоп?
