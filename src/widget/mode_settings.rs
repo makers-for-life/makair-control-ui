@@ -63,6 +63,16 @@ pub struct Config<'a> {
     pub field_trigger_inspiratory_ids: FieldWidgetIds,
     pub field_trigger_expiratory_ids: FieldWidgetIds,
 
+    pub field_alarm_threshold_low_inspiratory_minute_volume_ids: FieldWidgetIds,
+    pub field_alarm_threshold_high_inspiratory_minute_volume_ids: FieldWidgetIds,
+    pub field_alarm_threshold_low_expiratory_minute_volume_ids: FieldWidgetIds,
+    pub field_alarm_threshold_high_expiratory_minute_volume_ids: FieldWidgetIds,
+    pub field_alarm_threshold_low_expiratory_rate_ids: FieldWidgetIds,
+    pub field_alarm_threshold_high_expiratory_rate_ids: FieldWidgetIds,
+    pub field_alarm_threshold_low_tidal_volume_ids: FieldWidgetIds,
+    pub field_alarm_threshold_high_tidal_volume_ids: FieldWidgetIds,
+    pub field_alarm_threshold_leak_ids: FieldWidgetIds,
+
     pub group_wrapper: WidgetId,
     pub content_wrapper: WidgetId,
     pub form_wrapper: WidgetId,
@@ -307,7 +317,10 @@ fn form_pc_cmv<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             field_cycles_per_minute(3, master, config);
         }
         SettingsModeGroupTab::Alarms => {
-            // TODO
+            field_alarm_threshold_low_inspiratory_minute_volume(0, master, config);
+            field_alarm_threshold_high_inspiratory_minute_volume(1, master, config);
+            field_alarm_threshold_low_expiratory_minute_volume(2, master, config);
+            field_alarm_threshold_high_expiratory_minute_volume(3, master, config);
         }
     }
 }
@@ -322,7 +335,14 @@ fn form_pc_ac<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             field_trigger_offset(4, master, config);
         }
         SettingsModeGroupTab::Alarms => {
-            // TODO
+            field_alarm_threshold_low_inspiratory_minute_volume(0, master, config);
+            field_alarm_threshold_high_inspiratory_minute_volume(1, master, config);
+            field_alarm_threshold_low_expiratory_minute_volume(2, master, config);
+            field_alarm_threshold_high_expiratory_minute_volume(3, master, config);
+            field_alarm_threshold_low_expiratory_rate(4, master, config);
+            field_alarm_threshold_high_expiratory_rate(5, master, config);
+            field_alarm_threshold_low_tidal_volume(6, master, config);
+            field_alarm_threshold_high_tidal_volume(7, master, config);
         }
     }
 }
@@ -339,7 +359,14 @@ fn form_pc_vsai<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             field_trigger_expiratory(6, master, config);
         }
         SettingsModeGroupTab::Alarms => {
-            // TODO
+            field_alarm_threshold_low_inspiratory_minute_volume(0, master, config);
+            field_alarm_threshold_high_inspiratory_minute_volume(1, master, config);
+            field_alarm_threshold_low_expiratory_minute_volume(2, master, config);
+            field_alarm_threshold_high_expiratory_minute_volume(3, master, config);
+            field_alarm_threshold_low_expiratory_rate(4, master, config);
+            field_alarm_threshold_high_expiratory_rate(5, master, config);
+            field_alarm_threshold_low_tidal_volume(6, master, config);
+            field_alarm_threshold_high_tidal_volume(7, master, config);
         }
     }
 }
@@ -354,7 +381,7 @@ fn form_vc_cmv<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             field_inspiratory_flow(4, master, config);
         }
         SettingsModeGroupTab::Alarms => {
-            // TODO
+            field_alarm_threshold_leak(0, master, config);
         }
     }
 }
@@ -370,7 +397,13 @@ fn form_vc_ac<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             field_inspiratory_flow(5, master, config);
         }
         SettingsModeGroupTab::Alarms => {
-            // TODO
+            field_alarm_threshold_leak(0, master, config);
+            field_alarm_threshold_low_inspiratory_minute_volume(1, master, config);
+            field_alarm_threshold_high_inspiratory_minute_volume(2, master, config);
+            field_alarm_threshold_low_expiratory_minute_volume(3, master, config);
+            field_alarm_threshold_high_expiratory_minute_volume(4, master, config);
+            field_alarm_threshold_low_expiratory_rate(5, master, config);
+            field_alarm_threshold_high_expiratory_rate(6, master, config);
         }
     }
 }
@@ -586,6 +619,199 @@ fn field_trigger_expiratory<'a>(index: usize, master: &mut ControlWidget<'a>, co
             label_text: APP_I18N.t("modal-mode-trigger-expiratory"),
             value_text: format!("{}%", config.mode_settings.trigger_expiratory_flow),
             ids: config.field_trigger_expiratory_ids,
+        },
+    )
+}
+
+fn field_alarm_threshold_low_inspiratory_minute_volume<'a>(
+    index: usize,
+    master: &mut ControlWidget<'a>,
+    config: &Config,
+) {
+    draw_field(
+        index,
+        master,
+        config,
+        Field {
+            label_text: APP_I18N.t("modal-mode-alarm-low-inspiratory-minute-volume"),
+            value_text: format!(
+                "{} {}",
+                config
+                    .mode_settings
+                    .alarm_threshold_low_inspiratory_minute_volume,
+                APP_I18N.t("telemetry-unit-lpm")
+            ),
+            ids: config.field_alarm_threshold_low_inspiratory_minute_volume_ids,
+        },
+    )
+}
+
+fn field_alarm_threshold_high_inspiratory_minute_volume<'a>(
+    index: usize,
+    master: &mut ControlWidget<'a>,
+    config: &Config,
+) {
+    draw_field(
+        index,
+        master,
+        config,
+        Field {
+            label_text: APP_I18N.t("modal-mode-alarm-high-inspiratory-minute-volume"),
+            value_text: format!(
+                "{} {}",
+                config
+                    .mode_settings
+                    .alarm_threshold_high_inspiratory_minute_volume,
+                APP_I18N.t("telemetry-unit-lpm")
+            ),
+            ids: config.field_alarm_threshold_high_inspiratory_minute_volume_ids,
+        },
+    )
+}
+
+fn field_alarm_threshold_low_expiratory_minute_volume<'a>(
+    index: usize,
+    master: &mut ControlWidget<'a>,
+    config: &Config,
+) {
+    draw_field(
+        index,
+        master,
+        config,
+        Field {
+            label_text: APP_I18N.t("modal-mode-alarm-low-expiratory-minute-volume"),
+            value_text: format!(
+                "{} {}",
+                config
+                    .mode_settings
+                    .alarm_threshold_low_expiratory_minute_volume,
+                APP_I18N.t("telemetry-unit-lpm")
+            ),
+            ids: config.field_alarm_threshold_low_expiratory_minute_volume_ids,
+        },
+    )
+}
+
+fn field_alarm_threshold_high_expiratory_minute_volume<'a>(
+    index: usize,
+    master: &mut ControlWidget<'a>,
+    config: &Config,
+) {
+    draw_field(
+        index,
+        master,
+        config,
+        Field {
+            label_text: APP_I18N.t("modal-mode-alarm-high-expiratory-minute-volume"),
+            value_text: format!(
+                "{} {}",
+                config
+                    .mode_settings
+                    .alarm_threshold_high_expiratory_minute_volume,
+                APP_I18N.t("telemetry-unit-lpm")
+            ),
+            ids: config.field_alarm_threshold_high_expiratory_minute_volume_ids,
+        },
+    )
+}
+
+fn field_alarm_threshold_low_expiratory_rate<'a>(
+    index: usize,
+    master: &mut ControlWidget<'a>,
+    config: &Config,
+) {
+    draw_field(
+        index,
+        master,
+        config,
+        Field {
+            label_text: APP_I18N.t("modal-mode-alarm-low-expiratory-rate"),
+            value_text: format!(
+                "{}{}",
+                config.mode_settings.alarm_threshold_low_expiratory_rate,
+                APP_I18N.t("telemetry-unit-per-minute")
+            ),
+            ids: config.field_alarm_threshold_low_expiratory_rate_ids,
+        },
+    )
+}
+
+fn field_alarm_threshold_high_expiratory_rate<'a>(
+    index: usize,
+    master: &mut ControlWidget<'a>,
+    config: &Config,
+) {
+    draw_field(
+        index,
+        master,
+        config,
+        Field {
+            label_text: APP_I18N.t("modal-mode-alarm-high-expiratory-rate"),
+            value_text: format!(
+                "{}{}",
+                config.mode_settings.alarm_threshold_high_expiratory_rate,
+                APP_I18N.t("telemetry-unit-per-minute")
+            ),
+            ids: config.field_alarm_threshold_high_expiratory_rate_ids,
+        },
+    )
+}
+
+fn field_alarm_threshold_low_tidal_volume<'a>(
+    index: usize,
+    master: &mut ControlWidget<'a>,
+    config: &Config,
+) {
+    draw_field(
+        index,
+        master,
+        config,
+        Field {
+            label_text: APP_I18N.t("modal-mode-alarm-low-tidal-volume"),
+            value_text: format!(
+                "{} {}",
+                config.mode_settings.alarm_threshold_low_tidal_volume,
+                APP_I18N.t("telemetry-unit-milliliters")
+            ),
+            ids: config.field_alarm_threshold_low_tidal_volume_ids,
+        },
+    )
+}
+
+fn field_alarm_threshold_high_tidal_volume<'a>(
+    index: usize,
+    master: &mut ControlWidget<'a>,
+    config: &Config,
+) {
+    draw_field(
+        index,
+        master,
+        config,
+        Field {
+            label_text: APP_I18N.t("modal-mode-alarm-high-tidal-volume"),
+            value_text: format!(
+                "{} {}",
+                config.mode_settings.alarm_threshold_high_tidal_volume,
+                APP_I18N.t("telemetry-unit-milliliters")
+            ),
+            ids: config.field_alarm_threshold_high_tidal_volume_ids,
+        },
+    )
+}
+
+fn field_alarm_threshold_leak<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config) {
+    draw_field(
+        index,
+        master,
+        config,
+        Field {
+            label_text: APP_I18N.t("modal-mode-alarm-leak"),
+            value_text: format!(
+                "{} {}",
+                config.mode_settings.alarm_threshold_leak,
+                APP_I18N.t("telemetry-unit-mlpm")
+            ),
+            ids: config.field_alarm_threshold_leak_ids,
         },
     )
 }

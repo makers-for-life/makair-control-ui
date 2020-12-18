@@ -858,6 +858,43 @@ impl<'a> Screen<'a> {
                     self.ids.mode_settings_group_tab_alarms_text,
                 ],
 
+                field_alarm_threshold_low_inspiratory_minute_volume_ids: gen_render_mode_settings_alarm_ids!(
+                    self,
+                    threshold_low_inspiratory_minute_volume
+                ),
+                field_alarm_threshold_high_inspiratory_minute_volume_ids: gen_render_mode_settings_alarm_ids!(
+                    self,
+                    threshold_high_inspiratory_minute_volume
+                ),
+                field_alarm_threshold_low_expiratory_minute_volume_ids: gen_render_mode_settings_alarm_ids!(
+                    self,
+                    threshold_low_expiratory_minute_volume
+                ),
+                field_alarm_threshold_high_expiratory_minute_volume_ids: gen_render_mode_settings_alarm_ids!(
+                    self,
+                    threshold_high_expiratory_minute_volume
+                ),
+                field_alarm_threshold_low_expiratory_rate_ids: gen_render_mode_settings_alarm_ids!(
+                    self,
+                    threshold_low_expiratory_rate
+                ),
+                field_alarm_threshold_high_expiratory_rate_ids: gen_render_mode_settings_alarm_ids!(
+                    self,
+                    threshold_high_expiratory_rate
+                ),
+                field_alarm_threshold_low_tidal_volume_ids: gen_render_mode_settings_alarm_ids!(
+                    self,
+                    threshold_low_tidal_volume
+                ),
+                field_alarm_threshold_high_tidal_volume_ids: gen_render_mode_settings_alarm_ids!(
+                    self,
+                    threshold_high_tidal_volume
+                ),
+                field_alarm_threshold_leak_ids: gen_render_mode_settings_alarm_ids!(
+                    self,
+                    threshold_leak
+                ),
+
                 field_pressure_inspiratory_ids: gen_render_mode_settings_field_ids!(
                     self,
                     pressure_inspiratory

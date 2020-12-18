@@ -233,3 +233,19 @@ macro_rules! gen_render_mode_settings_field_ids {
         }
     };
 }
+
+macro_rules! gen_render_mode_settings_alarm_ids {
+    ($self:ident, $name:tt) => {
+        paste! {
+            (
+                $self.ids.[<mode_settings_alarm_ $name _text>],
+                $self.ids.[<mode_settings_alarm_ $name _value_wrapper>],
+                $self.ids.[<mode_settings_alarm_ $name _value>],
+                $self.ids.[<mode_settings_alarm_ $name _more>],
+                $self.ids.[<mode_settings_alarm_ $name _more_text>],
+                $self.ids.[<mode_settings_alarm_ $name _less>],
+                $self.ids.[<mode_settings_alarm_ $name _less_text>],
+            )
+        }
+    };
+}

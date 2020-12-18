@@ -112,16 +112,23 @@ impl SettingsMode {
             flow_inspiration: ControlSetting::TargetInspiratoryFlow.default(),
             duration_inspiration: ControlSetting::InspiratoryDuration.default(),
             duration_plateau: ControlSetting::PlateauDuration.default(),
-            // TODO: implement alarm commands defaults (all below)
-            alarm_threshold_low_inspiratory_minute_volume: 0,
-            alarm_threshold_high_inspiratory_minute_volume: 0,
-            alarm_threshold_low_expiratory_minute_volume: 0,
-            alarm_threshold_high_expiratory_minute_volume: 0,
-            alarm_threshold_low_expiratory_rate: 0,
-            alarm_threshold_high_expiratory_rate: 0,
-            alarm_threshold_low_tidal_volume: 0,
-            alarm_threshold_high_tidal_volume: 0,
-            alarm_threshold_leak: 0,
+            alarm_threshold_low_inspiratory_minute_volume:
+                ControlSetting::LowInspiratoryMinuteVolumeAlarmThreshold.default(),
+            alarm_threshold_high_inspiratory_minute_volume:
+                ControlSetting::HighInspiratoryMinuteVolumeAlarmThreshold.default(),
+            alarm_threshold_low_expiratory_minute_volume:
+                ControlSetting::LowExpiratoryMinuteVolumeAlarmThreshold.default(),
+            alarm_threshold_high_expiratory_minute_volume:
+                ControlSetting::HighExpiratoryMinuteVolumeAlarmThreshold.default(),
+            alarm_threshold_low_expiratory_rate: ControlSetting::LowExpiratoryRateAlarmThreshold
+                .default(),
+            alarm_threshold_high_expiratory_rate: ControlSetting::HighExpiratoryRateAlarmThreshold
+                .default(),
+            alarm_threshold_low_tidal_volume: ControlSetting::LowTidalVolumeAlarmThreshold
+                .default(),
+            alarm_threshold_high_tidal_volume: ControlSetting::HighTidalVolumeAlarmThreshold
+                .default(),
+            alarm_threshold_leak: ControlSetting::LeakAlarmThreshold.default(),
         }
     }
 
