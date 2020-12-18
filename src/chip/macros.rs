@@ -52,9 +52,11 @@ macro_rules! gen_add_data_generic {
         let (new_point, may_store) = if let Some(last_value_inner) = $self.$container.get(0) {
             // Compute a value that is capped in case of an overflow, as this could result \
             //   in a panic in some rare cases.
+            let low_pass_point = gen_cap_number_substract!(last_value_inner.1, $value, i16, i32);
+
             let new_point = gen_cap_number_substract!(
                 last_value_inner.1,
-                ((last_value_inner.1 - $value) / TELEMETRY_POINTS_LOW_PASS_DEGREE),
+                (low_pass_point / TELEMETRY_POINTS_LOW_PASS_DEGREE),
                 i16,
                 i32
             );
