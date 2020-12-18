@@ -16,6 +16,10 @@ pub fn description_to_locale(description: AlarmCodeDescription) -> String {
         AlarmCodeDescription::BatteryVeryLow => "battery-very-low",
         AlarmCodeDescription::PowerCableUnplugged => "power-cable-unplugged",
         AlarmCodeDescription::PressureTooHigh => "pressure-too-high",
+        AlarmCodeDescription::InspiratoryMinuteVolumeLow => "inspiratory-minute-volume-low",
+        AlarmCodeDescription::InspiratoryMinuteVolumeHigh => "inspiratory-minute-volume-high",
+        AlarmCodeDescription::ExpiratoryMinuteVolumeLow => "expiratory-minute-volume-low",
+        AlarmCodeDescription::ExpiratoryMinuteVolumeHigh => "expiratory-minute-volume-high",
         AlarmCodeDescription::Unknown(_) => "unknown",
     };
 
