@@ -642,6 +642,222 @@ impl DisplayUIEvents {
                     ],
 
                     None
+                },
+
+                {
+                    SettingsModeEvent::LowInspiratoryMinuteVolumeAlarm(SettingActionRange::More),
+                    "alarm low inspiratory minute volume more",
+
+                    [
+                        ids.mode_settings_alarm_threshold_low_inspiratory_minute_volume_more,
+                        ids.mode_settings_alarm_threshold_low_inspiratory_minute_volume_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::LowInspiratoryMinuteVolumeAlarm(SettingActionRange::Less),
+                    "alarm low inspiratory minute volume less",
+
+                    [
+                        ids.mode_settings_alarm_threshold_low_inspiratory_minute_volume_less,
+                        ids.mode_settings_alarm_threshold_low_inspiratory_minute_volume_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::HighInspiratoryMinuteVolumeAlarm(SettingActionRange::More),
+                    "alarm high inspiratory minute volume more",
+
+                    [
+                        ids.mode_settings_alarm_threshold_high_inspiratory_minute_volume_more,
+                        ids.mode_settings_alarm_threshold_high_inspiratory_minute_volume_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::HighInspiratoryMinuteVolumeAlarm(SettingActionRange::Less),
+                    "alarm high inspiratory minute volume less",
+
+                    [
+                        ids.mode_settings_alarm_threshold_high_inspiratory_minute_volume_less,
+                        ids.mode_settings_alarm_threshold_high_inspiratory_minute_volume_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::LowExpiratoryMinuteVolumeAlarm(SettingActionRange::More),
+                    "alarm low expiratory minute volume more",
+
+                    [
+                        ids.mode_settings_alarm_threshold_low_expiratory_minute_volume_more,
+                        ids.mode_settings_alarm_threshold_low_expiratory_minute_volume_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::LowExpiratoryMinuteVolumeAlarm(SettingActionRange::Less),
+                    "alarm low expiratory minute volume less",
+
+                    [
+                        ids.mode_settings_alarm_threshold_low_expiratory_minute_volume_less,
+                        ids.mode_settings_alarm_threshold_low_expiratory_minute_volume_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::HighExpiratoryMinuteVolumeAlarm(SettingActionRange::More),
+                    "alarm high expiratory minute volume more",
+
+                    [
+                        ids.mode_settings_alarm_threshold_high_expiratory_minute_volume_more,
+                        ids.mode_settings_alarm_threshold_high_expiratory_minute_volume_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::HighExpiratoryMinuteVolumeAlarm(SettingActionRange::Less),
+                    "alarm high expiratory minute volume less",
+
+                    [
+                        ids.mode_settings_alarm_threshold_high_expiratory_minute_volume_less,
+                        ids.mode_settings_alarm_threshold_high_expiratory_minute_volume_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::LowExpiratoryRateAlarm(SettingActionRange::More),
+                    "alarm low expiratory rate more",
+
+                    [
+                        ids.mode_settings_alarm_threshold_low_expiratory_rate_more,
+                        ids.mode_settings_alarm_threshold_low_expiratory_rate_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::LowExpiratoryRateAlarm(SettingActionRange::Less),
+                    "alarm low expiratory rate less",
+
+                    [
+                        ids.mode_settings_alarm_threshold_low_expiratory_rate_less,
+                        ids.mode_settings_alarm_threshold_low_expiratory_rate_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::HighExpiratoryRateAlarm(SettingActionRange::More),
+                    "alarm high expiratory rate more",
+
+                    [
+                        ids.mode_settings_alarm_threshold_high_expiratory_rate_more,
+                        ids.mode_settings_alarm_threshold_high_expiratory_rate_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::HighExpiratoryRateAlarm(SettingActionRange::Less),
+                    "alarm high expiratory rate less",
+
+                    [
+                        ids.mode_settings_alarm_threshold_high_expiratory_rate_less,
+                        ids.mode_settings_alarm_threshold_high_expiratory_rate_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::LowTidalVolumeAlarm(SettingActionRange::More),
+                    "alarm low tidal volume more",
+
+                    [
+                        ids.mode_settings_alarm_threshold_low_tidal_volume_more,
+                        ids.mode_settings_alarm_threshold_low_tidal_volume_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::LowTidalVolumeAlarm(SettingActionRange::Less),
+                    "alarm low tidal volume less",
+
+                    [
+                        ids.mode_settings_alarm_threshold_low_tidal_volume_less,
+                        ids.mode_settings_alarm_threshold_low_tidal_volume_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::HighTidalVolumeAlarm(SettingActionRange::More),
+                    "alarm high tidal volume more",
+
+                    [
+                        ids.mode_settings_alarm_threshold_high_tidal_volume_more,
+                        ids.mode_settings_alarm_threshold_high_tidal_volume_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::HighTidalVolumeAlarm(SettingActionRange::Less),
+                    "alarm high tidal volume less",
+
+                    [
+                        ids.mode_settings_alarm_threshold_high_tidal_volume_less,
+                        ids.mode_settings_alarm_threshold_high_tidal_volume_less_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::LeakAlarm(SettingActionRange::More),
+                    "alarm leak more",
+
+                    [
+                        ids.mode_settings_alarm_threshold_leak_more,
+                        ids.mode_settings_alarm_threshold_leak_more_text,
+                    ],
+
+                    None
+                },
+
+                {
+                    SettingsModeEvent::LeakAlarm(SettingActionRange::Less),
+                    "alarm leak less",
+
+                    [
+                        ids.mode_settings_alarm_threshold_leak_less,
+                        ids.mode_settings_alarm_threshold_leak_less_text,
+                    ],
+
+                    None
                 }
             },
 

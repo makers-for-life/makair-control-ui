@@ -36,7 +36,15 @@ pub enum SettingsModeEvent {
     FlowInspiration(SettingActionRange),
     DurationInspiration(SettingActionRange),
     DurationPlateau(SettingActionRange),
-    // TODO: implement alarm commands
+    LowInspiratoryMinuteVolumeAlarm(SettingActionRange),
+    HighInspiratoryMinuteVolumeAlarm(SettingActionRange),
+    LowExpiratoryMinuteVolumeAlarm(SettingActionRange),
+    HighExpiratoryMinuteVolumeAlarm(SettingActionRange),
+    LowExpiratoryRateAlarm(SettingActionRange),
+    HighExpiratoryRateAlarm(SettingActionRange),
+    LowTidalVolumeAlarm(SettingActionRange),
+    HighTidalVolumeAlarm(SettingActionRange),
+    LeakAlarm(SettingActionRange),
 }
 
 #[derive(Debug)]
@@ -161,6 +169,31 @@ impl SettingsMode {
             SettingsModeEvent::FlowInspiration(action) => self.set_flow_inspiration(action),
             SettingsModeEvent::DurationInspiration(action) => self.set_duration_inspiration(action),
             SettingsModeEvent::DurationPlateau(action) => self.set_duration_plateau(action),
+            SettingsModeEvent::LowInspiratoryMinuteVolumeAlarm(action) => {
+                self.set_low_inspiratory_minute_volume_alarm(action)
+            }
+            SettingsModeEvent::HighInspiratoryMinuteVolumeAlarm(action) => {
+                self.set_high_inspiratory_minute_volume_alarm(action)
+            }
+            SettingsModeEvent::LowExpiratoryMinuteVolumeAlarm(action) => {
+                self.set_low_expiratory_minute_volume_alarm(action)
+            }
+            SettingsModeEvent::HighExpiratoryMinuteVolumeAlarm(action) => {
+                self.set_high_expiratory_minute_volume_alarm(action)
+            }
+            SettingsModeEvent::LowExpiratoryRateAlarm(action) => {
+                self.set_low_expiratory_rate_alarm(action)
+            }
+            SettingsModeEvent::HighExpiratoryRateAlarm(action) => {
+                self.set_high_expiratory_rate_alarm(action)
+            }
+            SettingsModeEvent::LowTidalVolumeAlarm(action) => {
+                self.set_low_tidal_volume_alarm(action)
+            }
+            SettingsModeEvent::HighTidalVolumeAlarm(action) => {
+                self.set_high_tidal_volume_alarm(action)
+            }
+            SettingsModeEvent::LeakAlarm(action) => self.set_leak_alarm(action),
         }
     }
 
@@ -276,6 +309,96 @@ impl SettingsMode {
             action,
             self.duration_plateau,
             DURATION_STEP
+        )
+    }
+
+    fn set_low_inspiratory_minute_volume_alarm(
+        &self,
+        action: SettingActionRange,
+    ) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::LowInspiratoryMinuteVolumeAlarmThreshold,
+            action,
+            self.alarm_threshold_low_inspiratory_minute_volume,
+            TRIGGER_FLOW_STEP
+        )
+    }
+
+    fn set_high_inspiratory_minute_volume_alarm(
+        &self,
+        action: SettingActionRange,
+    ) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::HighInspiratoryMinuteVolumeAlarmThreshold,
+            action,
+            self.alarm_threshold_high_inspiratory_minute_volume,
+            TRIGGER_FLOW_STEP
+        )
+    }
+
+    fn set_low_expiratory_minute_volume_alarm(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::LowExpiratoryMinuteVolumeAlarmThreshold,
+            action,
+            self.alarm_threshold_low_expiratory_minute_volume,
+            TRIGGER_FLOW_STEP
+        )
+    }
+
+    fn set_high_expiratory_minute_volume_alarm(
+        &self,
+        action: SettingActionRange,
+    ) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::HighExpiratoryMinuteVolumeAlarmThreshold,
+            action,
+            self.alarm_threshold_high_expiratory_minute_volume,
+            TRIGGER_FLOW_STEP
+        )
+    }
+
+    fn set_low_expiratory_rate_alarm(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::LowExpiratoryRateAlarmThreshold,
+            action,
+            self.alarm_threshold_low_expiratory_rate,
+            CYCLES_PER_MINUTE_STEP
+        )
+    }
+
+    fn set_high_expiratory_rate_alarm(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::HighExpiratoryRateAlarmThreshold,
+            action,
+            self.alarm_threshold_high_expiratory_rate,
+            CYCLES_PER_MINUTE_STEP
+        )
+    }
+
+    fn set_low_tidal_volume_alarm(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::LowTidalVolumeAlarmThreshold,
+            action,
+            self.alarm_threshold_low_tidal_volume,
+            VOLUME_STEP
+        )
+    }
+
+    fn set_high_tidal_volume_alarm(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::HighTidalVolumeAlarmThreshold,
+            action,
+            self.alarm_threshold_high_tidal_volume,
+            VOLUME_STEP
+        )
+    }
+
+    fn set_leak_alarm(&self, action: SettingActionRange) -> ControlMessage {
+        gen_set_new_value!(
+            ControlSetting::LeakAlarmThreshold,
+            action,
+            self.alarm_threshold_leak,
+            VOLUME_STEP
         )
     }
 }
