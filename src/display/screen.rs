@@ -874,13 +874,13 @@ impl<'a> Screen<'a> {
                     self,
                     threshold_high_expiratory_minute_volume
                 ),
-                field_alarm_threshold_low_expiratory_rate_ids: gen_render_mode_settings_alarm_ids!(
+                field_alarm_threshold_low_respiratory_rate_ids: gen_render_mode_settings_alarm_ids!(
                     self,
-                    threshold_low_expiratory_rate
+                    threshold_low_respiratory_rate
                 ),
-                field_alarm_threshold_high_expiratory_rate_ids: gen_render_mode_settings_alarm_ids!(
+                field_alarm_threshold_high_respiratory_rate_ids: gen_render_mode_settings_alarm_ids!(
                     self,
-                    threshold_high_expiratory_rate
+                    threshold_high_respiratory_rate
                 ),
                 field_alarm_threshold_low_tidal_volume_ids: gen_render_mode_settings_alarm_ids!(
                     self,

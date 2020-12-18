@@ -82,8 +82,8 @@ struct ChipSettingsUpdate {
     high_inspiratory_minute_volume_alarm_threshold: Option<u8>,
     low_expiratory_minute_volume_alarm_threshold: Option<u8>,
     high_expiratory_minute_volume_alarm_threshold: Option<u8>,
-    low_expiratory_rate_alarm_threshold: Option<u8>,
-    high_expiratory_rate_alarm_threshold: Option<u8>,
+    low_respiratory_rate_alarm_threshold: Option<u8>,
+    high_respiratory_rate_alarm_threshold: Option<u8>,
     low_tidal_volume_alarm_threshold: Option<u16>,
     high_tidal_volume_alarm_threshold: Option<u16>,
     leak_alarm_threshold: Option<u16>,
@@ -543,8 +543,8 @@ impl Chip {
                 high_inspiratory_minute_volume,
                 low_expiratory_minute_volume,
                 high_expiratory_minute_volume,
-                low_expiratory_rate,
-                high_expiratory_rate,
+                low_respiratory_rate,
+                high_respiratory_rate,
                 low_tidal_volume,
                 high_tidal_volume,
                 leak
@@ -584,8 +584,8 @@ impl Chip {
                 .low_expiratory_minute_volume_alarm_threshold,
             high_expiratory_minute_volume_alarm_threshold: snapshot
                 .high_expiratory_minute_volume_alarm_threshold,
-            low_expiratory_rate_alarm_threshold: snapshot.low_expiratory_rate_alarm_threshold,
-            high_expiratory_rate_alarm_threshold: snapshot.high_expiratory_rate_alarm_threshold,
+            low_respiratory_rate_alarm_threshold: snapshot.low_respiratory_rate_alarm_threshold,
+            high_respiratory_rate_alarm_threshold: snapshot.high_respiratory_rate_alarm_threshold,
             low_tidal_volume_alarm_threshold: snapshot.low_tidal_volume_alarm_threshold,
             high_tidal_volume_alarm_threshold: snapshot.high_tidal_volume_alarm_threshold,
             leak_alarm_threshold: snapshot.leak_alarm_threshold,
@@ -684,8 +684,8 @@ impl Chip {
                 .low_expiratory_minute_volume_alarm_threshold,
             high_expiratory_minute_volume_alarm_threshold: message
                 .high_expiratory_minute_volume_alarm_threshold,
-            low_expiratory_rate_alarm_threshold: message.low_expiratory_rate_alarm_threshold,
-            high_expiratory_rate_alarm_threshold: message.high_expiratory_rate_alarm_threshold,
+            low_respiratory_rate_alarm_threshold: message.low_respiratory_rate_alarm_threshold,
+            high_respiratory_rate_alarm_threshold: message.high_respiratory_rate_alarm_threshold,
             low_tidal_volume_alarm_threshold: message.low_tidal_volume_alarm_threshold,
             high_tidal_volume_alarm_threshold: message.high_tidal_volume_alarm_threshold,
             leak_alarm_threshold: message.leak_alarm_threshold,
@@ -715,8 +715,8 @@ impl Chip {
                 high_inspiratory_minute_volume_alarm_threshold,
                 low_expiratory_minute_volume_alarm_threshold,
                 high_expiratory_minute_volume_alarm_threshold,
-                low_expiratory_rate_alarm_threshold,
-                high_expiratory_rate_alarm_threshold
+                low_respiratory_rate_alarm_threshold,
+                high_respiratory_rate_alarm_threshold
             ]
         );
 
@@ -866,15 +866,15 @@ impl Chip {
             }
 
             ControlSetting::LowRespiratoryRateAlarmThreshold => {
-                self.settings.mode.alarm_threshold_low_expiratory_rate = ack.value as usize;
+                self.settings.mode.alarm_threshold_low_respiratory_rate = ack.value as usize;
                 self.last_machine_snapshot
-                    .low_expiratory_rate_alarm_threshold = Some(ack.value as _);
+                    .low_respiratory_rate_alarm_threshold = Some(ack.value as _);
             }
 
             ControlSetting::HighRespiratoryRateAlarmThreshold => {
-                self.settings.mode.alarm_threshold_high_expiratory_rate = ack.value as usize;
+                self.settings.mode.alarm_threshold_high_respiratory_rate = ack.value as usize;
                 self.last_machine_snapshot
-                    .high_expiratory_rate_alarm_threshold = Some(ack.value as _);
+                    .high_respiratory_rate_alarm_threshold = Some(ack.value as _);
             }
 
             ControlSetting::TargetTidalVolume => {

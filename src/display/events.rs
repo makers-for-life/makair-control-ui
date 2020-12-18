@@ -745,8 +745,8 @@ impl DisplayUIEvents {
                     "alarm low expiratory rate more",
 
                     [
-                        ids.mode_settings_alarm_threshold_low_expiratory_rate_more,
-                        ids.mode_settings_alarm_threshold_low_expiratory_rate_more_text,
+                        ids.mode_settings_alarm_threshold_low_respiratory_rate_more,
+                        ids.mode_settings_alarm_threshold_low_respiratory_rate_more_text,
                     ],
 
                     None
@@ -757,8 +757,8 @@ impl DisplayUIEvents {
                     "alarm low expiratory rate less",
 
                     [
-                        ids.mode_settings_alarm_threshold_low_expiratory_rate_less,
-                        ids.mode_settings_alarm_threshold_low_expiratory_rate_less_text,
+                        ids.mode_settings_alarm_threshold_low_respiratory_rate_less,
+                        ids.mode_settings_alarm_threshold_low_respiratory_rate_less_text,
                     ],
 
                     None
@@ -769,8 +769,8 @@ impl DisplayUIEvents {
                     "alarm high expiratory rate more",
 
                     [
-                        ids.mode_settings_alarm_threshold_high_expiratory_rate_more,
-                        ids.mode_settings_alarm_threshold_high_expiratory_rate_more_text,
+                        ids.mode_settings_alarm_threshold_high_respiratory_rate_more,
+                        ids.mode_settings_alarm_threshold_high_respiratory_rate_more_text,
                     ],
 
                     None
@@ -781,8 +781,8 @@ impl DisplayUIEvents {
                     "alarm high expiratory rate less",
 
                     [
-                        ids.mode_settings_alarm_threshold_high_expiratory_rate_less,
-                        ids.mode_settings_alarm_threshold_high_expiratory_rate_less_text,
+                        ids.mode_settings_alarm_threshold_high_respiratory_rate_less,
+                        ids.mode_settings_alarm_threshold_high_respiratory_rate_less_text,
                     ],
 
                     None

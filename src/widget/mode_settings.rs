@@ -67,8 +67,8 @@ pub struct Config<'a> {
     pub field_alarm_threshold_high_inspiratory_minute_volume_ids: FieldWidgetIds,
     pub field_alarm_threshold_low_expiratory_minute_volume_ids: FieldWidgetIds,
     pub field_alarm_threshold_high_expiratory_minute_volume_ids: FieldWidgetIds,
-    pub field_alarm_threshold_low_expiratory_rate_ids: FieldWidgetIds,
-    pub field_alarm_threshold_high_expiratory_rate_ids: FieldWidgetIds,
+    pub field_alarm_threshold_low_respiratory_rate_ids: FieldWidgetIds,
+    pub field_alarm_threshold_high_respiratory_rate_ids: FieldWidgetIds,
     pub field_alarm_threshold_low_tidal_volume_ids: FieldWidgetIds,
     pub field_alarm_threshold_high_tidal_volume_ids: FieldWidgetIds,
     pub field_alarm_threshold_leak_ids: FieldWidgetIds,
@@ -339,8 +339,8 @@ fn form_pc_ac<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             field_alarm_threshold_high_inspiratory_minute_volume(1, master, config);
             field_alarm_threshold_low_expiratory_minute_volume(2, master, config);
             field_alarm_threshold_high_expiratory_minute_volume(3, master, config);
-            field_alarm_threshold_low_expiratory_rate(4, master, config);
-            field_alarm_threshold_high_expiratory_rate(5, master, config);
+            field_alarm_threshold_low_respiratory_rate(4, master, config);
+            field_alarm_threshold_high_respiratory_rate(5, master, config);
             field_alarm_threshold_low_tidal_volume(6, master, config);
             field_alarm_threshold_high_tidal_volume(7, master, config);
         }
@@ -363,8 +363,8 @@ fn form_pc_vsai<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             field_alarm_threshold_high_inspiratory_minute_volume(1, master, config);
             field_alarm_threshold_low_expiratory_minute_volume(2, master, config);
             field_alarm_threshold_high_expiratory_minute_volume(3, master, config);
-            field_alarm_threshold_low_expiratory_rate(4, master, config);
-            field_alarm_threshold_high_expiratory_rate(5, master, config);
+            field_alarm_threshold_low_respiratory_rate(4, master, config);
+            field_alarm_threshold_high_respiratory_rate(5, master, config);
             field_alarm_threshold_low_tidal_volume(6, master, config);
             field_alarm_threshold_high_tidal_volume(7, master, config);
         }
@@ -402,8 +402,8 @@ fn form_vc_ac<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             field_alarm_threshold_high_inspiratory_minute_volume(2, master, config);
             field_alarm_threshold_low_expiratory_minute_volume(3, master, config);
             field_alarm_threshold_high_expiratory_minute_volume(4, master, config);
-            field_alarm_threshold_low_expiratory_rate(5, master, config);
-            field_alarm_threshold_high_expiratory_rate(6, master, config);
+            field_alarm_threshold_low_respiratory_rate(5, master, config);
+            field_alarm_threshold_high_respiratory_rate(6, master, config);
         }
     }
 }
@@ -715,7 +715,7 @@ fn field_alarm_threshold_high_expiratory_minute_volume<'a>(
     )
 }
 
-fn field_alarm_threshold_low_expiratory_rate<'a>(
+fn field_alarm_threshold_low_respiratory_rate<'a>(
     index: usize,
     master: &mut ControlWidget<'a>,
     config: &Config,
@@ -725,18 +725,18 @@ fn field_alarm_threshold_low_expiratory_rate<'a>(
         master,
         config,
         Field {
-            label_text: APP_I18N.t("modal-mode-alarm-low-expiratory-rate"),
+            label_text: APP_I18N.t("modal-mode-alarm-low-respiratory-rate"),
             value_text: format!(
                 "{}{}",
-                config.mode_settings.alarm_threshold_low_expiratory_rate,
+                config.mode_settings.alarm_threshold_low_respiratory_rate,
                 APP_I18N.t("telemetry-unit-per-minute")
             ),
-            ids: config.field_alarm_threshold_low_expiratory_rate_ids,
+            ids: config.field_alarm_threshold_low_respiratory_rate_ids,
         },
     )
 }
 
-fn field_alarm_threshold_high_expiratory_rate<'a>(
+fn field_alarm_threshold_high_respiratory_rate<'a>(
     index: usize,
     master: &mut ControlWidget<'a>,
     config: &Config,
@@ -746,13 +746,13 @@ fn field_alarm_threshold_high_expiratory_rate<'a>(
         master,
         config,
         Field {
-            label_text: APP_I18N.t("modal-mode-alarm-high-expiratory-rate"),
+            label_text: APP_I18N.t("modal-mode-alarm-high-respiratory-rate"),
             value_text: format!(
                 "{}{}",
-                config.mode_settings.alarm_threshold_high_expiratory_rate,
+                config.mode_settings.alarm_threshold_high_respiratory_rate,
                 APP_I18N.t("telemetry-unit-per-minute")
             ),
-            ids: config.field_alarm_threshold_high_expiratory_rate_ids,
+            ids: config.field_alarm_threshold_high_respiratory_rate_ids,
         },
     )
 }
