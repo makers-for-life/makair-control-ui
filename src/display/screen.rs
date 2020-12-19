@@ -13,8 +13,8 @@ use telemetry::structures::{
 };
 
 use crate::chip::settings::{
-    cycles::SettingsCycles, expiration_term::SettingsExpirationTerm, mode::SettingsMode,
-    run::SettingsRun, snooze::SettingsSnooze, ChipSettings,
+    cycles::SettingsCycles, mode::SettingsMode, run::SettingsRun, snooze::SettingsSnooze,
+    ChipSettings,
 };
 use crate::chip::ChipError;
 use crate::config::environment::*;
@@ -33,7 +33,6 @@ pub struct ScreenModalsOpen {
     snooze: bool,
     advanced: bool,
     mode: bool,
-    expiration_term: bool,
     cycles: bool,
 }
 
@@ -53,7 +52,6 @@ impl ScreenModalsOpen {
             snooze: states.snooze_settings.is_open(),
             advanced: states.advanced_settings.is_open(),
             mode: states.mode_settings.is_open(),
-            expiration_term: states.expiration_term_settings.is_open(),
             cycles: states.cycles_settings.is_open(),
         }
     }
@@ -268,7 +266,7 @@ impl<'a> Screen<'a> {
         self.render_graph(graph_data);
 
         // Render bottom elements
-        self.render_telemetry(&settings.mode, &settings.expiration_term);
+        self.render_telemetry(&settings.mode);
 
         // Render modals (as needed)
         self.render_settings(settings, modals);
@@ -361,11 +359,7 @@ impl<'a> Screen<'a> {
             }));
     }
 
-    pub fn render_telemetry(
-        &mut self,
-        mode: &'a SettingsMode,
-        expiration_term: &'a SettingsExpirationTerm,
-    ) {
+    pub fn render_telemetry(&mut self, mode: &'a SettingsMode) {
         let machine_snapshot = self.machine_snapshot.unwrap();
 
         // Initialize the pressure graph widget
@@ -660,7 +654,8 @@ impl<'a> Screen<'a> {
                 unit: format!(
                     "{} {}",
                     APP_I18N.t("telemetry-label-ratio-plateau"),
-                    if let Some(plateau_duration) = expiration_term.get_plateau_duration() {
+                    // TODO: refactor this
+                    if let Some(plateau_duration) = Some(0) {
                         format!(
                             "{}{}",
                             plateau_duration,
@@ -714,8 +709,6 @@ impl<'a> Screen<'a> {
             self.render_advanced_settings();
         } else if modals.mode {
             self.render_mode_settings(&settings.mode);
-        } else if modals.expiration_term {
-            self.render_expiration_term_settings(&settings.expiration_term);
         } else if modals.cycles {
             self.render_cycles_settings(&settings.cycles);
         }
@@ -923,39 +916,6 @@ impl<'a> Screen<'a> {
                     trigger_expiratory
                 ),
             }));
-    }
-
-    fn render_expiration_term_settings(&mut self, settings: &'a SettingsExpirationTerm) {
-        self.render_modal(
-            EXPIRATION_TERM_SETTINGS_MODAL_WIDTH,
-            EXPIRATION_TERM_SETTINGS_MODAL_HEIGTH,
-            Some(EXPIRATION_TERM_SETTINGS_MODAL_PADDING),
-        );
-
-        self.widgets
-            .render(ControlWidgetType::ExpirationTermSettings(
-                expiration_term_settings::Config {
-                    width: EXPIRATION_TERM_SETTINGS_MODAL_WIDTH,
-                    height: EXPIRATION_TERM_SETTINGS_MODAL_HEIGTH
-                        - MODAL_VALIDATE_BUTTON_HEIGHT
-                        - (EXPIRATION_TERM_SETTINGS_MODAL_PADDING * 2.0),
-                    expiration_term_settings: settings,
-
-                    expiration_term_container_parent: self.ids.modal_container,
-                    expiration_term_container_widget: self.ids.expiration_term_container,
-                    expiration_term_more_button_widget: self.ids.expiration_term_more_button,
-                    expiration_term_more_button_text_widget: self
-                        .ids
-                        .expiration_term_more_button_text,
-                    expiration_term_less_button_widget: self.ids.expiration_term_less_button,
-                    expiration_term_less_button_text_widget: self
-                        .ids
-                        .expiration_term_less_button_text,
-                    expiration_term_text_widget: self.ids.expiration_term_text,
-                    expiration_term_value_wrapper_widget: self.ids.expiration_term_value_wrapper,
-                    expiration_term_value_widget: self.ids.expiration_term_value,
-                },
-            ));
     }
 
     fn render_cycles_settings(&mut self, settings: &'a SettingsCycles) {

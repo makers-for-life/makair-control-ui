@@ -38,6 +38,5 @@ gen_widget_impls!(
     AdvancedSettings -> advanced_settings['a],
     ModeSettings -> mode_settings['a],
     ModeOverview -> mode_overview['a],
-    ExpirationTermSettings -> expiration_term_settings['a],
     CyclesSettings -> cycles_settings['a],
 );

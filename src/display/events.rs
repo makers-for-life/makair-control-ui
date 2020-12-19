@@ -9,7 +9,6 @@ use glium::glutin::{Event, EventsLoop, KeyboardInput, WindowEvent};
 use crate::chip::{
     settings::{
         cycles::SettingsCyclesEvent,
-        expiration_term::SettingsExpirationTermEvent,
         mode::{SettingsModeEvent, SettingsModeGroupTab},
         run::SettingsRunEvent,
         snooze::SettingsSnoozeEvent,
@@ -817,34 +816,6 @@ impl DisplayUIEvents {
                     [
                         ids.mode_settings_alarm_threshold_leak_less,
                         ids.mode_settings_alarm_threshold_leak_less_text,
-                    ],
-
-                    None
-                }
-            },
-
-            {
-                "expiratory term", ExpirationTerm, states.expiration_term_settings,
-
-                {
-                    SettingsExpirationTermEvent::ExpiratoryTerm(SettingActionRange::Less),
-                    "term less",
-
-                    [
-                        ids.expiration_term_less_button,
-                        ids.expiration_term_less_button_text,
-                    ],
-
-                    None
-                },
-
-                {
-                    SettingsExpirationTermEvent::ExpiratoryTerm(SettingActionRange::More),
-                    "term more",
-
-                    [
-                        ids.expiration_term_more_button,
-                        ids.expiration_term_more_button_text,
                     ],
 
                     None

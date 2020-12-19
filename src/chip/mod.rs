@@ -64,7 +64,6 @@ struct ChipSettingsUpdate {
     plateau_command: Option<u8>,
     peep_command: Option<u8>,
     cpm_command: Option<u8>,
-    expiratory_term: Option<u8>,
     trigger_offset: Option<u8>,
     alarm_snoozed: Option<bool>,
     ventilation_mode: Option<VentilationMode>,
@@ -105,19 +104,15 @@ pub struct Chip {
 
 impl Chip {
     pub fn new(lora_sender: Option<Sender<TelemetryMessage>>) -> Chip {
-        let last_machine_snapshot = MachineStateSnapshot::default();
-        let cycles_per_minute = last_machine_snapshot.cpm_command as usize;
-
-        // Notice: initialize the data pressure storage w/ a safety gap of 1 second of data points
         Chip {
             boot_time: None,
             last_tick: 0,
             data_pressure: ChipDataPressure::with_capacity(GRAPH_NUMBER_OF_POINTS),
             data_flow: ChipDataFlow::with_capacity(GRAPH_NUMBER_OF_POINTS),
-            last_machine_snapshot,
+            last_machine_snapshot: MachineStateSnapshot::default(),
             last_data_snapshot: None,
             ongoing_alarms: HashMap::new(),
-            settings: ChipSettings::new(cycles_per_minute),
+            settings: ChipSettings::new(),
             state: ChipState::WaitingData(Instant::now()),
             lora_tx: lora_sender,
             channel_for_settings: None,
@@ -449,10 +444,6 @@ impl Chip {
 
     fn update_settings_from_parameters(&mut self, update: ChipSettingsUpdate) {
         // Update expiratory term values
-        if let Some(expiratory_term) = update.expiratory_term {
-            self.settings.expiration_term.expiratory_term = expiratory_term as usize;
-        }
-
         if let Some(ti_min) = update.ti_min {
             self.settings.mode.inspiratory_time_minimum = ti_min as usize;
         }
@@ -478,7 +469,6 @@ impl Chip {
         if let Some(cpm_command) = update.cpm_command {
             self.settings.mode.cycles_per_minute = cpm_command as usize;
             self.settings.cycles.cycles_per_minute = cpm_command as usize;
-            self.settings.expiration_term.cycles_per_minute = cpm_command as usize;
         }
 
         // Update pressure values
@@ -550,7 +540,6 @@ impl Chip {
             plateau_command: Some(snapshot.plateau_command),
             peep_command: Some(snapshot.peep_command),
             cpm_command: Some(snapshot.cpm_command),
-            expiratory_term: Some(snapshot.expiratory_term),
             trigger_offset: Some(snapshot.trigger_offset),
             alarm_snoozed: snapshot.alarm_snoozed,
             ventilation_mode: Some(snapshot.ventilation_mode),
@@ -649,7 +638,6 @@ impl Chip {
             plateau_command: message.plateau_command,
             peep_command: message.peep_command,
             cpm_command: message.cpm_command,
-            expiratory_term: message.expiratory_term,
             trigger_offset: message.trigger_offset,
             alarm_snoozed: message.alarm_snoozed,
             ventilation_mode: Some(message.ventilation_mode),
@@ -766,7 +754,6 @@ impl Chip {
             }
 
             ControlSetting::ExpiratoryTerm => {
-                self.settings.expiration_term.expiratory_term = ack.value as usize;
                 self.last_machine_snapshot.expiratory_term = ack.value as u8;
             }
 

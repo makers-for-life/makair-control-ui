@@ -57,8 +57,6 @@ modal-snooze-alarms = Allarmi
 modal-snooze-alarms-active = Segnali acustici abilitati
 modal-snooze-alarms-inactive = Segnali acustici disabilitati
 
-modal-expiration-term-expiratory-term = Termine di scadenza:
-
 modal-cycles-cycles-per-minute = Cicli al minuto:
 
 modal-mode-pressure-inspiratory = Pressione inspiratoria

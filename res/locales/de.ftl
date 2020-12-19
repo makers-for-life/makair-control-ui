@@ -57,8 +57,6 @@ modal-snooze-alarms = Alarm
 modal-snooze-alarms-active = Signaltöne aktiviert
 modal-snooze-alarms-inactive = Signaltöne deaktiviert
 
-modal-expiration-term-expiratory-term = Exspiratorischer Begriff:
-
 modal-cycles-cycles-per-minute = Zyklen pro Minute:
 
 modal-mode-pressure-inspiratory = Inspirationsdruck

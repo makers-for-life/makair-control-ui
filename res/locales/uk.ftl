@@ -57,8 +57,6 @@ modal-snooze-alarms = Сигналізація
 modal-snooze-alarms-active = Звукові сигнали увімкнено
 modal-snooze-alarms-inactive = Звукові сигнали відключені
 
-modal-expiration-term-expiratory-term = Термін видиху:
-
 modal-cycles-cycles-per-minute = Цикли в хвилину:
 
 modal-mode-pressure-inspiratory = Інспіраторний тиск

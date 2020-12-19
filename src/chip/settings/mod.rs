@@ -7,7 +7,6 @@
 mod macros;
 
 pub mod cycles;
-pub mod expiration_term;
 pub mod mode;
 pub mod run;
 pub mod snooze;
@@ -15,7 +14,6 @@ pub mod snooze;
 use telemetry::control::{ControlMessage, ControlSetting};
 
 use cycles::*;
-use expiration_term::*;
 use mode::*;
 use run::*;
 use snooze::*;
@@ -25,7 +23,6 @@ pub enum ChipSettingsEvent {
     Run(SettingsRunEvent),
     Snooze(SettingsSnoozeEvent),
     Mode(SettingsModeEvent),
-    ExpirationTerm(SettingsExpirationTermEvent),
     Cycles(SettingsCyclesEvent),
 }
 
@@ -92,17 +89,15 @@ pub struct ChipSettings {
     pub run: SettingsRun,
     pub snooze: SettingsSnooze,
     pub mode: SettingsMode,
-    pub expiration_term: SettingsExpirationTerm,
     pub cycles: SettingsCycles,
 }
 
 impl ChipSettings {
-    pub fn new(cycles_per_minute: usize) -> ChipSettings {
+    pub fn new() -> ChipSettings {
         ChipSettings {
             run: SettingsRun::new(),
             snooze: SettingsSnooze::new(),
             mode: SettingsMode::new(),
-            expiration_term: SettingsExpirationTerm::new(cycles_per_minute),
             cycles: SettingsCycles::new(),
         }
     }
@@ -112,7 +107,6 @@ impl ChipSettings {
             ChipSettingsEvent::Run(event) => self.run.new_event(event),
             ChipSettingsEvent::Snooze(event) => self.snooze.new_event(event),
             ChipSettingsEvent::Mode(event) => self.mode.new_event(event),
-            ChipSettingsEvent::ExpirationTerm(event) => self.expiration_term.new_event(event),
             ChipSettingsEvent::Cycles(event) => self.cycles.new_event(event),
         }
     }

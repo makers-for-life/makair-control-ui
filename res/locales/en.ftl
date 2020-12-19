@@ -57,8 +57,6 @@ modal-snooze-alarms = Snooze alarms
 modal-snooze-alarms-active = Beeps enabled (default setting)
 modal-snooze-alarms-inactive = Beeps disabled (for some time)
 
-modal-expiration-term-expiratory-term = Expiratory term:
-
 modal-cycles-cycles-per-minute = Cycles per minute:
 
 modal-mode-pressure-inspiratory = Inspiratory pressure

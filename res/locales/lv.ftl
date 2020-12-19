@@ -57,8 +57,6 @@ modal-snooze-alarms = Signāli
 modal-snooze-alarms-active = Pīkstieni ir iespējoti
 modal-snooze-alarms-inactive = Pīkstieni ir invalīdi
 
-modal-expiration-term-expiratory-term = Derīguma termiņš:
-
 modal-cycles-cycles-per-minute = Cikli minūtē:
 
 modal-mode-pressure-inspiratory = Ieelpošanas spiediens

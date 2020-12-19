@@ -57,8 +57,6 @@ modal-snooze-alarms = 警报器
 modal-snooze-alarms-active = 启用哔声
 modal-snooze-alarms-inactive = 哔声禁用
 
-modal-expiration-term-expiratory-term = 呼气期:
-
 modal-cycles-cycles-per-minute = 每分钟循环数：
 
 modal-mode-pressure-inspiratory = 吸气压力
