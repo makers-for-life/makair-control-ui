@@ -389,6 +389,11 @@ impl<'a> Screen<'a> {
             || machine_snapshot.plateau_command > 0
             || machine_snapshot.peep_command > 0;
 
+        // Check if there is a target tidal volume we can show (only if value is set, and current \
+        //   ventilation mode is volume-controlled)
+        let has_target_volume_tidal =
+            mode.volume_tidal > 0 && mode.mode.class() == VentilationModeClass::Volume;
+
         // Unpack re-used values
         let (measured_cpm, measured_volume) = (
             machine_snapshot.previous_cpm.unwrap_or(0),
@@ -564,14 +569,12 @@ impl<'a> Screen<'a> {
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-tidal"),
-                value_measured: Some(if measured_volume > 0 {
+                value_measured: Some(if measured_volume > 0 || has_target_volume_tidal {
                     measured_volume.to_string()
                 } else {
                     TELEMETRY_WIDGET_VALUE_EMPTY.to_owned()
                 }),
-                value_target: if mode.volume_tidal > 0
-                    && mode.mode.class() == VentilationModeClass::Volume
-                {
+                value_target: if has_target_volume_tidal {
                     Some(mode.volume_tidal.to_string())
                 } else {
                     None
