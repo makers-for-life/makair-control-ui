@@ -13,7 +13,7 @@ After=getty@%i.service
 [Service]
 Type=simple
 EnvironmentFile=/etc/makair-env
-ExecStart=/usr/bin/cage -- /home/alarm/makair-control --port /dev/ttyAMA1 --fullscreen
+ExecStart=/usr/bin/cage -- /home/alarm/makair-control --port /dev/makair --fullscreen
 User=alarm
 Group=uucp
 #Restart=on-failure
