@@ -74,162 +74,6 @@ impl<'a> Screen<'a> {
         }
     }
 
-    pub fn render_background(&mut self) {
-        self.widgets
-            .render(ControlWidgetType::Background(background::Config {
-                color: color::BLACK,
-                id: self.ids.background,
-            }));
-    }
-
-    pub fn render_layout(&mut self, layout_data: DisplayDataLayout) {
-        self.widgets
-            .render(ControlWidgetType::Layout(layout::Config {
-                width: DISPLAY_WINDOW_SIZE_WIDTH as _,
-                height: DISPLAY_WINDOW_SIZE_HEIGHT as _,
-
-                parent: self.ids.background,
-                container: self.ids.layout_container,
-
-                header: layout::Slice {
-                    layout: self.ids.layout_header,
-                    top: 0.0,
-                    height: LAYOUT_HEADER_SIZE_HEIGHT,
-                    texture: Some((
-                        self.ids.layout_texture_header,
-                        layout_data.texture_header_image_id,
-                        (
-                            LAYOUT_TEXTURE_HEADER_WIDTH as _,
-                            LAYOUT_TEXTURE_HEADER_HEIGHT as _,
-                        ),
-                    )),
-                },
-                body: layout::Slice {
-                    layout: self.ids.layout_body,
-                    top: LAYOUT_HEADER_SIZE_HEIGHT,
-                    height: LAYOUT_BODY_SIZE_HEIGHT,
-                    texture: None,
-                },
-                footer: layout::Slice {
-                    layout: self.ids.layout_footer,
-                    top: LAYOUT_HEADER_SIZE_HEIGHT + LAYOUT_BODY_SIZE_HEIGHT,
-                    height: LAYOUT_FOOTER_SIZE_HEIGHT,
-                    texture: None,
-                },
-            }));
-    }
-
-    pub fn render_branding(
-        &mut self,
-        version_firmware: &'a str,
-        version_control: &'a str,
-        width: f64,
-        height: f64,
-    ) {
-        self.widgets
-            .render(ControlWidgetType::Branding(branding::Config {
-                parent: self.ids.layout_header,
-                version_firmware,
-                version_control,
-                width,
-                height,
-                ids: (self.ids.branding_container, self.ids.branding_text),
-            }));
-    }
-
-    pub fn render_alarms(&mut self) {
-        self.widgets
-            .render(ControlWidgetType::Alarms(alarms::Config {
-                parent: self.ids.branding_container,
-                container: self.ids.alarm_container,
-                title_wrapper: self.ids.alarm_title_wrapper,
-                title: self.ids.alarm_title,
-                empty: self.ids.alarm_empty,
-                alarm_widgets: &self.ids.alarm_alarms,
-                alarm_codes_containers: &self.ids.alarm_codes_containers,
-                alarm_codes: &self.ids.alarm_codes,
-                alarm_messages_containers: &self.ids.alarm_messages_containers,
-                alarm_messages: &self.ids.alarm_messages,
-                alarms: self.ongoing_alarms.unwrap(),
-            }));
-    }
-
-    pub fn render_heartbeat(&mut self, heartbeat_data: DisplayDataHeartbeat<'a>) {
-        self.widgets
-            .render(ControlWidgetType::Heartbeat(heartbeat::Config {
-                data_pressure: heartbeat_data.data_pressure,
-                peak_command: self.machine_snapshot.unwrap().peak_command,
-                container: self.ids.layout_header,
-                ground: self.ids.heartbeat_ground,
-                surround: self.ids.heartbeat_surround,
-                inner: self.ids.heartbeat_inner,
-            }));
-    }
-
-    pub fn render_status(&mut self, status_data: DisplayDataStatus<'a>) {
-        self.widgets
-            .render(ControlWidgetType::Status(status::Config {
-                container: self.ids.layout_header,
-                wrapper: self.ids.status_wrapper,
-                unit_box: self.ids.status_unit_box,
-                unit_text: self.ids.status_unit_text,
-                power_box: self.ids.status_power_box,
-                power_text: self.ids.status_power_text,
-                battery_level: status_data.battery_level,
-                chip_state: status_data.chip_state,
-                alarms: self.ongoing_alarms.unwrap(),
-                recording: if APP_ARGS.is_recording() {
-                    Some((
-                        self.ids.status_recording_outer,
-                        self.ids.status_recording_inner,
-                    ))
-                } else {
-                    None
-                },
-            }));
-    }
-
-    pub fn render_controls(&mut self) {
-        self.widgets
-            .render(ControlWidgetType::Controls(controls::Config {
-                container: self.ids.layout_header,
-                wrapper: self.ids.controls_wrapper,
-                run_button: self.ids.controls_button_run,
-                snooze_button: self.ids.controls_button_snooze,
-                advanced_button: self.ids.controls_button_advanced,
-            }));
-    }
-
-    pub fn render_graph(&mut self, graph_data: DisplayDataGraph<'a>) {
-        self.widgets.render(ControlWidgetType::Graph(graph::Config {
-            width: graph_data.width,
-            height: graph_data.height,
-            parent: self.ids.layout_body,
-            wrapper_id: self.ids.graph_wrapper,
-            pressure_id: self.ids.graph_pressure,
-            flow_id: self.ids.graph_flow,
-            pressure_label_box_id: self.ids.graph_pressure_label_box,
-            pressure_label_text_id: self.ids.graph_pressure_label_text,
-            flow_label_box_id: self.ids.graph_flow_label_box,
-            flow_label_text_id: self.ids.graph_flow_label_text,
-            pressure_saturate_ids: (
-                self.ids.graph_pressure_saturate_low,
-                self.ids.graph_pressure_saturate_high,
-            ),
-            flow_saturate_ids: (
-                self.ids.graph_flow_saturate_low,
-                self.ids.graph_flow_saturate_high,
-            ),
-            boot_time: self.timers.0,
-            last_tick: self.timers.1,
-            data_pressure: graph_data.data_pressure,
-            data_flow: graph_data.data_flow,
-            chip_state: graph_data.chip_state,
-            machine_snapshot: graph_data.machine_snapshot,
-            plot_graphs: graph_data.plot_graphs,
-        }));
-    }
-
     #[allow(clippy::too_many_arguments)]
     pub fn render_running(
         &mut self,
@@ -356,10 +200,200 @@ impl<'a> Screen<'a> {
             }));
     }
 
-    pub fn render_telemetry(&mut self, mode: &'a SettingsMode) {
+    fn render_background(&mut self) {
+        self.widgets
+            .render(ControlWidgetType::Background(background::Config {
+                color: color::BLACK,
+                id: self.ids.background,
+            }));
+    }
+
+    fn render_layout(&mut self, layout_data: DisplayDataLayout) {
+        self.widgets
+            .render(ControlWidgetType::Layout(layout::Config {
+                width: DISPLAY_WINDOW_SIZE_WIDTH as _,
+                height: DISPLAY_WINDOW_SIZE_HEIGHT as _,
+
+                parent: self.ids.background,
+                container: self.ids.layout_container,
+
+                header: layout::Slice {
+                    layout: self.ids.layout_header,
+                    top: 0.0,
+                    height: LAYOUT_HEADER_SIZE_HEIGHT,
+                    texture: Some((
+                        self.ids.layout_texture_header,
+                        layout_data.texture_header_image_id,
+                        (
+                            LAYOUT_TEXTURE_HEADER_WIDTH as _,
+                            LAYOUT_TEXTURE_HEADER_HEIGHT as _,
+                        ),
+                    )),
+                },
+                body: layout::Slice {
+                    layout: self.ids.layout_body,
+                    top: LAYOUT_HEADER_SIZE_HEIGHT,
+                    height: LAYOUT_BODY_SIZE_HEIGHT,
+                    texture: None,
+                },
+                footer: layout::Slice {
+                    layout: self.ids.layout_footer,
+                    top: LAYOUT_HEADER_SIZE_HEIGHT + LAYOUT_BODY_SIZE_HEIGHT,
+                    height: LAYOUT_FOOTER_SIZE_HEIGHT,
+                    texture: None,
+                },
+            }));
+    }
+
+    fn render_branding(
+        &mut self,
+        version_firmware: &'a str,
+        version_control: &'a str,
+        width: f64,
+        height: f64,
+    ) {
+        self.widgets
+            .render(ControlWidgetType::Branding(branding::Config {
+                parent: self.ids.layout_header,
+                version_firmware,
+                version_control,
+                width,
+                height,
+                ids: (self.ids.branding_container, self.ids.branding_text),
+            }));
+    }
+
+    fn render_alarms(&mut self) {
+        self.widgets
+            .render(ControlWidgetType::Alarms(alarms::Config {
+                parent: self.ids.branding_container,
+                container: self.ids.alarm_container,
+                title_wrapper: self.ids.alarm_title_wrapper,
+                title: self.ids.alarm_title,
+                empty: self.ids.alarm_empty,
+                alarm_widgets: &self.ids.alarm_alarms,
+                alarm_codes_containers: &self.ids.alarm_codes_containers,
+                alarm_codes: &self.ids.alarm_codes,
+                alarm_messages_containers: &self.ids.alarm_messages_containers,
+                alarm_messages: &self.ids.alarm_messages,
+                alarms: self.ongoing_alarms.unwrap(),
+            }));
+    }
+
+    fn render_heartbeat(&mut self, heartbeat_data: DisplayDataHeartbeat<'a>) {
+        self.widgets
+            .render(ControlWidgetType::Heartbeat(heartbeat::Config {
+                data_pressure: heartbeat_data.data_pressure,
+                peak_command: self.machine_snapshot.unwrap().peak_command,
+                container: self.ids.layout_header,
+                ground: self.ids.heartbeat_ground,
+                surround: self.ids.heartbeat_surround,
+                inner: self.ids.heartbeat_inner,
+            }));
+    }
+
+    fn render_status(&mut self, status_data: DisplayDataStatus<'a>) {
+        self.widgets
+            .render(ControlWidgetType::Status(status::Config {
+                container: self.ids.layout_header,
+                wrapper: self.ids.status_wrapper,
+                unit_box: self.ids.status_unit_box,
+                unit_text: self.ids.status_unit_text,
+                power_box: self.ids.status_power_box,
+                power_text: self.ids.status_power_text,
+                battery_level: status_data.battery_level,
+                chip_state: status_data.chip_state,
+                alarms: self.ongoing_alarms.unwrap(),
+                recording: if APP_ARGS.is_recording() {
+                    Some((
+                        self.ids.status_recording_outer,
+                        self.ids.status_recording_inner,
+                    ))
+                } else {
+                    None
+                },
+            }));
+    }
+
+    fn render_controls(&mut self) {
+        self.widgets
+            .render(ControlWidgetType::Controls(controls::Config {
+                container: self.ids.layout_header,
+                wrapper: self.ids.controls_wrapper,
+                run_button: self.ids.controls_button_run,
+                snooze_button: self.ids.controls_button_snooze,
+                advanced_button: self.ids.controls_button_advanced,
+            }));
+    }
+
+    fn render_graph(&mut self, graph_data: DisplayDataGraph<'a>) {
+        self.widgets.render(ControlWidgetType::Graph(graph::Config {
+            width: graph_data.width,
+            height: graph_data.height,
+            parent: self.ids.layout_body,
+            wrapper_id: self.ids.graph_wrapper,
+            pressure_id: self.ids.graph_pressure,
+            flow_id: self.ids.graph_flow,
+            pressure_label_box_id: self.ids.graph_pressure_label_box,
+            pressure_label_text_id: self.ids.graph_pressure_label_text,
+            flow_label_box_id: self.ids.graph_flow_label_box,
+            flow_label_text_id: self.ids.graph_flow_label_text,
+            pressure_saturate_ids: (
+                self.ids.graph_pressure_saturate_low,
+                self.ids.graph_pressure_saturate_high,
+            ),
+            flow_saturate_ids: (
+                self.ids.graph_flow_saturate_low,
+                self.ids.graph_flow_saturate_high,
+            ),
+            boot_time: self.timers.0,
+            last_tick: self.timers.1,
+            data_pressure: graph_data.data_pressure,
+            data_flow: graph_data.data_flow,
+            chip_state: graph_data.chip_state,
+            machine_snapshot: graph_data.machine_snapshot,
+            plot_graphs: graph_data.plot_graphs,
+        }));
+    }
+
+    fn render_telemetry(&mut self, mode: &'a SettingsMode) {
         let machine_snapshot = self.machine_snapshot.unwrap();
 
+        // Check if at least a pressure value is known (otherwise, all pressure widgets should \
+        //   show as empty)
+        let has_target_pressure = machine_snapshot.peak_command > 0
+            || machine_snapshot.plateau_command > 0
+            || machine_snapshot.peep_command > 0;
+
         // Initialize the pressure graph widget
+        self.render_telemetry_graph();
+
+        // Initialize the mode widget
+        self.render_telemetry_mode_overview(mode);
+
+        // Initialize the peak widget
+        self.render_telemetry_peak(&machine_snapshot, has_target_pressure);
+
+        // Initialize the plateau widget
+        self.render_telemetry_plateau(&machine_snapshot, mode, has_target_pressure);
+
+        // Initialize the PEEP widget
+        self.render_telemetry_peep(&machine_snapshot, has_target_pressure);
+
+        // Initialize the cycles widget
+        self.render_telemetry_cycles(&machine_snapshot);
+
+        // Initialize the tidal widget
+        self.render_telemetry_tidal(&machine_snapshot, mode);
+
+        // Initialize the minute volume widget
+        self.render_telemetry_minute_volume(&machine_snapshot);
+
+        // Initialize the ratio widget
+        self.render_telemetry_ratio(&machine_snapshot, mode);
+    }
+
+    fn render_telemetry_graph(&mut self) {
         self.widgets.render(ControlWidgetType::TelemetryContainer(
             telemetry_container::Config {
                 width: TELEMETRY_WIDGET_RIGHT_SIZE_WIDTH,
@@ -368,44 +402,9 @@ impl<'a> Screen<'a> {
                 id: self.ids.telemetry_widgets_right,
             },
         ));
+    }
 
-        // Unpack re-used values
-        let (measured_cpm, measured_volume, measured_inspiratory_duration) = (
-            machine_snapshot.previous_cpm.unwrap_or(0),
-            machine_snapshot.previous_volume.unwrap_or(0),
-            machine_snapshot.previous_inspiratory_duration.unwrap_or(0),
-        );
-
-        // Check if at least a pressure value is known (otherwise, all pressure widgets should \
-        //   show as empty)
-        let has_target_pressure = machine_snapshot.peak_command > 0
-            || machine_snapshot.plateau_command > 0
-            || machine_snapshot.peep_command > 0;
-
-        // Check if we can show listed target values (only if value is set, and current \
-        //   ventilation mode matches expectation to show target value)
-        let has_target_volume_tidal =
-            mode.volume_tidal > 0 && mode.mode.class() == VentilationModeClass::Volume;
-        let has_target_inspiration_duration = measured_inspiratory_duration > 0
-            && (mode.mode == VentilationMode::PC_CMV || mode.mode == VentilationMode::PC_AC);
-
-        // Compute internal values
-        let computed_respiratory_time = if measured_cpm > 0 {
-            60000.0 / measured_cpm as f64
-        } else {
-            0.0
-        };
-        let computed_inspiratory_duration = measured_inspiratory_duration as f64;
-
-        let computed_expiratory_term =
-            if computed_inspiratory_duration > 0.0 && computed_respiratory_time > 0.0 {
-                (computed_respiratory_time - computed_inspiratory_duration)
-                    / computed_inspiratory_duration
-            } else {
-                0.0
-            };
-
-        // Initialize the mode widget
+    fn render_telemetry_mode_overview(&mut self, mode: &'a SettingsMode) {
         self.widgets
             .render(ControlWidgetType::ModeOverview(mode_overview::Config {
                 parent: self.ids.telemetry_widgets_right,
@@ -418,8 +417,13 @@ impl<'a> Screen<'a> {
                 height: TELEMETRY_WIDGET_RIGHT_MODE_HEIGHT,
                 mode_settings: mode,
             }));
+    }
 
-        // Initialize the peak widget
+    fn render_telemetry_peak(
+        &mut self,
+        machine_snapshot: &MachineStateSnapshot,
+        has_target_pressure: bool,
+    ) {
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-peak"),
@@ -453,8 +457,14 @@ impl<'a> Screen<'a> {
                 width: TELEMETRY_WIDGET_RIGHT_SIZE_WIDTH,
                 height: TELEMETRY_WIDGET_RIGHT_SIZE_HEIGHT,
             }));
+    }
 
-        // Initialize the plateau widget
+    fn render_telemetry_plateau(
+        &mut self,
+        machine_snapshot: &MachineStateSnapshot,
+        mode: &'a SettingsMode,
+        has_target_pressure: bool,
+    ) {
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-plateau"),
@@ -495,8 +505,13 @@ impl<'a> Screen<'a> {
                 width: TELEMETRY_WIDGET_RIGHT_SIZE_WIDTH,
                 height: TELEMETRY_WIDGET_RIGHT_SIZE_HEIGHT,
             }));
+    }
 
-        // Initialize the PEEP widget
+    fn render_telemetry_peep(
+        &mut self,
+        machine_snapshot: &MachineStateSnapshot,
+        has_target_pressure: bool,
+    ) {
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-expiratory"),
@@ -535,8 +550,12 @@ impl<'a> Screen<'a> {
                 width: TELEMETRY_WIDGET_RIGHT_SIZE_WIDTH,
                 height: TELEMETRY_WIDGET_RIGHT_SIZE_HEIGHT,
             }));
+    }
 
-        // Initialize the cycles widget
+    fn render_telemetry_cycles(&mut self, machine_snapshot: &MachineStateSnapshot) {
+        // Acquire measured cycles per minute
+        let measured_cpm = machine_snapshot.previous_cpm.unwrap_or(0);
+
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-cycles"),
@@ -569,8 +588,20 @@ impl<'a> Screen<'a> {
                 width: TELEMETRY_WIDGET_BOTTOM_SIZE_WIDTH,
                 height: LAYOUT_FOOTER_SIZE_HEIGHT,
             }));
+    }
 
-        // Initialize the tidal widget
+    fn render_telemetry_tidal(
+        &mut self,
+        machine_snapshot: &MachineStateSnapshot,
+        mode: &'a SettingsMode,
+    ) {
+        // Acquire measured volume
+        let measured_volume = machine_snapshot.previous_volume.unwrap_or(0);
+
+        // Check if should show target tidal volume
+        let has_target_volume_tidal =
+            mode.volume_tidal > 0 && mode.mode.class() == VentilationModeClass::Volume;
+
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-tidal"),
@@ -603,8 +634,13 @@ impl<'a> Screen<'a> {
                 width: TELEMETRY_WIDGET_BOTTOM_SIZE_WIDTH,
                 height: LAYOUT_FOOTER_SIZE_HEIGHT,
             }));
+    }
 
-        // Initialize the minute volume widget
+    fn render_telemetry_minute_volume(&mut self, machine_snapshot: &MachineStateSnapshot) {
+        // Acquire measured volume & cycles per minute
+        let measured_volume = machine_snapshot.previous_volume.unwrap_or(0);
+        let measured_cpm = machine_snapshot.previous_cpm.unwrap_or(0);
+
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-minute-volume"),
@@ -639,8 +675,38 @@ impl<'a> Screen<'a> {
                 width: TELEMETRY_WIDGET_BOTTOM_SIZE_WIDTH,
                 height: LAYOUT_FOOTER_SIZE_HEIGHT,
             }));
+    }
 
-        // Initialize the ratio widget
+    fn render_telemetry_ratio(
+        &mut self,
+        machine_snapshot: &MachineStateSnapshot,
+        mode: &'a SettingsMode,
+    ) {
+        // Acquire measured inspiratory duration & cycles per minute
+        let measured_inspiratory_duration =
+            machine_snapshot.previous_inspiratory_duration.unwrap_or(0);
+        let measured_cpm = machine_snapshot.previous_cpm.unwrap_or(0);
+
+        // Check if target inspiration duration can be shown
+        let has_target_inspiration_duration = measured_inspiratory_duration > 0
+            && (mode.mode == VentilationMode::PC_CMV || mode.mode == VentilationMode::PC_AC);
+
+        // Compute internal values
+        let computed_respiratory_time = if measured_cpm > 0 {
+            60000.0 / measured_cpm as f64
+        } else {
+            0.0
+        };
+        let computed_inspiratory_duration = measured_inspiratory_duration as f64;
+
+        let computed_expiratory_term =
+            if computed_inspiratory_duration > 0.0 && computed_respiratory_time > 0.0 {
+                (computed_respiratory_time - computed_inspiratory_duration)
+                    / computed_inspiratory_duration
+            } else {
+                0.0
+            };
+
         // Important: if the ratio has decimals, then show them (to the first decimal). If it \
         //   has no decimals (eg. '2.0'), then show it as an integer.
         self.widgets
@@ -708,7 +774,7 @@ impl<'a> Screen<'a> {
         }));
     }
 
-    pub fn render_settings(&mut self, settings: &'a ChipSettings, modals: &ScreenModalsOpen) {
+    fn render_settings(&mut self, settings: &'a ChipSettings, modals: &ScreenModalsOpen) {
         if modals.run {
             self.render_run_settings(&settings.run);
         } else if modals.snooze {
