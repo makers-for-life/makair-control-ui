@@ -660,7 +660,7 @@ impl<'a> Screen<'a> {
                 } else {
                     None
                 },
-                unit: if computed_expiratory_term == 0.0 {
+                unit: if computed_expiratory_term < 1.0 {
                     APP_I18N.t("telemetry-unit-milliseconds")
                 } else {
                     format!(
