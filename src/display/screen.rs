@@ -565,7 +565,13 @@ impl<'a> Screen<'a> {
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-tidal"),
                 value_measured: Some(previous_volume),
-                value_target: None,
+                value_target: if mode.volume_tidal > 0
+                    && mode.mode.class() == VentilationModeClass::Volume
+                {
+                    Some(mode.volume_tidal.to_string())
+                } else {
+                    None
+                },
                 unit: APP_I18N.t("telemetry-unit-milliliters"),
                 ids: (
                     self.ids.cycles_parent,

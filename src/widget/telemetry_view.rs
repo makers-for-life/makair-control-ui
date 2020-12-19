@@ -76,7 +76,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
             target_text_style.font_id = Some(Some(master.fonts.regular));
             target_text_style.color = Some(color::WHITE);
-            target_text_style.font_size = Some(29);
+            target_text_style.font_size = Some(23);
 
             // Draw measured value
             widget::Text::new(&value_measured)
@@ -112,8 +112,8 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
             // Draw target value
             widget::Text::new(&format!("({})", value_target))
                 .with_style(target_text_style)
-                .right_from((config.ids.4).1, TELEMETRY_ARROW_SPACING_SIDES)
-                .y_relative_to(config.ids.3, -1.0)
+                .right_from((config.ids.4).1, TELEMETRY_ARROW_SPACING_SIDES + 1.0)
+                .y_relative_to(config.ids.3, -2.0)
                 .set(config.ids.5, &mut master.ui);
         }
         (Some(value_measured), None) => {
