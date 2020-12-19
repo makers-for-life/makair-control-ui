@@ -389,6 +389,22 @@ impl<'a> Screen<'a> {
         let has_target_inspiration_duration = measured_inspiratory_duration > 0
             && (mode.mode == VentilationMode::PC_CMV || mode.mode == VentilationMode::PC_AC);
 
+        // Compute internal values
+        let computed_respiratory_time = if measured_cpm > 0 {
+            60000.0 / measured_cpm as f64
+        } else {
+            0.0
+        };
+        let computed_inspiratory_duration = measured_inspiratory_duration as f64;
+
+        let computed_expiratory_term =
+            if computed_inspiratory_duration > 0.0 && computed_respiratory_time > 0.0 {
+                (computed_respiratory_time - computed_inspiratory_duration)
+                    / computed_inspiratory_duration
+            } else {
+                0.0
+            };
+
         // Initialize the mode widget
         self.widgets
             .render(ControlWidgetType::ModeOverview(mode_overview::Config {
@@ -644,33 +660,17 @@ impl<'a> Screen<'a> {
                 } else {
                     None
                 },
-                unit: if machine_snapshot.expiratory_term == 0 {
+                unit: if computed_expiratory_term == 0.0 {
                     APP_I18N.t("telemetry-unit-milliseconds")
                 } else {
                     format!(
                         "{} ({} {})",
                         &APP_I18N.t("telemetry-unit-milliseconds"),
                         &APP_I18N.t("telemetry-label-ratio-details"),
-                        {
-                            let expiratory_term_value = convert_mmh2o_to_cmh2o(
-                                ConvertMode::WithDecimals,
-                                machine_snapshot.expiratory_term as f64,
-                            );
-
-                            if expiratory_term_value.fract() == 0.0 {
-                                format!(
-                                    "{}:{}",
-                                    TELEMETRY_WIDGET_CYCLES_RATIO_INSPIRATION,
-                                    expiratory_term_value,
-                                )
-                            } else {
-                                format!(
-                                    "{}:{:.1}",
-                                    TELEMETRY_WIDGET_CYCLES_RATIO_INSPIRATION,
-                                    expiratory_term_value,
-                                )
-                            }
-                        }
+                        format!(
+                            "{}:{:.1}",
+                            TELEMETRY_WIDGET_CYCLES_RATIO_INSPIRATION, computed_expiratory_term,
+                        )
                     )
                 },
                 ids: (
