@@ -28,6 +28,11 @@ alarms-message-inspiratory-minute-volume-low = Ieelpošanas minūtes tilpums ir 
 alarms-message-inspiratory-minute-volume-high = Ieelpotās minūtes tilpums ir pārāk liels
 alarms-message-expiratory-minute-volume-low = Izejas minūtes skaļums ir pārāk mazs
 alarms-message-expiratory-minute-volume-high = Izejas minūtes skaļums ir pārāk liels
+alarms-message-respiratory-rate-low = Elpošanas ātrums ir pārāk zems
+alarms-message-respiratory-rate-high = Elpošanas ātrums ir pārāk augsts
+alarms-message-leak-high = Noplūdes apjoms ir pārāk liels
+alarms-message-tidal-volume-low = Plūdmaiņu daudzums ir pārāk mazs
+alarms-message-tidal-volume-high = Plūdmaiņu apjoms ir pārāk liels
 alarms-message-unknown = Nezināms trauksme (pārbaudes kods)
 
 status-unit-stopped = Ierīce apstājās

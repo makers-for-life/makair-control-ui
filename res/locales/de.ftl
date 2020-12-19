@@ -28,6 +28,11 @@ alarms-message-inspiratory-minute-volume-low = Das inspiratorische Minutenvolume
 alarms-message-inspiratory-minute-volume-high = Das inspiratorische Minutenvolumen ist zu hoch
 alarms-message-expiratory-minute-volume-low = Das exspiratorische Minutenvolumen ist zu gering
 alarms-message-expiratory-minute-volume-high = Das exspiratorische Minutenvolumen ist zu hoch
+alarms-message-respiratory-rate-low = Atemfrequenz ist zu niedrig
+alarms-message-respiratory-rate-high = Atemfrequenz ist zu hoch
+alarms-message-leak-high = Leckvolumen ist zu hoch
+alarms-message-tidal-volume-low = Das Atemvolumen ist zu gering
+alarms-message-tidal-volume-high = Das Atemvolumen ist zu hoch
 alarms-message-unknown = Unbekannter Alarm (Code prüfen)
 
 status-unit-stopped = Gerät gestoppt

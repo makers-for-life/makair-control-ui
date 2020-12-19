@@ -28,6 +28,11 @@ alarms-message-inspiratory-minute-volume-low = Insp. minute volume is too low
 alarms-message-inspiratory-minute-volume-high = Insp. minute volume is too high
 alarms-message-expiratory-minute-volume-low = Exp. minute volume is too low
 alarms-message-expiratory-minute-volume-high = Exp. minute volume is too high
+alarms-message-respiratory-rate-low = Respiratory rate is too low
+alarms-message-respiratory-rate-high = Respiratory rate is too high
+alarms-message-leak-high = Leak volume is too high
+alarms-message-tidal-volume-low = Tidal volume is too low
+alarms-message-tidal-volume-high = Tidal volume is too high
 alarms-message-unknown = Unknown alarm (check code)
 
 status-unit-stopped = Unit stopped

@@ -28,6 +28,11 @@ alarms-message-inspiratory-minute-volume-low = Vol./min. inspiratoire trop faibl
 alarms-message-inspiratory-minute-volume-high = Vol./min. inspiratoire trop élevé
 alarms-message-expiratory-minute-volume-low = Vol./min. expiratoire trop faible
 alarms-message-expiratory-minute-volume-high = Vol./min. expiratoire trop élevé
+alarms-message-respiratory-rate-low = Fréquence respiratoire trop faible
+alarms-message-respiratory-rate-high = Fréquence respiratoire trop élevée
+alarms-message-leak-high = Volume de fuite trop élevé
+alarms-message-tidal-volume-low = Volume courant trop faible
+alarms-message-tidal-volume-high = Volume courant trop élevé
 alarms-message-unknown = Alarme inconnue (vérifiez le code)
 
 status-unit-stopped = Unité arrêtée

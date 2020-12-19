@@ -20,6 +20,11 @@ pub fn description_to_locale(description: AlarmCodeDescription) -> String {
         AlarmCodeDescription::InspiratoryMinuteVolumeHigh => "inspiratory-minute-volume-high",
         AlarmCodeDescription::ExpiratoryMinuteVolumeLow => "expiratory-minute-volume-low",
         AlarmCodeDescription::ExpiratoryMinuteVolumeHigh => "expiratory-minute-volume-high",
+        AlarmCodeDescription::RespiratoryRateLow => "respiratory-rate-low",
+        AlarmCodeDescription::RespiratoryRateHigh => "respiratory-rate-high",
+        AlarmCodeDescription::LeakHigh => "leak-high",
+        AlarmCodeDescription::TidalVolumeLow => "tidal-volume-low",
+        AlarmCodeDescription::TidalVolumeHigh => "tidal-volume-high",
         AlarmCodeDescription::Unknown(_) => "unknown",
     };
 

@@ -28,6 +28,11 @@ alarms-message-inspiratory-minute-volume-low = 吸气分钟量太低
 alarms-message-inspiratory-minute-volume-high = 吸气分钟量过高
 alarms-message-expiratory-minute-volume-low = 呼气分钟音量太低
 alarms-message-expiratory-minute-volume-high = 呼气分钟量过高
+alarms-message-respiratory-rate-low = 呼吸频率太低
+alarms-message-respiratory-rate-high = 呼吸频率过高
+alarms-message-leak-high = 泄漏量太大
+alarms-message-tidal-volume-low = 潮气量太低
+alarms-message-tidal-volume-high = 潮气量过高
 alarms-message-unknown = 未知警报（校验码）
 
 status-unit-stopped = 单位停止

@@ -28,6 +28,11 @@ alarms-message-inspiratory-minute-volume-low = Минутный объем вд�
 alarms-message-inspiratory-minute-volume-high = Минутный объем вдоха слишком велик
 alarms-message-expiratory-minute-volume-low = Минутный объем выдоха слишком мал
 alarms-message-expiratory-minute-volume-high = Минутный объем выдоха слишком велик
+alarms-message-respiratory-rate-low = Частота дыхания слишком низкая
+alarms-message-respiratory-rate-high = Частота дыхания слишком высокая
+alarms-message-leak-high = Объем утечки слишком велик
+alarms-message-tidal-volume-low = Дыхательный объем слишком низкий
+alarms-message-tidal-volume-high = Дыхательный объем слишком высокий
 alarms-message-unknown = Неизвестный сигнал тревоги
 
 status-unit-stopped = Остановлен
