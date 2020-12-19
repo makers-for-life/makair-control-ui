@@ -49,6 +49,8 @@ mode-type-vsai = VSAI
 mode-group-general = General
 mode-group-alarms = Alarmas
 
+modal-close = OK
+
 modal-run-status = Estado de la unidad de ventilación
 modal-run-status-started = Corriendo - ¿Parar?
 modal-run-status-stopped = Detenido - ¿Empezar?
@@ -87,8 +89,6 @@ error-title = ¡Ups! Ocurrió un error.
 error-message-no-device = No se puede conectar con el maestro de telemetría.
 error-message-timed-out = Algunos componentes no se iniciaron.
 error-message-bad-protocol = Protocolo de telemetría no admitido.
-
-modal-close = OK
 
 stop-title = Unidad de ventilador inactiva
 stop-description = Por favor re-active para reanudar respiración

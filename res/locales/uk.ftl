@@ -49,6 +49,8 @@ mode-type-vsai = VSAI
 mode-group-general = Загальні
 mode-group-alarms = Сигналізація
 
+modal-close = в порядку
+
 modal-run-status = Статус блоку вентилятора
 modal-run-status-started = Біг - зупинка?
 modal-run-status-stopped = Зупинився - почати?
@@ -87,8 +89,6 @@ error-title = На жаль Сталася помилка.
 error-message-no-device = Не вдається зв’язатися з майстром телеметрії.
 error-message-timed-out = Не вдалося запустити деякі компоненти.
 error-message-bad-protocol = Непідтримуваний протокол телеметрії.
-
-modal-close = в порядку
 
 stop-title = Апарат ШВЛ не активний
 stop-description = Повторно включіть його для провітрювання

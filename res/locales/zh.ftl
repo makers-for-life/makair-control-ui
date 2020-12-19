@@ -49,6 +49,8 @@ mode-type-vsai = VSAI
 mode-group-general = 一般
 mode-group-alarms = 警报器
 
+modal-close = 好
+
 modal-run-status = 呼吸机状态
 modal-run-status-started = 跑步-停下来吗？
 modal-run-status-stopped = 已停止-开始吗？
@@ -87,8 +89,6 @@ error-title = 哎呀。 发生错误。
 error-message-no-device = 无法到达遥测主机。
 error-message-timed-out = 某些组件无法启动。
 error-message-bad-protocol = 不支持的遥测协议。
-
-modal-close = 好
 
 stop-title = 呼吸机单元无效
 stop-description = 请重新启用它以恢复呼吸

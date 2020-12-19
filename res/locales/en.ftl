@@ -49,6 +49,8 @@ mode-type-vsai = VSAI
 mode-group-general = General
 mode-group-alarms = Alarms
 
+modal-close = Close
+
 modal-run-status = Ventilator unit status
 modal-run-status-started = Running — Tap to stop
 modal-run-status-stopped = Stopped — Tap to start
@@ -87,8 +89,6 @@ error-title = Oops. An error occurred.
 error-message-no-device = Cannot reach the telemetry master. Is it properly configured?
 error-message-timed-out = Some components may have failed to start. Can you try power cycling?
 error-message-bad-protocol = The firmware is using an unsupported telemetry protocol. Please update software.
-
-modal-close = Close
 
 stop-title = Ventilator unit inactive
 stop-description = Please start it to begin or resume ventilation

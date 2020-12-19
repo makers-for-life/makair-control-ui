@@ -49,6 +49,8 @@ mode-type-vsai = VSAI
 mode-group-general = Allgemeines
 mode-group-alarms = Alarm
 
+modal-close = OK
+
 modal-run-status = Status der Beatmungseinheit
 modal-run-status-started = Laufen - aufhören?
 modal-run-status-stopped = Gestoppt - Starten?
@@ -87,8 +89,6 @@ error-title = Hoppla. Ein Fehler ist aufgetreten.
 error-message-no-device = Der Telemetriemaster kann nicht erreicht werden.
 error-message-timed-out = Einige Komponenten konnten nicht gestartet werden.
 error-message-bad-protocol = Nicht unterstütztes Telemetrieprotokoll.
-
-modal-close = OK
 
 stop-title = Das Beatmungsgerät ist nicht aktiv
 stop-description = Bitte aktivieren Sie es wieder, um zu lüften

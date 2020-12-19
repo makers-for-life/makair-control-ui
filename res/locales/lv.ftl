@@ -49,6 +49,8 @@ mode-type-vsai = VSAI
 mode-group-general = Vispārīgi
 mode-group-alarms = Signāli
 
+modal-close = OK
+
 modal-run-status = Ventilatora bloka statuss
 modal-run-status-started = Skriet - apstāties?
 modal-run-status-stopped = Apturēts - sākt?
@@ -87,8 +89,6 @@ error-title = Hmm ... Notika kļūda.
 error-message-no-device = Nevar sasniegt telemetrijas kapteini.
 error-message-timed-out = Dažus komponentus neizdevās palaist.
 error-message-bad-protocol = Neatbalstīts telemetrijas protokols.
-
-modal-close = OK
 
 stop-title = Ventilatora ierīce neaktīva
 stop-description = Lūdzu, atkārtoti ieslēdziet to, lai atsāktu elpošanu

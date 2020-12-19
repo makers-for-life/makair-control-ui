@@ -49,6 +49,8 @@ mode-type-vsai = VSAI
 mode-group-general = Général
 mode-group-alarms = Alarmes
 
+modal-close = Fermer
+
 modal-run-status = Unité de ventilation
 modal-run-status-started = Active — La stopper ?
 modal-run-status-stopped = Arrêtée — La démarrer ?
@@ -87,8 +89,6 @@ error-title = Oups. Une erreur est survenue.
 error-message-no-device = Impossible d'atteindre la télémétrie. Est-elle configurée correctement ?
 error-message-timed-out = Certains composants pourraient ne pas avoir démarré. Redémarrez la machine.
 error-message-bad-protocol = La version du protocole de télémétrie du système n'est pas supportée. Mettez à niveau.
-
-modal-close = Fermer
 
 stop-title = Unité de ventilation inactive
 stop-description = Démarrez-la pour commencer la ventilation

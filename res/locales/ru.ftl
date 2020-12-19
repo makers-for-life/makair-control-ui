@@ -49,6 +49,8 @@ mode-type-vsai = VSAI
 mode-group-general = Генеральный
 mode-group-alarms = Будильники
 
+modal-close = в порядке
+
 modal-run-status = Состояние вентиляционной установки
 modal-run-status-started = Бег - Стоп?
 modal-run-status-stopped = Остановлен - Пуск?
@@ -87,8 +89,6 @@ error-title = Ой. Произошла ошибка.
 error-message-no-device = Невозможно связаться с мастером телеметрии.
 error-message-timed-out = Некоторые компоненты не запускались.
 error-message-bad-protocol = Неподдерживаемый протокол телеметрии.
-
-modal-close = в порядке
 
 stop-title = Аппарат ИВЛ не активен
 stop-description = Включите снова, чтобы проветрить
