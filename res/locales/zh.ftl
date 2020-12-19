@@ -57,11 +57,6 @@ modal-snooze-alarms = 警报器
 modal-snooze-alarms-active = 启用哔声
 modal-snooze-alarms-inactive = 哔声禁用
 
-modal-trigger-inspiratory-status = 触发吸气状态：
-modal-trigger-inspiratory-status-enabled = 已启用
-modal-trigger-inspiratory-status-disabled = 残障人士
-modal-trigger-inspiratory-offset = 吸气扳机偏移量：
-
 modal-expiration-term-expiratory-term = 呼气期:
 
 modal-cycles-cycles-per-minute = 每分钟循环数：

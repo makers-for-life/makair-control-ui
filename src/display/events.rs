@@ -14,7 +14,6 @@ use crate::chip::{
         pressure::SettingsPressureEvent,
         run::SettingsRunEvent,
         snooze::SettingsSnoozeEvent,
-        trigger::SettingsTriggerEvent,
         ChipSettingsEvent, SettingActionRange,
     },
     Chip,
@@ -262,43 +261,6 @@ impl DisplayUIEvents {
 
             {
                 "advanced", Advanced, states.advanced_settings,
-            },
-
-            {
-                "trigger", Trigger, states.trigger_settings,
-
-                {
-                    SettingsTriggerEvent::TriggerToggle, "toggle",
-
-                    [
-                        ids.trigger_status_button,
-                        ids.trigger_status_button_text,
-                    ],
-
-                    None
-                },
-
-                {
-                    SettingsTriggerEvent::TriggerOffset(SettingActionRange::Less), "offset less",
-
-                    [
-                        ids.trigger_offset_less_button,
-                        ids.trigger_offset_less_button_text,
-                    ],
-
-                    None
-                },
-
-                {
-                    SettingsTriggerEvent::TriggerOffset(SettingActionRange::More), "offset more",
-
-                    [
-                        ids.trigger_offset_more_button,
-                        ids.trigger_offset_more_button_text,
-                    ],
-
-                    None
-                }
             },
 
             {

@@ -8,7 +8,7 @@ use telemetry::structures::VentilationMode;
 
 use crate::chip::settings::SettingActionRange;
 
-const INSPIRATORY_TIME_STEP: usize = 1;
+const INSPIRATORY_TIME_STEP: usize = 10;
 const CYCLES_PER_MINUTE_STEP: usize = 1;
 const TRIGGER_OFFSET_STEP: usize = 1;
 const TRIGGER_FLOW_STEP: usize = 1;

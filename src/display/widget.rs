@@ -36,7 +36,6 @@ gen_widget_impls!(
     RunSettings -> run_settings['a],
     SnoozeSettings -> snooze_settings['a],
     AdvancedSettings -> advanced_settings['a],
-    TriggerSettings -> trigger_settings['a],
     ModeSettings -> mode_settings['a],
     ModeOverview -> mode_overview['a],
     ExpirationTermSettings -> expiration_term_settings['a],

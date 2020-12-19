@@ -57,11 +57,6 @@ modal-snooze-alarms = Allarmi
 modal-snooze-alarms-active = Segnali acustici abilitati
 modal-snooze-alarms-inactive = Segnali acustici disabilitati
 
-modal-trigger-inspiratory-status = Stato inspiratorio trigger:
-modal-trigger-inspiratory-status-enabled = Abilitato
-modal-trigger-inspiratory-status-disabled = Disabilitato
-modal-trigger-inspiratory-offset = Offset trigger inspiratorio:
-
 modal-expiration-term-expiratory-term = Termine di scadenza:
 
 modal-cycles-cycles-per-minute = Cicli al minuto:

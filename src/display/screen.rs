@@ -14,8 +14,7 @@ use telemetry::structures::{
 
 use crate::chip::settings::{
     cycles::SettingsCycles, expiration_term::SettingsExpirationTerm, mode::SettingsMode,
-    pressure::SettingsPressure, run::SettingsRun, snooze::SettingsSnooze, trigger::SettingsTrigger,
-    ChipSettings,
+    pressure::SettingsPressure, run::SettingsRun, snooze::SettingsSnooze, ChipSettings,
 };
 use crate::chip::ChipError;
 use crate::config::environment::*;
@@ -33,7 +32,6 @@ pub struct ScreenModalsOpen {
     run: bool,
     snooze: bool,
     advanced: bool,
-    trigger: bool,
     mode: bool,
     expiration_term: bool,
     pressure: bool,
@@ -55,7 +53,6 @@ impl ScreenModalsOpen {
             run: states.run_settings.is_open(),
             snooze: states.snooze_settings.is_open(),
             advanced: states.advanced_settings.is_open(),
-            trigger: states.trigger_settings.is_open(),
             mode: states.mode_settings.is_open(),
             expiration_term: states.expiration_term_settings.is_open(),
             pressure: states.pressure_settings.is_open(),
@@ -717,8 +714,6 @@ impl<'a> Screen<'a> {
             self.render_snooze_settings(&settings.snooze);
         } else if modals.advanced {
             self.render_advanced_settings();
-        } else if modals.trigger {
-            self.render_trigger_settings(&settings.trigger);
         } else if modals.mode {
             self.render_mode_settings(&settings.mode);
         } else if modals.expiration_term {
@@ -798,43 +793,6 @@ impl<'a> Screen<'a> {
                 advanced_container_widget: self.ids.advanced_container,
                 advanced_container_line_labels: &self.ids.advanced_line_labels,
                 advanced_container_line_values: &self.ids.advanced_line_values,
-            },
-        ));
-    }
-
-    fn render_trigger_settings(&mut self, settings: &'a SettingsTrigger) {
-        self.render_modal(
-            TRIGGER_SETTINGS_MODAL_WIDTH,
-            TRIGGER_SETTINGS_MODAL_HEIGTH,
-            Some(TRIGGER_SETTINGS_MODAL_PADDING),
-        );
-
-        self.widgets.render(ControlWidgetType::TriggerSettings(
-            trigger_settings::Config {
-                width: TRIGGER_SETTINGS_MODAL_WIDTH,
-                height: TRIGGER_SETTINGS_MODAL_HEIGTH
-                    - MODAL_VALIDATE_BUTTON_HEIGHT
-                    - (TRIGGER_SETTINGS_MODAL_PADDING * 2.0),
-                trigger_settings: settings,
-
-                status_container_parent: self.ids.modal_container,
-                status_container_widget: self.ids.trigger_status_container,
-                status_enabled_text_widget: self.ids.trigger_status_text,
-                status_enabled_button_widget: self.ids.trigger_status_button,
-                status_enabled_button_text_widget: self.ids.trigger_status_button_text,
-
-                inspiratory_offset_container_parent: self.ids.trigger_offset_container,
-                inspiratory_offset_more_button_widget: self.ids.trigger_offset_more_button,
-                inspiratory_offset_more_button_text_widget: self
-                    .ids
-                    .trigger_offset_more_button_text,
-                inspiratory_offset_less_button_widget: self.ids.trigger_offset_less_button,
-                inspiratory_offset_less_button_text_widget: self
-                    .ids
-                    .trigger_offset_less_button_text,
-                inspiratory_offset_text_widget: self.ids.trigger_offset_text,
-                inspiratory_offset_value_wrapper_widget: self.ids.trigger_offset_value_wrapper,
-                inspiratory_offset_value_widget: self.ids.trigger_offset_value,
             },
         ));
     }

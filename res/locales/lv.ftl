@@ -57,11 +57,6 @@ modal-snooze-alarms = Signāli
 modal-snooze-alarms-active = Pīkstieni ir iespējoti
 modal-snooze-alarms-inactive = Pīkstieni ir invalīdi
 
-modal-trigger-inspiratory-status = Iedvesmojošā stāvokļa izraisītājs:
-modal-trigger-inspiratory-status-enabled = Iespējots
-modal-trigger-inspiratory-status-disabled = Atspējots
-modal-trigger-inspiratory-offset = Ieelpošanas trigera nobīde:
-
 modal-expiration-term-expiratory-term = Derīguma termiņš:
 
 modal-cycles-cycles-per-minute = Cikli minūtē:

@@ -43,7 +43,6 @@ pub struct DisplayRendererStates {
     pub run_settings: DisplayRendererSettingsState,
     pub snooze_settings: DisplayRendererSettingsState,
     pub advanced_settings: DisplayRendererSettingsState,
-    pub trigger_settings: DisplayRendererSettingsState,
     pub mode_settings: DisplayRendererSettingsState,
     pub expiration_term_settings: DisplayRendererSettingsState,
     pub pressure_settings: DisplayRendererSettingsState,

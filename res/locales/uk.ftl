@@ -57,11 +57,6 @@ modal-snooze-alarms = Сигналізація
 modal-snooze-alarms-active = Звукові сигнали увімкнено
 modal-snooze-alarms-inactive = Звукові сигнали відключені
 
-modal-trigger-inspiratory-status = Стан тригера:
-modal-trigger-inspiratory-status-enabled = Увімкнено
-modal-trigger-inspiratory-status-disabled = Інваліди
-modal-trigger-inspiratory-offset = Зсув тригера:
-
 modal-expiration-term-expiratory-term = Термін видиху:
 
 modal-cycles-cycles-per-minute = Цикли в хвилину:

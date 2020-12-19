@@ -65,7 +65,6 @@ struct ChipSettingsUpdate {
     peep_command: Option<u8>,
     cpm_command: Option<u8>,
     expiratory_term: Option<u8>,
-    trigger_enabled: Option<bool>,
     trigger_offset: Option<u8>,
     alarm_snoozed: Option<bool>,
     ventilation_mode: Option<VentilationMode>,
@@ -463,17 +462,8 @@ impl Chip {
         }
 
         // Update trigger values
-        if let Some(trigger_enabled) = update.trigger_enabled {
-            self.settings.trigger.state = if trigger_enabled {
-                SettingActionState::Enabled
-            } else {
-                SettingActionState::Disabled
-            };
-        }
-
         if let Some(trigger_offset) = update.trigger_offset {
             self.settings.mode.trigger_inspiratory_offset = trigger_offset as usize;
-            self.settings.trigger.inspiratory_trigger_offset = trigger_offset as usize;
         }
 
         if let Some(inspiratory_trigger_flow) = update.inspiratory_trigger_flow {
@@ -563,7 +553,6 @@ impl Chip {
             peep_command: Some(snapshot.peep_command),
             cpm_command: Some(snapshot.cpm_command),
             expiratory_term: Some(snapshot.expiratory_term),
-            trigger_enabled: Some(snapshot.trigger_enabled),
             trigger_offset: Some(snapshot.trigger_offset),
             alarm_snoozed: snapshot.alarm_snoozed,
             ventilation_mode: Some(snapshot.ventilation_mode),
@@ -663,7 +652,6 @@ impl Chip {
             peep_command: message.peep_command,
             cpm_command: message.cpm_command,
             expiratory_term: message.expiratory_term,
-            trigger_enabled: message.trigger_enabled,
             trigger_offset: message.trigger_offset,
             alarm_snoozed: message.alarm_snoozed,
             ventilation_mode: Some(message.ventilation_mode),
@@ -770,17 +758,14 @@ impl Chip {
 
             ControlSetting::TriggerEnabled => {
                 if ack.value == 0 {
-                    self.settings.trigger.state = SettingActionState::Disabled;
                     self.last_machine_snapshot.trigger_enabled = false;
                 } else {
-                    self.settings.trigger.state = SettingActionState::Enabled;
                     self.last_machine_snapshot.trigger_enabled = true;
                 }
             }
 
             ControlSetting::TriggerOffset => {
                 self.settings.mode.trigger_inspiratory_offset = ack.value as usize;
-                self.settings.trigger.inspiratory_trigger_offset = ack.value as usize;
                 self.last_machine_snapshot.trigger_offset = ack.value as u8;
             }
 

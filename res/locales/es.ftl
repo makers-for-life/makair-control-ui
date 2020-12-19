@@ -57,11 +57,6 @@ modal-snooze-alarms = Alarmas
 modal-snooze-alarms-active = Pitidos habilitados
 modal-snooze-alarms-inactive = Pitidos desactivados
 
-modal-trigger-inspiratory-status = Activar el estado inspiratorio:
-modal-trigger-inspiratory-status-enabled = Habilitado
-modal-trigger-inspiratory-status-disabled = Discapacitado
-modal-trigger-inspiratory-offset = Desplazamiento del disparador:
-
 modal-expiration-term-expiratory-term = Término expiratorio:
 
 modal-cycles-cycles-per-minute = Ciclos por minuto:

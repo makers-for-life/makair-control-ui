@@ -57,11 +57,6 @@ modal-snooze-alarms = Snooze alarms
 modal-snooze-alarms-active = Beeps enabled (default setting)
 modal-snooze-alarms-inactive = Beeps disabled (for some time)
 
-modal-trigger-inspiratory-status = Inspiratory trigger status:
-modal-trigger-inspiratory-status-enabled = Enabled
-modal-trigger-inspiratory-status-disabled = Disabled
-modal-trigger-inspiratory-offset = Inspiratory trigger offset:
-
 modal-expiration-term-expiratory-term = Expiratory term:
 
 modal-cycles-cycles-per-minute = Cycles per minute:

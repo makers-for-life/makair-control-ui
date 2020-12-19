@@ -57,11 +57,6 @@ modal-snooze-alarms = Alarm
 modal-snooze-alarms-active = Signaltöne aktiviert
 modal-snooze-alarms-inactive = Signaltöne deaktiviert
 
-modal-trigger-inspiratory-status = Inspirationsstatus auslösen:
-modal-trigger-inspiratory-status-enabled = Aktiviert
-modal-trigger-inspiratory-status-disabled = Behindert
-modal-trigger-inspiratory-offset = Inspiratorischer Trigger-Offset:
-
 modal-expiration-term-expiratory-term = Exspiratorischer Begriff:
 
 modal-cycles-cycles-per-minute = Zyklen pro Minute:
