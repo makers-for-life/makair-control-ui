@@ -40,10 +40,6 @@ status-unit-active = 单位活跃
 status-power-battery = 电池
 status-power-ac = 交流电
 
-trigger-label-title = 触发
-trigger-label-state = 州：
-trigger-label-offset = 抵消：
-trigger-label-configure = 点击配置
 trigger-state-enabled = 已启用
 trigger-state-disabled = 残障人士
 

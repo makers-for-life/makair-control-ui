@@ -40,10 +40,6 @@ status-unit-active = Активний
 status-power-battery = Батарея
 status-power-ac = Зовнішнє живлення
 
-trigger-label-title = Тригер
-trigger-label-state = Штат:
-trigger-label-offset = Зсув:
-trigger-label-configure = Налаштуйте
 trigger-state-enabled = Увімкнено
 trigger-state-disabled = Інваліди
 

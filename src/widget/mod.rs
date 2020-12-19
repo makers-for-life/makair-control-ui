@@ -29,5 +29,4 @@ pub mod status;
 pub mod stop;
 pub mod telemetry_container;
 pub mod telemetry_view;
-pub mod trigger_overview;
 pub mod trigger_settings;

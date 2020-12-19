@@ -149,16 +149,6 @@ widget_ids!(pub struct Ids {
   tidal_value_target,
   tidal_unit,
 
-  trigger_overview_container,
-  trigger_overview_title,
-  trigger_overview_status_label,
-  trigger_overview_status_value,
-  trigger_overview_offset_label,
-  trigger_overview_offset_value,
-  trigger_overview_configure,
-  trigger_overview_expiratory_term,
-  trigger_overview_plateau_duration,
-
   trigger_status_container,
   trigger_status_text,
   trigger_status_button,

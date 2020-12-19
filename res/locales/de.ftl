@@ -40,10 +40,6 @@ status-unit-active = Gerät aktiv
 status-power-battery = Batterie
 status-power-ac = Stromversorgung
 
-trigger-label-title = Auslösen
-trigger-label-state = Zustand:
-trigger-label-offset = Offset:
-trigger-label-configure = Antippen zum Öffnen
 trigger-state-enabled = aktiviert
 trigger-state-disabled = Behindert
 

@@ -40,10 +40,6 @@ status-unit-active = Ierīce aktīva
 status-power-battery = Akumulators
 status-power-ac = Maiņstrāvas avots
 
-trigger-label-title = Trigeris
-trigger-label-state = Valsts:
-trigger-label-offset = Līmenis:
-trigger-label-configure = Pieskarieties, lai atvērtu
 trigger-state-enabled = Iespējots
 trigger-state-disabled = Atspējots
 

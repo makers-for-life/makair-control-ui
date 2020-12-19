@@ -40,10 +40,6 @@ status-unit-active = Unità attiva
 status-power-battery = Battery
 status-power-ac = Corrente alternata
 
-trigger-label-title = Trigger
-trigger-label-state = Stato:
-trigger-label-offset = Livello:
-trigger-label-configure = Tocca per configurare
 trigger-state-enabled = Abilitato
 trigger-state-disabled = Disabilitato
 

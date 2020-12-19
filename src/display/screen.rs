@@ -273,7 +273,7 @@ impl<'a> Screen<'a> {
         self.render_graph(graph_data);
 
         // Render bottom elements
-        self.render_telemetry(&settings.mode, &settings.trigger, &settings.expiration_term);
+        self.render_telemetry(&settings.mode, &settings.expiration_term);
 
         // Render modals (as needed)
         self.render_settings(settings, modals);
@@ -369,7 +369,6 @@ impl<'a> Screen<'a> {
     pub fn render_telemetry(
         &mut self,
         mode: &'a SettingsMode,
-        trigger: &'a SettingsTrigger,
         expiration_term: &'a SettingsExpirationTerm,
     ) {
         let machine_snapshot = self.machine_snapshot.unwrap();
@@ -650,28 +649,6 @@ impl<'a> Screen<'a> {
                 width: TELEMETRY_WIDGET_BOTTOM_SIZE_WIDTH,
                 height: LAYOUT_FOOTER_SIZE_HEIGHT,
             }));
-
-        // Initialize the trigger widget
-        self.widgets.render(ControlWidgetType::TriggerOverview(
-            trigger_overview::Config {
-                parent: self.ids.ratio_parent,
-                container: self.ids.trigger_overview_container,
-                title_widget: self.ids.trigger_overview_title,
-                status_label_widget: self.ids.trigger_overview_status_label,
-                status_value_widget: self.ids.trigger_overview_status_value,
-                offset_label_widget: self.ids.trigger_overview_offset_label,
-                offset_value_widget: self.ids.trigger_overview_offset_value,
-                configure_widget: self.ids.trigger_overview_configure,
-                expiratory_term_widget: self.ids.trigger_overview_expiratory_term,
-                plateau_duration_widget: self.ids.trigger_overview_plateau_duration,
-                background_color: color::BLUE,
-                width: TELEMETRY_WIDGET_BOTTOM_SIZE_WIDTH,
-                height: LAYOUT_FOOTER_SIZE_HEIGHT,
-                x_position: TELEMETRY_WIDGET_BOTTOM_SIZE_WIDTH + TELEMETRY_WIDGET_SPACING_SIDES,
-                y_position: 0.0,
-                trigger_settings: trigger,
-            },
-        ));
     }
 
     fn render_modal(&mut self, width: f64, height: f64, padding: Option<f64>) {

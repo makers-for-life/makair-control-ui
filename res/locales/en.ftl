@@ -40,10 +40,6 @@ status-unit-active = Unit active
 status-power-battery = Battery
 status-power-ac = AC power
 
-trigger-label-title = Trigger
-trigger-label-state = State:
-trigger-label-offset = Offset:
-trigger-label-configure = Tap to configure
 trigger-state-enabled = Enabled
 trigger-state-disabled = Disabled
 

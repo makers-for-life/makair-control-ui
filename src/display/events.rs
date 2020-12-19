@@ -149,14 +149,6 @@ impl DisplayUIEvents {
                     ids.mode_overview_text_class,
                     ids.mode_overview_text_type,
 
-                    // From: 'trigger'
-                    ids.trigger_overview_container,
-                    ids.trigger_overview_title,
-                    ids.trigger_overview_status_label,
-                    ids.trigger_overview_status_value,
-                    ids.trigger_overview_offset_label,
-                    ids.trigger_overview_offset_value,
-
                     // From: 'expiratory term'
                     ids.ratio_parent,
                     ids.ratio_title,
