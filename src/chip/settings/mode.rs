@@ -28,7 +28,6 @@ pub enum SettingsModeEvent {
     InspiratoryTimeMaximum(SettingActionRange),
     CyclesPerMinute(SettingActionRange),
     TriggerInspiratoryOffset(SettingActionRange),
-    TriggerInspiratoryFlow(SettingActionRange),
     TriggerExpiratoryFlow(SettingActionRange),
     PressurePlateau(SettingActionRange),
     PressureExpiratory(SettingActionRange),
@@ -60,7 +59,6 @@ pub struct SettingsMode {
     pub inspiratory_time_maximum: usize,
     pub cycles_per_minute: usize,
     pub trigger_inspiratory_offset: usize,
-    pub trigger_inspiratory_flow: usize,
     pub trigger_expiratory_flow: usize,
     pub pressure_plateau: usize,
     pub pressure_expiratory: usize,
@@ -112,7 +110,6 @@ impl SettingsMode {
             inspiratory_time_maximum: ControlSetting::TiMax.default(),
             cycles_per_minute: ControlSetting::CyclesPerMinute.default(),
             trigger_inspiratory_offset: ControlSetting::TriggerOffset.default(),
-            trigger_inspiratory_flow: ControlSetting::InspiratoryTriggerFlow.default(),
             trigger_expiratory_flow: ControlSetting::ExpiratoryTriggerFlow.default(),
             pressure_plateau: ControlSetting::PlateauPressure.default(),
             pressure_expiratory: ControlSetting::PEEP.default(),
@@ -156,9 +153,6 @@ impl SettingsMode {
             SettingsModeEvent::CyclesPerMinute(action) => self.set_cycles_per_minute(action),
             SettingsModeEvent::TriggerInspiratoryOffset(action) => {
                 self.set_trigger_inspiratory_offset(action)
-            }
-            SettingsModeEvent::TriggerInspiratoryFlow(action) => {
-                self.set_trigger_inspiratory_flow(action)
             }
             SettingsModeEvent::TriggerExpiratoryFlow(action) => {
                 self.set_trigger_expiratory_flow(action)
@@ -237,15 +231,6 @@ impl SettingsMode {
             action,
             self.trigger_inspiratory_offset,
             TRIGGER_OFFSET_STEP
-        )
-    }
-
-    fn set_trigger_inspiratory_flow(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
-            ControlSetting::InspiratoryTriggerFlow,
-            action,
-            self.trigger_inspiratory_flow,
-            TRIGGER_FLOW_STEP
         )
     }
 

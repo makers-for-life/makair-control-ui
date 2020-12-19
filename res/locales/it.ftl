@@ -69,7 +69,6 @@ modal-mode-cycles-per-minute = Cicli al minuto
 modal-mode-tidal-volume = Volume corrente
 modal-mode-plateau-duration = Durata dell'altopiano
 modal-mode-trigger-offset = Trigger offset
-modal-mode-trigger-inspiratory = Trigger inspiratorio
 modal-mode-trigger-expiratory = Trigger espiratorio
 modal-mode-alarm-low-inspiratory-minute-volume = Volume inspiratorio (basso)
 modal-mode-alarm-high-inspiratory-minute-volume = Volume inspiratorio (alto)

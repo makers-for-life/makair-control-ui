@@ -60,7 +60,6 @@ pub struct Config<'a> {
     pub field_inspiratory_flow_ids: FieldWidgetIds,
     pub field_plateau_duration_ids: FieldWidgetIds,
     pub field_trigger_offset_ids: FieldWidgetIds,
-    pub field_trigger_inspiratory_ids: FieldWidgetIds,
     pub field_trigger_expiratory_ids: FieldWidgetIds,
 
     pub field_alarm_threshold_low_inspiratory_minute_volume_ids: FieldWidgetIds,
@@ -586,21 +585,6 @@ fn field_trigger_offset<'a>(index: usize, master: &mut ControlWidget<'a>, config
                 APP_I18N.t("telemetry-unit-cmh2o")
             ),
             ids: config.field_trigger_offset_ids,
-        },
-    )
-}
-
-fn field_trigger_inspiratory<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config) {
-    // TODO: this is not used atm, but will be re-enabled whenever algorithms get better and \
-    //   we can use this option.
-    draw_field(
-        index,
-        master,
-        config,
-        Field {
-            label_text: APP_I18N.t("modal-mode-trigger-inspiratory"),
-            value_text: format!("{}%", config.mode_settings.trigger_inspiratory_flow),
-            ids: config.field_trigger_inspiratory_ids,
         },
     )
 }

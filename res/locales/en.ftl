@@ -69,7 +69,6 @@ modal-mode-cycles-per-minute = Cycles per minute
 modal-mode-tidal-volume = Tidal volume
 modal-mode-plateau-duration = Plateau duration
 modal-mode-trigger-offset = Trigger offset
-modal-mode-trigger-inspiratory = Inspiratory trigger
 modal-mode-trigger-expiratory = Expiratory trigger
 modal-mode-alarm-low-inspiratory-minute-volume = Insp. minute volume (min)
 modal-mode-alarm-high-inspiratory-minute-volume = Insp. minute volume (max)

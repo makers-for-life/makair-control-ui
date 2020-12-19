@@ -913,10 +913,6 @@ impl<'a> Screen<'a> {
                     plateau_duration
                 ),
                 field_trigger_offset_ids: gen_render_mode_settings_field_ids!(self, trigger_offset),
-                field_trigger_inspiratory_ids: gen_render_mode_settings_field_ids!(
-                    self,
-                    trigger_inspiratory
-                ),
                 field_trigger_expiratory_ids: gen_render_mode_settings_field_ids!(
                     self,
                     trigger_expiratory

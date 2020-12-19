@@ -69,7 +69,6 @@ modal-mode-cycles-per-minute = Ciclos por minuto
 modal-mode-tidal-volume = Volumen corriente
 modal-mode-plateau-duration = Duración de la meseta
 modal-mode-trigger-offset = Desplazamiento del disparador
-modal-mode-trigger-inspiratory = Gatillo inspiratorio
 modal-mode-trigger-expiratory = Gatillo espiratorio
 modal-mode-alarm-low-inspiratory-minute-volume = Volumen inspiratorio (bajo)
 modal-mode-alarm-high-inspiratory-minute-volume = Volumen inspiratorio (alto)

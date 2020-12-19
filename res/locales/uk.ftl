@@ -69,7 +69,6 @@ modal-mode-cycles-per-minute = Цикли в хвилину
 modal-mode-tidal-volume = Дихальний об’єм
 modal-mode-plateau-duration = Тривалість плато
 modal-mode-trigger-offset = Зсув тригера
-modal-mode-trigger-inspiratory = Інспіраторний тригер
 modal-mode-trigger-expiratory = Тригер видиху
 modal-mode-alarm-low-inspiratory-minute-volume = Об'єм вдиху (низький)
 modal-mode-alarm-high-inspiratory-minute-volume = Об'єм вдиху (високий)

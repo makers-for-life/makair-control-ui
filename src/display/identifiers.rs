@@ -238,14 +238,6 @@ widget_ids!(pub struct Ids {
   mode_settings_field_trigger_offset_less,
   mode_settings_field_trigger_offset_less_text,
 
-  mode_settings_field_trigger_inspiratory_text,
-  mode_settings_field_trigger_inspiratory_value,
-  mode_settings_field_trigger_inspiratory_value_wrapper,
-  mode_settings_field_trigger_inspiratory_more,
-  mode_settings_field_trigger_inspiratory_more_text,
-  mode_settings_field_trigger_inspiratory_less,
-  mode_settings_field_trigger_inspiratory_less_text,
-
   mode_settings_field_trigger_expiratory_text,
   mode_settings_field_trigger_expiratory_value,
   mode_settings_field_trigger_expiratory_value_wrapper,

@@ -69,7 +69,6 @@ modal-mode-cycles-per-minute = Zyklen pro Minute
 modal-mode-tidal-volume = Atemzugvolumen
 modal-mode-plateau-duration = Plateaudauer
 modal-mode-trigger-offset = Offset auslösen
-modal-mode-trigger-inspiratory = Inspirierender Auslöser
 modal-mode-trigger-expiratory = Exspiratorischer Auslöser
 modal-mode-alarm-low-inspiratory-minute-volume = Inspirationsvolumen (niedrig)
 modal-mode-alarm-high-inspiratory-minute-volume = Inspirationsvolumen (hoch)

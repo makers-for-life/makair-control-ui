@@ -511,30 +511,6 @@ impl DisplayUIEvents {
                 },
 
                 {
-                    SettingsModeEvent::TriggerInspiratoryFlow(SettingActionRange::Less),
-                    "trigger inspiratory flow less",
-
-                    [
-                        ids.mode_settings_field_trigger_inspiratory_less,
-                        ids.mode_settings_field_trigger_inspiratory_less_text,
-                    ],
-
-                    None
-                },
-
-                {
-                    SettingsModeEvent::TriggerInspiratoryFlow(SettingActionRange::More),
-                    "trigger inspiratory flow more",
-
-                    [
-                        ids.mode_settings_field_trigger_inspiratory_more,
-                        ids.mode_settings_field_trigger_inspiratory_more_text,
-                    ],
-
-                    None
-                },
-
-                {
                     SettingsModeEvent::TriggerExpiratoryFlow(SettingActionRange::Less),
                     "trigger expiratory flow less",
 

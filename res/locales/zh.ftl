@@ -69,7 +69,6 @@ modal-mode-cycles-per-minute = 每分钟循环
 modal-mode-tidal-volume = 潮量
 modal-mode-plateau-duration = 高原持续时间
 modal-mode-trigger-offset = 触发偏移
-modal-mode-trigger-inspiratory = 吸气触发器
 modal-mode-trigger-expiratory = 呼气触发
 modal-mode-alarm-low-inspiratory-minute-volume = 吸气量（低）
 modal-mode-alarm-high-inspiratory-minute-volume = 吸气量（高）

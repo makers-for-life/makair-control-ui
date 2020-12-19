@@ -69,7 +69,6 @@ modal-mode-cycles-per-minute = Cikli minūtē
 modal-mode-tidal-volume = Plūdmaiņu apjoms
 modal-mode-plateau-duration = Plato ilgums
 modal-mode-trigger-offset = Aktivizētāja nobīde
-modal-mode-trigger-inspiratory = Ieelpas sprūda
 modal-mode-trigger-expiratory = Derīguma termiņš
 modal-mode-alarm-low-inspiratory-minute-volume = Ieelpošanas tilpums (zems)
 modal-mode-alarm-high-inspiratory-minute-volume = Ieelpošanas tilpums (augsts)

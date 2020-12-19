@@ -67,7 +67,6 @@ struct ChipSettingsUpdate {
     trigger_offset: Option<u8>,
     alarm_snoozed: Option<bool>,
     ventilation_mode: Option<VentilationMode>,
-    inspiratory_trigger_flow: Option<u8>,
     expiratory_trigger_flow: Option<u8>,
     ti_min: Option<u16>,
     ti_max: Option<u16>,
@@ -457,10 +456,6 @@ impl Chip {
             self.settings.mode.trigger_inspiratory_offset = trigger_offset as usize;
         }
 
-        if let Some(inspiratory_trigger_flow) = update.inspiratory_trigger_flow {
-            self.settings.mode.trigger_inspiratory_flow = inspiratory_trigger_flow as usize;
-        }
-
         if let Some(expiratory_trigger_flow) = update.expiratory_trigger_flow {
             self.settings.mode.trigger_expiratory_flow = expiratory_trigger_flow as usize;
         }
@@ -542,7 +537,6 @@ impl Chip {
             trigger_offset: Some(snapshot.trigger_offset),
             alarm_snoozed: snapshot.alarm_snoozed,
             ventilation_mode: Some(snapshot.ventilation_mode),
-            inspiratory_trigger_flow: snapshot.inspiratory_trigger_flow,
             expiratory_trigger_flow: snapshot.expiratory_trigger_flow,
             ti_min: snapshot.ti_min,
             ti_max: snapshot.ti_max,
@@ -640,7 +634,6 @@ impl Chip {
             trigger_offset: message.trigger_offset,
             alarm_snoozed: message.alarm_snoozed,
             ventilation_mode: Some(message.ventilation_mode),
-            inspiratory_trigger_flow: message.inspiratory_trigger_flow,
             expiratory_trigger_flow: message.expiratory_trigger_flow,
             ti_min: message.ti_min,
             ti_max: message.ti_max,
@@ -785,7 +778,6 @@ impl Chip {
             }
 
             ControlSetting::InspiratoryTriggerFlow => {
-                self.settings.mode.trigger_inspiratory_flow = ack.value as usize;
                 self.last_machine_snapshot.inspiratory_trigger_flow = Some(ack.value as _);
             }
 
