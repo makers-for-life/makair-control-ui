@@ -3,6 +3,9 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+const CONVERT_RATIO_MMH2O_TO_CMH2O: f64 = 10.0;
+const CONVERT_RATIO_ML_TO_L: f64 = 1000.0;
+
 pub enum ConvertMode {
     Rounded,
     WithDecimals,
@@ -10,8 +13,8 @@ pub enum ConvertMode {
 
 pub fn convert_mmh2o_to_cmh2o(mode: ConvertMode, value: f64) -> f64 {
     match mode {
-        ConvertMode::WithDecimals => value / 10.0,
-        ConvertMode::Rounded => (value / 10.0).round(),
+        ConvertMode::WithDecimals => value / CONVERT_RATIO_MMH2O_TO_CMH2O,
+        ConvertMode::Rounded => (value / CONVERT_RATIO_MMH2O_TO_CMH2O).round(),
     }
 }
 
@@ -21,4 +24,11 @@ pub fn convert_cmh2o_to_mmh2o(value: u8) -> usize {
 
 pub fn convert_sub_ppm_to_ppm(value: u8) -> usize {
     (value as usize) * 10
+}
+
+pub fn convert_ml_to_l(mode: ConvertMode, value: f64) -> f64 {
+    match mode {
+        ConvertMode::WithDecimals => value / CONVERT_RATIO_ML_TO_L,
+        ConvertMode::Rounded => (value / CONVERT_RATIO_ML_TO_L).round(),
+    }
 }

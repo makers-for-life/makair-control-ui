@@ -5,6 +5,7 @@ telemetry-label-cycles = Ciclos/minuto
 telemetry-label-ratio = Taxa de insp-exp.
 telemetry-label-ratio-plateau = Duração do platô:
 telemetry-label-tidal = Volume corr.
+telemetry-label-minute-volume = Volume minuto
 
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-mmh2o = mmH2O

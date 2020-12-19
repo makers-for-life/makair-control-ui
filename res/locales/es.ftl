@@ -5,6 +5,7 @@ telemetry-label-cycles = Ciclos/minutos
 telemetry-label-ratio = Relación Insp-Exp
 telemetry-label-ratio-plateau = Duración de la meseta:
 telemetry-label-tidal = Volumen corriente
+telemetry-label-minute-volume = Volumen minuto
 
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-mmh2o = mmH2O

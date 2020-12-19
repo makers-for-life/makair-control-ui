@@ -5,6 +5,7 @@ telemetry-label-cycles = 周期/分钟
 telemetry-label-ratio = 吸气呼气比
 telemetry-label-ratio-plateau = 高原持续时间：
 telemetry-label-tidal = 潮量
+telemetry-label-minute-volume = 分钟音量
 
 telemetry-unit-cmh2o = 厘米水
 telemetry-unit-mmh2o = 毫米水柱

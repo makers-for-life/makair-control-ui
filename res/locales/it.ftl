@@ -5,6 +5,7 @@ telemetry-label-cycles = Cicli / minuti
 telemetry-label-ratio = Ispir.-Rapp. scadenza
 telemetry-label-ratio-plateau = Durata Altopiano:
 telemetry-label-tidal = Volume corrente
+telemetry-label-minute-volume = Volume minuto
 
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-mmh2o = mmH2O

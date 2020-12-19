@@ -5,6 +5,7 @@ telemetry-label-cycles = Циклов в минуту
 telemetry-label-ratio = Соотн. Вдох-Выдох
 telemetry-label-ratio-plateau = Продолжительность плато:
 telemetry-label-tidal = Дыхательный объем
+telemetry-label-minute-volume = Минутный объем
 
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-mmh2o = mmH2O

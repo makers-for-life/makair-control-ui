@@ -5,6 +5,7 @@ telemetry-label-cycles = Cikli/minutē
 telemetry-label-ratio = Ieel.-izel. attiecība
 telemetry-label-ratio-plateau = Plato ilgums:
 telemetry-label-tidal = Plūdmaiņas tilpums
+telemetry-label-minute-volume = Minūtes skaļums
 
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-mmh2o = mmH2O

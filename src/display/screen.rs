@@ -19,7 +19,7 @@ use crate::chip::settings::{
 };
 use crate::chip::ChipError;
 use crate::config::environment::*;
-use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
+use crate::utilities::units::{convert_ml_to_l, convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::widget::*;
 use crate::{APP_ARGS, APP_I18N};
 
@@ -389,6 +389,12 @@ impl<'a> Screen<'a> {
             || machine_snapshot.plateau_command > 0
             || machine_snapshot.peep_command > 0;
 
+        // Unpack re-used values
+        let (measured_cpm, measured_volume) = (
+            machine_snapshot.previous_cpm.unwrap_or(0),
+            machine_snapshot.previous_volume.unwrap_or(0),
+        );
+
         // Initialize the mode widget
         self.widgets
             .render(ControlWidgetType::ModeOverview(mode_overview::Config {
@@ -527,7 +533,7 @@ impl<'a> Screen<'a> {
                 value_measured: if machine_snapshot.cpm_command == 0 {
                     None
                 } else {
-                    Some(machine_snapshot.previous_cpm.unwrap_or(0).to_string())
+                    Some(measured_cpm.to_string())
                 },
                 value_target: Some(if machine_snapshot.cpm_command == 0 {
                     TELEMETRY_WIDGET_VALUE_EMPTY.to_owned()
@@ -555,15 +561,14 @@ impl<'a> Screen<'a> {
             }));
 
         // Initialize the tidal widget
-        let previous_volume = machine_snapshot
-            .previous_volume
-            .map(|v| format!("{}", v))
-            .unwrap_or_else(|| TELEMETRY_WIDGET_VALUE_EMPTY.to_owned());
-
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-tidal"),
-                value_measured: Some(previous_volume),
+                value_measured: Some(if measured_volume > 0 {
+                    measured_volume.to_string()
+                } else {
+                    TELEMETRY_WIDGET_VALUE_EMPTY.to_owned()
+                }),
                 value_target: if mode.volume_tidal > 0
                     && mode.mode.class() == VentilationModeClass::Volume
                 {
@@ -583,6 +588,42 @@ impl<'a> Screen<'a> {
                     ),
                     self.ids.tidal_value_target,
                     Some(self.ids.tidal_unit),
+                ),
+                x_position: TELEMETRY_WIDGET_BOTTOM_SIZE_WIDTH + TELEMETRY_WIDGET_SPACING_SIDES,
+                y_position: 0.0,
+                background_color: Color::Rgba(52.0 / 255.0, 52.0 / 255.0, 52.0 / 255.0, 1.0),
+                width: TELEMETRY_WIDGET_BOTTOM_SIZE_WIDTH,
+                height: LAYOUT_FOOTER_SIZE_HEIGHT,
+            }));
+
+        // Initialize the minute volume widget
+        self.widgets
+            .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
+                title: APP_I18N.t("telemetry-label-minute-volume"),
+                value_measured: Some(if measured_cpm > 0 && measured_volume > 0 {
+                    format!(
+                        "{:.1}",
+                        convert_ml_to_l(
+                            ConvertMode::WithDecimals,
+                            (measured_cpm as u16 * measured_volume) as f64,
+                        )
+                    )
+                } else {
+                    TELEMETRY_WIDGET_VALUE_EMPTY.to_owned()
+                }),
+                value_target: None,
+                unit: APP_I18N.t("telemetry-unit-lpm"),
+                ids: (
+                    self.ids.tidal_parent,
+                    self.ids.minute_volume_parent,
+                    self.ids.minute_volume_title,
+                    self.ids.minute_volume_value_measured,
+                    (
+                        self.ids.minute_volume_value_arrow_main,
+                        self.ids.minute_volume_value_arrow_line,
+                    ),
+                    self.ids.minute_volume_value_target,
+                    Some(self.ids.minute_volume_unit),
                 ),
                 x_position: TELEMETRY_WIDGET_BOTTOM_SIZE_WIDTH + TELEMETRY_WIDGET_SPACING_SIDES,
                 y_position: 0.0,
@@ -632,7 +673,7 @@ impl<'a> Screen<'a> {
                     }
                 ),
                 ids: (
-                    self.ids.tidal_parent,
+                    self.ids.minute_volume_parent,
                     self.ids.ratio_parent,
                     self.ids.ratio_title,
                     self.ids.ratio_value_measured,

@@ -5,6 +5,7 @@ telemetry-label-cycles = Zyklen/Minuten
 telemetry-label-ratio = Ein.-Aus. Verhältnis
 telemetry-label-ratio-plateau = Plateaudauer:
 telemetry-label-tidal = Atemzugvolumen
+telemetry-label-minute-volume = Minutenlautstärke
 
 telemetry-unit-cmh2o = cmH2O
 telemetry-unit-mmh2o = mmH2O

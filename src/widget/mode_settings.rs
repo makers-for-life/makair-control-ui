@@ -100,9 +100,6 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         ]
     );
 
-    // TODO: do not save values (mode + its options) right away once it gets changed
-    // TODO: add save button
-
     // Append contents
     selector(master, &config);
     content(master, &config);
@@ -281,8 +278,6 @@ fn group_tab<'a>(
 }
 
 fn form<'a>(master: &mut ControlWidget<'a>, config: &Config, parent_size: (f64, f64)) {
-    // TODO: option becomes eg. blue when it is changed and not saved
-
     // Compute total tabs width
     let tabs_total_width = MODE_SETTINGS_GROUP_TABS_WIDTH + MODE_SETTINGS_GROUP_TABS_MARGIN_RIGHT;
 

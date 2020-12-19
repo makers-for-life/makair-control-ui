@@ -149,6 +149,14 @@ widget_ids!(pub struct Ids {
   tidal_value_target,
   tidal_unit,
 
+  minute_volume_parent,
+  minute_volume_title,
+  minute_volume_value_measured,
+  minute_volume_value_arrow_main,
+  minute_volume_value_arrow_line,
+  minute_volume_value_target,
+  minute_volume_unit,
+
   trigger_status_container,
   trigger_status_text,
   trigger_status_button,
