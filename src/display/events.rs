@@ -583,7 +583,8 @@ impl DisplayUIEvents {
                 },
 
                 {
-                    SettingsModeEvent::PressureExpiratory(SettingActionRange::Less), "pressure expiratory less",
+                    SettingsModeEvent::PressureExpiratory(SettingActionRange::Less),
+                    "pressure expiratory less",
 
                     [
                         ids.mode_settings_field_pressure_expiratory_less,
@@ -594,7 +595,8 @@ impl DisplayUIEvents {
                 },
 
                 {
-                    SettingsModeEvent::PressureExpiratory(SettingActionRange::More), "pressure expiratory more",
+                    SettingsModeEvent::PressureExpiratory(SettingActionRange::More),
+                    "pressure expiratory more",
 
                     [
                         ids.mode_settings_field_pressure_expiratory_more,
