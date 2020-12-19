@@ -2,8 +2,7 @@ telemetry-label-peak = Пик.давл
 telemetry-label-plateau = Давление плато
 telemetry-label-expiratory = ПДКВ
 telemetry-label-cycles = Циклов в минуту
-telemetry-label-ratio = Соотн. Вдох-Выдох
-telemetry-label-ratio-plateau = Продолжительность плато:
+telemetry-label-ratio = Продолжительность вдоха
 telemetry-label-tidal = Дыхательный объем
 telemetry-label-minute-volume = Минутный объем
 

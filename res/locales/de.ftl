@@ -2,8 +2,7 @@ telemetry-label-peak = P(spitzendruck)
 telemetry-label-plateau = P(plateaudruck)
 telemetry-label-expiratory = P(PEEP)
 telemetry-label-cycles = Zyklen/Minuten
-telemetry-label-ratio = Ein.-Aus. Verhältnis
-telemetry-label-ratio-plateau = Plateaudauer:
+telemetry-label-ratio = Inspirationsdauer
 telemetry-label-tidal = Atemzugvolumen
 telemetry-label-minute-volume = Minutenlautstärke
 

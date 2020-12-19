@@ -2,8 +2,7 @@ telemetry-label-peak = K(kulminācija)
 telemetry-label-plateau = A(atslābums)
 telemetry-label-expiratory = I(izelpa)
 telemetry-label-cycles = Cikli/minutē
-telemetry-label-ratio = Ieel.-izel. attiecība
-telemetry-label-ratio-plateau = Plato ilgums:
+telemetry-label-ratio = Ieelpošanas ilgums
 telemetry-label-tidal = Plūdmaiņas tilpums
 telemetry-label-minute-volume = Minūtes skaļums
 

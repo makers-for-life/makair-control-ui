@@ -2,8 +2,7 @@ telemetry-label-peak = P(picco)
 telemetry-label-plateau = P(altopiano)
 telemetry-label-expiratory = P(espiratorio)
 telemetry-label-cycles = Cicli / minuti
-telemetry-label-ratio = Ispir.-Rapp. scadenza
-telemetry-label-ratio-plateau = Durata Altopiano:
+telemetry-label-ratio = Durata inspiratoria
 telemetry-label-tidal = Volume corrente
 telemetry-label-minute-volume = Volume minuto
 

@@ -2,8 +2,7 @@ telemetry-label-peak = Пік
 telemetry-label-plateau = Тиск плато
 telemetry-label-expiratory = ПТКВ
 telemetry-label-cycles = Циклів в хвилину
-telemetry-label-ratio = Співвідн. Вдих-Видих
-telemetry-label-ratio-plateau = Тривалість плато:
+telemetry-label-ratio = Тривалість натхнення
 telemetry-label-tidal = Дихальний обсяг
 telemetry-label-minute-volume = Хвилинна гучність
 

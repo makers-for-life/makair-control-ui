@@ -2,8 +2,7 @@ telemetry-label-peak = P(peak)
 telemetry-label-plateau = P(plateau)
 telemetry-label-expiratory = P(expiratory)
 telemetry-label-cycles = Cycles/minute
-telemetry-label-ratio = Insp-exp ratio
-telemetry-label-ratio-plateau = Plateau duration:
+telemetry-label-ratio = Inspiratory duration
 telemetry-label-tidal = Tidal volume
 telemetry-label-minute-volume = Minute volume
 

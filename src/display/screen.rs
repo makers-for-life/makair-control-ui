@@ -381,9 +381,10 @@ impl<'a> Screen<'a> {
             mode.volume_tidal > 0 && mode.mode.class() == VentilationModeClass::Volume;
 
         // Unpack re-used values
-        let (measured_cpm, measured_volume) = (
+        let (measured_cpm, measured_volume, measured_inspiratory_duration) = (
             machine_snapshot.previous_cpm.unwrap_or(0),
             machine_snapshot.previous_volume.unwrap_or(0),
+            machine_snapshot.previous_inspiratory_duration.unwrap_or(0),
         );
 
         // Initialize the mode widget
@@ -627,42 +628,21 @@ impl<'a> Screen<'a> {
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-ratio"),
-                value_measured: Some(if machine_snapshot.expiratory_term == 0 {
-                    TELEMETRY_WIDGET_VALUE_EMPTY.to_owned()
+                value_measured: Some(if measured_inspiratory_duration > 0 {
+                    measured_inspiratory_duration.to_string()
                 } else {
-                    let expiratory_term_value = convert_mmh2o_to_cmh2o(
-                        ConvertMode::WithDecimals,
-                        machine_snapshot.expiratory_term as f64,
-                    );
-
-                    if expiratory_term_value.fract() == 0.0 {
-                        format!(
-                            "{}:{}",
-                            TELEMETRY_WIDGET_CYCLES_RATIO_INSPIRATION, expiratory_term_value,
-                        )
-                    } else {
-                        format!(
-                            "{}:{:.1}",
-                            TELEMETRY_WIDGET_CYCLES_RATIO_INSPIRATION, expiratory_term_value,
-                        )
-                    }
+                    TELEMETRY_WIDGET_VALUE_EMPTY.to_owned()
                 }),
-                value_target: None,
-                unit: format!(
-                    "{} {}",
-                    APP_I18N.t("telemetry-label-ratio-plateau"),
-                    // TODO: invert unit and value, it should show in large text eg. '1000ms', \
-                    //   and in small text the i/e ratio. REQUIRES TELEMETRY PROTO UPDATE!
-                    if let Some(plateau_duration) = Some(0) {
-                        format!(
-                            "{}{}",
-                            plateau_duration,
-                            APP_I18N.t("telemetry-unit-milliseconds")
-                        )
-                    } else {
-                        TELEMETRY_WIDGET_VALUE_EMPTY.to_owned()
-                    }
-                ),
+                value_target: if measured_inspiratory_duration > 0
+                    && mode.mode.class() != VentilationModeClass::Volume
+                {
+                    machine_snapshot
+                        .inspiratory_duration_command
+                        .map(|target_inspiratory_duration| target_inspiratory_duration.to_string())
+                } else {
+                    None
+                },
+                unit: APP_I18N.t("telemetry-unit-milliseconds"),
                 ids: (
                     self.ids.minute_volume_parent,
                     self.ids.ratio_parent,

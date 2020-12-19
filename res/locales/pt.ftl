@@ -2,8 +2,7 @@ telemetry-label-peak = P (pico)
 telemetry-label-plateau = P (platô)
 telemetry-label-expiratory = P (expiratório)
 telemetry-label-cycles = Ciclos/minuto
-telemetry-label-ratio = Taxa de insp-exp.
-telemetry-label-ratio-plateau = Duração do platô:
+telemetry-label-ratio = Duração inspiratória
 telemetry-label-tidal = Volume corr.
 telemetry-label-minute-volume = Volume minuto
 

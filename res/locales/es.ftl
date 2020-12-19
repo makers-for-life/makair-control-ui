@@ -2,8 +2,7 @@ telemetry-label-peak = P(Pico)
 telemetry-label-plateau = P(meseta)
 telemetry-label-expiratory = P(exhalación)
 telemetry-label-cycles = Ciclos/minutos
-telemetry-label-ratio = Relación Insp-Exp
-telemetry-label-ratio-plateau = Duración de la meseta:
+telemetry-label-ratio = Duración inspiratoria
 telemetry-label-tidal = Volumen corriente
 telemetry-label-minute-volume = Volumen minuto
 
