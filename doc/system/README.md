@@ -2,7 +2,7 @@
 
 The UI is started fullscreen, using the cage compositor for wayland.
 
-These packages are required for the minimal operation: `cage` `fontconfig` `ttf-opensans` `libxcb`.
+These packages are required for the minimal operation: `cage`, `fontconfig`, `ttf-opensans` and `libxcb`.
 
 **Note:** `ttf-opensans` is required as a default _ttf_ font. The control ui does not support a non-ttf default
 sans-serif font.
@@ -19,4 +19,4 @@ There are additional support scripts for recording the telemetry data onto a USB
 The script `makair-restart`, triggered by _udevil_ on USB detection handles reconfiguring and restarting the UI to
 log data onto the USB if necessary.
 
-These packages are required for on-the-fly recording the telemetry the USB telemetry: `usdisks2` `devmon`
+These packages are required for on-the-fly recording the telemetry the USB telemetry: `usdisks2` and `devmon`
