@@ -72,6 +72,7 @@ macro_rules! gen_draw_cached_image {
 
 macro_rules! gen_widget_impls {
     ($($control:tt -> $widget:ident $([$lifetime:lifetime])*),+,) => {
+        #[allow(clippy::large_enum_variant)]
         pub enum ControlWidgetType<'a> {
             $(
                 $control($widget::Config<$($lifetime)*>),
