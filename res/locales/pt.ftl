@@ -40,9 +40,6 @@ status-unit-active = Unidade ativa
 status-power-battery = Bateria
 status-power-ac = Alimentação
 
-trigger-state-enabled = ativado
-trigger-state-disabled = Desativado
-
 mode-class-pc = Pressão
 mode-class-vc = Volume
 mode-type-cmv = CMV
@@ -60,6 +57,8 @@ modal-snooze-alarms-active = Bips ativados
 modal-snooze-alarms-inactive = Beeps desativados
 
 modal-trigger-inspiratory-status = Status inspiratório do gatilho:
+modal-trigger-inspiratory-status-enabled = Ativado
+modal-trigger-inspiratory-status-disabled = Desativado
 modal-trigger-inspiratory-offset = Deslocamento do gatilho:
 
 modal-expiration-term-expiratory-term = Termo expiratório:

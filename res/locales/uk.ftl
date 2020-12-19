@@ -40,9 +40,6 @@ status-unit-active = Активний
 status-power-battery = Батарея
 status-power-ac = Зовнішнє живлення
 
-trigger-state-enabled = Увімкнено
-trigger-state-disabled = Інваліди
-
 mode-class-pc = Тиск
 mode-class-vc = Гучність
 mode-type-cmv = CMV
@@ -60,6 +57,8 @@ modal-snooze-alarms-active = Звукові сигнали увімкнено
 modal-snooze-alarms-inactive = Звукові сигнали відключені
 
 modal-trigger-inspiratory-status = Стан тригера:
+modal-trigger-inspiratory-status-enabled = Увімкнено
+modal-trigger-inspiratory-status-disabled = Інваліди
 modal-trigger-inspiratory-offset = Зсув тригера:
 
 modal-expiration-term-expiratory-term = Термін видиху:

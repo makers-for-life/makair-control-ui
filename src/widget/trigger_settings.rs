@@ -78,8 +78,8 @@ fn status_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 fn status_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Acquire status button color & label
     let status_label = match config.trigger_settings.state {
-        SettingActionState::Enabled => APP_I18N.t("trigger-state-enabled"),
-        SettingActionState::Disabled => APP_I18N.t("trigger-state-disabled"),
+        SettingActionState::Enabled => APP_I18N.t("modal-trigger-inspiratory-status-enabled"),
+        SettingActionState::Disabled => APP_I18N.t("modal-trigger-inspiratory-status-disabled"),
     };
     let button_color = match config.trigger_settings.state {
         SettingActionState::Enabled => color::DARK_GREEN,

@@ -40,9 +40,6 @@ status-unit-active = 单位活跃
 status-power-battery = 电池
 status-power-ac = 交流电
 
-trigger-state-enabled = 已启用
-trigger-state-disabled = 残障人士
-
 mode-class-pc = 压力
 mode-class-vc = 卷
 mode-type-cmv = CMV
@@ -60,6 +57,8 @@ modal-snooze-alarms-active = 启用哔声
 modal-snooze-alarms-inactive = 哔声禁用
 
 modal-trigger-inspiratory-status = 触发吸气状态：
+modal-trigger-inspiratory-status-enabled = 已启用
+modal-trigger-inspiratory-status-disabled = 残障人士
 modal-trigger-inspiratory-offset = 吸气扳机偏移量：
 
 modal-expiration-term-expiratory-term = 呼气期:

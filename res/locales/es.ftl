@@ -40,9 +40,6 @@ status-unit-active = Unidad activa
 status-power-battery = Batería
 status-power-ac = Corriente alterna
 
-trigger-state-enabled = Habilitado
-trigger-state-disabled = Discapacitado
-
 mode-class-pc = Presión
 mode-class-vc = Volumen
 mode-type-cmv = CMV
@@ -60,6 +57,8 @@ modal-snooze-alarms-active = Pitidos habilitados
 modal-snooze-alarms-inactive = Pitidos desactivados
 
 modal-trigger-inspiratory-status = Activar el estado inspiratorio:
+modal-trigger-inspiratory-status-enabled = Habilitado
+modal-trigger-inspiratory-status-disabled = Discapacitado
 modal-trigger-inspiratory-offset = Desplazamiento del disparador:
 
 modal-expiration-term-expiratory-term = Término expiratorio:

@@ -40,9 +40,6 @@ status-unit-active = Ierīce aktīva
 status-power-battery = Akumulators
 status-power-ac = Maiņstrāvas avots
 
-trigger-state-enabled = Iespējots
-trigger-state-disabled = Atspējots
-
 mode-class-pc = Spiediens
 mode-class-vc = Skaļums
 mode-type-cmv = CMV
@@ -60,6 +57,8 @@ modal-snooze-alarms-active = Pīkstieni ir iespējoti
 modal-snooze-alarms-inactive = Pīkstieni ir invalīdi
 
 modal-trigger-inspiratory-status = Iedvesmojošā stāvokļa izraisītājs:
+modal-trigger-inspiratory-status-enabled = Iespējots
+modal-trigger-inspiratory-status-disabled = Atspējots
 modal-trigger-inspiratory-offset = Ieelpošanas trigera nobīde:
 
 modal-expiration-term-expiratory-term = Derīguma termiņš:

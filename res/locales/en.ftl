@@ -40,9 +40,6 @@ status-unit-active = Unit active
 status-power-battery = Battery
 status-power-ac = AC power
 
-trigger-state-enabled = Enabled
-trigger-state-disabled = Disabled
-
 mode-class-pc = Pressure
 mode-class-vc = Volume
 mode-type-cmv = CMV
@@ -60,6 +57,8 @@ modal-snooze-alarms-active = Beeps enabled (default setting)
 modal-snooze-alarms-inactive = Beeps disabled (for some time)
 
 modal-trigger-inspiratory-status = Inspiratory trigger status:
+modal-trigger-inspiratory-status-enabled = Enabled
+modal-trigger-inspiratory-status-disabled = Disabled
 modal-trigger-inspiratory-offset = Inspiratory trigger offset:
 
 modal-expiration-term-expiratory-term = Expiratory term:

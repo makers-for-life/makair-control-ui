@@ -40,9 +40,6 @@ status-unit-active = Gerät aktiv
 status-power-battery = Batterie
 status-power-ac = Stromversorgung
 
-trigger-state-enabled = aktiviert
-trigger-state-disabled = Behindert
-
 mode-class-pc = Druck
 mode-class-vc = Volumen
 mode-type-cmv = CMV
@@ -60,6 +57,8 @@ modal-snooze-alarms-active = Signaltöne aktiviert
 modal-snooze-alarms-inactive = Signaltöne deaktiviert
 
 modal-trigger-inspiratory-status = Inspirationsstatus auslösen:
+modal-trigger-inspiratory-status-enabled = Aktiviert
+modal-trigger-inspiratory-status-disabled = Behindert
 modal-trigger-inspiratory-offset = Inspiratorischer Trigger-Offset:
 
 modal-expiration-term-expiratory-term = Exspiratorischer Begriff:

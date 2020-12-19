@@ -40,9 +40,6 @@ status-unit-active = Активный
 status-power-battery = Батарея
 status-power-ac = Кабель
 
-trigger-state-enabled = Включено
-trigger-state-disabled = инвалид
-
 mode-class-pc = Давление
 mode-class-vc = Объем
 mode-type-cmv = CMV
@@ -60,6 +57,8 @@ modal-snooze-alarms-active = Звуковые сигналы включены
 modal-snooze-alarms-inactive = Звуковые сигналы отключены
 
 modal-trigger-inspiratory-status = Статус триггера:
+modal-trigger-inspiratory-status-enabled = Включено
+modal-trigger-inspiratory-status-disabled = Инвалид
 modal-trigger-inspiratory-offset = Смещение триггера:
 
 modal-expiration-term-expiratory-term = Срок выдоха:
