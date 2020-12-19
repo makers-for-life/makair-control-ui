@@ -61,9 +61,6 @@ modal-expiration-term-expiratory-term = Термін видиху:
 
 modal-cycles-cycles-per-minute = Цикли в хвилину:
 
-modal-pressure-plateau = Тиск на плато:
-modal-pressure-expiratory = Тиск на видиху:
-
 modal-mode-pressure-inspiratory = Інспіраторний тиск
 modal-mode-pressure-expiratory = Тиск на видиху
 modal-mode-time-inspiratory = Час надихання

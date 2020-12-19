@@ -61,9 +61,6 @@ modal-expiration-term-expiratory-term = Срок выдоха:
 
 modal-cycles-cycles-per-minute = Циклов в минуту:
 
-modal-pressure-plateau = Давление плато:
-modal-pressure-expiratory = Давление на выдохе:
-
 modal-mode-pressure-inspiratory = Давление на вдохе
 modal-mode-pressure-expiratory = Давление на выдохе
 modal-mode-time-inspiratory = Время вдоха

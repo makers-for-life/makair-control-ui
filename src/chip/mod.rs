@@ -484,11 +484,9 @@ impl Chip {
         // Update pressure values
         if let Some(plateau_command) = update.plateau_command {
             self.settings.mode.pressure_plateau = convert_cmh2o_to_mmh2o(plateau_command);
-            self.settings.pressure.plateau = convert_cmh2o_to_mmh2o(plateau_command);
         }
         if let Some(peep_command) = update.peep_command {
             self.settings.mode.pressure_expiratory = convert_cmh2o_to_mmh2o(peep_command);
-            self.settings.pressure.peep = convert_cmh2o_to_mmh2o(peep_command);
         }
 
         // Update target tidal volume values
@@ -738,14 +736,12 @@ impl Chip {
 
             ControlSetting::PlateauPressure => {
                 self.settings.mode.pressure_plateau = ack.value as usize;
-                self.settings.pressure.plateau = ack.value as usize;
                 self.last_machine_snapshot.plateau_command =
                     convert_mmh2o_to_cmh2o(ConvertMode::Rounded, ack.value as f64) as u8
             }
 
             ControlSetting::PEEP => {
                 self.settings.mode.pressure_expiratory = ack.value as usize;
-                self.settings.pressure.peep = ack.value as usize;
                 self.last_machine_snapshot.peep_command =
                     convert_mmh2o_to_cmh2o(ConvertMode::Rounded, ack.value as f64) as u8
             }

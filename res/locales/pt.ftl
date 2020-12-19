@@ -61,9 +61,6 @@ modal-expiration-term-expiratory-term = Termo expiratório:
 
 modal-cycles-cycles-per-minute = Ciclos por minuto:
 
-modal-pressure-plateau = Pressão de platô:
-modal-pressure-expiratory = Pressão expiratória:
-
 modal-mode-pressure-inspiratory = Pressão inspiratória
 modal-mode-pressure-expiratory = Pressão expiratória
 modal-mode-time-inspiratory = Tempo inspiratório

@@ -11,7 +11,6 @@ use crate::chip::{
         cycles::SettingsCyclesEvent,
         expiration_term::SettingsExpirationTermEvent,
         mode::{SettingsModeEvent, SettingsModeGroupTab},
-        pressure::SettingsPressureEvent,
         run::SettingsRunEvent,
         snooze::SettingsSnoozeEvent,
         ChipSettingsEvent, SettingActionRange,
@@ -872,54 +871,6 @@ impl DisplayUIEvents {
                     [
                         ids.cycles_more_button,
                         ids.cycles_more_button_text,
-                    ],
-
-                    None
-                }
-            },
-
-            {
-                "pressure", Pressure, states.pressure_settings,
-
-                {
-                    SettingsPressureEvent::Plateau(SettingActionRange::Less), "plateau less",
-
-                    [
-                        ids.pressure_plateau_less_button,
-                        ids.pressure_plateau_less_button_text,
-                    ],
-
-                    None
-                },
-
-                {
-                    SettingsPressureEvent::Plateau(SettingActionRange::More), "plateau more",
-
-                    [
-                        ids.pressure_plateau_more_button,
-                        ids.pressure_plateau_more_button_text,
-                    ],
-
-                    None
-                },
-
-                {
-                    SettingsPressureEvent::PEEP(SettingActionRange::Less), "peep less",
-
-                    [
-                        ids.pressure_peep_less_button,
-                        ids.pressure_peep_less_button_text,
-                    ],
-
-                    None
-                },
-
-                {
-                    SettingsPressureEvent::PEEP(SettingActionRange::More), "peep more",
-
-                    [
-                        ids.pressure_peep_more_button,
-                        ids.pressure_peep_more_button_text,
                     ],
 
                     None

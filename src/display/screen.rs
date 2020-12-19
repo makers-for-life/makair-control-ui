@@ -14,7 +14,7 @@ use telemetry::structures::{
 
 use crate::chip::settings::{
     cycles::SettingsCycles, expiration_term::SettingsExpirationTerm, mode::SettingsMode,
-    pressure::SettingsPressure, run::SettingsRun, snooze::SettingsSnooze, ChipSettings,
+    run::SettingsRun, snooze::SettingsSnooze, ChipSettings,
 };
 use crate::chip::ChipError;
 use crate::config::environment::*;
@@ -34,7 +34,6 @@ pub struct ScreenModalsOpen {
     advanced: bool,
     mode: bool,
     expiration_term: bool,
-    pressure: bool,
     cycles: bool,
 }
 
@@ -55,7 +54,6 @@ impl ScreenModalsOpen {
             advanced: states.advanced_settings.is_open(),
             mode: states.mode_settings.is_open(),
             expiration_term: states.expiration_term_settings.is_open(),
-            pressure: states.pressure_settings.is_open(),
             cycles: states.cycles_settings.is_open(),
         }
     }
@@ -718,8 +716,6 @@ impl<'a> Screen<'a> {
             self.render_mode_settings(&settings.mode);
         } else if modals.expiration_term {
             self.render_expiration_term_settings(&settings.expiration_term);
-        } else if modals.pressure {
-            self.render_pressure_settings(&settings.pressure);
         } else if modals.cycles {
             self.render_cycles_settings(&settings.cycles);
         }
@@ -960,45 +956,6 @@ impl<'a> Screen<'a> {
                     expiration_term_value_widget: self.ids.expiration_term_value,
                 },
             ));
-    }
-
-    fn render_pressure_settings(&mut self, settings: &'a SettingsPressure) {
-        self.render_modal(
-            PRESSURE_SETTINGS_MODAL_WIDTH,
-            PRESSURE_SETTINGS_MODAL_HEIGTH,
-            Some(PRESSURE_SETTINGS_MODAL_PADDING),
-        );
-
-        self.widgets.render(ControlWidgetType::PressureSettings(
-            pressure_settings::Config {
-                width: PRESSURE_SETTINGS_MODAL_WIDTH,
-                height: PRESSURE_SETTINGS_MODAL_HEIGTH
-                    - MODAL_VALIDATE_BUTTON_HEIGHT
-                    - (PRESSURE_SETTINGS_MODAL_PADDING * 2.0),
-                pressure_settings: settings,
-
-                pressure_container_parent: self.ids.modal_container,
-                pressure_container_widget: self.ids.pressure_container,
-                pressure_plateau_more_button_widget: self.ids.pressure_plateau_more_button,
-                pressure_plateau_more_button_text_widget: self
-                    .ids
-                    .pressure_plateau_more_button_text,
-                pressure_plateau_less_button_widget: self.ids.pressure_plateau_less_button,
-                pressure_plateau_less_button_text_widget: self
-                    .ids
-                    .pressure_plateau_less_button_text,
-                pressure_plateau_text_widget: self.ids.pressure_plateau_text,
-                pressure_plateau_value_wrapper_widget: self.ids.pressure_plateau_value_wrapper,
-                pressure_plateau_value_widget: self.ids.pressure_plateau_value,
-                pressure_peep_more_button_widget: self.ids.pressure_peep_more_button,
-                pressure_peep_more_button_text_widget: self.ids.pressure_peep_more_button_text,
-                pressure_peep_less_button_widget: self.ids.pressure_peep_less_button,
-                pressure_peep_less_button_text_widget: self.ids.pressure_peep_less_button_text,
-                pressure_peep_text_widget: self.ids.pressure_peep_text,
-                pressure_peep_value_wrapper_widget: self.ids.pressure_peep_value_wrapper,
-                pressure_peep_value_widget: self.ids.pressure_peep_value,
-            },
-        ));
     }
 
     fn render_cycles_settings(&mut self, settings: &'a SettingsCycles) {
