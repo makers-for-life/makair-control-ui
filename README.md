@@ -1,5 +1,7 @@
 # MakAir Control UI
 
+[![Control Lint](https://github.com/makers-for-life/makair-control-ui/workflows/Control%20Lint/badge.svg)](https://github.com/makers-for-life/makair-control-ui/actions?query=workflow%3A%22Control+Lint%22)
+
 <p align="center">
   <img alt="UI When Ventilation Unit Is Running" src="./doc/screens/unit-running.jpg">
 </p>
