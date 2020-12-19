@@ -651,7 +651,8 @@ impl<'a> Screen<'a> {
                 unit: format!(
                     "{} {}",
                     APP_I18N.t("telemetry-label-ratio-plateau"),
-                    // TODO: refactor this
+                    // TODO: invert unit and value, it should show in large text eg. '1000ms', \
+                    //   and in small text the i/e ratio. REQUIRES TELEMETRY PROTO UPDATE!
                     if let Some(plateau_duration) = Some(0) {
                         format!(
                             "{}{}",
