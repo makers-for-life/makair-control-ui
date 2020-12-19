@@ -164,6 +164,15 @@ impl DisplayUIEvents {
                     ids.tidal_value_target,
                     ids.tidal_unit,
 
+                    // From: 'minute volume'
+                    ids.minute_volume_parent,
+                    ids.minute_volume_title,
+                    ids.minute_volume_value_measured,
+                    ids.minute_volume_value_arrow_main,
+                    ids.minute_volume_value_arrow_line,
+                    ids.minute_volume_value_target,
+                    ids.minute_volume_unit,
+
                     // From: 'cycles'
                     ids.cycles_parent,
                     ids.cycles_title,
