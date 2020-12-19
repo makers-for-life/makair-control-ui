@@ -9,7 +9,7 @@ use paste::paste;
 
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{
-    AlarmPriority, DataSnapshot, MachineStateSnapshot, VentilationModeClass,
+    AlarmPriority, DataSnapshot, MachineStateSnapshot, VentilationMode, VentilationModeClass,
 };
 
 use crate::chip::settings::{
@@ -369,23 +369,25 @@ impl<'a> Screen<'a> {
             },
         ));
 
-        // Check if at least a pressure value is known (otherwise, all pressure widgets should \
-        //   show as empty)
-        let has_target_pressure = machine_snapshot.peak_command > 0
-            || machine_snapshot.plateau_command > 0
-            || machine_snapshot.peep_command > 0;
-
-        // Check if there is a target tidal volume we can show (only if value is set, and current \
-        //   ventilation mode is volume-controlled)
-        let has_target_volume_tidal =
-            mode.volume_tidal > 0 && mode.mode.class() == VentilationModeClass::Volume;
-
         // Unpack re-used values
         let (measured_cpm, measured_volume, measured_inspiratory_duration) = (
             machine_snapshot.previous_cpm.unwrap_or(0),
             machine_snapshot.previous_volume.unwrap_or(0),
             machine_snapshot.previous_inspiratory_duration.unwrap_or(0),
         );
+
+        // Check if at least a pressure value is known (otherwise, all pressure widgets should \
+        //   show as empty)
+        let has_target_pressure = machine_snapshot.peak_command > 0
+            || machine_snapshot.plateau_command > 0
+            || machine_snapshot.peep_command > 0;
+
+        // Check if we can show listed target values (only if value is set, and current \
+        //   ventilation mode matches expectation to show target value)
+        let has_target_volume_tidal =
+            mode.volume_tidal > 0 && mode.mode.class() == VentilationModeClass::Volume;
+        let has_target_inspiration_duration = measured_inspiratory_duration > 0
+            && (mode.mode == VentilationMode::PC_CMV || mode.mode == VentilationMode::PC_AC);
 
         // Initialize the mode widget
         self.widgets
@@ -628,21 +630,49 @@ impl<'a> Screen<'a> {
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
                 title: APP_I18N.t("telemetry-label-ratio"),
-                value_measured: Some(if measured_inspiratory_duration > 0 {
-                    measured_inspiratory_duration.to_string()
-                } else {
-                    TELEMETRY_WIDGET_VALUE_EMPTY.to_owned()
-                }),
-                value_target: if measured_inspiratory_duration > 0
-                    && mode.mode.class() != VentilationModeClass::Volume
-                {
+                value_measured: Some(
+                    if measured_inspiratory_duration > 0 || has_target_inspiration_duration {
+                        measured_inspiratory_duration.to_string()
+                    } else {
+                        TELEMETRY_WIDGET_VALUE_EMPTY.to_owned()
+                    },
+                ),
+                value_target: if has_target_inspiration_duration {
                     machine_snapshot
                         .inspiratory_duration_command
                         .map(|target_inspiratory_duration| target_inspiratory_duration.to_string())
                 } else {
                     None
                 },
-                unit: APP_I18N.t("telemetry-unit-milliseconds"),
+                unit: if machine_snapshot.expiratory_term == 0 {
+                    APP_I18N.t("telemetry-unit-milliseconds")
+                } else {
+                    format!(
+                        "{} ({} {})",
+                        &APP_I18N.t("telemetry-unit-milliseconds"),
+                        &APP_I18N.t("telemetry-label-ratio-details"),
+                        {
+                            let expiratory_term_value = convert_mmh2o_to_cmh2o(
+                                ConvertMode::WithDecimals,
+                                machine_snapshot.expiratory_term as f64,
+                            );
+
+                            if expiratory_term_value.fract() == 0.0 {
+                                format!(
+                                    "{}:{}",
+                                    TELEMETRY_WIDGET_CYCLES_RATIO_INSPIRATION,
+                                    expiratory_term_value,
+                                )
+                            } else {
+                                format!(
+                                    "{}:{:.1}",
+                                    TELEMETRY_WIDGET_CYCLES_RATIO_INSPIRATION,
+                                    expiratory_term_value,
+                                )
+                            }
+                        }
+                    )
+                },
                 ids: (
                     self.ids.minute_volume_parent,
                     self.ids.ratio_parent,

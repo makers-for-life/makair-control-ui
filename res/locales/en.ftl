@@ -3,6 +3,7 @@ telemetry-label-plateau = P(plateau)
 telemetry-label-expiratory = P(expiratory)
 telemetry-label-cycles = Cycles/minute
 telemetry-label-ratio = Inspiratory duration
+telemetry-label-ratio-details = insp-exp. ratio of
 telemetry-label-tidal = Tidal volume
 telemetry-label-minute-volume = Minute volume
 

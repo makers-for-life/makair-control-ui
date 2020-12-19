@@ -3,6 +3,7 @@ telemetry-label-plateau = P(meseta)
 telemetry-label-expiratory = P(exhalación)
 telemetry-label-cycles = Ciclos/minutos
 telemetry-label-ratio = Duración inspiratoria
+telemetry-label-ratio-details = relación insp-exp
 telemetry-label-tidal = Volumen corriente
 telemetry-label-minute-volume = Volumen minuto
 

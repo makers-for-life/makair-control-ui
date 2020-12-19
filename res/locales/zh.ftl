@@ -3,6 +3,7 @@ telemetry-label-plateau = P（高原）
 telemetry-label-expiratory = P（呼气）
 telemetry-label-cycles = 周期/分钟
 telemetry-label-ratio = 吸气时间
+telemetry-label-ratio-details = 吸气呼气比
 telemetry-label-tidal = 潮量
 telemetry-label-minute-volume = 分钟音量
 

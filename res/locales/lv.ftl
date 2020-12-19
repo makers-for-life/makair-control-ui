@@ -3,6 +3,7 @@ telemetry-label-plateau = A(atslābums)
 telemetry-label-expiratory = I(izelpa)
 telemetry-label-cycles = Cikli/minutē
 telemetry-label-ratio = Ieelpošanas ilgums
+telemetry-label-ratio-details = ieel.-izel. attiecība
 telemetry-label-tidal = Plūdmaiņas tilpums
 telemetry-label-minute-volume = Minūtes skaļums
 

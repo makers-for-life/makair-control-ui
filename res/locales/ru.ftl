@@ -3,6 +3,7 @@ telemetry-label-plateau = Давление плато
 telemetry-label-expiratory = ПДКВ
 telemetry-label-cycles = Циклов в минуту
 telemetry-label-ratio = Продолжительность вдоха
+telemetry-label-ratio-details = соотн. вдох-выдох
 telemetry-label-tidal = Дыхательный объем
 telemetry-label-minute-volume = Минутный объем
 
