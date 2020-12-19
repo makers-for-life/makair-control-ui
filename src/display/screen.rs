@@ -8,7 +8,9 @@ use conrod_core::color::{self, Color};
 use paste::paste;
 
 use telemetry::alarm::AlarmCode;
-use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot};
+use telemetry::structures::{
+    AlarmPriority, DataSnapshot, MachineStateSnapshot, VentilationModeClass,
+};
 
 use crate::chip::settings::{
     cycles::SettingsCycles, expiration_term::SettingsExpirationTerm, mode::SettingsMode,
@@ -450,7 +452,9 @@ impl<'a> Screen<'a> {
                     )
                     .to_string()
                 }),
-                value_target: if !has_target_pressure {
+                value_target: if !has_target_pressure
+                    || mode.mode.class() != VentilationModeClass::Pressure
+                {
                     None
                 } else {
                     Some(machine_snapshot.plateau_command.to_string())
