@@ -468,7 +468,6 @@ impl Chip {
         // Update cycle values
         if let Some(cpm_command) = update.cpm_command {
             self.settings.mode.cycles_per_minute = cpm_command as usize;
-            self.settings.cycles.cycles_per_minute = cpm_command as usize;
         }
 
         // Update pressure values
@@ -736,7 +735,6 @@ impl Chip {
 
             ControlSetting::CyclesPerMinute => {
                 self.settings.mode.cycles_per_minute = ack.value as usize;
-                self.settings.cycles.cycles_per_minute = ack.value as usize;
                 self.last_machine_snapshot.cpm_command = ack.value as u8
             }
 

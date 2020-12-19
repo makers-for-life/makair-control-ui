@@ -57,8 +57,6 @@ modal-snooze-alarms = Sourdine d'alarme
 modal-snooze-alarms-active = Bips activés (valeur par défaut)
 modal-snooze-alarms-inactive = Bips désactivés (temporaire)
 
-modal-cycles-cycles-per-minute = Cycles par minute :
-
 modal-mode-pressure-inspiratory = Pression inspiratoire
 modal-mode-pressure-expiratory = Pression expiratoire
 modal-mode-time-inspiratory = Temps inspiratoire

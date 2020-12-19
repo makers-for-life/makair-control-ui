@@ -57,8 +57,6 @@ modal-snooze-alarms = Alarmas
 modal-snooze-alarms-active = Pitidos habilitados
 modal-snooze-alarms-inactive = Pitidos desactivados
 
-modal-cycles-cycles-per-minute = Ciclos por minuto:
-
 modal-mode-pressure-inspiratory = Presión inspiratoria
 modal-mode-pressure-expiratory = Presión espiratoria
 modal-mode-time-inspiratory = Tiempo inspiratorio

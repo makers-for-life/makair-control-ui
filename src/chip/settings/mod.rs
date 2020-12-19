@@ -6,14 +6,12 @@
 #[macro_use]
 mod macros;
 
-pub mod cycles;
 pub mod mode;
 pub mod run;
 pub mod snooze;
 
 use telemetry::control::{ControlMessage, ControlSetting};
 
-use cycles::*;
 use mode::*;
 use run::*;
 use snooze::*;
@@ -23,7 +21,6 @@ pub enum ChipSettingsEvent {
     Run(SettingsRunEvent),
     Snooze(SettingsSnoozeEvent),
     Mode(SettingsModeEvent),
-    Cycles(SettingsCyclesEvent),
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -89,7 +86,6 @@ pub struct ChipSettings {
     pub run: SettingsRun,
     pub snooze: SettingsSnooze,
     pub mode: SettingsMode,
-    pub cycles: SettingsCycles,
 }
 
 impl ChipSettings {
@@ -98,7 +94,6 @@ impl ChipSettings {
             run: SettingsRun::new(),
             snooze: SettingsSnooze::new(),
             mode: SettingsMode::new(),
-            cycles: SettingsCycles::new(),
         }
     }
 
@@ -107,7 +102,6 @@ impl ChipSettings {
             ChipSettingsEvent::Run(event) => self.run.new_event(event),
             ChipSettingsEvent::Snooze(event) => self.snooze.new_event(event),
             ChipSettingsEvent::Mode(event) => self.mode.new_event(event),
-            ChipSettingsEvent::Cycles(event) => self.cycles.new_event(event),
         }
     }
 }

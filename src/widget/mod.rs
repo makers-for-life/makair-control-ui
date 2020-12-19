@@ -12,7 +12,6 @@ pub mod alarms;
 pub mod background;
 pub mod branding;
 pub mod controls;
-pub mod cycles_settings;
 pub mod error;
 pub mod graph;
 pub mod heartbeat;

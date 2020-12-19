@@ -57,8 +57,6 @@ modal-snooze-alarms = Будильники
 modal-snooze-alarms-active = Звуковые сигналы включены
 modal-snooze-alarms-inactive = Звуковые сигналы отключены
 
-modal-cycles-cycles-per-minute = Циклов в минуту:
-
 modal-mode-pressure-inspiratory = Давление на вдохе
 modal-mode-pressure-expiratory = Давление на выдохе
 modal-mode-time-inspiratory = Время вдоха
@@ -94,4 +92,3 @@ modal-close = в порядке
 
 stop-title = Аппарат ИВЛ не активен
 stop-description = Включите снова, чтобы проветрить
-

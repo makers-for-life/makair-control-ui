@@ -38,5 +38,4 @@ gen_widget_impls!(
     AdvancedSettings -> advanced_settings['a],
     ModeSettings -> mode_settings['a],
     ModeOverview -> mode_overview['a],
-    CyclesSettings -> cycles_settings['a],
 );

@@ -44,7 +44,6 @@ pub struct DisplayRendererStates {
     pub snooze_settings: DisplayRendererSettingsState,
     pub advanced_settings: DisplayRendererSettingsState,
     pub mode_settings: DisplayRendererSettingsState,
-    pub cycles_settings: DisplayRendererSettingsState,
 }
 
 impl DisplayRendererSettingsState {

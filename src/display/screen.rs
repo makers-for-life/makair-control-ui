@@ -13,8 +13,7 @@ use telemetry::structures::{
 };
 
 use crate::chip::settings::{
-    cycles::SettingsCycles, mode::SettingsMode, run::SettingsRun, snooze::SettingsSnooze,
-    ChipSettings,
+    mode::SettingsMode, run::SettingsRun, snooze::SettingsSnooze, ChipSettings,
 };
 use crate::chip::ChipError;
 use crate::config::environment::*;
@@ -33,7 +32,6 @@ pub struct ScreenModalsOpen {
     snooze: bool,
     advanced: bool,
     mode: bool,
-    cycles: bool,
 }
 
 pub struct Screen<'a> {
@@ -52,7 +50,6 @@ impl ScreenModalsOpen {
             snooze: states.snooze_settings.is_open(),
             advanced: states.advanced_settings.is_open(),
             mode: states.mode_settings.is_open(),
-            cycles: states.cycles_settings.is_open(),
         }
     }
 }
@@ -709,8 +706,6 @@ impl<'a> Screen<'a> {
             self.render_advanced_settings();
         } else if modals.mode {
             self.render_mode_settings(&settings.mode);
-        } else if modals.cycles {
-            self.render_cycles_settings(&settings.cycles);
         }
     }
 
@@ -915,33 +910,6 @@ impl<'a> Screen<'a> {
                     self,
                     trigger_expiratory
                 ),
-            }));
-    }
-
-    fn render_cycles_settings(&mut self, settings: &'a SettingsCycles) {
-        self.render_modal(
-            CYCLES_SETTINGS_MODAL_WIDTH,
-            CYCLES_SETTINGS_MODAL_HEIGTH,
-            Some(CYCLES_SETTINGS_MODAL_PADDING),
-        );
-
-        self.widgets
-            .render(ControlWidgetType::CyclesSettings(cycles_settings::Config {
-                width: CYCLES_SETTINGS_MODAL_WIDTH,
-                height: CYCLES_SETTINGS_MODAL_HEIGTH
-                    - MODAL_VALIDATE_BUTTON_HEIGHT
-                    - (CYCLES_SETTINGS_MODAL_PADDING * 2.0),
-                cycles_settings: settings,
-
-                cycles_container_parent: self.ids.modal_container,
-                cycles_container_widget: self.ids.cycles_container,
-                cycles_more_button_widget: self.ids.cycles_more_button,
-                cycles_more_button_text_widget: self.ids.cycles_more_button_text,
-                cycles_less_button_widget: self.ids.cycles_less_button,
-                cycles_less_button_text_widget: self.ids.cycles_less_button_text,
-                cycles_text_widget: self.ids.cycles_text,
-                cycles_value_wrapper_widget: self.ids.cycles_value_wrapper,
-                cycles_value_widget: self.ids.cycles_value,
             }));
     }
 }

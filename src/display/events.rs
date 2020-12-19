@@ -8,7 +8,6 @@ use glium::glutin::{Event, EventsLoop, KeyboardInput, WindowEvent};
 
 use crate::chip::{
     settings::{
-        cycles::SettingsCyclesEvent,
         mode::{SettingsModeEvent, SettingsModeGroupTab},
         run::SettingsRunEvent,
         snooze::SettingsSnoozeEvent,
@@ -816,32 +815,6 @@ impl DisplayUIEvents {
                     [
                         ids.mode_settings_alarm_threshold_leak_less,
                         ids.mode_settings_alarm_threshold_leak_less_text,
-                    ],
-
-                    None
-                }
-            },
-
-            {
-                "cycles", Cycles, states.cycles_settings,
-
-                {
-                    SettingsCyclesEvent::CyclesPerMinute(SettingActionRange::Less), "cycles less",
-
-                    [
-                        ids.cycles_less_button,
-                        ids.cycles_less_button_text,
-                    ],
-
-                    None
-                },
-
-                {
-                    SettingsCyclesEvent::CyclesPerMinute(SettingActionRange::More), "cycles more",
-
-                    [
-                        ids.cycles_more_button,
-                        ids.cycles_more_button_text,
                     ],
 
                     None
