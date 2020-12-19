@@ -73,7 +73,7 @@ struct ChipSettingsUpdate {
     ti_max: Option<u16>,
     target_tidal_volume: Option<u16>,
     target_inspiratory_flow: Option<u8>,
-    inspiratory_duration: Option<u16>,
+    inspiratory_duration_command: Option<u16>,
     plateau_duration: Option<u16>,
 
     // Alarm thresholds
@@ -489,8 +489,8 @@ impl Chip {
         }
 
         // Update inspiratory duration values
-        if let Some(inspiratory_duration) = update.inspiratory_duration {
-            self.settings.mode.duration_inspiration = inspiratory_duration as usize;
+        if let Some(inspiratory_duration_command) = update.inspiratory_duration_command {
+            self.settings.mode.duration_inspiration = inspiratory_duration_command as usize;
         }
 
         // Update plateau duration values
@@ -548,7 +548,7 @@ impl Chip {
             ti_max: snapshot.ti_max,
             target_tidal_volume: snapshot.target_tidal_volume,
             target_inspiratory_flow: snapshot.target_inspiratory_flow,
-            inspiratory_duration: snapshot.inspiratory_duration,
+            inspiratory_duration_command: snapshot.inspiratory_duration_command,
             plateau_duration: snapshot.plateau_duration,
 
             // Alarm thresholds
@@ -646,7 +646,7 @@ impl Chip {
             ti_max: message.ti_max,
             target_tidal_volume: message.target_tidal_volume,
             target_inspiratory_flow: message.target_inspiratory_flow,
-            inspiratory_duration: message.inspiratory_duration,
+            inspiratory_duration_command: message.inspiratory_duration_command,
             plateau_duration: message.plateau_duration,
 
             // Alarm thresholds
@@ -880,7 +880,7 @@ impl Chip {
 
             ControlSetting::InspiratoryDuration => {
                 self.settings.mode.duration_inspiration = ack.value as usize;
-                self.last_machine_snapshot.inspiratory_duration = Some(ack.value);
+                self.last_machine_snapshot.inspiratory_duration_command = Some(ack.value);
             }
         }
     }
