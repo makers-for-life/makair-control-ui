@@ -3,7 +3,7 @@
 [![Control Lint](https://github.com/makers-for-life/makair-control-ui/workflows/Control%20Lint/badge.svg)](https://github.com/makers-for-life/makair-control-ui/actions?query=workflow%3A%22Control+Lint%22) [![dependency status](https://deps.rs/repo/github/makers-for-life/makair-control-ui/status.svg)](https://deps.rs/repo/github/makers-for-life/makair-control-ui)
 
 <p align="center">
-  <img alt="UI When Ventilation Unit Is Running" src="./doc/screens/unit-running.jpg">
+  <img alt="UI When Ventilation Unit Is Running" src="./doc/screens/unit-running-windowed.png">
 </p>
 
 ## Versions
