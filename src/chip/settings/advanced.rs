@@ -4,13 +4,13 @@
 // License: Public Domain License
 
 use crate::chip::settings::SettingActionRange;
-use crate::locale::{loader::LocaleLoader, locales::LOCALES};
+use crate::locale::{loader::LocaleLoader, locales::LocaleCode};
 use crate::{APP_I18N, APP_SETTINGS};
 
 #[derive(Debug)]
 pub struct SettingsAdvanced {
     pub group: SettingsAdvancedGroupTab,
-    pub locale: String,
+    pub locale: LocaleCode,
 }
 
 #[derive(Debug, PartialEq)]
@@ -39,18 +39,19 @@ impl SettingsAdvanced {
     pub fn new() -> SettingsAdvanced {
         SettingsAdvanced {
             group: SettingsAdvancedGroupTab::default(),
-            locale: APP_SETTINGS.read().unwrap().locale.to_owned(),
+            locale: LocaleCode::from_code(&APP_SETTINGS.read().unwrap().locale).unwrap_or_default(),
         }
     }
 
     pub fn switch_locale(&mut self, action: SettingActionRange) {
-        let locales_size = LOCALES.len() as i16;
+        let locales = LocaleCode::all();
+        let locales_size = locales.len() as i16;
 
         if locales_size > 1 {
             // Get index of current locale in list of locales
-            let current_index = LOCALES
+            let current_index = locales
                 .iter()
-                .position(|&locale| locale == self.locale)
+                .position(|locale| locale == &self.locale)
                 .unwrap_or(0);
 
             // Increment or decrement next locale index
@@ -68,7 +69,7 @@ impl SettingsAdvanced {
             }
 
             // Assign new locale value? (and save)
-            let next_locale = LOCALES[next_index as usize].to_string();
+            let next_locale = locales[next_index as usize].to_owned();
 
             if next_locale != self.locale {
                 self.locale = next_locale;
@@ -77,15 +78,15 @@ impl SettingsAdvanced {
                 APP_SETTINGS
                     .write()
                     .unwrap()
-                    .set_locale(self.locale.to_owned());
+                    .set_locale(self.locale.to_code().to_string());
 
                 match APP_SETTINGS.read().unwrap().save() {
-                    Ok(_) => info!("saved locale in settings: {}", self.locale),
+                    Ok(_) => info!("saved locale in settings: {}", self.locale.to_code()),
                     Err(err) => error!("error saving locale in settings: {:?}", err),
                 }
 
                 // Replace current locale with new locale
-                APP_I18N.replace(LocaleLoader::new(&self.locale).into_bundle());
+                APP_I18N.replace(LocaleLoader::new(&self.locale.to_code()).into_bundle());
             }
         }
     }

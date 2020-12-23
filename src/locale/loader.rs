@@ -10,7 +10,7 @@ use unic_langid::LanguageIdentifier;
 use crate::EmbeddedLocales;
 
 use super::accessor::LocaleAccessor;
-use super::locales::LOCALES;
+use super::locales::LocaleCode;
 
 const LOCALE_EXTENSION: &str = ".ftl";
 
@@ -23,7 +23,7 @@ impl LocaleLoader {
     pub fn new(locale: &str) -> Self {
         debug!("loading locale: [{}]...", locale);
 
-        if !LOCALES.contains(&locale) {
+        if LocaleCode::from_code(locale).is_none() {
             panic!(
                 "locale not mapped in the list of allowed locales: {}",
                 locale

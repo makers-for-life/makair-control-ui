@@ -5,7 +5,7 @@
 
 use confy::{self, ConfyError};
 
-use crate::locale::locales::{LOCALES, LOCALE_DEFAULT};
+use crate::locale::locales::LocaleCode;
 
 use super::environment::RUNTIME_NAME;
 
@@ -22,7 +22,7 @@ pub enum ConfigSettingsUpdateMay {
 impl Default for ConfigSettings {
     fn default() -> Self {
         Self {
-            locale: LOCALE_DEFAULT.to_string(),
+            locale: LocaleCode::default().to_code().to_string(),
         }
     }
 }
@@ -54,8 +54,8 @@ impl ConfigSettings {
         // Ensure configuration is still valid
         // Notice: as the UI may be resumed from an old saved state, some saved configuration \
         //   values may not be valid anymore, hence this check to ensure their validity.
-        if !LOCALES.contains(&configuration.locale.as_str()) {
-            configuration.locale = LOCALE_DEFAULT.to_string();
+        if LocaleCode::from_code(&configuration.locale.as_str()).is_none() {
+            configuration.locale = LocaleCode::default().to_code().to_string();
         }
 
         configuration
