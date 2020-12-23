@@ -118,6 +118,10 @@ impl ChipData {
     pub fn reset(&mut self) {
         self.points.clear();
 
+        self.clear_bounds();
+    }
+
+    pub fn clear_bounds(&mut self) {
         self.bounds_high = None;
         self.bounds_low = None;
     }
@@ -143,8 +147,7 @@ impl Chip {
     pub fn reset(&mut self, new_tick: u64) {
         self.last_tick = new_tick;
 
-        self.data_pressure.reset();
-        self.data_flow.reset();
+        self.reset_data();
 
         self.last_machine_snapshot = MachineStateSnapshot::default();
         self.last_data_snapshot = None;
@@ -346,6 +349,10 @@ impl Chip {
                 // Last data snapshot is not relevant when the state went from running to stopped
                 self.last_data_snapshot = None;
 
+                // Clear saved data bounds, as to avoid bounds to show in some cases when \
+                //   resuming a stopped ventilation that was overflowing.
+                self.clear_data_bounds();
+
                 // A stopped message should only trigger an UI refresh when changed
                 if self.state != ChipState::Stopped {
                     self.update_state_stopped();
@@ -412,6 +419,16 @@ impl Chip {
 
     fn clean_expired_data_flow_from_time(&mut self, front_time: DateTime<Utc>) {
         gen_clean_expired_data_from_time_generic!(self, data_flow, front_time);
+    }
+
+    fn reset_data(&mut self) {
+        self.data_pressure.reset();
+        self.data_flow.reset();
+    }
+
+    fn clear_data_bounds(&mut self) {
+        self.data_pressure.clear_bounds();
+        self.data_flow.clear_bounds();
     }
 
     fn update_boot_time(&mut self) {
