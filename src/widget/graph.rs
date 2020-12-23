@@ -16,7 +16,7 @@ use plotters::style::{Color, ShapeStyle, TextStyle};
 use plotters_conrod::{ConrodBackend, ConrodBackendReusableGraph};
 use telemetry::structures::MachineStateSnapshot;
 
-use crate::chip::{ChipDataFlow, ChipDataGeneric, ChipDataPressure, ChipState};
+use crate::chip::{ChipData, ChipState};
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::APP_I18N;
@@ -59,8 +59,8 @@ pub struct Config<'a> {
     pub boot_time: Option<DateTime<Utc>>,
     pub last_tick: Option<u64>,
 
-    pub data_pressure: &'a ChipDataPressure,
-    pub data_flow: &'a ChipDataFlow,
+    pub data_pressure: &'a ChipData,
+    pub data_flow: &'a ChipData,
 
     pub chip_state: &'a ChipState,
     pub machine_snapshot: &'a MachineStateSnapshot,
@@ -73,7 +73,7 @@ struct PlotContext<'a, 'b> {
     plot_id: WidgetId,
     precision_divide: i32,
     line_color: &'a RGBColor,
-    data_values: &'b ChipDataGeneric,
+    data_values: &'b ChipData,
 }
 
 lazy_static! {
@@ -107,7 +107,11 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, mut config: Config<'a>) -> f64
             boot_time + chrono::Duration::microseconds(config.last_tick.unwrap_or(0) as i64)
         })
     } else {
-        config.data_pressure.front().map(|pressure| pressure.0)
+        config
+            .data_pressure
+            .points
+            .front()
+            .map(|pressure| pressure.0)
     };
 
     // Acquire common graph time range
@@ -296,7 +300,7 @@ fn plot<'a>(
     chart
         .draw_series(
             AreaSeries::new(
-                context.data_values.iter().map(|x| (x.0, x.1 as i32)),
+                context.data_values.points.iter().map(|x| (x.0, x.1 as i32)),
                 0,
                 &context.line_color.mix(0.3),
             )
@@ -343,12 +347,12 @@ fn saturate<'a>(
     parent_id: WidgetId,
     saturate_ids: (WidgetId, WidgetId),
     high_low: (i16, i16),
-    data_values: &ChipDataGeneric,
+    data_values: &ChipData,
 ) {
     // Check if should draw saturation indicators?
     let (mut saturate_low, mut saturate_high) = (false, false);
 
-    for data_value in data_values {
+    for data_value in data_values.points.iter() {
         if data_value.1 < high_low.0 {
             saturate_low = true;
         }

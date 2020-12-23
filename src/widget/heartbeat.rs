@@ -11,7 +11,7 @@ use conrod_core::{
     Positionable, Widget,
 };
 
-use crate::chip::ChipDataPressure;
+use crate::chip::ChipData;
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::utilities::pressure::process_max_allowed_pressure;
@@ -28,7 +28,7 @@ const GROUND_CIRCLE_COLOR_OVERFLOW: Color =
     Color::Rgba(204.0 / 255.0, 204.0 / 255.0, 204.0 / 255.0, 1.0);
 
 pub struct Config<'a> {
-    pub data_pressure: &'a ChipDataPressure,
+    pub data_pressure: &'a ChipData,
     pub peak_command: u8,
 
     pub container: WidgetId,
@@ -58,7 +58,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         .set(config.surround, &mut master.ui);
 
     // #2: Create inner circle
-    let last_pressure = if let Some(last_pressure_inner) = config.data_pressure.get(0) {
+    let last_pressure = if let Some(last_pressure_inner) = config.data_pressure.points.get(0) {
         // Convert high-precision point in mmH20 back to cmH20 (which measurements & targets \
         //   both use)
         last_pressure_inner.1 / (TELEMETRY_POINTS_PRESSURE_PRECISION_DIVIDE as i16)

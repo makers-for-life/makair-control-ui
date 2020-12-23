@@ -31,10 +31,15 @@ use crate::utilities::units::{convert_cmh2o_to_mmh2o, convert_mmh2o_to_cmh2o, Co
 
 const DATA_STORE_EVERY_MILLISECONDS: i64 = 1000 / TELEMETRY_POINTS_PER_SECOND as i64;
 
-pub type ChipDataGeneric = VecDeque<(DateTime<Utc>, i16)>;
+pub type ChipDataPoint = (DateTime<Utc>, i16);
+pub type ChipDataPoints = VecDeque<ChipDataPoint>;
+pub type ChipDataBound = ChipDataPoint;
 
-pub type ChipDataPressure = ChipDataGeneric;
-pub type ChipDataFlow = ChipDataGeneric;
+pub struct ChipData {
+    pub points: ChipDataPoints,
+    pub bounds_high: Option<ChipDataBound>,
+    pub bounds_low: Option<ChipDataBound>,
+}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ChipState {
@@ -90,8 +95,8 @@ struct ChipSettingsUpdate {
 pub struct Chip {
     pub boot_time: Option<DateTime<Utc>>,
     pub last_tick: u64,
-    pub data_pressure: ChipDataPressure,
-    pub data_flow: ChipDataFlow,
+    pub data_pressure: ChipData,
+    pub data_flow: ChipData,
     pub last_machine_snapshot: MachineStateSnapshot,
     pub last_data_snapshot: Option<DataSnapshot>,
     pub ongoing_alarms: HashMap<AlarmCode, AlarmPriority>,
@@ -101,13 +106,30 @@ pub struct Chip {
     channel_for_settings: Option<Sender<ControlMessage>>,
 }
 
+impl ChipData {
+    pub fn new() -> Self {
+        Self {
+            points: ChipDataPoints::with_capacity(GRAPH_NUMBER_OF_POINTS),
+            bounds_high: None,
+            bounds_low: None,
+        }
+    }
+
+    pub fn reset(&mut self) {
+        self.points.clear();
+
+        self.bounds_high = None;
+        self.bounds_low = None;
+    }
+}
+
 impl Chip {
     pub fn new(lora_sender: Option<Sender<TelemetryMessage>>) -> Chip {
         Chip {
             boot_time: None,
             last_tick: 0,
-            data_pressure: ChipDataPressure::with_capacity(GRAPH_NUMBER_OF_POINTS),
-            data_flow: ChipDataFlow::with_capacity(GRAPH_NUMBER_OF_POINTS),
+            data_pressure: ChipData::new(),
+            data_flow: ChipData::new(),
             last_machine_snapshot: MachineStateSnapshot::default(),
             last_data_snapshot: None,
             ongoing_alarms: HashMap::new(),
@@ -121,8 +143,8 @@ impl Chip {
     pub fn reset(&mut self, new_tick: u64) {
         self.last_tick = new_tick;
 
-        self.data_pressure.clear();
-        self.data_flow.clear();
+        self.data_pressure.reset();
+        self.data_flow.reset();
 
         self.last_machine_snapshot = MachineStateSnapshot::default();
         self.last_data_snapshot = None;

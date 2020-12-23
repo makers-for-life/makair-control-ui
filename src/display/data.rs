@@ -6,7 +6,7 @@
 use plotters_conrod::ConrodBackendReusableGraph;
 use telemetry::structures::MachineStateSnapshot;
 
-use crate::chip::{ChipDataFlow, ChipDataPressure, ChipError, ChipState};
+use crate::chip::{ChipData, ChipError, ChipState};
 
 pub struct DisplayDataLayout {
     pub texture_header_image_id: conrod_core::image::Id,
@@ -24,14 +24,14 @@ pub struct DisplayDataStatus<'a> {
 }
 
 pub struct DisplayDataHeartbeat<'a> {
-    pub data_pressure: &'a ChipDataPressure,
+    pub data_pressure: &'a ChipData,
 }
 
 pub struct DisplayDataGraph<'a> {
     pub width: f64,
     pub height: f64,
-    pub data_pressure: &'a ChipDataPressure,
-    pub data_flow: &'a ChipDataFlow,
+    pub data_pressure: &'a ChipData,
+    pub data_flow: &'a ChipData,
     pub chip_state: &'a ChipState,
     pub machine_snapshot: &'a MachineStateSnapshot,
     pub plot_graphs: &'a mut (ConrodBackendReusableGraph, ConrodBackendReusableGraph),
