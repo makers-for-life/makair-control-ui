@@ -3,7 +3,7 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-use confy;
+use confy::{self, ConfyError};
 
 use super::environment::RUNTIME_NAME;
 
@@ -27,5 +27,9 @@ impl ConfigSettings {
         } else {
             Self::default()
         }
+    }
+
+    pub fn save(&self) -> Result<(), ConfyError> {
+        confy::store(RUNTIME_NAME, self)
     }
 }
