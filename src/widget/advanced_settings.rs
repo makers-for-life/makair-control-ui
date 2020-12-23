@@ -142,9 +142,9 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
                     .map(|data| convert_sub_ppm_to_ppm(data.blower_rpm)),
             ),
         ),
-        // Battery level (in volts)
+        // Power input (in volts)
         (
-            "battery-level-volts",
+            "power-input-volts",
             &parse_optional_number_to_string(
                 config.data_snapshot.map(|data| data.battery_level as usize),
             ),
