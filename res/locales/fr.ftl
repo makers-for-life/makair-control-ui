@@ -49,6 +49,9 @@ mode-type-vsai = VSAI
 mode-group-general = Général
 mode-group-alarms = Alarmes
 
+advanced-group-statistics = Statistiques
+advanced-group-settings = Paramètres
+
 modal-close = Fermer
 
 modal-run-status = Unité de ventilation

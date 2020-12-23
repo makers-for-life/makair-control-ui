@@ -49,6 +49,9 @@ mode-type-vsai = VSAI
 mode-group-general = 一般
 mode-group-alarms = 警报器
 
+advanced-group-statistics = 统计
+advanced-group-settings = 设定值
+
 modal-close = 好
 
 modal-run-status = 呼吸机状态

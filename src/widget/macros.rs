@@ -183,3 +183,78 @@ macro_rules! gen_widget_button_navigate {
         );
     };
 }
+
+macro_rules! gen_widget_group {
+    (
+        $master:ident,
+        parent_id: $parent_id:expr,
+        group_id: $group_id:expr,
+        height: $height:expr,
+    ) => {
+        // Create group wrapper
+        gen_widget_container!(
+            $master,
+            container_id: $group_id,
+            color: color::TRANSPARENT,
+            width: MODAL_GROUP_TABS_WIDTH,
+            height: $height,
+            positions: top_left_of[
+                $parent_id,
+            ]
+        );
+    };
+}
+
+macro_rules! gen_widget_group_tab {
+    (
+        $master:ident,
+        group_id: $group_id:expr,
+        button_ids: $button_ids:expr,
+        text_ids: $text_ids:expr,
+        tab_active: $tab_active:expr,
+        tab_current: $tab_current:expr,
+        text_fn: $text_fn:tt,
+        index: $index:ident,
+    ) => {
+        // Acquire button colors
+        let (color_button, color_text) = (
+            if $tab_active == $tab_current {
+                Color::Rgba(1.0, 1.0, 1.0, 1.0)
+            } else {
+                Color::Rgba(48.0 / 255.0, 48.0 / 255.0, 48.0 / 255.0, 1.0)
+            },
+            if $tab_active == $tab_current {
+                color::BLACK
+            } else {
+                color::WHITE
+            },
+        );
+
+        // Create rectangle (selected if group tab matches ongoing group)
+        widget::rounded_rectangle::RoundedRectangle::fill_with(
+            [MODAL_GROUP_TABS_WIDTH, MODAL_GROUP_TABS_HEIGHT],
+            MODAL_GROUP_TABS_BORDER_RADIUS,
+            color_button,
+        )
+        .top_left_with_margins_on(
+            $group_id,
+            $index as f64 * (MODAL_GROUP_TABS_HEIGHT + MODAL_GROUP_TABS_MARGIN_TOP),
+            0.0,
+        )
+        .set($button_ids[$index], &mut $master.ui);
+
+        // Generate text style
+        let mut text_style = widget::text::Style::default();
+
+        text_style.font_id = Some(Some($master.fonts.bold));
+        text_style.color = Some(color_text);
+        text_style.font_size = Some(14);
+
+        // Append text
+        widget::Text::new(&$text_fn($tab_current))
+            .with_style(text_style)
+            .middle_of($button_ids[$index])
+            .y_relative(2.0)
+            .set($text_ids[$index], &mut $master.ui);
+    };
+}

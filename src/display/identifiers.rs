@@ -331,6 +331,12 @@ widget_ids!(pub struct Ids {
   advanced_container,
   advanced_line_labels[],
   advanced_line_values[],
+  advanced_group_wrapper,
+  advanced_form_wrapper,
+  advanced_group_tab_statistics_button,
+  advanced_group_tab_settings_button,
+  advanced_group_tab_statistics_text,
+  advanced_group_tab_settings_text,
 
   modal_background,
   modal_container_borders,

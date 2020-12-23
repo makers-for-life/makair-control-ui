@@ -49,6 +49,9 @@ mode-type-vsai = VSAI
 mode-group-general = Vispārīgi
 mode-group-alarms = Signāli
 
+advanced-group-statistics = Statistika
+advanced-group-settings = Iestatījumi
+
 modal-close = OK
 
 modal-run-status = Ventilatora bloka statuss

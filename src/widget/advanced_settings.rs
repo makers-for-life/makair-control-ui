@@ -9,15 +9,17 @@
 // License: Public Domain License
 
 use conrod_core::{
-    color,
+    color::{self, Color},
     widget::{self, id::List as WidgetList, Id as WidgetId},
     Positionable, Sizeable, Widget,
 };
 
 use telemetry::structures::{DataSnapshot, MachineStateSnapshot};
 
+use crate::chip::settings::advanced::{SettingsAdvanced, SettingsAdvancedGroupTab};
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
+use crate::locale::advanced::group_tab_to_locale as advanced_group_tab_to_locale;
 use crate::utilities::{
     parse::{parse_non_empty_number_to_string, parse_optional_number_to_string},
     units::convert_sub_ppm_to_ppm,
@@ -28,6 +30,8 @@ pub struct Config<'a> {
     pub width: f64,
     pub height: f64,
 
+    pub advanced_settings: &'a SettingsAdvanced,
+
     pub last_tick: Option<u64>,
     pub machine_snapshot: &'a MachineStateSnapshot,
     pub data_snapshot: Option<&'a DataSnapshot>,
@@ -36,6 +40,12 @@ pub struct Config<'a> {
     pub advanced_container_widget: WidgetId,
     pub advanced_container_line_labels: &'a WidgetList,
     pub advanced_container_line_values: &'a WidgetList,
+
+    pub advanced_group_wrapper: WidgetId,
+    pub advanced_form_wrapper: WidgetId,
+
+    pub advanced_group_tab_buttons: [WidgetId; ADVANCED_SETTINGS_GROUP_TABS_COUNT],
+    pub advanced_group_tab_texts: [WidgetId; ADVANCED_SETTINGS_GROUP_TABS_COUNT],
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
@@ -51,6 +61,81 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         ]
     );
 
+    // Compute inner size
+    let size = (
+        config.width - (2.0 * ADVANCED_SETTINGS_MODAL_PADDING),
+        config.height - ADVANCED_SETTINGS_MODAL_PADDING,
+    );
+
+    // Append contents
+    group(master, &config, size);
+    form(master, &config, size);
+
+    0 as _
+}
+
+fn group<'a>(master: &mut ControlWidget<'a>, config: &Config, parent_size: (f64, f64)) {
+    // Create group wrapper
+    gen_widget_group!(
+        master,
+        parent_id: config.advanced_container_widget,
+        group_id: config.advanced_group_wrapper,
+        height: parent_size.1,
+    );
+
+    // Render all group tabs
+    for index in 0..ADVANCED_SETTINGS_GROUP_TABS_COUNT {
+        group_tab(
+            master,
+            config,
+            SettingsAdvancedGroupTab::from_index(index).expect("invalid group tab index"),
+            index,
+        );
+    }
+}
+
+fn group_tab<'a>(
+    master: &mut ControlWidget<'a>,
+    config: &Config,
+    tab: SettingsAdvancedGroupTab,
+    index: usize,
+) {
+    gen_widget_group_tab!(
+        master,
+        group_id: config.advanced_group_wrapper,
+        button_ids: config.advanced_group_tab_buttons,
+        text_ids: config.advanced_group_tab_texts,
+        tab_active: config.advanced_settings.group,
+        tab_current: tab,
+        text_fn: advanced_group_tab_to_locale,
+        index: index,
+    );
+}
+
+fn form<'a>(master: &mut ControlWidget<'a>, config: &Config, parent_size: (f64, f64)) {
+    // Compute total tabs width
+    let tabs_total_width = MODAL_GROUP_TABS_WIDTH + MODAL_GROUP_TABS_MARGIN_RIGHT;
+
+    // Create form wrapper
+    gen_widget_container!(
+        master,
+        container_id: config.advanced_form_wrapper,
+        color: color::TRANSPARENT,
+        width: parent_size.0 - tabs_total_width,
+        height: parent_size.1,
+        positions: top_left_with_margins_on[
+            config.advanced_container_widget, 0.0, tabs_total_width,
+        ]
+    );
+
+    // Append form depending on current group
+    match config.advanced_settings.group {
+        SettingsAdvancedGroupTab::Statistics => form_statistics(master, config),
+        SettingsAdvancedGroupTab::Settings => form_settings(master, config),
+    }
+}
+
+fn form_statistics<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Generate line data
     let line_data: [(&str, &str); ADVANCED_SETTINGS_LINES_COUNT] = [
         // Telemetry version
@@ -149,13 +234,15 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
         ),
     ];
 
-    // Append lines
-    lines(master, config, &line_data);
-
-    0 as _
+    // Append form lines
+    form_statistics_lines(master, config, &line_data);
 }
 
-fn lines<'a>(master: &mut ControlWidget<'a>, config: Config, line_data: &[(&str, &str)]) {
+fn form_statistics_lines<'a>(
+    master: &mut ControlWidget<'a>,
+    config: &Config,
+    line_data: &[(&str, &str)],
+) {
     for (index, container_line) in config.advanced_container_line_labels.iter().enumerate() {
         let line_text = line_data[index].0;
 
@@ -168,7 +255,7 @@ fn lines<'a>(master: &mut ControlWidget<'a>, config: Config, line_data: &[(&str,
                 font_size: ADVANCED_SETTINGS_LINE_FONT_SIZE,
                 font_weight: bold,
                 positions: top_left_of[
-                    config.advanced_container_widget,
+                    config.advanced_form_wrapper,
                 ]
             );
         } else {
@@ -206,4 +293,8 @@ fn lines<'a>(master: &mut ControlWidget<'a>, config: Config, line_data: &[(&str,
         )
         .set(config.advanced_container_line_values[index], &mut master.ui);
     }
+}
+
+fn form_settings<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+    // TODO
 }

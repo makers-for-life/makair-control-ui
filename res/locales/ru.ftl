@@ -49,6 +49,9 @@ mode-type-vsai = VSAI
 mode-group-general = Генеральный
 mode-group-alarms = Будильники
 
+advanced-group-statistics = Статистика
+advanced-group-settings = Настройки
+
 modal-close = в порядке
 
 modal-run-status = Состояние вентиляционной установки

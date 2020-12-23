@@ -8,6 +8,7 @@ use glium::glutin::{Event, EventsLoop, KeyboardInput, WindowEvent};
 
 use crate::chip::{
     settings::{
+        advanced::SettingsAdvancedGroupTab,
         mode::{SettingsModeEvent, SettingsModeGroupTab},
         run::SettingsRunEvent,
         snooze::SettingsSnoozeEvent,
@@ -834,6 +835,28 @@ impl DisplayUIEvents {
                     [
                         ids.mode_settings_group_tab_alarms_button,
                         ids.mode_settings_group_tab_alarms_text,
+                    ]
+                }
+            },
+
+            {
+                "advanced", chip.settings.advanced, states.advanced_settings,
+
+                {
+                    SettingsAdvancedGroupTab::Statistics, group, "group statistics",
+
+                    [
+                        ids.advanced_group_tab_statistics_button,
+                        ids.advanced_group_tab_statistics_text,
+                    ]
+                },
+
+                {
+                    SettingsAdvancedGroupTab::Settings, group, "group settings",
+
+                    [
+                        ids.advanced_group_tab_settings_button,
+                        ids.advanced_group_tab_settings_text,
                     ]
                 }
             },

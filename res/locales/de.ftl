@@ -49,6 +49,9 @@ mode-type-vsai = VSAI
 mode-group-general = Allgemeines
 mode-group-alarms = Alarm
 
+advanced-group-statistics = Statistiken
+advanced-group-settings = Optionen
+
 modal-close = OK
 
 modal-run-status = Status der Beatmungseinheit

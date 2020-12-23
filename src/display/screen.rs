@@ -13,7 +13,8 @@ use telemetry::structures::{
 };
 
 use crate::chip::settings::{
-    mode::SettingsMode, run::SettingsRun, snooze::SettingsSnooze, ChipSettings,
+    advanced::SettingsAdvanced, mode::SettingsMode, run::SettingsRun, snooze::SettingsSnooze,
+    ChipSettings,
 };
 use crate::chip::ChipError;
 use crate::config::environment::*;
@@ -780,7 +781,7 @@ impl<'a> Screen<'a> {
         } else if modals.snooze {
             self.render_snooze_settings(&settings.snooze);
         } else if modals.advanced {
-            self.render_advanced_settings();
+            self.render_advanced_settings(&settings.advanced);
         } else if modals.mode {
             self.render_mode_settings(&settings.mode);
         }
@@ -832,7 +833,7 @@ impl<'a> Screen<'a> {
             }));
     }
 
-    fn render_advanced_settings(&mut self) {
+    fn render_advanced_settings(&mut self, settings: &'a SettingsAdvanced) {
         self.render_modal(
             ADVANCED_SETTINGS_MODAL_WIDTH,
             ADVANCED_SETTINGS_MODAL_HEIGTH,
@@ -846,6 +847,8 @@ impl<'a> Screen<'a> {
                     - MODAL_VALIDATE_BUTTON_HEIGHT
                     - (ADVANCED_SETTINGS_MODAL_PADDING * 2.0),
 
+                advanced_settings: settings,
+
                 last_tick: self.timers.1,
                 machine_snapshot: &self.machine_snapshot.unwrap(),
                 data_snapshot: self.data_snapshot,
@@ -854,6 +857,19 @@ impl<'a> Screen<'a> {
                 advanced_container_widget: self.ids.advanced_container,
                 advanced_container_line_labels: &self.ids.advanced_line_labels,
                 advanced_container_line_values: &self.ids.advanced_line_values,
+
+                advanced_group_wrapper: self.ids.advanced_group_wrapper,
+                advanced_form_wrapper: self.ids.advanced_form_wrapper,
+
+                advanced_group_tab_buttons: [
+                    self.ids.advanced_group_tab_statistics_button,
+                    self.ids.advanced_group_tab_settings_button,
+                ],
+
+                advanced_group_tab_texts: [
+                    self.ids.advanced_group_tab_statistics_text,
+                    self.ids.advanced_group_tab_settings_text,
+                ],
             },
         ));
     }

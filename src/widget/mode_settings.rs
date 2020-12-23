@@ -24,9 +24,6 @@ const SELECTOR_BORDER_COLOR: Color = Color::Rgba(81.0 / 255.0, 81.0 / 255.0, 81.
 const SELECTOR_COLOR_DEFAULT: Color = Color::Rgba(0.0, 0.0, 0.0, 0.975);
 const SELECTOR_COLOR_SELECTED: Color = Color::Rgba(26.0 / 255.0, 26.0 / 255.0, 26.0 / 255.0, 1.0);
 
-const GROUP_TAB_COLOR_DEFAULT: Color = Color::Rgba(48.0 / 255.0, 48.0 / 255.0, 48.0 / 255.0, 1.0);
-const GROUP_TAB_COLOR_SELECTED: Color = Color::Rgba(1.0, 1.0, 1.0, 1.0);
-
 type FieldWidgetIds = (
     WidgetId,
     WidgetId,
@@ -203,15 +200,11 @@ fn content<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 
 fn group<'a>(master: &mut ControlWidget<'a>, config: &Config, parent_size: (f64, f64)) {
     // Create group wrapper
-    gen_widget_container!(
+    gen_widget_group!(
         master,
-        container_id: config.group_wrapper,
-        color: color::TRANSPARENT,
-        width: MODE_SETTINGS_GROUP_TABS_WIDTH,
+        parent_id: config.content_wrapper,
+        group_id: config.group_wrapper,
         height: parent_size.1,
-        positions: top_left_of[
-            config.content_wrapper,
-        ]
     );
 
     // Render all group tabs
@@ -231,54 +224,21 @@ fn group_tab<'a>(
     tab: SettingsModeGroupTab,
     index: usize,
 ) {
-    // Acquire button colors
-    let (color_button, color_text) = (
-        if config.mode_settings.group == tab {
-            GROUP_TAB_COLOR_SELECTED
-        } else {
-            GROUP_TAB_COLOR_DEFAULT
-        },
-        if config.mode_settings.group == tab {
-            color::BLACK
-        } else {
-            color::WHITE
-        },
+    gen_widget_group_tab!(
+        master,
+        group_id: config.group_wrapper,
+        button_ids: config.group_tab_buttons,
+        text_ids: config.group_tab_texts,
+        tab_active: config.mode_settings.group,
+        tab_current: tab,
+        text_fn: mode_group_tab_to_locale,
+        index: index,
     );
-
-    // Create rectangle (selected if group tab matches ongoing group)
-    widget::rounded_rectangle::RoundedRectangle::fill_with(
-        [
-            MODE_SETTINGS_GROUP_TABS_WIDTH,
-            MODE_SETTINGS_GROUP_TABS_HEIGHT,
-        ],
-        MODE_SETTINGS_GROUP_TABS_BORDER_RADIUS,
-        color_button,
-    )
-    .top_left_with_margins_on(
-        config.group_wrapper,
-        index as f64 * (MODE_SETTINGS_GROUP_TABS_HEIGHT + MODE_SETTINGS_GROUP_TABS_MARGIN_TOP),
-        0.0,
-    )
-    .set(config.group_tab_buttons[index], &mut master.ui);
-
-    // Generate text style
-    let mut text_style = widget::text::Style::default();
-
-    text_style.font_id = Some(Some(master.fonts.bold));
-    text_style.color = Some(color_text);
-    text_style.font_size = Some(14);
-
-    // Append text
-    widget::Text::new(&mode_group_tab_to_locale(tab))
-        .with_style(text_style)
-        .middle_of(config.group_tab_buttons[index])
-        .y_relative(2.0)
-        .set(config.group_tab_texts[index], &mut master.ui);
 }
 
 fn form<'a>(master: &mut ControlWidget<'a>, config: &Config, parent_size: (f64, f64)) {
     // Compute total tabs width
-    let tabs_total_width = MODE_SETTINGS_GROUP_TABS_WIDTH + MODE_SETTINGS_GROUP_TABS_MARGIN_RIGHT;
+    let tabs_total_width = MODAL_GROUP_TABS_WIDTH + MODAL_GROUP_TABS_MARGIN_RIGHT;
 
     // Create form wrapper
     gen_widget_container!(
