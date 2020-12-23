@@ -19,7 +19,9 @@ doc = false
 [dependencies]
 log = "0.4"
 clap = { version = "2.33", default-features = false }
+confy = "0.4"
 lazy_static = "1.4"
+serde = { version = "1.0", features = ["derive"] }
 paste = "1.0"
 rust-embed = { version = "5.6", default-features = false, features = ["compression"] }
 chrono = { version = "0.4", default-features = false }

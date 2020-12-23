@@ -3,6 +3,7 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+pub const RUNTIME_NAME: &str = env!("CARGO_PKG_NAME");
 pub const RUNTIME_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub const HARDWARE_BATTERY_SERIES_COUNT: f32 = 2.0;

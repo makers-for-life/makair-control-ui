@@ -24,8 +24,6 @@ use crate::utilities::{
 };
 use crate::APP_CONTEXT;
 
-const CONTROL_UI_VERSION: &str = env!("CARGO_PKG_VERSION");
-
 pub struct Config<'a> {
     pub width: f64,
     pub height: f64,
@@ -61,7 +59,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
             &parse_non_empty_number_to_string(config.machine_snapshot.telemetry_version as usize),
         ),
         // Control UI version
-        ("control-ui-version", CONTROL_UI_VERSION),
+        ("control-ui-version", RUNTIME_VERSION),
         (
             "control-ui-uptime-seconds",
             &parse_non_empty_number_to_string(APP_CONTEXT.start_time.elapsed().as_secs() as usize),

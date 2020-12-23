@@ -11,6 +11,8 @@ extern crate log;
 #[macro_use]
 extern crate clap;
 #[macro_use]
+extern crate serde;
+#[macro_use]
 extern crate lazy_static;
 #[macro_use]
 extern crate rust_embed;
@@ -39,6 +41,7 @@ use crate::lora::controller::LoraController;
 use config::arguments::ConfigArguments;
 use config::context::ConfigContext;
 use config::logger::ConfigLogger;
+use config::settings::ConfigSettings;
 use display::window::DisplayWindowBuilder;
 use locale::accessor::LocaleAccessor;
 use locale::loader::LocaleLoader;
@@ -63,6 +66,7 @@ pub struct EmbeddedLocales;
 lazy_static! {
     static ref APP_ARGS: ConfigArguments = make_app_args();
     static ref APP_CONTEXT: ConfigContext = make_app_context();
+    static ref APP_SETTINGS: ConfigSettings = make_app_settings();
     static ref APP_I18N: LocaleAccessor = make_app_i18n();
 }
 
@@ -74,13 +78,22 @@ fn make_app_context() -> ConfigContext {
     ConfigContext::make()
 }
 
+fn make_app_settings() -> ConfigSettings {
+    ConfigSettings::read()
+}
+
 fn make_app_i18n() -> LocaleAccessor {
     LocaleLoader::new(&APP_ARGS.translation).into_accessor()
 }
 
 fn ensure_states() {
     // Ensure all statics are valid (a `deref` is enough to lazily initialize them)
-    let (_, _, _) = (APP_CONTEXT.deref(), APP_ARGS.deref(), APP_I18N.deref());
+    let (_, _, _, _) = (
+        APP_CONTEXT.deref(),
+        APP_SETTINGS.deref(),
+        APP_ARGS.deref(),
+        APP_I18N.deref(),
+    );
 }
 
 fn main() {

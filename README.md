@@ -76,7 +76,7 @@ The following options can be passed to the Control UI upon running it:
 * `--input={file}`: path to a telemetry record to play in the UI, where `{file}` is a record file (all UI controls will be inactive);
 * `--output={directory}`: path to directory in which telemetry records should be stored, where `{directory}` is a path (disabled by default);
 * `--fullscreen`: enables fullscreen mode (used on the final ventilator display only);
-* `--translation={locale}`: locale to use in the UI, where `{locale}` is a [supported locale code](#supported-translations) (defaults to `en`);
+* `--translation={locale}`: locale to use in the UI, where `{locale}` is a [supported locale code](#supported-translations) (defaults to `en`; overrides user settings);
 * `--disable-lora`: disables LoRa telemetry broadcasts (`lora` build feature);
 * `--lora-device={device}`: LoRa device path, where `{device}` is a path eg. `/dev/ttyAMA0` (`lora` build feature; defaults to `/dev/ttyAMA0`);
 
@@ -85,6 +85,8 @@ The following options can be passed to the Control UI upon running it:
 As MakAir was designed to be used internationally, we have made sure that the Control UI was fully translated in major languages.
 
 You can pass the desired locale code when running the `makair-control` binary, using the `--translation` argument. _Make sure to pass the locale ISO code, eg. for French: `--translation=fr`._
+
+By default, you do not need to pass the target locale, as it is read from user settings and can be changed by the end-user through the UI. If the `--translation` argument is used, then user settings are ignored and the passed locale is forcibly used.
 
 **➡️ You can find the list of supported languages, with their ISO language codes below:**
 

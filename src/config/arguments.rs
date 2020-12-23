@@ -5,6 +5,8 @@
 
 use clap::{App, Arg};
 
+use crate::APP_SETTINGS;
+
 #[cfg(debug_assertions)]
 const LOG_LEVEL_DEFAULT: &str = "debug";
 #[cfg(not(debug_assertions))]
@@ -76,7 +78,6 @@ impl ConfigArguments {
                     .short("t")
                     .long("translation")
                     .help("Translation locale ISO code")
-                    .default_value("en")
                     .takes_value(true),
             )
             .arg(
@@ -112,7 +113,7 @@ impl ConfigArguments {
             translation: String::from(
                 matches
                     .value_of("translation")
-                    .expect("invalid translation value"),
+                    .unwrap_or(&APP_SETTINGS.locale),
             ),
             mode,
             fullscreen: matches.is_present("fullscreen"),
