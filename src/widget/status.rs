@@ -15,14 +15,18 @@ use telemetry::structures::AlarmPriority;
 use crate::chip::ChipState;
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
+use crate::utilities::battery::estimate_lead_acid_12v_soc;
 use crate::APP_I18N;
+
+const POWER_BOX_BATTERY_WEAK_THRESHOLD: u16 = 25;
 
 const WRAPPER_COLOR: Color = Color::Rgba(52.0 / 255.0, 52.0 / 255.0, 52.0 / 255.0, 1.0);
 
 const UNIT_STOPPED_COLOR: Color = Color::Rgba(180.0 / 255.0, 24.0 / 255.0, 28.0 / 255.0, 1.0);
 const UNIT_ACTIVE_COLOR: Color = Color::Rgba(50.0 / 255.0, 186.0 / 255.0, 0.0, 1.0);
 
-const POWER_BOX_BATTERY_COLOR: Color = Color::Rgba(208.0 / 255.0, 92.0 / 255.0, 0.0, 1.0);
+const POWER_BOX_BATTERY_NORMAL_COLOR: Color = Color::Rgba(208.0 / 255.0, 92.0 / 255.0, 0.0, 1.0);
+const POWER_BOX_BATTERY_WEAK_COLOR: Color = Color::Rgba(1.0, 0.0 / 255.0, 3.0 / 255.0, 1.0);
 
 pub struct Config<'a> {
     pub container: WidgetId,
@@ -126,12 +130,31 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
             .set(config.unit_text, &mut master.ui);
     }
 
+    // Compute power box battery SoC (if any available)
+    // Notice: the hardware may put multiple lead-acid batteries in series, hence why we first \
+    //   need to divide battery level voltage by the number of series batteries.
+    let battery_soc = if is_battery_powered {
+        if let Some(battery_level) = config.battery_level {
+            Some(estimate_lead_acid_12v_soc(
+                battery_level as f32 / HARDWARE_BATTERY_SERIES_COUNT,
+            ))
+        } else {
+            None
+        }
+    } else {
+        None
+    };
+
     // Create power box canvas
     gen_widget_container!(
         master,
         container_id: config.power_box,
-        color: if is_battery_powered {
-            POWER_BOX_BATTERY_COLOR
+        color: if let Some(battery_soc) = battery_soc {
+            if battery_soc <= POWER_BOX_BATTERY_WEAK_THRESHOLD {
+                POWER_BOX_BATTERY_WEAK_COLOR
+            } else {
+                POWER_BOX_BATTERY_NORMAL_COLOR
+            }
         } else {
             color::TRANSPARENT
         },
@@ -152,10 +175,8 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     let power_text_value = if is_battery_powered {
         let mut value = APP_I18N.t("status-power-battery");
 
-        if let Some(battery_level) = config.battery_level {
-            value.push_str(" (");
-            value.push_str(&battery_level.to_string());
-            value.push_str("V)");
+        if let Some(battery_soc) = battery_soc {
+            value.push_str(&format!(" ({}%)", battery_soc));
         }
 
         value

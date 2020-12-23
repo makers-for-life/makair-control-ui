@@ -5,6 +5,8 @@
 
 pub const RUNTIME_VERSION: &str = env!("CARGO_PKG_VERSION");
 
+pub const HARDWARE_BATTERY_SERIES_COUNT: f32 = 2.0;
+
 pub const WINDOW_ICON_WIDTH: u32 = 512;
 pub const WINDOW_ICON_HEIGHT: u32 = 512;
 
