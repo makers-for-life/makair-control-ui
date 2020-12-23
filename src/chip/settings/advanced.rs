@@ -44,7 +44,7 @@ impl SettingsAdvanced {
     }
 
     pub fn switch_locale(&mut self, action: SettingActionRange) {
-        let locales = LocaleCode::all();
+        let locales = LocaleCode::list_available();
         let locales_size = locales.len() as i16;
 
         if locales_size > 1 {

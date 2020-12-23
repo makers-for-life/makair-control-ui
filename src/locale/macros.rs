@@ -4,7 +4,7 @@
 // License: Public Domain License
 
 macro_rules! gen_locale_impls {
-    (default: $default:tt, count: $count:literal, { $($identifier:tt -> [$code:expr, $name:expr]),+ }) => {
+    (default: $default:tt, { $($identifier:tt -> [$code:expr, $name:expr, $available: expr]),+ }) => {
         #[derive(PartialEq, Debug, Clone)]
         pub enum LocaleCode {
             $(
@@ -13,12 +13,16 @@ macro_rules! gen_locale_impls {
         }
 
         impl LocaleCode {
-            pub fn all() -> [Self; $count] {
-                [
-                    $(
-                        Self::$identifier,
-                    )+
-                ]
+            pub fn list_available() -> Vec<Self> {
+                let mut locales = vec![];
+
+                $(
+                    if $available {
+                        locales.push(Self::$identifier);
+                    }
+                )+
+
+                locales
             }
 
             pub fn from_code(code: &str) -> Option<Self> {
