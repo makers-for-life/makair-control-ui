@@ -42,7 +42,7 @@ macro_rules! gen_settings_from_parameters_alarm_thresholds {
 }
 
 macro_rules! gen_add_data_generic {
-    ($self:ident, $container:tt, $value:expr, $systick:expr, $clean_fn:tt) => {
+    ($self:ident, $name:tt, $container:tt, $value:expr, $systick:expr, $clean_fn:tt) => {
         let snapshot_time = $self.boot_time.unwrap() + Duration::microseconds($systick as i64);
 
         // Fetch last data value in order to reduce noise, and check if the point should be \
@@ -70,11 +70,13 @@ macro_rules! gen_add_data_generic {
         };
 
         // Check that points does not exceed a boundary?
-        if new_point < GRAPH_DRAW_PRESSURE_RANGE_LOW_PRECISION_DIVIDED_SMALL {
-            $self.$container.bounds_low = Some((snapshot_time, new_point));
-        }
-        if new_point > GRAPH_DRAW_PRESSURE_RANGE_HIGH_PRECISION_DIVIDED_SMALL {
-            $self.$container.bounds_high = Some((snapshot_time, new_point));
+        paste! {
+            if new_point < [<GRAPH_DRAW_ $name _RANGE_LOW_PRECISION_DIVIDED_SMALL>] {
+                $self.$container.bounds_low = Some((snapshot_time, new_point));
+            }
+            if new_point > [<GRAPH_DRAW_ $name _RANGE_HIGH_PRECISION_DIVIDED_SMALL>] {
+                $self.$container.bounds_high = Some((snapshot_time, new_point));
+            }
         }
 
         // May we store this value point?

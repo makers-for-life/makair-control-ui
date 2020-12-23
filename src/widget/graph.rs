@@ -147,7 +147,7 @@ fn pressure<'a>(
     plot(
         master,
         size,
-        time_range,
+        time_range.clone(),
         &mut config.plot_graphs.0,
         PlotContext {
             value_range: GRAPH_DRAW_PRESSURE_RANGE_LOW_PRECISION_DIVIDED
@@ -173,12 +173,9 @@ fn pressure<'a>(
         saturate(
             master,
             size,
+            time_range,
             config.pressure_id,
             config.pressure_saturate_ids,
-            (
-                GRAPH_DRAW_PRESSURE_RANGE_LOW_PRECISION_DIVIDED as _,
-                GRAPH_DRAW_PRESSURE_RANGE_HIGH_PRECISION_DIVIDED as _,
-            ),
             &config.data_pressure,
         );
     }
@@ -206,7 +203,7 @@ fn flow<'a>(
     plot(
         master,
         size,
-        time_range,
+        time_range.clone(),
         &mut config.plot_graphs.1,
         PlotContext {
             value_range: GRAPH_DRAW_FLOW_RANGE_LOW_PRECISION_DIVIDED
@@ -232,12 +229,9 @@ fn flow<'a>(
         saturate(
             master,
             size,
+            time_range,
             config.flow_id,
             config.flow_saturate_ids,
-            (
-                GRAPH_DRAW_FLOW_RANGE_LOW_PRECISION_DIVIDED as _,
-                GRAPH_DRAW_FLOW_RANGE_HIGH_PRECISION_DIVIDED as _,
-            ),
             &config.data_flow,
         );
     }
@@ -344,30 +338,17 @@ fn label<'a>(
 fn saturate<'a>(
     master: &mut ControlWidget<'a>,
     size: (f64, f64),
+    time_range: Range<DateTime<Utc>>,
     parent_id: WidgetId,
     saturate_ids: (WidgetId, WidgetId),
-    high_low: (i16, i16),
     data_values: &ChipData,
 ) {
-    // Check if should draw saturation indicators?
-    let (mut saturate_low, mut saturate_high) = (false, false);
-
-    for data_value in data_values.points.iter() {
-        if data_value.1 < high_low.0 {
-            saturate_low = true;
-        }
-
-        if data_value.1 > high_low.1 {
-            saturate_high = true;
-        }
-
-        // All saturation indicators will be visible, we can already stop searching there.
-        if saturate_low && saturate_high {
-            break;
-        }
-    }
-
-    if saturate_low {
+    // Check if should draw saturation indicators
+    if data_values
+        .bounds_low
+        .map(|bounds| bounds.0 >= time_range.start)
+        == Some(true)
+    {
         widget::Rectangle::fill_with(
             [
                 size.0 - GRAPH_DRAW_LABEL_WIDTH as f64,
@@ -383,7 +364,11 @@ fn saturate<'a>(
         .set(saturate_ids.0, &mut master.ui);
     }
 
-    if saturate_high {
+    if data_values
+        .bounds_high
+        .map(|bounds| bounds.0 >= time_range.start)
+        == Some(true)
+    {
         widget::Rectangle::fill_with(
             [
                 size.0 - GRAPH_DRAW_LABEL_WIDTH as f64,

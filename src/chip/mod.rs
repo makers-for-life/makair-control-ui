@@ -378,6 +378,7 @@ impl Chip {
     fn add_data_pressure(&mut self, snapshot: &DataSnapshot) {
         gen_add_data_generic!(
             self,
+            PRESSURE,
             data_pressure,
             snapshot.pressure,
             snapshot.systick,
@@ -397,6 +398,7 @@ impl Chip {
 
         gen_add_data_generic!(
             self,
+            FLOW,
             data_flow,
             net_flow,
             snapshot.systick,
