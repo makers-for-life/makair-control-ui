@@ -31,6 +31,7 @@ mod widget;
 
 use std::ops::Deref;
 use std::str::FromStr;
+use std::sync::RwLock;
 
 use log::LevelFilter;
 
@@ -66,7 +67,7 @@ pub struct EmbeddedLocales;
 lazy_static! {
     static ref APP_ARGS: ConfigArguments = make_app_args();
     static ref APP_CONTEXT: ConfigContext = make_app_context();
-    static ref APP_SETTINGS: ConfigSettings = make_app_settings();
+    static ref APP_SETTINGS: RwLock<ConfigSettings> = RwLock::new(make_app_settings());
     static ref APP_I18N: LocaleAccessor = make_app_i18n();
 }
 

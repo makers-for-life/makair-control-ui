@@ -12,6 +12,11 @@ pub struct ConfigSettings {
     pub locale: String,
 }
 
+pub enum ConfigSettingsUpdateMay {
+    ShouldSave,
+    NoChange,
+}
+
 impl Default for ConfigSettings {
     fn default() -> Self {
         Self {
@@ -31,5 +36,15 @@ impl ConfigSettings {
 
     pub fn save(&self) -> Result<(), ConfyError> {
         confy::store(RUNTIME_NAME, self)
+    }
+
+    pub fn set_locale(&mut self, locale: String) -> ConfigSettingsUpdateMay {
+        if self.locale != locale {
+            self.locale = locale;
+
+            ConfigSettingsUpdateMay::ShouldSave
+        } else {
+            ConfigSettingsUpdateMay::NoChange
+        }
     }
 }

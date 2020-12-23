@@ -113,7 +113,7 @@ impl ConfigArguments {
             translation: String::from(
                 matches
                     .value_of("translation")
-                    .unwrap_or(&APP_SETTINGS.locale),
+                    .unwrap_or(&APP_SETTINGS.read().unwrap().locale),
             ),
             mode,
             fullscreen: matches.is_present("fullscreen"),
