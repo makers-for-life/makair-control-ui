@@ -19,7 +19,9 @@ use telemetry::structures::{DataSnapshot, MachineStateSnapshot};
 use crate::chip::settings::advanced::{SettingsAdvanced, SettingsAdvancedGroupTab};
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
-use crate::locale::advanced::group_tab_to_locale as advanced_group_tab_to_locale;
+use crate::locale::{
+    advanced::group_tab_to_locale as advanced_group_tab_to_locale, locales::locale_code_to_name,
+};
 use crate::utilities::{
     parse::{parse_non_empty_number_to_string, parse_optional_number_to_string},
     units::convert_sub_ppm_to_ppm,
@@ -320,7 +322,7 @@ fn form_settings<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         config,
         Field {
             label_text: APP_I18N.t("modal-advanced-locale"),
-            value_text: config.advanced_settings.locale.to_uppercase(),
+            value_text: locale_code_to_name(&config.advanced_settings.locale),
             ids: config.field_locale_ids,
         },
     )
