@@ -98,6 +98,7 @@ macro_rules! gen_clean_expired_data_from_time_generic {
         if !$self.$container.points.is_empty() {
             let expired_time = $front_time - chrono::Duration::seconds(GRAPH_DRAW_SECONDS);
 
+            // Clear expired points
             while $self
                 .$container
                 .points
@@ -106,6 +107,20 @@ macro_rules! gen_clean_expired_data_from_time_generic {
                 .unwrap_or(false)
             {
                 $self.$container.points.pop_back();
+            }
+
+            // Clear expired bounds? (high)
+            if let Some(bounds_high) = $self.$container.bounds_high {
+                if bounds_high.0 < expired_time {
+                    $self.$container.bounds_high = None;
+                }
+            }
+
+            // Clear expired bounds? (low)
+            if let Some(bounds_low) = $self.$container.bounds_low {
+                if bounds_low.0 < expired_time {
+                    $self.$container.bounds_low = None;
+                }
             }
         }
     };
