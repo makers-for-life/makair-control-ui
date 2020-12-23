@@ -5,6 +5,8 @@
 
 use confy::{self, ConfyError};
 
+use crate::locale::locales::{LOCALES, LOCALE_DEFAULT};
+
 use super::environment::RUNTIME_NAME;
 
 #[derive(Serialize, Deserialize)]
@@ -20,15 +22,15 @@ pub enum ConfigSettingsUpdateMay {
 impl Default for ConfigSettings {
     fn default() -> Self {
         Self {
-            locale: "en".to_string(),
+            locale: LOCALE_DEFAULT.to_string(),
         }
     }
 }
 
 impl ConfigSettings {
     pub fn read() -> Self {
-        if let Ok(configuration) = confy::load(RUNTIME_NAME) {
-            configuration
+        if let Ok(configuration) = confy::load::<Self>(RUNTIME_NAME) {
+            Self::check_configuration(configuration)
         } else {
             Self::default()
         }
@@ -46,5 +48,16 @@ impl ConfigSettings {
         } else {
             ConfigSettingsUpdateMay::NoChange
         }
+    }
+
+    fn check_configuration(mut configuration: Self) -> Self {
+        // Ensure configuration is still valid
+        // Notice: as the UI may be resumed from an old saved state, some saved configuration \
+        //   values may not be valid anymore, hence this check to ensure their validity.
+        if !LOCALES.contains(&configuration.locale.as_str()) {
+            configuration.locale = LOCALE_DEFAULT.to_string();
+        }
+
+        configuration
     }
 }
