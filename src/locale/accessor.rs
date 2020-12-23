@@ -3,23 +3,24 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+use std::sync::RwLock;
+
 use fluent::concurrent::FluentBundle;
 use fluent::{FluentArgs, FluentResource};
-use unic_langid::LanguageIdentifier;
 
 pub struct LocaleAccessor {
-    bundle: FluentBundle<FluentResource>,
+    bundle: RwLock<FluentBundle<FluentResource>>,
 }
 
 impl LocaleAccessor {
-    pub fn new(locale_id: LanguageIdentifier, resource: FluentResource) -> Self {
-        let mut bundle = FluentBundle::new(&[locale_id]);
+    pub fn new(bundle: FluentBundle<FluentResource>) -> Self {
+        LocaleAccessor {
+            bundle: RwLock::new(bundle),
+        }
+    }
 
-        bundle
-            .add_resource(resource)
-            .expect("failed to add locale to its bundle");
-
-        LocaleAccessor { bundle }
+    pub fn replace(&self, bundle: FluentBundle<FluentResource>) {
+        *self.bundle.write().unwrap() = bundle;
     }
 
     pub fn t(&self, key: &str) -> String {
@@ -27,16 +28,17 @@ impl LocaleAccessor {
     }
 
     fn process(&self, key: &str, arguments: Option<&FluentArgs>) -> String {
-        let mut errors = vec![];
+        let bundle = self.bundle.read().unwrap();
 
-        let message = self
-            .bundle
+        let message = bundle
             .get_message(key)
             .unwrap_or_else(|| panic!("locale key not found: {}", key));
 
         // Notice: return the key if the message has no value (eg. not yet translated)
         if let Some(pattern) = message.value {
-            let formatted = self.bundle.format_pattern(&pattern, arguments, &mut errors);
+            let mut errors = vec![];
+
+            let formatted = bundle.format_pattern(&pattern, arguments, &mut errors);
 
             // Any error? Panic
             if !errors.is_empty() {

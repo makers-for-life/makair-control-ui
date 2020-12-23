@@ -83,6 +83,8 @@ modal-mode-alarm-low-tidal-volume = Plūdmaiņu daudzums (zems)
 modal-mode-alarm-high-tidal-volume = Plūdmaiņu daudzums (liels)
 modal-mode-alarm-leak = Noplūdes apjoms
 
+modal-advanced-locale = Valoda
+
 initializing-connecting = Notiek palaišana...
 initializing-connected = Notiek inicializēšana...
 

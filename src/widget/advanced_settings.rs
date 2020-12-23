@@ -24,7 +24,17 @@ use crate::utilities::{
     parse::{parse_non_empty_number_to_string, parse_optional_number_to_string},
     units::convert_sub_ppm_to_ppm,
 };
-use crate::APP_CONTEXT;
+use crate::{APP_CONTEXT, APP_I18N};
+
+type FieldWidgetIds = (
+    WidgetId,
+    WidgetId,
+    WidgetId,
+    WidgetId,
+    WidgetId,
+    WidgetId,
+    WidgetId,
+);
 
 pub struct Config<'a> {
     pub width: f64,
@@ -46,6 +56,14 @@ pub struct Config<'a> {
 
     pub advanced_group_tab_buttons: [WidgetId; ADVANCED_SETTINGS_GROUP_TABS_COUNT],
     pub advanced_group_tab_texts: [WidgetId; ADVANCED_SETTINGS_GROUP_TABS_COUNT],
+
+    pub field_locale_ids: FieldWidgetIds,
+}
+
+struct Field {
+    label_text: String,
+    value_text: String,
+    ids: FieldWidgetIds,
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
@@ -296,5 +314,43 @@ fn form_statistics_lines<'a>(
 }
 
 fn form_settings<'a>(master: &mut ControlWidget<'a>, config: &Config) {
-    // TODO
+    draw_field(
+        0,
+        master,
+        config,
+        Field {
+            label_text: APP_I18N.t("modal-advanced-locale"),
+            value_text: config.advanced_settings.locale.to_uppercase(),
+            ids: config.field_locale_ids,
+        },
+    )
+}
+
+fn draw_field<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config, field: Field) {
+    // Generate label
+    gen_widget_label_form!(
+        master,
+        text_id: field.ids.0,
+        value: &field.label_text,
+        positions: top_left_with_margins_on[
+            config.advanced_form_wrapper, index as f64 * ADVANCED_SETTINGS_MODAL_FORM_FIELD_HEIGHT_PADDED, 0.0,
+        ]
+    );
+
+    // Generate navigation buttons
+    gen_widget_button_navigate!(
+        master,
+        button_less_id: field.ids.5,
+        button_less_text_id: field.ids.6,
+        button_more_id: field.ids.3,
+        button_more_text_id: field.ids.4,
+        value_wrapper_id: field.ids.1,
+        value_id: field.ids.2,
+        value: &field.value_text,
+        positions: top_left_with_margins_on[
+            field.ids.0,
+            -2.0,
+            ADVANCED_SETTINGS_MODAL_FORM_PADDING_LEFT,
+        ]
+    );
 }

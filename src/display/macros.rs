@@ -187,14 +187,12 @@ macro_rules! gen_ui_events_modal_local_clicks {
 
         $({
             $name:expr,
-            $settings_chip:expr,
             $settings_state:expr,
 
             $({
-                $target_value:expr,
-                $field_key:tt,
                 $field_name:expr,
-                $widget_ids:expr
+                $widget_ids:expr,
+                $handler:block
             }),*
         }),+,
     ) => {
@@ -208,8 +206,8 @@ macro_rules! gen_ui_events_modal_local_clicks {
                     ) {
                         debug!("pressed the {} local {} field button once", $name, $field_name);
 
-                        // Force state to target value
-                        $settings_chip.$field_key = $target_value;
+                        // Call handler block
+                        $handler;
 
                         $has = true;
                     }
@@ -246,6 +244,22 @@ macro_rules! gen_render_mode_settings_alarm_ids {
                 $self.ids.[<mode_settings_alarm_ $name _more_text>],
                 $self.ids.[<mode_settings_alarm_ $name _less>],
                 $self.ids.[<mode_settings_alarm_ $name _less_text>],
+            )
+        }
+    };
+}
+
+macro_rules! gen_render_advanced_settings_field_ids {
+    ($self:ident, $name:tt) => {
+        paste! {
+            (
+                $self.ids.[<advanced_field_ $name _text>],
+                $self.ids.[<advanced_field_ $name _value_wrapper>],
+                $self.ids.[<advanced_field_ $name _value>],
+                $self.ids.[<advanced_field_ $name _more>],
+                $self.ids.[<advanced_field_ $name _more_text>],
+                $self.ids.[<advanced_field_ $name _less>],
+                $self.ids.[<advanced_field_ $name _less_text>],
             )
         }
     };

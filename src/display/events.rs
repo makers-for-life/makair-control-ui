@@ -818,46 +818,88 @@ impl DisplayUIEvents {
             interface, ids, has_events,
 
             {
-                "mode", chip.settings.mode, states.mode_settings,
+                "mode", states.mode_settings,
 
                 {
-                    SettingsModeGroupTab::General, group, "group general",
+                    "group general",
 
                     [
                         ids.mode_settings_group_tab_general_button,
                         ids.mode_settings_group_tab_general_text,
-                    ]
+                    ],
+
+                    {
+                        chip.settings.mode.group = SettingsModeGroupTab::General;
+                    }
                 },
 
                 {
-                    SettingsModeGroupTab::Alarms, group, "group alarms",
+                    "group alarms",
 
                     [
                         ids.mode_settings_group_tab_alarms_button,
                         ids.mode_settings_group_tab_alarms_text,
-                    ]
+                    ],
+
+                    {
+                        chip.settings.mode.group = SettingsModeGroupTab::Alarms;
+                    }
                 }
             },
 
             {
-                "advanced", chip.settings.advanced, states.advanced_settings,
+                "advanced", states.advanced_settings,
 
                 {
-                    SettingsAdvancedGroupTab::Statistics, group, "group statistics",
+                    "group statistics",
 
                     [
                         ids.advanced_group_tab_statistics_button,
                         ids.advanced_group_tab_statistics_text,
-                    ]
+                    ],
+
+                    {
+                        chip.settings.advanced.group = SettingsAdvancedGroupTab::Statistics;
+                    }
                 },
 
                 {
-                    SettingsAdvancedGroupTab::Settings, group, "group settings",
+                    "group settings",
 
                     [
                         ids.advanced_group_tab_settings_button,
                         ids.advanced_group_tab_settings_text,
-                    ]
+                    ],
+
+                    {
+                        chip.settings.advanced.group = SettingsAdvancedGroupTab::Settings;
+                    }
+                },
+
+                {
+                    "settings locale previous",
+
+                    [
+                        ids.advanced_field_locale_less,
+                        ids.advanced_field_locale_less_text,
+                    ],
+
+                    {
+                        chip.settings.advanced.switch_locale(SettingActionRange::Less);
+                    }
+                },
+
+                {
+                    "settings locale next",
+
+                    [
+                        ids.advanced_field_locale_more,
+                        ids.advanced_field_locale_more_text,
+                    ],
+
+                    {
+                        chip.settings.advanced.switch_locale(SettingActionRange::More);
+                    }
                 }
             },
         );

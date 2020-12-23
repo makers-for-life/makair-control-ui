@@ -83,6 +83,8 @@ modal-mode-alarm-low-tidal-volume = Дихальний об'єм (низький
 modal-mode-alarm-high-tidal-volume = Дихальний об'єм (високий)
 modal-mode-alarm-leak = Об'єм витоку
 
+modal-advanced-locale = Мова
+
 initializing-connecting = Запуск...
 initializing-connected = Ініціалізація...
 

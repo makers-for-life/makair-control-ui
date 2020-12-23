@@ -83,6 +83,8 @@ modal-mode-alarm-low-tidal-volume = Дыхательный объем (низк�
 modal-mode-alarm-high-tidal-volume = Дыхательный объем (высокий)
 modal-mode-alarm-leak = Объем утечки
 
+modal-advanced-locale = Язык
+
 initializing-connecting = Начиная...
 initializing-connected = Инициализация...
 

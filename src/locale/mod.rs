@@ -7,4 +7,5 @@ pub mod accessor;
 pub mod advanced;
 pub mod alarms;
 pub mod loader;
+pub mod locales;
 pub mod modes;

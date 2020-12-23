@@ -338,6 +338,14 @@ widget_ids!(pub struct Ids {
   advanced_group_tab_statistics_text,
   advanced_group_tab_settings_text,
 
+  advanced_field_locale_text,
+  advanced_field_locale_value,
+  advanced_field_locale_value_wrapper,
+  advanced_field_locale_more,
+  advanced_field_locale_more_text,
+  advanced_field_locale_less,
+  advanced_field_locale_less_text,
+
   modal_background,
   modal_container_borders,
   modal_container,

@@ -83,6 +83,8 @@ modal-mode-alarm-low-tidal-volume = Volume corrente (baixo)
 modal-mode-alarm-high-tidal-volume = Volume corrente (alto)
 modal-mode-alarm-leak = Volume de vazamento
 
+modal-advanced-locale = Língua
+
 initializing-connecting = Começando...
 initializing-connected = Inicializando...
 

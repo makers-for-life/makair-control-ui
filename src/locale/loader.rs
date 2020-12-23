@@ -3,12 +3,16 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+use fluent::concurrent::FluentBundle;
 use fluent::FluentResource;
 use unic_langid::LanguageIdentifier;
 
 use crate::EmbeddedLocales;
 
 use super::accessor::LocaleAccessor;
+use super::locales::LOCALES;
+
+const LOCALE_EXTENSION: &str = ".ftl";
 
 pub struct LocaleLoader {
     locale_id: LanguageIdentifier,
@@ -19,9 +23,16 @@ impl LocaleLoader {
     pub fn new(locale: &str) -> Self {
         debug!("loading locale: [{}]...", locale);
 
+        if !LOCALES.contains(&locale) {
+            panic!(
+                "locale not mapped in the list of allowed locales: {}",
+                locale
+            );
+        }
+
         let locale_id: LanguageIdentifier = locale.parse().expect("locale code parsing failed");
-        let locale_buffer =
-            EmbeddedLocales::get(&format!("{}.ftl", locale)).expect("locale not found");
+        let locale_buffer = EmbeddedLocales::get(&format!("{}{}", locale, LOCALE_EXTENSION))
+            .expect("locale not found");
         let locale_string =
             String::from_utf8(locale_buffer.into_owned()).expect("locale file is not a string");
 
@@ -33,7 +44,17 @@ impl LocaleLoader {
         }
     }
 
+    pub fn into_bundle(self) -> FluentBundle<FluentResource> {
+        let mut bundle = FluentBundle::new(&[self.locale_id]);
+
+        bundle
+            .add_resource(self.resource)
+            .expect("failed to add locale to its bundle");
+
+        bundle
+    }
+
     pub fn into_accessor(self) -> LocaleAccessor {
-        LocaleAccessor::new(self.locale_id, self.resource)
+        LocaleAccessor::new(self.into_bundle())
     }
 }

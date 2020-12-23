@@ -83,6 +83,8 @@ modal-mode-alarm-low-tidal-volume = 潮气量（低）
 modal-mode-alarm-high-tidal-volume = 潮气量（高）
 modal-mode-alarm-leak = 泄漏量
 
+modal-advanced-locale = 语言
+
 initializing-connecting = 启动...
 initializing-connected = 初始化中...
 

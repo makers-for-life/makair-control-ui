@@ -870,6 +870,8 @@ impl<'a> Screen<'a> {
                     self.ids.advanced_group_tab_statistics_text,
                     self.ids.advanced_group_tab_settings_text,
                 ],
+
+                field_locale_ids: gen_render_advanced_settings_field_ids!(self, locale),
             },
         ));
     }
