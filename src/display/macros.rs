@@ -119,6 +119,7 @@ macro_rules! gen_ui_events_modal_settings_clicks {
         $({
             $name:expr,
             $settings_state:expr,
+            $close_handler:block,
             $save_handler:block,
 
             $([
@@ -139,9 +140,12 @@ macro_rules! gen_ui_events_modal_settings_clicks {
                         $ids.modal_close_text,
                     ],
                 ) {
-                    debug!("pressed the {} settings close button once", $name);
+                    debug!("pressed the {} settings cleose button once", $name);
 
                     $settings_state.toggle();
+
+                    // Call close handler block
+                    $close_handler;
 
                     $has = true;
                 }
@@ -156,10 +160,10 @@ macro_rules! gen_ui_events_modal_settings_clicks {
                 ) {
                     debug!("pressed the {} settings save button once", $name);
 
+                    $settings_state.toggle();
+
                     // Call save handler block
                     $save_handler;
-
-                    $settings_state.toggle();
 
                     $has = true;
                 }
@@ -196,6 +200,7 @@ macro_rules! gen_ui_events_modal_settings_intents_clicks {
             $name:expr,
             $type:tt,
             $settings_state:expr,
+            $close_handler:block,
             $save_handler:block,
 
             $([
@@ -209,7 +214,7 @@ macro_rules! gen_ui_events_modal_settings_intents_clicks {
             $interface, $ids, $has,
 
             $({
-                $name, $settings_state, $save_handler,
+                $name, $settings_state, $close_handler, $save_handler,
 
                 $([
                     $field_name,

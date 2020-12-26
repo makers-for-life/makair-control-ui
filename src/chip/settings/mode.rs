@@ -24,6 +24,7 @@ pub enum SettingsModeEvent {
 
 #[derive(Debug)]
 pub enum SettingsModeIntent {
+    ClearDraft,
     ModePcCmv,
     ModePcAc,
     ModePcVsai,
@@ -166,6 +167,7 @@ impl SettingsMode {
 
     pub fn new_intent(&mut self, intent: SettingsModeIntent) {
         match intent {
+            SettingsModeIntent::ClearDraft => self.clear_draft(),
             SettingsModeIntent::ModePcCmv => self.switch_mode(VentilationMode::PC_CMV),
             SettingsModeIntent::ModePcAc => self.switch_mode(VentilationMode::PC_AC),
             SettingsModeIntent::ModePcVsai => self.switch_mode(VentilationMode::PC_VSAI),
@@ -225,14 +227,6 @@ impl SettingsMode {
 
         // Generate events from changed draft values?
         if let Some(ref draft) = self.draft {
-            // Append non-numeric mode value
-            if draft.mode != self.live.mode {
-                events.push(ControlMessage {
-                    setting: ControlSetting::VentilationMode,
-                    value: u8::from(&draft.mode) as _,
-                });
-            }
-
             // Append all other numeric values
             gen_commit_mode_events_numeric!(
                 self, draft, events, {
@@ -262,12 +256,25 @@ impl SettingsMode {
                     LeakAlarmThreshold -> alarm_threshold_leak,
                 }
             );
+
+            // Append non-numeric mode value (right after all numeric values have been commited)
+            if draft.mode != self.live.mode {
+                events.push(ControlMessage {
+                    setting: ControlSetting::VentilationMode,
+                    value: u8::from(&draft.mode) as _,
+                });
+            }
         }
 
         // Ensure draft is reset back to none
         self.draft = None;
 
         events
+    }
+
+    fn clear_draft(&mut self) {
+        // Ensure draft is cleared
+        self.draft = None;
     }
 
     fn switch_mode(&mut self, mode: VentilationMode) {

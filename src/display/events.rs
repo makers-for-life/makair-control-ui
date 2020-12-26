@@ -222,7 +222,7 @@ impl DisplayUIEvents {
             interface, ids, has_events,
 
             {
-                "run", states.run_settings, {},
+                "run", states.run_settings, {}, {},
 
                 [
                     "toggle",
@@ -247,7 +247,7 @@ impl DisplayUIEvents {
             },
 
             {
-                "snooze", states.snooze_settings, {},
+                "snooze", states.snooze_settings, {}, {},
 
                 [
                     "alarms",
@@ -271,7 +271,7 @@ impl DisplayUIEvents {
             },
 
             {
-                "advanced", states.advanced_settings, {},
+                "advanced", states.advanced_settings, {}, {},
             },
         );
 
@@ -282,8 +282,16 @@ impl DisplayUIEvents {
                 "mode", Mode, states.mode_settings,
 
                 {
+                    // Clear all local draft changes, as the user pressed on the cancel button \
+                    //   to cancel all pending changes and close the modal.
+                    intents.push(
+                        ChipSettingsIntent::Mode(SettingsModeIntent::ClearDraft)
+                    );
+                },
+
+                {
                     // Commit all draft changes (push all draft changes to live settings, which \
-                    //   will apply them immediately in the firmware runtime)
+                    //   will apply them immediately in the firmware runtime).
                     events.push(
                         ChipSettingsEvent::Mode(SettingsModeEvent::Commit)
                     );
