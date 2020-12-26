@@ -131,7 +131,7 @@ fn selector<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 
         // Create rectangle (selected if index mode matches ongoing mode)
         let (rectangle_color, rectangle_height_offset, rectangle_width_offset, selection_offset) =
-            if Some(config.mode_settings.mode) == index_mode {
+            if Some(config.mode_settings.live.mode) == index_mode {
                 (
                     SELECTOR_COLOR_SELECTED,
                     0.0,
@@ -253,7 +253,7 @@ fn form<'a>(master: &mut ControlWidget<'a>, config: &Config, parent_size: (f64, 
     );
 
     // Append form depending on current ventilation mode
-    match config.mode_settings.mode {
+    match config.mode_settings.live.mode {
         VentilationMode::PC_CMV => form_pc_cmv(master, config),
         VentilationMode::PC_AC => form_pc_ac(master, config),
         VentilationMode::PC_VSAI => form_pc_vsai(master, config),
@@ -373,7 +373,7 @@ fn field_pressure_inspiratory<'a>(index: usize, master: &mut ControlWidget<'a>, 
                 "{} {}",
                 convert_mmh2o_to_cmh2o(
                     ConvertMode::Rounded,
-                    config.mode_settings.pressure_plateau as f64
+                    config.mode_settings.live.pressure_plateau as f64
                 ),
                 APP_I18N.t("telemetry-unit-cmh2o")
             ),
@@ -393,7 +393,7 @@ fn field_pressure_expiratory<'a>(index: usize, master: &mut ControlWidget<'a>, c
                 "{} {}",
                 convert_mmh2o_to_cmh2o(
                     ConvertMode::Rounded,
-                    config.mode_settings.pressure_expiratory as f64
+                    config.mode_settings.live.pressure_expiratory as f64
                 ),
                 APP_I18N.t("telemetry-unit-cmh2o")
             ),
@@ -415,7 +415,7 @@ fn field_time_inspiratory_minimum<'a>(
             label_text: APP_I18N.t("modal-mode-time-inspiratory-minimum"),
             value_text: format!(
                 "{} {}",
-                config.mode_settings.inspiratory_time_minimum,
+                config.mode_settings.live.inspiratory_time_minimum,
                 APP_I18N.t("telemetry-unit-milliseconds")
             ),
             ids: config.field_time_inspiratory_minimum_ids,
@@ -436,7 +436,7 @@ fn field_time_inspiratory_maximum<'a>(
             label_text: APP_I18N.t("modal-mode-time-inspiratory-maximum"),
             value_text: format!(
                 "{} {}",
-                config.mode_settings.inspiratory_time_maximum,
+                config.mode_settings.live.inspiratory_time_maximum,
                 APP_I18N.t("telemetry-unit-milliseconds")
             ),
             ids: config.field_time_inspiratory_maximum_ids,
@@ -453,7 +453,7 @@ fn field_cycles_per_minute<'a>(index: usize, master: &mut ControlWidget<'a>, con
             label_text: APP_I18N.t("modal-mode-cycles-per-minute"),
             value_text: format!(
                 "{}{}",
-                config.mode_settings.cycles_per_minute,
+                config.mode_settings.live.cycles_per_minute,
                 APP_I18N.t("telemetry-unit-per-minute")
             ),
             ids: config.field_cycles_per_minute_ids,
@@ -470,7 +470,7 @@ fn field_tidal_volume<'a>(index: usize, master: &mut ControlWidget<'a>, config: 
             label_text: APP_I18N.t("modal-mode-tidal-volume"),
             value_text: format!(
                 "{} {}",
-                config.mode_settings.volume_tidal,
+                config.mode_settings.live.volume_tidal,
                 APP_I18N.t("telemetry-unit-milliliters")
             ),
             ids: config.field_tidal_volume_ids,
@@ -487,7 +487,7 @@ fn field_inspiratory_flow<'a>(index: usize, master: &mut ControlWidget<'a>, conf
             label_text: APP_I18N.t("modal-mode-flow-inspiratory"),
             value_text: format!(
                 "{} {}",
-                config.mode_settings.flow_inspiration,
+                config.mode_settings.live.flow_inspiration,
                 APP_I18N.t("telemetry-unit-lpm")
             ),
             ids: config.field_inspiratory_flow_ids,
@@ -504,7 +504,7 @@ fn field_duration_inspiration<'a>(index: usize, master: &mut ControlWidget<'a>, 
             label_text: APP_I18N.t("modal-mode-time-inspiratory"),
             value_text: format!(
                 "{} {}",
-                config.mode_settings.duration_inspiration,
+                config.mode_settings.live.duration_inspiration,
                 APP_I18N.t("telemetry-unit-milliseconds")
             ),
             ids: config.field_inspiratory_duration_ids,
@@ -521,7 +521,7 @@ fn field_duration_plateau<'a>(index: usize, master: &mut ControlWidget<'a>, conf
             label_text: APP_I18N.t("modal-mode-plateau-duration"),
             value_text: format!(
                 "{} {}",
-                config.mode_settings.duration_plateau,
+                config.mode_settings.live.duration_plateau,
                 APP_I18N.t("telemetry-unit-milliseconds")
             ),
             ids: config.field_plateau_duration_ids,
@@ -540,7 +540,7 @@ fn field_trigger_offset<'a>(index: usize, master: &mut ControlWidget<'a>, config
                 "{:.1} {}",
                 convert_mmh2o_to_cmh2o(
                     ConvertMode::WithDecimals,
-                    config.mode_settings.trigger_inspiratory_offset as f64
+                    config.mode_settings.live.trigger_inspiratory_offset as f64
                 ),
                 APP_I18N.t("telemetry-unit-cmh2o")
             ),
@@ -556,7 +556,7 @@ fn field_trigger_expiratory<'a>(index: usize, master: &mut ControlWidget<'a>, co
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-trigger-expiratory"),
-            value_text: format!("{}%", config.mode_settings.trigger_expiratory_flow),
+            value_text: format!("{}%", config.mode_settings.live.trigger_expiratory_flow),
             ids: config.field_trigger_expiratory_ids,
         },
     )
@@ -577,6 +577,7 @@ fn field_alarm_threshold_low_inspiratory_minute_volume<'a>(
                 "{} {}",
                 config
                     .mode_settings
+                    .live
                     .alarm_threshold_low_inspiratory_minute_volume,
                 APP_I18N.t("telemetry-unit-lpm")
             ),
@@ -600,6 +601,7 @@ fn field_alarm_threshold_high_inspiratory_minute_volume<'a>(
                 "{} {}",
                 config
                     .mode_settings
+                    .live
                     .alarm_threshold_high_inspiratory_minute_volume,
                 APP_I18N.t("telemetry-unit-lpm")
             ),
@@ -623,6 +625,7 @@ fn field_alarm_threshold_low_expiratory_minute_volume<'a>(
                 "{} {}",
                 config
                     .mode_settings
+                    .live
                     .alarm_threshold_low_expiratory_minute_volume,
                 APP_I18N.t("telemetry-unit-lpm")
             ),
@@ -646,6 +649,7 @@ fn field_alarm_threshold_high_expiratory_minute_volume<'a>(
                 "{} {}",
                 config
                     .mode_settings
+                    .live
                     .alarm_threshold_high_expiratory_minute_volume,
                 APP_I18N.t("telemetry-unit-lpm")
             ),
@@ -667,7 +671,10 @@ fn field_alarm_threshold_low_respiratory_rate<'a>(
             label_text: APP_I18N.t("modal-mode-alarm-low-respiratory-rate"),
             value_text: format!(
                 "{}{}",
-                config.mode_settings.alarm_threshold_low_respiratory_rate,
+                config
+                    .mode_settings
+                    .live
+                    .alarm_threshold_low_respiratory_rate,
                 APP_I18N.t("telemetry-unit-per-minute")
             ),
             ids: config.field_alarm_threshold_low_respiratory_rate_ids,
@@ -688,7 +695,10 @@ fn field_alarm_threshold_high_respiratory_rate<'a>(
             label_text: APP_I18N.t("modal-mode-alarm-high-respiratory-rate"),
             value_text: format!(
                 "{}{}",
-                config.mode_settings.alarm_threshold_high_respiratory_rate,
+                config
+                    .mode_settings
+                    .live
+                    .alarm_threshold_high_respiratory_rate,
                 APP_I18N.t("telemetry-unit-per-minute")
             ),
             ids: config.field_alarm_threshold_high_respiratory_rate_ids,
@@ -709,7 +719,7 @@ fn field_alarm_threshold_low_tidal_volume<'a>(
             label_text: APP_I18N.t("modal-mode-alarm-low-tidal-volume"),
             value_text: format!(
                 "{} {}",
-                config.mode_settings.alarm_threshold_low_tidal_volume,
+                config.mode_settings.live.alarm_threshold_low_tidal_volume,
                 APP_I18N.t("telemetry-unit-milliliters")
             ),
             ids: config.field_alarm_threshold_low_tidal_volume_ids,
@@ -730,7 +740,7 @@ fn field_alarm_threshold_high_tidal_volume<'a>(
             label_text: APP_I18N.t("modal-mode-alarm-high-tidal-volume"),
             value_text: format!(
                 "{} {}",
-                config.mode_settings.alarm_threshold_high_tidal_volume,
+                config.mode_settings.live.alarm_threshold_high_tidal_volume,
                 APP_I18N.t("telemetry-unit-milliliters")
             ),
             ids: config.field_alarm_threshold_high_tidal_volume_ids,
@@ -747,7 +757,7 @@ fn field_alarm_threshold_leak<'a>(index: usize, master: &mut ControlWidget<'a>, 
             label_text: APP_I18N.t("modal-mode-alarm-leak"),
             value_text: format!(
                 "{} {}",
-                config.mode_settings.alarm_threshold_leak,
+                config.mode_settings.live.alarm_threshold_leak,
                 APP_I18N.t("telemetry-unit-mlpm")
             ),
             ids: config.field_alarm_threshold_leak_ids,

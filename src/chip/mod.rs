@@ -485,53 +485,53 @@ impl Chip {
     fn update_settings_from_parameters(&mut self, update: ChipSettingsUpdate) {
         // Update expiratory term values
         if let Some(ti_min) = update.ti_min {
-            self.settings.mode.inspiratory_time_minimum = ti_min as usize;
+            self.settings.mode.live.inspiratory_time_minimum = ti_min as usize;
         }
 
         if let Some(ti_max) = update.ti_max {
-            self.settings.mode.inspiratory_time_maximum = ti_max as usize;
+            self.settings.mode.live.inspiratory_time_maximum = ti_max as usize;
         }
 
         // Update trigger values
         if let Some(trigger_offset) = update.trigger_offset {
-            self.settings.mode.trigger_inspiratory_offset = trigger_offset as usize;
+            self.settings.mode.live.trigger_inspiratory_offset = trigger_offset as usize;
         }
 
         if let Some(expiratory_trigger_flow) = update.expiratory_trigger_flow {
-            self.settings.mode.trigger_expiratory_flow = expiratory_trigger_flow as usize;
+            self.settings.mode.live.trigger_expiratory_flow = expiratory_trigger_flow as usize;
         }
 
         // Update cycle values
         if let Some(cpm_command) = update.cpm_command {
-            self.settings.mode.cycles_per_minute = cpm_command as usize;
+            self.settings.mode.live.cycles_per_minute = cpm_command as usize;
         }
 
         // Update pressure values
         if let Some(plateau_command) = update.plateau_command {
-            self.settings.mode.pressure_plateau = convert_cmh2o_to_mmh2o(plateau_command);
+            self.settings.mode.live.pressure_plateau = convert_cmh2o_to_mmh2o(plateau_command);
         }
         if let Some(peep_command) = update.peep_command {
-            self.settings.mode.pressure_expiratory = convert_cmh2o_to_mmh2o(peep_command);
+            self.settings.mode.live.pressure_expiratory = convert_cmh2o_to_mmh2o(peep_command);
         }
 
         // Update target tidal volume values
         if let Some(target_tidal_volume) = update.target_tidal_volume {
-            self.settings.mode.volume_tidal = target_tidal_volume as usize;
+            self.settings.mode.live.volume_tidal = target_tidal_volume as usize;
         }
 
         // Update target inspiratory flow values
         if let Some(target_inspiratory_flow) = update.target_inspiratory_flow {
-            self.settings.mode.flow_inspiration = target_inspiratory_flow as usize;
+            self.settings.mode.live.flow_inspiration = target_inspiratory_flow as usize;
         }
 
         // Update inspiratory duration values
         if let Some(inspiratory_duration_command) = update.inspiratory_duration_command {
-            self.settings.mode.duration_inspiration = inspiratory_duration_command as usize;
+            self.settings.mode.live.duration_inspiration = inspiratory_duration_command as usize;
         }
 
         // Update plateau duration values
         if let Some(plateau_duration) = update.plateau_duration {
-            self.settings.mode.duration_plateau = plateau_duration as usize;
+            self.settings.mode.live.duration_plateau = plateau_duration as usize;
         }
 
         // Update alarms snooze values
@@ -545,13 +545,13 @@ impl Chip {
 
         // Update ventilation mode value
         if let Some(ventilation_mode) = update.ventilation_mode {
-            self.settings.mode.mode = ventilation_mode;
+            self.settings.mode.live.mode = ventilation_mode;
         }
 
         // Update all alarm threshold values
         gen_settings_from_parameters_alarm_thresholds!(
             update,
-            self.settings.mode,
+            self.settings.mode.live,
             [
                 low_inspiratory_minute_volume,
                 high_inspiratory_minute_volume,
@@ -756,19 +756,19 @@ impl Chip {
             }
 
             ControlSetting::PlateauPressure => {
-                self.settings.mode.pressure_plateau = ack.value as usize;
+                self.settings.mode.live.pressure_plateau = ack.value as usize;
                 self.last_machine_snapshot.plateau_command =
                     convert_mmh2o_to_cmh2o(ConvertMode::Rounded, ack.value as f64) as u8
             }
 
             ControlSetting::PEEP => {
-                self.settings.mode.pressure_expiratory = ack.value as usize;
+                self.settings.mode.live.pressure_expiratory = ack.value as usize;
                 self.last_machine_snapshot.peep_command =
                     convert_mmh2o_to_cmh2o(ConvertMode::Rounded, ack.value as f64) as u8
             }
 
             ControlSetting::CyclesPerMinute => {
-                self.settings.mode.cycles_per_minute = ack.value as usize;
+                self.settings.mode.live.cycles_per_minute = ack.value as usize;
                 self.last_machine_snapshot.cpm_command = ack.value as u8
             }
 
@@ -781,7 +781,7 @@ impl Chip {
             }
 
             ControlSetting::TriggerOffset => {
-                self.settings.mode.trigger_inspiratory_offset = ack.value as usize;
+                self.settings.mode.live.trigger_inspiratory_offset = ack.value as usize;
                 self.last_machine_snapshot.trigger_offset = ack.value as u8;
             }
 
@@ -811,8 +811,8 @@ impl Chip {
                 if let Ok(ventilation_mode) = VentilationMode::try_from(ack.value as u8) {
                     self.last_machine_snapshot.ventilation_mode = ventilation_mode;
 
-                    if self.settings.mode.mode != ventilation_mode {
-                        self.settings.mode.mode = ventilation_mode;
+                    if self.settings.mode.live.mode != ventilation_mode {
+                        self.settings.mode.live.mode = ventilation_mode;
                         self.settings.mode.group = SettingsModeGroupTab::default();
                     }
                 }
@@ -823,23 +823,24 @@ impl Chip {
             }
 
             ControlSetting::ExpiratoryTriggerFlow => {
-                self.settings.mode.trigger_expiratory_flow = ack.value as usize;
+                self.settings.mode.live.trigger_expiratory_flow = ack.value as usize;
                 self.last_machine_snapshot.expiratory_trigger_flow = Some(ack.value as _);
             }
 
             ControlSetting::TiMin => {
-                self.settings.mode.inspiratory_time_minimum = ack.value as usize;
+                self.settings.mode.live.inspiratory_time_minimum = ack.value as usize;
                 self.last_machine_snapshot.ti_min = Some(ack.value);
             }
 
             ControlSetting::TiMax => {
-                self.settings.mode.inspiratory_time_maximum = ack.value as usize;
+                self.settings.mode.live.inspiratory_time_maximum = ack.value as usize;
                 self.last_machine_snapshot.ti_max = Some(ack.value);
             }
 
             ControlSetting::LowInspiratoryMinuteVolumeAlarmThreshold => {
                 self.settings
                     .mode
+                    .live
                     .alarm_threshold_low_inspiratory_minute_volume = ack.value as usize;
                 self.last_machine_snapshot
                     .low_inspiratory_minute_volume_alarm_threshold = Some(ack.value as _);
@@ -848,6 +849,7 @@ impl Chip {
             ControlSetting::HighInspiratoryMinuteVolumeAlarmThreshold => {
                 self.settings
                     .mode
+                    .live
                     .alarm_threshold_high_inspiratory_minute_volume = ack.value as usize;
                 self.last_machine_snapshot
                     .high_inspiratory_minute_volume_alarm_threshold = Some(ack.value as _);
@@ -856,6 +858,7 @@ impl Chip {
             ControlSetting::LowExpiratoryMinuteVolumeAlarmThreshold => {
                 self.settings
                     .mode
+                    .live
                     .alarm_threshold_low_expiratory_minute_volume = ack.value as usize;
                 self.last_machine_snapshot
                     .low_expiratory_minute_volume_alarm_threshold = Some(ack.value as _);
@@ -864,55 +867,59 @@ impl Chip {
             ControlSetting::HighExpiratoryMinuteVolumeAlarmThreshold => {
                 self.settings
                     .mode
+                    .live
                     .alarm_threshold_high_expiratory_minute_volume = ack.value as usize;
                 self.last_machine_snapshot
                     .high_expiratory_minute_volume_alarm_threshold = Some(ack.value as _);
             }
 
             ControlSetting::LowRespiratoryRateAlarmThreshold => {
-                self.settings.mode.alarm_threshold_low_respiratory_rate = ack.value as usize;
+                self.settings.mode.live.alarm_threshold_low_respiratory_rate = ack.value as usize;
                 self.last_machine_snapshot
                     .low_respiratory_rate_alarm_threshold = Some(ack.value as _);
             }
 
             ControlSetting::HighRespiratoryRateAlarmThreshold => {
-                self.settings.mode.alarm_threshold_high_respiratory_rate = ack.value as usize;
+                self.settings
+                    .mode
+                    .live
+                    .alarm_threshold_high_respiratory_rate = ack.value as usize;
                 self.last_machine_snapshot
                     .high_respiratory_rate_alarm_threshold = Some(ack.value as _);
             }
 
             ControlSetting::TargetTidalVolume => {
-                self.settings.mode.volume_tidal = ack.value as usize;
+                self.settings.mode.live.volume_tidal = ack.value as usize;
                 self.last_machine_snapshot.target_tidal_volume = Some(ack.value);
             }
 
             ControlSetting::LowTidalVolumeAlarmThreshold => {
-                self.settings.mode.alarm_threshold_low_tidal_volume = ack.value as usize;
+                self.settings.mode.live.alarm_threshold_low_tidal_volume = ack.value as usize;
                 self.last_machine_snapshot.low_tidal_volume_alarm_threshold = Some(ack.value as _);
             }
 
             ControlSetting::HighTidalVolumeAlarmThreshold => {
-                self.settings.mode.alarm_threshold_high_tidal_volume = ack.value as usize;
+                self.settings.mode.live.alarm_threshold_high_tidal_volume = ack.value as usize;
                 self.last_machine_snapshot.high_tidal_volume_alarm_threshold = Some(ack.value as _);
             }
 
             ControlSetting::PlateauDuration => {
-                self.settings.mode.duration_plateau = ack.value as usize;
+                self.settings.mode.live.duration_plateau = ack.value as usize;
                 self.last_machine_snapshot.plateau_duration = Some(ack.value);
             }
 
             ControlSetting::LeakAlarmThreshold => {
-                self.settings.mode.alarm_threshold_leak = ack.value as usize;
+                self.settings.mode.live.alarm_threshold_leak = ack.value as usize;
                 self.last_machine_snapshot.leak_alarm_threshold = Some(ack.value as _);
             }
 
             ControlSetting::TargetInspiratoryFlow => {
-                self.settings.mode.flow_inspiration = ack.value as usize;
+                self.settings.mode.live.flow_inspiration = ack.value as usize;
                 self.last_machine_snapshot.target_inspiratory_flow = Some(ack.value as _);
             }
 
             ControlSetting::InspiratoryDuration => {
-                self.settings.mode.duration_inspiration = ack.value as usize;
+                self.settings.mode.live.duration_inspiration = ack.value as usize;
                 self.last_machine_snapshot.inspiratory_duration_command = Some(ack.value);
             }
         }

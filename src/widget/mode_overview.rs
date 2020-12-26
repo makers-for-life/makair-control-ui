@@ -67,7 +67,7 @@ fn separator<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 
 fn class<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Acquire mode class
-    let mode_class = config.mode_settings.mode.class();
+    let mode_class = config.mode_settings.live.mode.class();
 
     // Initialize text style
     let mut text_style = conrod_core::widget::primitive::text::Style::default();
@@ -99,7 +99,7 @@ fn kind<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     text_style.font_size = Some(TELEMETRY_WIDGET_RIGHT_MODE_FONT_SIZE);
 
     // Create text
-    widget::Text::new(&mode_kind_to_locale(config.mode_settings.mode.kind()))
+    widget::Text::new(&mode_kind_to_locale(config.mode_settings.live.mode.kind()))
         .mid_left_with_margin_on(
             config.separator,
             TELEMETRY_WIDGET_RIGHT_MODE_SEPARATOR_SPACING,

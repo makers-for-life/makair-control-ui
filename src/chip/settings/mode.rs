@@ -48,11 +48,18 @@ pub enum SettingsModeEvent {
 
 #[derive(Debug)]
 pub struct SettingsMode {
-    // Mode
-    pub mode: VentilationMode,
-
     // Group
     pub group: SettingsModeGroupTab,
+
+    // Settings
+    pub live: SettingsModeSettings,
+    pub draft: Option<SettingsModeSettings>,
+}
+
+#[derive(Debug)]
+pub struct SettingsModeSettings {
+    // Mode
+    pub mode: VentilationMode,
 
     // Commands
     pub inspiratory_time_minimum: usize,
@@ -85,27 +92,10 @@ pub enum SettingsModeGroupTab {
     Alarms,
 }
 
-impl SettingsModeGroupTab {
-    pub fn from_index(index: usize) -> Option<Self> {
-        match index {
-            0 => Some(Self::General),
-            1 => Some(Self::Alarms),
-            _ => None,
-        }
-    }
-}
-
-impl Default for SettingsModeGroupTab {
+impl Default for SettingsModeSettings {
     fn default() -> Self {
-        Self::General
-    }
-}
-
-impl SettingsMode {
-    pub fn new() -> SettingsMode {
-        SettingsMode {
+        Self {
             mode: VentilationMode::default(),
-            group: SettingsModeGroupTab::default(),
             inspiratory_time_minimum: ControlSetting::TiMin.default(),
             inspiratory_time_maximum: ControlSetting::TiMax.default(),
             cycles_per_minute: ControlSetting::CyclesPerMinute.default(),
@@ -134,6 +124,32 @@ impl SettingsMode {
             alarm_threshold_high_tidal_volume: ControlSetting::HighTidalVolumeAlarmThreshold
                 .default(),
             alarm_threshold_leak: ControlSetting::LeakAlarmThreshold.default(),
+        }
+    }
+}
+
+impl SettingsModeGroupTab {
+    pub fn from_index(index: usize) -> Option<Self> {
+        match index {
+            0 => Some(Self::General),
+            1 => Some(Self::Alarms),
+            _ => None,
+        }
+    }
+}
+
+impl Default for SettingsModeGroupTab {
+    fn default() -> Self {
+        Self::General
+    }
+}
+
+impl SettingsMode {
+    pub fn new() -> SettingsMode {
+        SettingsMode {
+            group: SettingsModeGroupTab::default(),
+            live: SettingsModeSettings::default(),
+            draft: None,
         }
     }
 
@@ -202,7 +218,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::TiMin,
             action,
-            self.inspiratory_time_minimum,
+            self.live.inspiratory_time_minimum,
             INSPIRATORY_TIME_STEP
         )
     }
@@ -211,7 +227,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::TiMax,
             action,
-            self.inspiratory_time_maximum,
+            self.live.inspiratory_time_maximum,
             INSPIRATORY_TIME_STEP
         )
     }
@@ -220,7 +236,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::CyclesPerMinute,
             action,
-            self.cycles_per_minute,
+            self.live.cycles_per_minute,
             CYCLES_PER_MINUTE_STEP
         )
     }
@@ -229,7 +245,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::TriggerOffset,
             action,
-            self.trigger_inspiratory_offset,
+            self.live.trigger_inspiratory_offset,
             TRIGGER_OFFSET_STEP
         )
     }
@@ -238,7 +254,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::ExpiratoryTriggerFlow,
             action,
-            self.trigger_expiratory_flow,
+            self.live.trigger_expiratory_flow,
             TRIGGER_FLOW_STEP
         )
     }
@@ -247,7 +263,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::PlateauPressure,
             action,
-            self.pressure_plateau,
+            self.live.pressure_plateau,
             PRESSURE_STEP
         )
     }
@@ -256,7 +272,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::PEEP,
             action,
-            self.pressure_expiratory,
+            self.live.pressure_expiratory,
             PRESSURE_STEP
         )
     }
@@ -265,7 +281,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::TargetTidalVolume,
             action,
-            self.volume_tidal,
+            self.live.volume_tidal,
             VOLUME_STEP
         )
     }
@@ -274,7 +290,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::TargetInspiratoryFlow,
             action,
-            self.flow_inspiration,
+            self.live.flow_inspiration,
             FLOW_STEP
         )
     }
@@ -283,7 +299,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::InspiratoryDuration,
             action,
-            self.duration_inspiration,
+            self.live.duration_inspiration,
             DURATION_STEP
         )
     }
@@ -292,7 +308,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::PlateauDuration,
             action,
-            self.duration_plateau,
+            self.live.duration_plateau,
             DURATION_STEP
         )
     }
@@ -304,7 +320,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::LowInspiratoryMinuteVolumeAlarmThreshold,
             action,
-            self.alarm_threshold_low_inspiratory_minute_volume,
+            self.live.alarm_threshold_low_inspiratory_minute_volume,
             TRIGGER_FLOW_STEP
         )
     }
@@ -316,7 +332,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::HighInspiratoryMinuteVolumeAlarmThreshold,
             action,
-            self.alarm_threshold_high_inspiratory_minute_volume,
+            self.live.alarm_threshold_high_inspiratory_minute_volume,
             TRIGGER_FLOW_STEP
         )
     }
@@ -325,7 +341,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::LowExpiratoryMinuteVolumeAlarmThreshold,
             action,
-            self.alarm_threshold_low_expiratory_minute_volume,
+            self.live.alarm_threshold_low_expiratory_minute_volume,
             TRIGGER_FLOW_STEP
         )
     }
@@ -337,7 +353,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::HighExpiratoryMinuteVolumeAlarmThreshold,
             action,
-            self.alarm_threshold_high_expiratory_minute_volume,
+            self.live.alarm_threshold_high_expiratory_minute_volume,
             TRIGGER_FLOW_STEP
         )
     }
@@ -346,7 +362,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::LowRespiratoryRateAlarmThreshold,
             action,
-            self.alarm_threshold_low_respiratory_rate,
+            self.live.alarm_threshold_low_respiratory_rate,
             CYCLES_PER_MINUTE_STEP
         )
     }
@@ -355,7 +371,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::HighRespiratoryRateAlarmThreshold,
             action,
-            self.alarm_threshold_high_respiratory_rate,
+            self.live.alarm_threshold_high_respiratory_rate,
             CYCLES_PER_MINUTE_STEP
         )
     }
@@ -364,7 +380,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::LowTidalVolumeAlarmThreshold,
             action,
-            self.alarm_threshold_low_tidal_volume,
+            self.live.alarm_threshold_low_tidal_volume,
             VOLUME_STEP
         )
     }
@@ -373,7 +389,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::HighTidalVolumeAlarmThreshold,
             action,
-            self.alarm_threshold_high_tidal_volume,
+            self.live.alarm_threshold_high_tidal_volume,
             VOLUME_STEP
         )
     }
@@ -382,7 +398,7 @@ impl SettingsMode {
         gen_set_new_value!(
             ControlSetting::LeakAlarmThreshold,
             action,
-            self.alarm_threshold_leak,
+            self.live.alarm_threshold_leak,
             VOLUME_STEP
         )
     }

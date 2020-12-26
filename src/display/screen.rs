@@ -479,7 +479,7 @@ impl<'a> Screen<'a> {
                     .to_string()
                 }),
                 value_target: if !has_target_pressure
-                    || mode.mode.class() != VentilationModeClass::Pressure
+                    || mode.live.mode.class() != VentilationModeClass::Pressure
                 {
                     None
                 } else {
@@ -601,7 +601,7 @@ impl<'a> Screen<'a> {
 
         // Check if should show target tidal volume
         let has_target_volume_tidal =
-            mode.volume_tidal > 0 && mode.mode.class() == VentilationModeClass::Volume;
+            mode.live.volume_tidal > 0 && mode.live.mode.class() == VentilationModeClass::Volume;
 
         self.widgets
             .render(ControlWidgetType::TelemetryView(telemetry_view::Config {
@@ -612,7 +612,7 @@ impl<'a> Screen<'a> {
                     TELEMETRY_WIDGET_VALUE_EMPTY.to_owned()
                 }),
                 value_target: if has_target_volume_tidal {
-                    Some(mode.volume_tidal.to_string())
+                    Some(mode.live.volume_tidal.to_string())
                 } else {
                     None
                 },
@@ -690,7 +690,8 @@ impl<'a> Screen<'a> {
 
         // Check if target inspiration duration can be shown
         let has_target_inspiration_duration = measured_inspiratory_duration > 0
-            && (mode.mode == VentilationMode::PC_CMV || mode.mode == VentilationMode::PC_AC);
+            && (mode.live.mode == VentilationMode::PC_CMV
+                || mode.live.mode == VentilationMode::PC_AC);
 
         // Compute internal values
         let computed_respiratory_time = if measured_cpm > 0 {
