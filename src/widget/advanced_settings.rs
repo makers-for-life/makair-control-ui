@@ -357,7 +357,7 @@ fn form_settings<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         config,
         Text {
             label_text: APP_I18N.t("modal-advanced-time"),
-            value_text: now.format("%l:%M %p").to_string().trim_start().to_string(),
+            value_text: now.format("%-I:%M %p").to_string(),
             ids: config.text_time_ids,
         },
     );
