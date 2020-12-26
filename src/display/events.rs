@@ -332,19 +332,13 @@ impl DisplayUIEvents {
                 {
                     [
                         "inspiratory time minimum",
-                        InspiratoryTimeMinimum,
-                        field_time_inspiratory_minimum
-                    ],
-
-                    [
-                        "inspiratory time minimum",
-                        InspiratoryTimeMinimum,
+                        TiMin,
                         field_time_inspiratory_minimum
                     ],
 
                     [
                         "inspiratory time maximum",
-                        InspiratoryTimeMaximum,
+                        TiMax,
                         field_time_inspiratory_maximum
                     ],
 
@@ -356,103 +350,103 @@ impl DisplayUIEvents {
 
                     [
                         "volume tidal",
-                        VolumeTidal,
+                        TargetTidalVolume,
                         field_tidal_volume
                     ],
 
                     [
                         "flow inspiration",
-                        FlowInspiration,
+                        TargetInspiratoryFlow,
                         field_inspiratory_flow
                     ],
 
                     [
                         "duration inspiration",
-                        DurationInspiration,
+                        InspiratoryDuration,
                         field_inspiratory_duration
                     ],
 
                     [
                         "duration plateau",
-                        DurationPlateau,
+                        PlateauDuration,
                         field_plateau_duration
                     ],
 
                     [
                         "trigger inspiratory offset",
-                        TriggerInspiratoryOffset,
+                        TriggerOffset,
                         field_trigger_offset
                     ],
 
                     [
                         "trigger expiratory flow",
-                        TriggerExpiratoryFlow,
+                        ExpiratoryTriggerFlow,
                         field_trigger_expiratory
                     ],
 
                     [
                         "pressure plateau",
-                        PressurePlateau,
+                        PlateauPressure,
                         field_pressure_inspiratory
                     ],
 
                     [
                         "pressure expiratory",
-                        PressureExpiratory,
+                        PEEP,
                         field_pressure_expiratory
                     ],
 
                     [
                         "alarm low inspiratory minute volume",
-                        LowInspiratoryMinuteVolumeAlarm,
+                        LowInspiratoryMinuteVolumeAlarmThreshold,
                         alarm_threshold_low_inspiratory_minute_volume
                     ],
 
                     [
                         "alarm high inspiratory minute volume",
-                        HighInspiratoryMinuteVolumeAlarm,
+                        HighInspiratoryMinuteVolumeAlarmThreshold,
                         alarm_threshold_high_inspiratory_minute_volume
                     ],
 
                     [
                         "alarm low expiratory minute volume",
-                        LowExpiratoryMinuteVolumeAlarm,
+                        LowExpiratoryMinuteVolumeAlarmThreshold,
                         alarm_threshold_low_expiratory_minute_volume
                     ],
 
                     [
                         "alarm high expiratory minute volume",
-                        HighExpiratoryMinuteVolumeAlarm,
+                        HighExpiratoryMinuteVolumeAlarmThreshold,
                         alarm_threshold_high_expiratory_minute_volume
                     ],
 
                     [
                         "alarm low expiratory rate",
-                        LowRespiratoryRateAlarm,
+                        LowRespiratoryRateAlarmThreshold,
                         alarm_threshold_low_respiratory_rate
                     ],
 
                     [
                         "alarm high expiratory rate",
-                        HighRespiratoryRateAlarm,
+                        HighRespiratoryRateAlarmThreshold,
                         alarm_threshold_high_respiratory_rate
                     ],
 
                     [
                         "alarm low tidal volume",
-                        LowTidalVolumeAlarm,
+                        LowTidalVolumeAlarmThreshold,
                         alarm_threshold_low_tidal_volume
                     ],
 
                     [
                         "alarm high tidal volume",
-                        HighTidalVolumeAlarm,
+                        HighTidalVolumeAlarmThreshold,
                         alarm_threshold_high_tidal_volume
                     ],
 
                     [
                         "alarm leak",
-                        LeakAlarm,
+                        LeakAlarmThreshold,
                         alarm_threshold_leak
                     ]
                 }
