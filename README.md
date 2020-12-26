@@ -32,7 +32,7 @@ In order to setup your environment and build the code, please follow these steps
 
 Wayland support may be available but it hasn't been tested. You need a working X11 server.
 
-_Tested with Rust version: `rustc 1.47.0 (18bf6b4f0 2020-10-07)`_
+_Tested with Rust version: `rustc 1.48.0 (7eac88abb 2020-11-16)`_
 
 **Note:** as the MakAir Control UI currently targets a single 7" touch display, the UI only supports a static resolution of 800 x 480 pixels.
 
