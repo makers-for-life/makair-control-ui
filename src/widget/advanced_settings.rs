@@ -8,6 +8,7 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+use chrono::offset::Local;
 use conrod_core::{
     color::{self, Color},
     widget::{self, id::List as WidgetList, Id as WidgetId},
@@ -36,6 +37,8 @@ type FieldWidgetIds = (
     WidgetId,
 );
 
+type TextWidgetIds = (WidgetId, WidgetId);
+
 pub struct Config<'a> {
     pub width: f64,
     pub height: f64,
@@ -58,12 +61,21 @@ pub struct Config<'a> {
     pub advanced_group_tab_texts: [WidgetId; ADVANCED_SETTINGS_GROUP_TABS_COUNT],
 
     pub field_locale_ids: FieldWidgetIds,
+
+    pub text_date_ids: TextWidgetIds,
+    pub text_time_ids: TextWidgetIds,
 }
 
 struct Field {
     label_text: String,
     value_text: String,
     ids: FieldWidgetIds,
+}
+
+struct Text {
+    label_text: String,
+    value_text: String,
+    ids: TextWidgetIds,
 }
 
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
@@ -314,6 +326,8 @@ fn form_statistics_lines<'a>(
 }
 
 fn form_settings<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+    let now = Local::now();
+
     draw_field(
         0,
         master,
@@ -323,7 +337,29 @@ fn form_settings<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             value_text: config.advanced_settings.locale.to_name().to_string(),
             ids: config.field_locale_ids,
         },
-    )
+    );
+
+    draw_text(
+        1,
+        master,
+        config,
+        Text {
+            label_text: APP_I18N.t("modal-advanced-date"),
+            value_text: now.format("%d/%m/%Y").to_string(),
+            ids: config.text_date_ids,
+        },
+    );
+
+    draw_text(
+        2,
+        master,
+        config,
+        Text {
+            label_text: APP_I18N.t("modal-advanced-time"),
+            value_text: now.format("%I:%M:%S %p").to_string(),
+            ids: config.text_time_ids,
+        },
+    );
 }
 
 fn draw_field<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config, field: Field) {
@@ -353,4 +389,29 @@ fn draw_field<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config,
             ADVANCED_SETTINGS_MODAL_FORM_PADDING_LEFT,
         ]
     );
+}
+
+fn draw_text<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config, text: Text) {
+    // Generate label
+    gen_widget_label_form!(
+        master,
+        text_id: text.ids.0,
+        value: &text.label_text,
+        positions: top_left_with_margins_on[
+            config.advanced_form_wrapper, index as f64 * ADVANCED_SETTINGS_MODAL_FORM_FIELD_HEIGHT_PADDED, 0.0,
+        ]
+    );
+
+    // Initialize text style for value
+    let mut value_style = widget::text::Style::default();
+
+    value_style.font_id = Some(Some(master.fonts.regular));
+    value_style.color = Some(color::WHITE);
+    value_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
+
+    // Create text for value
+    widget::Text::new(&text.value_text)
+        .with_style(value_style)
+        .top_left_with_margins_on(text.ids.0, 0.0, ADVANCED_SETTINGS_MODAL_FORM_PADDING_LEFT)
+        .set(text.ids.1, &mut master.ui);
 }

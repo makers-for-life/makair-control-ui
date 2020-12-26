@@ -84,6 +84,8 @@ modal-mode-alarm-high-tidal-volume = Tidal volume (max)
 modal-mode-alarm-leak = Leak volume
 
 modal-advanced-locale = Language
+modal-advanced-date = Date
+modal-advanced-time = Time
 
 initializing-connecting = Starting up...
 initializing-connected = Initializing...

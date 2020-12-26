@@ -346,6 +346,12 @@ widget_ids!(pub struct Ids {
   advanced_field_locale_less,
   advanced_field_locale_less_text,
 
+  advanced_text_date_text,
+  advanced_text_date_value,
+
+  advanced_text_time_text,
+  advanced_text_time_value,
+
   modal_background,
   modal_container_borders,
   modal_container,

@@ -84,6 +84,8 @@ modal-mode-alarm-high-tidal-volume = Plūdmaiņu daudzums (liels)
 modal-mode-alarm-leak = Noplūdes apjoms
 
 modal-advanced-locale = Valoda
+modal-advanced-date = Datums
+modal-advanced-time = Laiks
 
 initializing-connecting = Notiek palaišana...
 initializing-connected = Notiek inicializēšana...

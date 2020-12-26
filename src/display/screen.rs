@@ -872,6 +872,9 @@ impl<'a> Screen<'a> {
                 ],
 
                 field_locale_ids: gen_render_advanced_settings_field_ids!(self, locale),
+
+                text_date_ids: gen_render_advanced_settings_text_ids!(self, date),
+                text_time_ids: gen_render_advanced_settings_text_ids!(self, time),
             },
         ));
     }

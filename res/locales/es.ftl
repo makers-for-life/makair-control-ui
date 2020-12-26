@@ -84,6 +84,8 @@ modal-mode-alarm-high-tidal-volume = Volumen corriente (alto)
 modal-mode-alarm-leak = Volumen de fuga
 
 modal-advanced-locale = Idioma
+modal-advanced-date = Fecha
+modal-advanced-time = Hora
 
 initializing-connecting = Empezando...
 initializing-connected = Inicializando...

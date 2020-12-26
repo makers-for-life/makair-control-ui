@@ -264,3 +264,14 @@ macro_rules! gen_render_advanced_settings_field_ids {
         }
     };
 }
+
+macro_rules! gen_render_advanced_settings_text_ids {
+    ($self:ident, $name:tt) => {
+        paste! {
+            (
+                $self.ids.[<advanced_text_ $name _text>],
+                $self.ids.[<advanced_text_ $name _value>],
+            )
+        }
+    };
+}

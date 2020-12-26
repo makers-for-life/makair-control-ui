@@ -84,6 +84,8 @@ modal-mode-alarm-high-tidal-volume = Atemzugvolumen (hoch)
 modal-mode-alarm-leak = Leckvolumen
 
 modal-advanced-locale = Sprache
+modal-advanced-date = Datum
+modal-advanced-time = Zeit
 
 initializing-connecting = Inbetriebnahme...
 initializing-connected = Initialisierung...
