@@ -86,6 +86,7 @@ modal-mode-alarm-leak = Noplūdes apjoms
 modal-advanced-locale = Valoda
 modal-advanced-date = Datums
 modal-advanced-time = Laiks
+modal-advanced-timezone = Laika zona
 
 initializing-connecting = Notiek palaišana...
 initializing-connected = Notiek inicializēšana...

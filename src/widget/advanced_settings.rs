@@ -64,6 +64,7 @@ pub struct Config<'a> {
 
     pub text_date_ids: TextWidgetIds,
     pub text_time_ids: TextWidgetIds,
+    pub text_timezone_ids: TextWidgetIds,
 }
 
 struct Field {
@@ -358,6 +359,17 @@ fn form_settings<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             label_text: APP_I18N.t("modal-advanced-time"),
             value_text: now.format("%I:%M:%S %p").to_string(),
             ids: config.text_time_ids,
+        },
+    );
+
+    draw_text(
+        3,
+        master,
+        config,
+        Text {
+            label_text: APP_I18N.t("modal-advanced-timezone"),
+            value_text: now.format("UTC%:z").to_string(),
+            ids: config.text_timezone_ids,
         },
     );
 }

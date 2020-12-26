@@ -352,6 +352,9 @@ widget_ids!(pub struct Ids {
   advanced_text_time_text,
   advanced_text_time_value,
 
+  advanced_text_timezone_text,
+  advanced_text_timezone_value,
+
   modal_background,
   modal_container_borders,
   modal_container,

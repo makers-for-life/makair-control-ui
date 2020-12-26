@@ -86,6 +86,7 @@ modal-mode-alarm-leak = Volumen de fuga
 modal-advanced-locale = Idioma
 modal-advanced-date = Fecha
 modal-advanced-time = Hora
+modal-advanced-timezone = Zona horaria
 
 initializing-connecting = Empezando...
 initializing-connected = Inicializando...

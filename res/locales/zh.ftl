@@ -86,6 +86,7 @@ modal-mode-alarm-leak = 泄漏量
 modal-advanced-locale = 语言
 modal-advanced-date = 日期
 modal-advanced-time = 时间
+modal-advanced-timezone = 时区
 
 initializing-connecting = 启动...
 initializing-connected = 初始化中...

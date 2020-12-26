@@ -86,6 +86,7 @@ modal-mode-alarm-leak = Volume de vazamento
 modal-advanced-locale = Língua
 modal-advanced-date = Encontro
 modal-advanced-time = Tempo
+modal-advanced-timezone = Fuso horário
 
 initializing-connecting = Começando...
 initializing-connected = Inicializando...

@@ -86,6 +86,7 @@ modal-mode-alarm-leak = Об'єм витоку
 modal-advanced-locale = Мова
 modal-advanced-date = Дата
 modal-advanced-time = Час
+modal-advanced-timezone = Часовий пояс
 
 initializing-connecting = Запуск...
 initializing-connected = Ініціалізація...

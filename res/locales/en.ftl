@@ -86,6 +86,7 @@ modal-mode-alarm-leak = Leak volume
 modal-advanced-locale = Language
 modal-advanced-date = Date
 modal-advanced-time = Time
+modal-advanced-timezone = Timezone
 
 initializing-connecting = Starting up...
 initializing-connected = Initializing...
