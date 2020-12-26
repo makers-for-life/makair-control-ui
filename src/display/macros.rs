@@ -160,7 +160,9 @@ macro_rules! gen_ui_events_modal_settings_clicks {
                 ) {
                     debug!("pressed the {} settings save button once", $name);
 
-                    // Call save handler block (do not close)
+                    $settings_state.toggle();
+
+                    // Call save handler block
                     $save_handler;
 
                     $has = true;
