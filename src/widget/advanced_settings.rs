@@ -414,16 +414,16 @@ fn draw_text<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config, 
         ]
     );
 
-    // Initialize text style for value
-    let mut value_style = widget::text::Style::default();
-
-    value_style.font_id = Some(Some(master.fonts.regular));
-    value_style.color = Some(color::WHITE);
-    value_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
-
-    // Create text for value
-    widget::Text::new(&text.value_text)
-        .with_style(value_style)
-        .top_left_with_margins_on(text.ids.0, 0.0, ADVANCED_SETTINGS_MODAL_FORM_PADDING_LEFT)
-        .set(text.ids.1, &mut master.ui);
+    // Generate text
+    gen_widget_text!(
+        master,
+        text_id: text.ids.1,
+        value: text.value_text,
+        y_relative: 0.0,
+        positions: top_left_with_margins_on[
+            text.ids.0,
+            0.0,
+            ADVANCED_SETTINGS_MODAL_FORM_PADDING_LEFT,
+        ]
+    );
 }

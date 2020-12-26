@@ -109,6 +109,30 @@ macro_rules! gen_widget_label_form {
     };
 }
 
+macro_rules! gen_widget_text {
+    (
+        $master:ident,
+        text_id: $text_id:expr,
+        value: $value:expr,
+        y_relative: $y_relative:expr,
+        positions: $position_call:tt[$($position_arguments:expr,)*]
+    ) => {
+        // Initialize text style for value
+        let mut value_style = widget::text::Style::default();
+
+        value_style.font_id = Some(Some($master.fonts.regular));
+        value_style.color = Some(color::WHITE);
+        value_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
+
+        // Create text for value
+        widget::Text::new(&$value)
+            .with_style(value_style)
+            .$position_call($($position_arguments,)*)
+            .y_relative($y_relative)
+            .set($text_id, &mut $master.ui);
+    };
+}
+
 macro_rules! gen_widget_button_navigate {
     (
         $master:ident,
@@ -146,19 +170,16 @@ macro_rules! gen_widget_button_navigate {
             ]
         );
 
-        // Initialize text style for value
-        let mut value_style = widget::text::Style::default();
-
-        value_style.font_id = Some(Some($master.fonts.regular));
-        value_style.color = Some(color::WHITE);
-        value_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
-
         // Create text for value
-        widget::Text::new($value)
-        .with_style(value_style)
-        .middle_of($value_wrapper_id)
-        .y_relative(3.0)
-        .set($value_id, &mut $master.ui);
+        gen_widget_text!(
+            $master,
+            text_id: $value_id,
+            value: $value,
+            y_relative: 3.0,
+            positions: middle_of[
+                $value_wrapper_id,
+            ]
+        );
 
         // Create more button
         gen_widget_button!(
