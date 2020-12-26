@@ -820,11 +820,8 @@ impl Chip {
 
             ControlSetting::VentilationMode => {
                 if let Ok(ventilation_mode) = VentilationMode::try_from(ack.value as u8) {
+                    self.settings.mode.live.mode = ventilation_mode;
                     self.last_machine_snapshot.ventilation_mode = ventilation_mode;
-
-                    if self.settings.mode.live.mode != ventilation_mode {
-                        self.settings.mode.live.mode = ventilation_mode;
-                    }
                 }
             }
 
