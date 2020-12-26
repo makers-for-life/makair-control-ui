@@ -199,15 +199,27 @@ macro_rules! gen_ui_events_modal_settings_intents_clicks {
         $({
             $name:expr,
             $type:tt,
+            $settings_prefix:tt,
             $settings_state:expr,
+            $settings_intent:tt,
             $close_handler:block,
             $save_handler:block,
 
-            $([
-                $field_name:expr,
-                $intent:expr,
-                $widget_ids:expr
-            ]),*
+            {
+                $([
+                    $switch_field_name:expr,
+                    $switch_intent:tt,
+                    $switch_field:tt
+                ]),*
+            },
+
+            {
+                $([
+                    $navigate_field_name:expr,
+                    $navigate_intent:tt,
+                    $navigate_field:tt
+                ]),*
+            }
         }),+,
     ) => {
         gen_ui_events_modal_settings_clicks!(
@@ -217,13 +229,65 @@ macro_rules! gen_ui_events_modal_settings_intents_clicks {
                 $name, $settings_state, $close_handler, $save_handler,
 
                 $([
-                    $field_name,
-                    $widget_ids,
+                    $switch_field_name,
+
+                    paste! {
+                        [
+                            $ids.[<$settings_prefix _selector_tab_ $switch_field>],
+                            $ids.[<$settings_prefix _selector_texts_ $switch_field>],
+                        ]
+                    },
 
                     {
-                        $intents.push(ChipSettingsIntent::$type($intent));
+                        $intents.push(ChipSettingsIntent::$type(
+                            $settings_intent::$switch_intent
+                        ));
                     }
                 ]),*
+            },)+
+
+            $({
+                $name, $settings_state, $close_handler, $save_handler,
+
+                $(
+                    [
+                        $navigate_field_name,
+
+                        paste! {
+                            [
+                                $ids.[<$settings_prefix _ $navigate_field _less>],
+                                $ids.[<$settings_prefix _ $navigate_field _less_text>],
+                            ]
+                        },
+
+                        {
+                            $intents.push(ChipSettingsIntent::$type(
+                                $settings_intent::$navigate_intent(
+                                    SettingActionRange::Less
+                                )
+                            ));
+                        }
+                    ],
+
+                    [
+                        $navigate_field_name,
+
+                        paste! {
+                            [
+                                $ids.[<$settings_prefix _ $navigate_field _more>],
+                                $ids.[<$settings_prefix _ $navigate_field _more_text>],
+                            ]
+                        },
+
+                        {
+                            $intents.push(ChipSettingsIntent::$type(
+                                $settings_intent::$navigate_intent(
+                                    SettingActionRange::More
+                                )
+                            ));
+                        }
+                    ]
+                ),*
             },)+
         );
     }

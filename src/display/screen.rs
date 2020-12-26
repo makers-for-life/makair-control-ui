@@ -5,7 +5,6 @@
 
 use chrono::{offset::Utc, DateTime};
 use conrod_core::color::{self, Color};
-use paste::paste;
 
 use telemetry::alarm::AlarmCode;
 use telemetry::structures::{

@@ -9,7 +9,6 @@ mod macros;
 pub mod settings;
 
 use chrono::{offset::Utc, DateTime, Duration};
-use paste::paste;
 use std::collections::{HashMap, VecDeque};
 use std::convert::TryFrom;
 use std::sync::mpsc::{self, Receiver, Sender};

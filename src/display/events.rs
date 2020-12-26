@@ -279,7 +279,7 @@ impl DisplayUIEvents {
             interface, ids, intents, has_events,
 
             {
-                "mode", Mode, states.mode_settings,
+                "mode", Mode, mode_settings, states.mode_settings, SettingsModeIntent,
 
                 {
                     // Clear all local draft changes, as the user pressed on the cancel button \
@@ -297,455 +297,165 @@ impl DisplayUIEvents {
                     );
                 },
 
-                [
-                    "mode pc cmv",
-                    SettingsModeIntent::ModePcCmv,
+                {
+                    [
+                        "mode pc cmv",
+                        ModePcCmv,
+                        pc_cmv
+                    ],
 
                     [
-                        ids.mode_settings_selector_tab_pc_cmv,
-                        ids.mode_settings_selector_texts_pc_cmv,
-                    ]
-                ],
-
-                [
-                    "mode pc ac",
-                    SettingsModeIntent::ModePcAc,
+                        "mode pc ac",
+                        ModePcAc,
+                        pc_ac
+                    ],
 
                     [
-                        ids.mode_settings_selector_tab_pc_ac,
-                        ids.mode_settings_selector_texts_pc_ac,
-                    ]
-                ],
-
-                [
-                    "mode pc vsai",
-                    SettingsModeIntent::ModePcVsai,
+                        "mode pc vsai",
+                        ModePcVsai,
+                        pc_vsai
+                    ],
 
                     [
-                        ids.mode_settings_selector_tab_pc_vsai,
-                        ids.mode_settings_selector_texts_pc_vsai,
-                    ]
-                ],
-
-                [
-                    "mode vc cmv",
-                    SettingsModeIntent::ModeVcCmv,
+                        "mode vc cmv",
+                        ModeVcCmv,
+                        vc_cmv
+                    ],
 
                     [
-                        ids.mode_settings_selector_tab_vc_cmv,
-                        ids.mode_settings_selector_texts_vc_cmv,
+                        "mode vc ac",
+                        ModeVcAc,
+                        vc_ac
                     ]
-                ],
+                },
 
-                [
-                    "mode vc ac",
-                    SettingsModeIntent::ModeVcAc,
+                {
+                    [
+                        "inspiratory time minimum",
+                        InspiratoryTimeMinimum,
+                        field_time_inspiratory_minimum
+                    ],
 
                     [
-                        ids.mode_settings_selector_tab_vc_ac,
-                        ids.mode_settings_selector_texts_vc_ac,
-                    ]
-                ],
-
-                [
-                    "inspiratory time minimum less",
-                    SettingsModeIntent::InspiratoryTimeMinimum(SettingActionRange::Less),
+                        "inspiratory time minimum",
+                        InspiratoryTimeMinimum,
+                        field_time_inspiratory_minimum
+                    ],
 
                     [
-                        ids.mode_settings_field_time_inspiratory_minimum_less,
-                        ids.mode_settings_field_time_inspiratory_minimum_less_text,
-                    ]
-                ],
-
-                [
-                    "inspiratory time minimum more",
-                    SettingsModeIntent::InspiratoryTimeMinimum(SettingActionRange::More),
+                        "inspiratory time maximum",
+                        InspiratoryTimeMaximum,
+                        field_time_inspiratory_maximum
+                    ],
 
                     [
-                        ids.mode_settings_field_time_inspiratory_minimum_more,
-                        ids.mode_settings_field_time_inspiratory_minimum_more_text,
-                    ]
-                ],
-
-                [
-                    "inspiratory time maximum less",
-                    SettingsModeIntent::InspiratoryTimeMaximum(SettingActionRange::Less),
+                        "cycles per minute",
+                        CyclesPerMinute,
+                        field_cycles_per_minute
+                    ],
 
                     [
-                        ids.mode_settings_field_time_inspiratory_maximum_less,
-                        ids.mode_settings_field_time_inspiratory_maximum_less_text,
-                    ]
-                ],
-
-                [
-                    "inspiratory time maximum more",
-                    SettingsModeIntent::InspiratoryTimeMaximum(SettingActionRange::More),
+                        "volume tidal",
+                        VolumeTidal,
+                        field_tidal_volume
+                    ],
 
                     [
-                        ids.mode_settings_field_time_inspiratory_maximum_more,
-                        ids.mode_settings_field_time_inspiratory_maximum_more_text,
-                    ]
-                ],
-
-                [
-                    "cycles per minute less",
-                    SettingsModeIntent::CyclesPerMinute(SettingActionRange::Less),
+                        "flow inspiration",
+                        FlowInspiration,
+                        field_inspiratory_flow
+                    ],
 
                     [
-                        ids.mode_settings_field_cycles_per_minute_less,
-                        ids.mode_settings_field_cycles_per_minute_less_text,
-                    ]
-                ],
-
-                [
-                    "cycles per minute more",
-                    SettingsModeIntent::CyclesPerMinute(SettingActionRange::More),
+                        "duration inspiration",
+                        DurationInspiration,
+                        field_inspiratory_duration
+                    ],
 
                     [
-                        ids.mode_settings_field_cycles_per_minute_more,
-                        ids.mode_settings_field_cycles_per_minute_more_text,
-                    ]
-                ],
-
-                [
-                    "volume tidal less",
-                    SettingsModeIntent::VolumeTidal(SettingActionRange::Less),
+                        "duration plateau",
+                        DurationPlateau,
+                        field_plateau_duration
+                    ],
 
                     [
-                        ids.mode_settings_field_tidal_volume_less,
-                        ids.mode_settings_field_tidal_volume_less_text,
-                    ]
-                ],
-
-                [
-                    "volume tidal more",
-                    SettingsModeIntent::VolumeTidal(SettingActionRange::More),
+                        "trigger inspiratory offset",
+                        TriggerInspiratoryOffset,
+                        field_trigger_offset
+                    ],
 
                     [
-                        ids.mode_settings_field_tidal_volume_more,
-                        ids.mode_settings_field_tidal_volume_more_text,
-                    ]
-                ],
-
-                [
-                    "flow inspiration less",
-                    SettingsModeIntent::FlowInspiration(SettingActionRange::Less),
+                        "trigger expiratory flow",
+                        TriggerExpiratoryFlow,
+                        field_trigger_expiratory
+                    ],
 
                     [
-                        ids.mode_settings_field_inspiratory_flow_less,
-                        ids.mode_settings_field_inspiratory_flow_less_text,
-                    ]
-                ],
-
-                [
-                    "flow inspiration more",
-                    SettingsModeIntent::FlowInspiration(SettingActionRange::More),
+                        "pressure plateau",
+                        PressurePlateau,
+                        field_pressure_inspiratory
+                    ],
 
                     [
-                        ids.mode_settings_field_inspiratory_flow_more,
-                        ids.mode_settings_field_inspiratory_flow_more_text,
-                    ]
-                ],
-
-                [
-                    "duration inspiration less",
-                    SettingsModeIntent::DurationInspiration(SettingActionRange::Less),
+                        "pressure expiratory",
+                        PressureExpiratory,
+                        field_pressure_expiratory
+                    ],
 
                     [
-                        ids.mode_settings_field_inspiratory_duration_less,
-                        ids.mode_settings_field_inspiratory_duration_less_text,
-                    ]
-                ],
-
-                [
-                    "duration inspiration more",
-                    SettingsModeIntent::DurationInspiration(SettingActionRange::More),
+                        "alarm low inspiratory minute volume",
+                        LowInspiratoryMinuteVolumeAlarm,
+                        alarm_threshold_low_inspiratory_minute_volume
+                    ],
 
                     [
-                        ids.mode_settings_field_inspiratory_duration_more,
-                        ids.mode_settings_field_inspiratory_duration_more_text,
-                    ]
-                ],
-
-                [
-                    "duration plateau less",
-                    SettingsModeIntent::DurationPlateau(SettingActionRange::Less),
+                        "alarm high inspiratory minute volume",
+                        HighInspiratoryMinuteVolumeAlarm,
+                        alarm_threshold_high_inspiratory_minute_volume
+                    ],
 
                     [
-                        ids.mode_settings_field_plateau_duration_less,
-                        ids.mode_settings_field_plateau_duration_less_text,
-                    ]
-                ],
-
-                [
-                    "duration plateau more",
-                    SettingsModeIntent::DurationPlateau(SettingActionRange::More),
+                        "alarm low expiratory minute volume",
+                        LowExpiratoryMinuteVolumeAlarm,
+                        alarm_threshold_low_expiratory_minute_volume
+                    ],
 
                     [
-                        ids.mode_settings_field_plateau_duration_more,
-                        ids.mode_settings_field_plateau_duration_more_text,
-                    ]
-                ],
-
-                [
-                    "trigger inspiratory offset less",
-                    SettingsModeIntent::TriggerInspiratoryOffset(SettingActionRange::Less),
+                        "alarm high expiratory minute volume",
+                        HighExpiratoryMinuteVolumeAlarm,
+                        alarm_threshold_high_expiratory_minute_volume
+                    ],
 
                     [
-                        ids.mode_settings_field_trigger_offset_less,
-                        ids.mode_settings_field_trigger_offset_less_text,
-                    ]
-                ],
-
-                [
-                    "trigger inspiratory offset more",
-                    SettingsModeIntent::TriggerInspiratoryOffset(SettingActionRange::More),
+                        "alarm low expiratory rate",
+                        LowRespiratoryRateAlarm,
+                        alarm_threshold_low_respiratory_rate
+                    ],
 
                     [
-                        ids.mode_settings_field_trigger_offset_more,
-                        ids.mode_settings_field_trigger_offset_more_text,
-                    ]
-                ],
-
-                [
-                    "trigger expiratory flow less",
-                    SettingsModeIntent::TriggerExpiratoryFlow(SettingActionRange::Less),
+                        "alarm high expiratory rate",
+                        HighRespiratoryRateAlarm,
+                        alarm_threshold_high_respiratory_rate
+                    ],
 
                     [
-                        ids.mode_settings_field_trigger_expiratory_less,
-                        ids.mode_settings_field_trigger_expiratory_less_text,
-                    ]
-                ],
-
-                [
-                    "trigger expiratory flow more",
-                    SettingsModeIntent::TriggerExpiratoryFlow(SettingActionRange::More),
+                        "alarm low tidal volume",
+                        LowTidalVolumeAlarm,
+                        alarm_threshold_low_tidal_volume
+                    ],
 
                     [
-                        ids.mode_settings_field_trigger_expiratory_more,
-                        ids.mode_settings_field_trigger_expiratory_more_text,
-                    ]
-                ],
-
-                [
-                    "pressure plateau less",
-                    SettingsModeIntent::PressurePlateau(SettingActionRange::Less),
+                        "alarm high tidal volume",
+                        HighTidalVolumeAlarm,
+                        alarm_threshold_high_tidal_volume
+                    ],
 
                     [
-                        ids.mode_settings_field_pressure_inspiratory_less,
-                        ids.mode_settings_field_pressure_inspiratory_less_text,
+                        "alarm leak",
+                        LeakAlarm,
+                        alarm_threshold_leak
                     ]
-                ],
-
-                [
-                    "pressure plateau more",
-                    SettingsModeIntent::PressurePlateau(SettingActionRange::More),
-
-                    [
-                        ids.mode_settings_field_pressure_inspiratory_more,
-                        ids.mode_settings_field_pressure_inspiratory_more_text,
-                    ]
-                ],
-
-                [
-                    "pressure expiratory less",
-                    SettingsModeIntent::PressureExpiratory(SettingActionRange::Less),
-
-                    [
-                        ids.mode_settings_field_pressure_expiratory_less,
-                        ids.mode_settings_field_pressure_expiratory_less_text,
-                    ]
-                ],
-
-                [
-                    "pressure expiratory more",
-                    SettingsModeIntent::PressureExpiratory(SettingActionRange::More),
-
-                    [
-                        ids.mode_settings_field_pressure_expiratory_more,
-                        ids.mode_settings_field_pressure_expiratory_more_text,
-                    ]
-                ],
-
-                [
-                    "alarm low inspiratory minute volume more",
-                    SettingsModeIntent::LowInspiratoryMinuteVolumeAlarm(SettingActionRange::More),
-
-                    [
-                        ids.mode_settings_alarm_threshold_low_inspiratory_minute_volume_more,
-                        ids.mode_settings_alarm_threshold_low_inspiratory_minute_volume_more_text,
-                    ]
-                ],
-
-                [
-                    "alarm low inspiratory minute volume less",
-                    SettingsModeIntent::LowInspiratoryMinuteVolumeAlarm(SettingActionRange::Less),
-
-                    [
-                        ids.mode_settings_alarm_threshold_low_inspiratory_minute_volume_less,
-                        ids.mode_settings_alarm_threshold_low_inspiratory_minute_volume_less_text,
-                    ]
-                ],
-
-                [
-                    "alarm high inspiratory minute volume more",
-                    SettingsModeIntent::HighInspiratoryMinuteVolumeAlarm(SettingActionRange::More),
-
-                    [
-                        ids.mode_settings_alarm_threshold_high_inspiratory_minute_volume_more,
-                        ids.mode_settings_alarm_threshold_high_inspiratory_minute_volume_more_text,
-                    ]
-                ],
-
-                [
-                    "alarm high inspiratory minute volume less",
-                    SettingsModeIntent::HighInspiratoryMinuteVolumeAlarm(SettingActionRange::Less),
-
-                    [
-                        ids.mode_settings_alarm_threshold_high_inspiratory_minute_volume_less,
-                        ids.mode_settings_alarm_threshold_high_inspiratory_minute_volume_less_text,
-                    ]
-                ],
-
-                [
-                    "alarm low expiratory minute volume more",
-                    SettingsModeIntent::LowExpiratoryMinuteVolumeAlarm(SettingActionRange::More),
-
-                    [
-                        ids.mode_settings_alarm_threshold_low_expiratory_minute_volume_more,
-                        ids.mode_settings_alarm_threshold_low_expiratory_minute_volume_more_text,
-                    ]
-                ],
-
-                [
-                    "alarm low expiratory minute volume less",
-                    SettingsModeIntent::LowExpiratoryMinuteVolumeAlarm(SettingActionRange::Less),
-
-                    [
-                        ids.mode_settings_alarm_threshold_low_expiratory_minute_volume_less,
-                        ids.mode_settings_alarm_threshold_low_expiratory_minute_volume_less_text,
-                    ]
-                ],
-
-                [
-                    "alarm high expiratory minute volume more",
-                    SettingsModeIntent::HighExpiratoryMinuteVolumeAlarm(SettingActionRange::More),
-
-                    [
-                        ids.mode_settings_alarm_threshold_high_expiratory_minute_volume_more,
-                        ids.mode_settings_alarm_threshold_high_expiratory_minute_volume_more_text,
-                    ]
-                ],
-
-                [
-                    "alarm high expiratory minute volume less",
-                    SettingsModeIntent::HighExpiratoryMinuteVolumeAlarm(SettingActionRange::Less),
-
-                    [
-                        ids.mode_settings_alarm_threshold_high_expiratory_minute_volume_less,
-                        ids.mode_settings_alarm_threshold_high_expiratory_minute_volume_less_text,
-                    ]
-                ],
-
-                [
-                    "alarm low expiratory rate more",
-                    SettingsModeIntent::LowRespiratoryRateAlarm(SettingActionRange::More),
-
-                    [
-                        ids.mode_settings_alarm_threshold_low_respiratory_rate_more,
-                        ids.mode_settings_alarm_threshold_low_respiratory_rate_more_text,
-                    ]
-                ],
-
-                [
-                    "alarm low expiratory rate less",
-                    SettingsModeIntent::LowRespiratoryRateAlarm(SettingActionRange::Less),
-
-                    [
-                        ids.mode_settings_alarm_threshold_low_respiratory_rate_less,
-                        ids.mode_settings_alarm_threshold_low_respiratory_rate_less_text,
-                    ]
-                ],
-
-                [
-                    "alarm high expiratory rate more",
-                    SettingsModeIntent::HighRespiratoryRateAlarm(SettingActionRange::More),
-
-                    [
-                        ids.mode_settings_alarm_threshold_high_respiratory_rate_more,
-                        ids.mode_settings_alarm_threshold_high_respiratory_rate_more_text,
-                    ]
-                ],
-
-                [
-                    "alarm high expiratory rate less",
-                    SettingsModeIntent::HighRespiratoryRateAlarm(SettingActionRange::Less),
-
-                    [
-                        ids.mode_settings_alarm_threshold_high_respiratory_rate_less,
-                        ids.mode_settings_alarm_threshold_high_respiratory_rate_less_text,
-                    ]
-                ],
-
-                [
-                    "alarm low tidal volume more",
-                    SettingsModeIntent::LowTidalVolumeAlarm(SettingActionRange::More),
-
-                    [
-                        ids.mode_settings_alarm_threshold_low_tidal_volume_more,
-                        ids.mode_settings_alarm_threshold_low_tidal_volume_more_text,
-                    ]
-                ],
-
-                [
-                    "alarm low tidal volume less",
-                    SettingsModeIntent::LowTidalVolumeAlarm(SettingActionRange::Less),
-
-                    [
-                        ids.mode_settings_alarm_threshold_low_tidal_volume_less,
-                        ids.mode_settings_alarm_threshold_low_tidal_volume_less_text,
-                    ]
-                ],
-
-                [
-                    "alarm high tidal volume more",
-                    SettingsModeIntent::HighTidalVolumeAlarm(SettingActionRange::More),
-
-                    [
-                        ids.mode_settings_alarm_threshold_high_tidal_volume_more,
-                        ids.mode_settings_alarm_threshold_high_tidal_volume_more_text,
-                    ]
-                ],
-
-                [
-                    "alarm high tidal volume less",
-                    SettingsModeIntent::HighTidalVolumeAlarm(SettingActionRange::Less),
-
-                    [
-                        ids.mode_settings_alarm_threshold_high_tidal_volume_less,
-                        ids.mode_settings_alarm_threshold_high_tidal_volume_less_text,
-                    ]
-                ],
-
-                [
-                    "alarm leak more",
-                    SettingsModeIntent::LeakAlarm(SettingActionRange::More),
-
-                    [
-                        ids.mode_settings_alarm_threshold_leak_more,
-                        ids.mode_settings_alarm_threshold_leak_more_text,
-                    ]
-                ],
-
-                [
-                    "alarm leak less",
-                    SettingsModeIntent::LeakAlarm(SettingActionRange::Less),
-
-                    [
-                        ids.mode_settings_alarm_threshold_leak_less,
-                        ids.mode_settings_alarm_threshold_leak_less_text,
-                    ]
-                ]
+                }
             },
         );
 
