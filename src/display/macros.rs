@@ -115,19 +115,17 @@ macro_rules! gen_ui_events_modal_settings_clicks {
         $interface:ident,
         $ids:ident,
         $has:ident,
-        $events:ident,
 
         $({
             $name:expr,
-            $type:tt,
             $settings_state:expr,
+            $save_handler:block,
 
-            $({
-                $action:expr,
+            $([
                 $field_name:expr,
                 $widget_ids:expr,
-                $forced_state:expr
-            }),*
+                $form_handler:block
+            ]),*
         }),+,
     ) => {
         $(
@@ -137,11 +135,29 @@ macro_rules! gen_ui_events_modal_settings_clicks {
                     $interface,
                     &[
                         $ids.modal_background,
-                        $ids.modal_validate,
-                        $ids.modal_validate_text,
+                        $ids.modal_close,
+                        $ids.modal_close_text,
                     ],
                 ) {
                     debug!("pressed the {} settings close button once", $name);
+
+                    $settings_state.toggle();
+
+                    $has = true;
+                }
+
+                // Handle clicks on the save button (if any)
+                for _ in 0..DisplayUIEvents::count_clicks(
+                    $interface,
+                    &[
+                        $ids.modal_save,
+                        $ids.modal_save_text,
+                    ],
+                ) {
+                    debug!("pressed the {} settings save button once", $name);
+
+                    // Call save handler block
+                    $save_handler;
 
                     $settings_state.toggle();
 
@@ -154,28 +170,57 @@ macro_rules! gen_ui_events_modal_settings_clicks {
                         $interface,
                         &$widget_ids,
                     ) {
-                        debug!("pressed the {} settings {} field button once", $name, $field_name);
+                        debug!(
+                            "pressed the {} settings {} field button once", $name, $field_name
+                        );
 
-                        $events.push(ChipSettingsEvent::$type(
-                            $action,
-                        ));
+                        // Call form handler block
+                        $form_handler;
 
                         $has = true;
-
-                        // Force to provided state?
-                        if let Some(forced_state) = $forced_state {
-                            debug!(
-                                "forced state of the {} settings modal upon button press to: {:?}",
-                                $name,
-                                forced_state
-                            );
-
-                            $settings_state = forced_state;
-                        }
                     }
                 )*
             }
         )+
+    }
+}
+
+macro_rules! gen_ui_events_modal_settings_intents_clicks {
+    (
+        $interface:ident,
+        $ids:ident,
+        $intents:ident,
+        $has:ident,
+
+        $({
+            $name:expr,
+            $type:tt,
+            $settings_state:expr,
+            $save_handler:block,
+
+            $([
+                $field_name:expr,
+                $intent:expr,
+                $widget_ids:expr
+            ]),*
+        }),+,
+    ) => {
+        gen_ui_events_modal_settings_clicks!(
+            $interface, $ids, $has,
+
+            $({
+                $name, $settings_state, $save_handler,
+
+                $([
+                    $field_name,
+                    $widget_ids,
+
+                    {
+                        $intents.push(ChipSettingsIntent::$type($intent));
+                    }
+                ]),*
+            },)+
+        );
     }
 }
 

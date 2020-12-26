@@ -52,7 +52,9 @@ mode-group-alarms = 警报器
 advanced-group-statistics = 统计
 advanced-group-settings = 设定值
 
-modal-close = 好
+modal-close = 关
+modal-apply = 应用
+modal-cancel = 取消
 
 modal-run-status = 呼吸机状态
 modal-run-status-started = 跑步-停下来吗？

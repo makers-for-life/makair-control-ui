@@ -53,6 +53,8 @@ advanced-group-statistics = Statistiques
 advanced-group-settings = Paramètres
 
 modal-close = Fermer
+modal-apply = Valider
+modal-cancel = Annuler
 
 modal-run-status = Unité de ventilation
 modal-run-status-started = Active — La stopper ?

@@ -19,6 +19,11 @@ const DURATION_STEP: usize = 10;
 
 #[derive(Debug)]
 pub enum SettingsModeEvent {
+    Commit,
+}
+
+#[derive(Debug)]
+pub enum SettingsModeIntent {
     ModePcCmv,
     ModePcAc,
     ModePcVsai,
@@ -56,7 +61,7 @@ pub struct SettingsMode {
     pub draft: Option<SettingsModeSettings>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct SettingsModeSettings {
     // Mode
     pub mode: VentilationMode,
@@ -153,252 +158,320 @@ impl SettingsMode {
         }
     }
 
-    pub fn new_event(&self, event: SettingsModeEvent) -> ControlMessage {
+    pub fn new_event(&mut self, event: SettingsModeEvent) -> Vec<ControlMessage> {
         match event {
-            SettingsModeEvent::ModePcCmv => self.switch_mode(VentilationMode::PC_CMV),
-            SettingsModeEvent::ModePcAc => self.switch_mode(VentilationMode::PC_AC),
-            SettingsModeEvent::ModePcVsai => self.switch_mode(VentilationMode::PC_VSAI),
-            SettingsModeEvent::ModeVcCmv => self.switch_mode(VentilationMode::VC_CMV),
-            SettingsModeEvent::ModeVcAc => self.switch_mode(VentilationMode::VC_AC),
-            SettingsModeEvent::InspiratoryTimeMinimum(action) => {
+            SettingsModeEvent::Commit => self.commit(),
+        }
+    }
+
+    pub fn new_intent(&mut self, intent: SettingsModeIntent) {
+        match intent {
+            SettingsModeIntent::ModePcCmv => self.switch_mode(VentilationMode::PC_CMV),
+            SettingsModeIntent::ModePcAc => self.switch_mode(VentilationMode::PC_AC),
+            SettingsModeIntent::ModePcVsai => self.switch_mode(VentilationMode::PC_VSAI),
+            SettingsModeIntent::ModeVcCmv => self.switch_mode(VentilationMode::VC_CMV),
+            SettingsModeIntent::ModeVcAc => self.switch_mode(VentilationMode::VC_AC),
+            SettingsModeIntent::InspiratoryTimeMinimum(action) => {
                 self.set_inspiratory_time_minimum(action)
             }
-            SettingsModeEvent::InspiratoryTimeMaximum(action) => {
+            SettingsModeIntent::InspiratoryTimeMaximum(action) => {
                 self.set_inspiratory_time_maximum(action)
             }
-            SettingsModeEvent::CyclesPerMinute(action) => self.set_cycles_per_minute(action),
-            SettingsModeEvent::TriggerInspiratoryOffset(action) => {
+            SettingsModeIntent::CyclesPerMinute(action) => self.set_cycles_per_minute(action),
+            SettingsModeIntent::TriggerInspiratoryOffset(action) => {
                 self.set_trigger_inspiratory_offset(action)
             }
-            SettingsModeEvent::TriggerExpiratoryFlow(action) => {
+            SettingsModeIntent::TriggerExpiratoryFlow(action) => {
                 self.set_trigger_expiratory_flow(action)
             }
-            SettingsModeEvent::PressurePlateau(action) => self.set_pressure_plateau(action),
-            SettingsModeEvent::PressureExpiratory(action) => self.set_pressure_expiratory(action),
-            SettingsModeEvent::VolumeTidal(action) => self.set_volume_tidal(action),
-            SettingsModeEvent::FlowInspiration(action) => self.set_flow_inspiration(action),
-            SettingsModeEvent::DurationInspiration(action) => self.set_duration_inspiration(action),
-            SettingsModeEvent::DurationPlateau(action) => self.set_duration_plateau(action),
-            SettingsModeEvent::LowInspiratoryMinuteVolumeAlarm(action) => {
+            SettingsModeIntent::PressurePlateau(action) => self.set_pressure_plateau(action),
+            SettingsModeIntent::PressureExpiratory(action) => self.set_pressure_expiratory(action),
+            SettingsModeIntent::VolumeTidal(action) => self.set_volume_tidal(action),
+            SettingsModeIntent::FlowInspiration(action) => self.set_flow_inspiration(action),
+            SettingsModeIntent::DurationInspiration(action) => {
+                self.set_duration_inspiration(action)
+            }
+            SettingsModeIntent::DurationPlateau(action) => self.set_duration_plateau(action),
+            SettingsModeIntent::LowInspiratoryMinuteVolumeAlarm(action) => {
                 self.set_low_inspiratory_minute_volume_alarm(action)
             }
-            SettingsModeEvent::HighInspiratoryMinuteVolumeAlarm(action) => {
+            SettingsModeIntent::HighInspiratoryMinuteVolumeAlarm(action) => {
                 self.set_high_inspiratory_minute_volume_alarm(action)
             }
-            SettingsModeEvent::LowExpiratoryMinuteVolumeAlarm(action) => {
+            SettingsModeIntent::LowExpiratoryMinuteVolumeAlarm(action) => {
                 self.set_low_expiratory_minute_volume_alarm(action)
             }
-            SettingsModeEvent::HighExpiratoryMinuteVolumeAlarm(action) => {
+            SettingsModeIntent::HighExpiratoryMinuteVolumeAlarm(action) => {
                 self.set_high_expiratory_minute_volume_alarm(action)
             }
-            SettingsModeEvent::LowRespiratoryRateAlarm(action) => {
+            SettingsModeIntent::LowRespiratoryRateAlarm(action) => {
                 self.set_low_respiratory_rate_alarm(action)
             }
-            SettingsModeEvent::HighRespiratoryRateAlarm(action) => {
+            SettingsModeIntent::HighRespiratoryRateAlarm(action) => {
                 self.set_high_respiratory_rate_alarm(action)
             }
-            SettingsModeEvent::LowTidalVolumeAlarm(action) => {
+            SettingsModeIntent::LowTidalVolumeAlarm(action) => {
                 self.set_low_tidal_volume_alarm(action)
             }
-            SettingsModeEvent::HighTidalVolumeAlarm(action) => {
+            SettingsModeIntent::HighTidalVolumeAlarm(action) => {
                 self.set_high_tidal_volume_alarm(action)
             }
-            SettingsModeEvent::LeakAlarm(action) => self.set_leak_alarm(action),
+            SettingsModeIntent::LeakAlarm(action) => self.set_leak_alarm(action),
         }
     }
 
-    fn switch_mode(&self, mode: VentilationMode) -> ControlMessage {
-        ControlMessage {
-            setting: ControlSetting::VentilationMode,
-            value: u8::from(&mode) as _,
+    pub fn commit(&mut self) -> Vec<ControlMessage> {
+        let mut events = Vec::new();
+
+        // Generate events from changed draft values?
+        if let Some(ref draft) = self.draft {
+            // Append non-numeric mode value
+            if draft.mode != self.live.mode {
+                events.push(ControlMessage {
+                    setting: ControlSetting::VentilationMode,
+                    value: u8::from(&draft.mode) as _,
+                });
+            }
+
+            // Append all other numeric values
+            gen_commit_mode_events_numeric!(
+                self, draft, events, {
+                    TiMin -> inspiratory_time_minimum,
+                    TiMax -> inspiratory_time_maximum,
+                    CyclesPerMinute -> cycles_per_minute,
+                    TriggerOffset -> trigger_inspiratory_offset,
+                    ExpiratoryTriggerFlow -> trigger_expiratory_flow,
+                    PlateauPressure -> pressure_plateau,
+                    PEEP -> pressure_expiratory,
+                    TargetTidalVolume -> volume_tidal,
+                    TargetInspiratoryFlow -> flow_inspiration,
+                    InspiratoryDuration -> duration_inspiration,
+                    PlateauDuration -> duration_plateau,
+                    LowInspiratoryMinuteVolumeAlarmThreshold ->
+                        alarm_threshold_low_inspiratory_minute_volume,
+                    HighInspiratoryMinuteVolumeAlarmThreshold ->
+                        alarm_threshold_high_inspiratory_minute_volume,
+                    LowExpiratoryMinuteVolumeAlarmThreshold ->
+                        alarm_threshold_low_expiratory_minute_volume,
+                    HighExpiratoryMinuteVolumeAlarmThreshold ->
+                        alarm_threshold_high_expiratory_minute_volume,
+                    LowRespiratoryRateAlarmThreshold -> alarm_threshold_low_respiratory_rate,
+                    HighRespiratoryRateAlarmThreshold -> alarm_threshold_high_respiratory_rate,
+                    LowTidalVolumeAlarmThreshold -> alarm_threshold_low_tidal_volume,
+                    HighTidalVolumeAlarmThreshold -> alarm_threshold_high_tidal_volume,
+                    LeakAlarmThreshold -> alarm_threshold_leak,
+                }
+            );
         }
+
+        // Ensure draft is reset back to none
+        self.draft = None;
+
+        events
     }
 
-    fn set_inspiratory_time_minimum(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
+    fn switch_mode(&mut self, mode: VentilationMode) {
+        let old_mode = gen_get_mode_value!(self, mode);
+
+        gen_set_mode_draft!(self, mode, old_mode, mode);
+    }
+
+    fn set_inspiratory_time_minimum(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::TiMin,
             action,
-            self.live.inspiratory_time_minimum,
+            inspiratory_time_minimum,
             INSPIRATORY_TIME_STEP
         )
     }
 
-    fn set_inspiratory_time_maximum(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_inspiratory_time_maximum(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::TiMax,
             action,
-            self.live.inspiratory_time_maximum,
+            inspiratory_time_maximum,
             INSPIRATORY_TIME_STEP
         )
     }
 
-    fn set_cycles_per_minute(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_cycles_per_minute(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::CyclesPerMinute,
             action,
-            self.live.cycles_per_minute,
+            cycles_per_minute,
             CYCLES_PER_MINUTE_STEP
         )
     }
 
-    fn set_trigger_inspiratory_offset(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_trigger_inspiratory_offset(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::TriggerOffset,
             action,
-            self.live.trigger_inspiratory_offset,
+            trigger_inspiratory_offset,
             TRIGGER_OFFSET_STEP
         )
     }
 
-    fn set_trigger_expiratory_flow(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_trigger_expiratory_flow(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::ExpiratoryTriggerFlow,
             action,
-            self.live.trigger_expiratory_flow,
+            trigger_expiratory_flow,
             TRIGGER_FLOW_STEP
         )
     }
 
-    fn set_pressure_plateau(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_pressure_plateau(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::PlateauPressure,
             action,
-            self.live.pressure_plateau,
+            pressure_plateau,
             PRESSURE_STEP
         )
     }
 
-    fn set_pressure_expiratory(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_pressure_expiratory(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::PEEP,
             action,
-            self.live.pressure_expiratory,
+            pressure_expiratory,
             PRESSURE_STEP
         )
     }
 
-    fn set_volume_tidal(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_volume_tidal(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::TargetTidalVolume,
             action,
-            self.live.volume_tidal,
+            volume_tidal,
             VOLUME_STEP
         )
     }
 
-    fn set_flow_inspiration(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_flow_inspiration(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::TargetInspiratoryFlow,
             action,
-            self.live.flow_inspiration,
+            flow_inspiration,
             FLOW_STEP
         )
     }
 
-    fn set_duration_inspiration(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_duration_inspiration(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::InspiratoryDuration,
             action,
-            self.live.duration_inspiration,
+            duration_inspiration,
             DURATION_STEP
         )
     }
 
-    fn set_duration_plateau(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_duration_plateau(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::PlateauDuration,
             action,
-            self.live.duration_plateau,
+            duration_plateau,
             DURATION_STEP
         )
     }
 
-    fn set_low_inspiratory_minute_volume_alarm(
-        &self,
-        action: SettingActionRange,
-    ) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_low_inspiratory_minute_volume_alarm(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::LowInspiratoryMinuteVolumeAlarmThreshold,
             action,
-            self.live.alarm_threshold_low_inspiratory_minute_volume,
+            alarm_threshold_low_inspiratory_minute_volume,
             TRIGGER_FLOW_STEP
         )
     }
 
-    fn set_high_inspiratory_minute_volume_alarm(
-        &self,
-        action: SettingActionRange,
-    ) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_high_inspiratory_minute_volume_alarm(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::HighInspiratoryMinuteVolumeAlarmThreshold,
             action,
-            self.live.alarm_threshold_high_inspiratory_minute_volume,
+            alarm_threshold_high_inspiratory_minute_volume,
             TRIGGER_FLOW_STEP
         )
     }
 
-    fn set_low_expiratory_minute_volume_alarm(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_low_expiratory_minute_volume_alarm(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::LowExpiratoryMinuteVolumeAlarmThreshold,
             action,
-            self.live.alarm_threshold_low_expiratory_minute_volume,
+            alarm_threshold_low_expiratory_minute_volume,
             TRIGGER_FLOW_STEP
         )
     }
 
-    fn set_high_expiratory_minute_volume_alarm(
-        &self,
-        action: SettingActionRange,
-    ) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_high_expiratory_minute_volume_alarm(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::HighExpiratoryMinuteVolumeAlarmThreshold,
             action,
-            self.live.alarm_threshold_high_expiratory_minute_volume,
+            alarm_threshold_high_expiratory_minute_volume,
             TRIGGER_FLOW_STEP
         )
     }
 
-    fn set_low_respiratory_rate_alarm(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_low_respiratory_rate_alarm(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::LowRespiratoryRateAlarmThreshold,
             action,
-            self.live.alarm_threshold_low_respiratory_rate,
+            alarm_threshold_low_respiratory_rate,
             CYCLES_PER_MINUTE_STEP
         )
     }
 
-    fn set_high_respiratory_rate_alarm(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_high_respiratory_rate_alarm(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::HighRespiratoryRateAlarmThreshold,
             action,
-            self.live.alarm_threshold_high_respiratory_rate,
+            alarm_threshold_high_respiratory_rate,
             CYCLES_PER_MINUTE_STEP
         )
     }
 
-    fn set_low_tidal_volume_alarm(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_low_tidal_volume_alarm(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::LowTidalVolumeAlarmThreshold,
             action,
-            self.live.alarm_threshold_low_tidal_volume,
+            alarm_threshold_low_tidal_volume,
             VOLUME_STEP
         )
     }
 
-    fn set_high_tidal_volume_alarm(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_high_tidal_volume_alarm(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::HighTidalVolumeAlarmThreshold,
             action,
-            self.live.alarm_threshold_high_tidal_volume,
+            alarm_threshold_high_tidal_volume,
             VOLUME_STEP
         )
     }
 
-    fn set_leak_alarm(&self, action: SettingActionRange) -> ControlMessage {
-        gen_set_new_value!(
+    fn set_leak_alarm(&mut self, action: SettingActionRange) {
+        gen_set_mode_new_draft_value!(
+            self,
             ControlSetting::LeakAlarmThreshold,
             action,
-            self.live.alarm_threshold_leak,
+            alarm_threshold_leak,
             VOLUME_STEP
         )
     }

@@ -52,7 +52,9 @@ mode-group-alarms = Сигналізація
 advanced-group-statistics = Статистика
 advanced-group-settings = Налаштування
 
-modal-close = в порядку
+modal-close = Закрити
+modal-apply = Подати заявку
+modal-cancel = Скасувати
 
 modal-run-status = Статус блоку вентилятора
 modal-run-status-started = Біг - зупинка?

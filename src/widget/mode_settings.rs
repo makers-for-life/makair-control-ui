@@ -21,8 +21,11 @@ use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::APP_I18N;
 
 const SELECTOR_BORDER_COLOR: Color = Color::Rgba(81.0 / 255.0, 81.0 / 255.0, 81.0 / 255.0, 1.0);
+
 const SELECTOR_COLOR_DEFAULT: Color = Color::Rgba(0.0, 0.0, 0.0, 0.975);
 const SELECTOR_COLOR_SELECTED: Color = Color::Rgba(26.0 / 255.0, 26.0 / 255.0, 26.0 / 255.0, 1.0);
+
+const SELECTOR_TEXT_COLOR_CHANGED: Color = Color::Rgba(110.0 / 255.0, 191.0 / 255.0, 1.0, 1.0);
 
 type FieldWidgetIds = (
     WidgetId,
@@ -83,6 +86,12 @@ struct Field {
     ids: FieldWidgetIds,
 }
 
+struct FieldValues {
+    current: usize,
+    live: usize,
+    draft: Option<usize>,
+}
+
 pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     // Create container
     gen_widget_container!(
@@ -104,14 +113,11 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 }
 
 fn selector<'a>(master: &mut ControlWidget<'a>, config: &Config) {
-    // Pre-calculate sizes and styles
+    // Acquire selected mode
+    let mode = selected_mode(config);
+
+    // Pre-calculate sizes
     let tab_width = config.width / MODE_SETTINGS_SELECTOR_TABS_COUNT as f64;
-
-    let mut text_style = widget::text::Style::default();
-
-    text_style.font_id = Some(Some(master.fonts.bold));
-    text_style.color = Some(color::WHITE);
-    text_style.font_size = Some(14);
 
     // Append selector wrapper
     gen_widget_container!(
@@ -131,7 +137,7 @@ fn selector<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 
         // Create rectangle (selected if index mode matches ongoing mode)
         let (rectangle_color, rectangle_height_offset, rectangle_width_offset, selection_offset) =
-            if Some(config.mode_settings.live.mode) == index_mode {
+            if Some(mode) == index_mode {
                 (
                     SELECTOR_COLOR_SELECTED,
                     0.0,
@@ -163,6 +169,23 @@ fn selector<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 
         // Append text?
         if let Some(index_mode) = index_mode {
+            let is_selected = mode == index_mode;
+
+            // Generate text style
+            let mut text_style = widget::text::Style::default();
+
+            text_style.font_id = Some(Some(master.fonts.bold));
+            text_style.color = Some(if is_selected && mode != config.mode_settings.live.mode {
+                SELECTOR_TEXT_COLOR_CHANGED
+            } else {
+                color::WHITE
+            });
+            text_style.font_size = Some(14);
+
+            // Append text
+            // Notice: the text Y alignment must be adjusted in a super-dirty way, using a \
+            //   demi-pixel fix, when selected. This is done to avoid the text from jumping up \
+            //   when the user taps on a tab.
             widget::Text::new(&format!(
                 "{} {}",
                 mode_class_to_locale(index_mode.class()),
@@ -170,7 +193,7 @@ fn selector<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             ))
             .with_style(text_style)
             .middle_of(config.selector_tabs[index])
-            .y_relative(2.0)
+            .y_relative(if is_selected { 2.5 } else { 2.0 })
             .set(config.selector_texts[index], &mut master.ui);
         }
     }
@@ -237,6 +260,9 @@ fn group_tab<'a>(
 }
 
 fn form<'a>(master: &mut ControlWidget<'a>, config: &Config, parent_size: (f64, f64)) {
+    // Acquire selected mode
+    let mode = selected_mode(config);
+
     // Compute total tabs width
     let tabs_total_width = MODAL_GROUP_TABS_WIDTH + MODAL_GROUP_TABS_MARGIN_RIGHT;
 
@@ -253,7 +279,7 @@ fn form<'a>(master: &mut ControlWidget<'a>, config: &Config, parent_size: (f64, 
     );
 
     // Append form depending on current ventilation mode
-    match config.mode_settings.live.mode {
+    match mode {
         VentilationMode::PC_CMV => form_pc_cmv(master, config),
         VentilationMode::PC_AC => form_pc_ac(master, config),
         VentilationMode::PC_VSAI => form_pc_vsai(master, config),
@@ -363,6 +389,8 @@ fn form_vc_ac<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 }
 
 fn field_pressure_inspiratory<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config) {
+    let field_values = gen_widget_mode_field_values!(config, pressure_plateau);
+
     draw_field(
         index,
         master,
@@ -371,18 +399,18 @@ fn field_pressure_inspiratory<'a>(index: usize, master: &mut ControlWidget<'a>, 
             label_text: APP_I18N.t("modal-mode-pressure-inspiratory"),
             value_text: format!(
                 "{} {}",
-                convert_mmh2o_to_cmh2o(
-                    ConvertMode::Rounded,
-                    config.mode_settings.live.pressure_plateau as f64
-                ),
+                convert_mmh2o_to_cmh2o(ConvertMode::Rounded, field_values.current as f64),
                 APP_I18N.t("telemetry-unit-cmh2o")
             ),
             ids: config.field_pressure_inspiratory_ids,
         },
+        field_values,
     )
 }
 
 fn field_pressure_expiratory<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config) {
+    let field_values = gen_widget_mode_field_values!(config, pressure_expiratory);
+
     draw_field(
         index,
         master,
@@ -391,14 +419,12 @@ fn field_pressure_expiratory<'a>(index: usize, master: &mut ControlWidget<'a>, c
             label_text: APP_I18N.t("modal-mode-pressure-expiratory"),
             value_text: format!(
                 "{} {}",
-                convert_mmh2o_to_cmh2o(
-                    ConvertMode::Rounded,
-                    config.mode_settings.live.pressure_expiratory as f64
-                ),
+                convert_mmh2o_to_cmh2o(ConvertMode::Rounded, field_values.current as f64),
                 APP_I18N.t("telemetry-unit-cmh2o")
             ),
             ids: config.field_pressure_expiratory_ids,
         },
+        field_values,
     )
 }
 
@@ -407,6 +433,8 @@ fn field_time_inspiratory_minimum<'a>(
     master: &mut ControlWidget<'a>,
     config: &Config,
 ) {
+    let field_values = gen_widget_mode_field_values!(config, inspiratory_time_minimum);
+
     draw_field(
         index,
         master,
@@ -415,11 +443,12 @@ fn field_time_inspiratory_minimum<'a>(
             label_text: APP_I18N.t("modal-mode-time-inspiratory-minimum"),
             value_text: format!(
                 "{} {}",
-                config.mode_settings.live.inspiratory_time_minimum,
+                field_values.current,
                 APP_I18N.t("telemetry-unit-milliseconds")
             ),
             ids: config.field_time_inspiratory_minimum_ids,
         },
+        field_values,
     )
 }
 
@@ -428,6 +457,8 @@ fn field_time_inspiratory_maximum<'a>(
     master: &mut ControlWidget<'a>,
     config: &Config,
 ) {
+    let field_values = gen_widget_mode_field_values!(config, inspiratory_time_maximum);
+
     draw_field(
         index,
         master,
@@ -436,15 +467,18 @@ fn field_time_inspiratory_maximum<'a>(
             label_text: APP_I18N.t("modal-mode-time-inspiratory-maximum"),
             value_text: format!(
                 "{} {}",
-                config.mode_settings.live.inspiratory_time_maximum,
+                field_values.current,
                 APP_I18N.t("telemetry-unit-milliseconds")
             ),
             ids: config.field_time_inspiratory_maximum_ids,
         },
+        field_values,
     )
 }
 
 fn field_cycles_per_minute<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config) {
+    let field_values = gen_widget_mode_field_values!(config, cycles_per_minute);
+
     draw_field(
         index,
         master,
@@ -453,15 +487,18 @@ fn field_cycles_per_minute<'a>(index: usize, master: &mut ControlWidget<'a>, con
             label_text: APP_I18N.t("modal-mode-cycles-per-minute"),
             value_text: format!(
                 "{}{}",
-                config.mode_settings.live.cycles_per_minute,
+                field_values.current,
                 APP_I18N.t("telemetry-unit-per-minute")
             ),
             ids: config.field_cycles_per_minute_ids,
         },
+        field_values,
     )
 }
 
 fn field_tidal_volume<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config) {
+    let field_values = gen_widget_mode_field_values!(config, volume_tidal);
+
     draw_field(
         index,
         master,
@@ -470,15 +507,18 @@ fn field_tidal_volume<'a>(index: usize, master: &mut ControlWidget<'a>, config: 
             label_text: APP_I18N.t("modal-mode-tidal-volume"),
             value_text: format!(
                 "{} {}",
-                config.mode_settings.live.volume_tidal,
+                field_values.current,
                 APP_I18N.t("telemetry-unit-milliliters")
             ),
             ids: config.field_tidal_volume_ids,
         },
+        field_values,
     )
 }
 
 fn field_inspiratory_flow<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config) {
+    let field_values = gen_widget_mode_field_values!(config, flow_inspiration);
+
     draw_field(
         index,
         master,
@@ -487,15 +527,18 @@ fn field_inspiratory_flow<'a>(index: usize, master: &mut ControlWidget<'a>, conf
             label_text: APP_I18N.t("modal-mode-flow-inspiratory"),
             value_text: format!(
                 "{} {}",
-                config.mode_settings.live.flow_inspiration,
+                field_values.current,
                 APP_I18N.t("telemetry-unit-lpm")
             ),
             ids: config.field_inspiratory_flow_ids,
         },
+        field_values,
     )
 }
 
 fn field_duration_inspiration<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config) {
+    let field_values = gen_widget_mode_field_values!(config, duration_inspiration);
+
     draw_field(
         index,
         master,
@@ -504,15 +547,18 @@ fn field_duration_inspiration<'a>(index: usize, master: &mut ControlWidget<'a>, 
             label_text: APP_I18N.t("modal-mode-time-inspiratory"),
             value_text: format!(
                 "{} {}",
-                config.mode_settings.live.duration_inspiration,
+                field_values.current,
                 APP_I18N.t("telemetry-unit-milliseconds")
             ),
             ids: config.field_inspiratory_duration_ids,
         },
+        field_values,
     )
 }
 
 fn field_duration_plateau<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config) {
+    let field_values = gen_widget_mode_field_values!(config, duration_plateau);
+
     draw_field(
         index,
         master,
@@ -521,15 +567,18 @@ fn field_duration_plateau<'a>(index: usize, master: &mut ControlWidget<'a>, conf
             label_text: APP_I18N.t("modal-mode-plateau-duration"),
             value_text: format!(
                 "{} {}",
-                config.mode_settings.live.duration_plateau,
+                field_values.current,
                 APP_I18N.t("telemetry-unit-milliseconds")
             ),
             ids: config.field_plateau_duration_ids,
         },
+        field_values,
     )
 }
 
 fn field_trigger_offset<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config) {
+    let field_values = gen_widget_mode_field_values!(config, trigger_inspiratory_offset);
+
     draw_field(
         index,
         master,
@@ -538,27 +587,28 @@ fn field_trigger_offset<'a>(index: usize, master: &mut ControlWidget<'a>, config
             label_text: APP_I18N.t("modal-mode-trigger-offset"),
             value_text: format!(
                 "{:.1} {}",
-                convert_mmh2o_to_cmh2o(
-                    ConvertMode::WithDecimals,
-                    config.mode_settings.live.trigger_inspiratory_offset as f64
-                ),
+                convert_mmh2o_to_cmh2o(ConvertMode::WithDecimals, field_values.current as f64),
                 APP_I18N.t("telemetry-unit-cmh2o")
             ),
             ids: config.field_trigger_offset_ids,
         },
+        field_values,
     )
 }
 
 fn field_trigger_expiratory<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config) {
+    let field_values = gen_widget_mode_field_values!(config, trigger_expiratory_flow);
+
     draw_field(
         index,
         master,
         config,
         Field {
             label_text: APP_I18N.t("modal-mode-trigger-expiratory"),
-            value_text: format!("{}%", config.mode_settings.live.trigger_expiratory_flow),
+            value_text: format!("{}%", field_values.current),
             ids: config.field_trigger_expiratory_ids,
         },
+        field_values,
     )
 }
 
@@ -567,6 +617,9 @@ fn field_alarm_threshold_low_inspiratory_minute_volume<'a>(
     master: &mut ControlWidget<'a>,
     config: &Config,
 ) {
+    let field_values =
+        gen_widget_mode_field_values!(config, alarm_threshold_low_inspiratory_minute_volume);
+
     draw_field(
         index,
         master,
@@ -575,14 +628,12 @@ fn field_alarm_threshold_low_inspiratory_minute_volume<'a>(
             label_text: APP_I18N.t("modal-mode-alarm-low-inspiratory-minute-volume"),
             value_text: format!(
                 "{} {}",
-                config
-                    .mode_settings
-                    .live
-                    .alarm_threshold_low_inspiratory_minute_volume,
+                field_values.current,
                 APP_I18N.t("telemetry-unit-lpm")
             ),
             ids: config.field_alarm_threshold_low_inspiratory_minute_volume_ids,
         },
+        field_values,
     )
 }
 
@@ -591,6 +642,9 @@ fn field_alarm_threshold_high_inspiratory_minute_volume<'a>(
     master: &mut ControlWidget<'a>,
     config: &Config,
 ) {
+    let field_values =
+        gen_widget_mode_field_values!(config, alarm_threshold_high_inspiratory_minute_volume);
+
     draw_field(
         index,
         master,
@@ -599,14 +653,12 @@ fn field_alarm_threshold_high_inspiratory_minute_volume<'a>(
             label_text: APP_I18N.t("modal-mode-alarm-high-inspiratory-minute-volume"),
             value_text: format!(
                 "{} {}",
-                config
-                    .mode_settings
-                    .live
-                    .alarm_threshold_high_inspiratory_minute_volume,
+                field_values.current,
                 APP_I18N.t("telemetry-unit-lpm")
             ),
             ids: config.field_alarm_threshold_high_inspiratory_minute_volume_ids,
         },
+        field_values,
     )
 }
 
@@ -615,6 +667,9 @@ fn field_alarm_threshold_low_expiratory_minute_volume<'a>(
     master: &mut ControlWidget<'a>,
     config: &Config,
 ) {
+    let field_values =
+        gen_widget_mode_field_values!(config, alarm_threshold_low_expiratory_minute_volume);
+
     draw_field(
         index,
         master,
@@ -623,14 +678,12 @@ fn field_alarm_threshold_low_expiratory_minute_volume<'a>(
             label_text: APP_I18N.t("modal-mode-alarm-low-expiratory-minute-volume"),
             value_text: format!(
                 "{} {}",
-                config
-                    .mode_settings
-                    .live
-                    .alarm_threshold_low_expiratory_minute_volume,
+                field_values.current,
                 APP_I18N.t("telemetry-unit-lpm")
             ),
             ids: config.field_alarm_threshold_low_expiratory_minute_volume_ids,
         },
+        field_values,
     )
 }
 
@@ -639,6 +692,9 @@ fn field_alarm_threshold_high_expiratory_minute_volume<'a>(
     master: &mut ControlWidget<'a>,
     config: &Config,
 ) {
+    let field_values =
+        gen_widget_mode_field_values!(config, alarm_threshold_high_expiratory_minute_volume);
+
     draw_field(
         index,
         master,
@@ -647,14 +703,12 @@ fn field_alarm_threshold_high_expiratory_minute_volume<'a>(
             label_text: APP_I18N.t("modal-mode-alarm-high-expiratory-minute-volume"),
             value_text: format!(
                 "{} {}",
-                config
-                    .mode_settings
-                    .live
-                    .alarm_threshold_high_expiratory_minute_volume,
+                field_values.current,
                 APP_I18N.t("telemetry-unit-lpm")
             ),
             ids: config.field_alarm_threshold_high_expiratory_minute_volume_ids,
         },
+        field_values,
     )
 }
 
@@ -663,6 +717,8 @@ fn field_alarm_threshold_low_respiratory_rate<'a>(
     master: &mut ControlWidget<'a>,
     config: &Config,
 ) {
+    let field_values = gen_widget_mode_field_values!(config, alarm_threshold_low_respiratory_rate);
+
     draw_field(
         index,
         master,
@@ -671,14 +727,12 @@ fn field_alarm_threshold_low_respiratory_rate<'a>(
             label_text: APP_I18N.t("modal-mode-alarm-low-respiratory-rate"),
             value_text: format!(
                 "{}{}",
-                config
-                    .mode_settings
-                    .live
-                    .alarm_threshold_low_respiratory_rate,
+                field_values.current,
                 APP_I18N.t("telemetry-unit-per-minute")
             ),
             ids: config.field_alarm_threshold_low_respiratory_rate_ids,
         },
+        field_values,
     )
 }
 
@@ -687,6 +741,8 @@ fn field_alarm_threshold_high_respiratory_rate<'a>(
     master: &mut ControlWidget<'a>,
     config: &Config,
 ) {
+    let field_values = gen_widget_mode_field_values!(config, alarm_threshold_high_respiratory_rate);
+
     draw_field(
         index,
         master,
@@ -695,14 +751,12 @@ fn field_alarm_threshold_high_respiratory_rate<'a>(
             label_text: APP_I18N.t("modal-mode-alarm-high-respiratory-rate"),
             value_text: format!(
                 "{}{}",
-                config
-                    .mode_settings
-                    .live
-                    .alarm_threshold_high_respiratory_rate,
+                field_values.current,
                 APP_I18N.t("telemetry-unit-per-minute")
             ),
             ids: config.field_alarm_threshold_high_respiratory_rate_ids,
         },
+        field_values,
     )
 }
 
@@ -711,6 +765,8 @@ fn field_alarm_threshold_low_tidal_volume<'a>(
     master: &mut ControlWidget<'a>,
     config: &Config,
 ) {
+    let field_values = gen_widget_mode_field_values!(config, alarm_threshold_low_tidal_volume);
+
     draw_field(
         index,
         master,
@@ -719,11 +775,12 @@ fn field_alarm_threshold_low_tidal_volume<'a>(
             label_text: APP_I18N.t("modal-mode-alarm-low-tidal-volume"),
             value_text: format!(
                 "{} {}",
-                config.mode_settings.live.alarm_threshold_low_tidal_volume,
+                field_values.current,
                 APP_I18N.t("telemetry-unit-milliliters")
             ),
             ids: config.field_alarm_threshold_low_tidal_volume_ids,
         },
+        field_values,
     )
 }
 
@@ -732,6 +789,8 @@ fn field_alarm_threshold_high_tidal_volume<'a>(
     master: &mut ControlWidget<'a>,
     config: &Config,
 ) {
+    let field_values = gen_widget_mode_field_values!(config, alarm_threshold_high_tidal_volume);
+
     draw_field(
         index,
         master,
@@ -740,15 +799,18 @@ fn field_alarm_threshold_high_tidal_volume<'a>(
             label_text: APP_I18N.t("modal-mode-alarm-high-tidal-volume"),
             value_text: format!(
                 "{} {}",
-                config.mode_settings.live.alarm_threshold_high_tidal_volume,
+                field_values.current,
                 APP_I18N.t("telemetry-unit-milliliters")
             ),
             ids: config.field_alarm_threshold_high_tidal_volume_ids,
         },
+        field_values,
     )
 }
 
 fn field_alarm_threshold_leak<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config) {
+    let field_values = gen_widget_mode_field_values!(config, alarm_threshold_leak);
+
     draw_field(
         index,
         master,
@@ -757,15 +819,29 @@ fn field_alarm_threshold_leak<'a>(index: usize, master: &mut ControlWidget<'a>, 
             label_text: APP_I18N.t("modal-mode-alarm-leak"),
             value_text: format!(
                 "{} {}",
-                config.mode_settings.live.alarm_threshold_leak,
+                field_values.current,
                 APP_I18N.t("telemetry-unit-mlpm")
             ),
             ids: config.field_alarm_threshold_leak_ids,
         },
+        field_values,
     )
 }
 
-fn draw_field<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config, field: Field) {
+fn draw_field<'a>(
+    index: usize,
+    master: &mut ControlWidget<'a>,
+    config: &Config,
+    field: Field,
+    values: FieldValues,
+) {
+    // Check if value has changed (ie. draft value is different than live value)
+    let has_changed = if let Some(draft) = values.draft {
+        draft != values.live
+    } else {
+        false
+    };
+
     // Generate label
     gen_widget_label_form!(
         master,
@@ -786,6 +862,7 @@ fn draw_field<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config,
         value_wrapper_id: field.ids.1,
         value_id: field.ids.2,
         value: &field.value_text,
+        changed: has_changed,
         positions: top_left_with_margins_on[
             field.ids.0,
             -2.0,
@@ -802,5 +879,13 @@ fn tab_index_to_mode(index: usize) -> Option<VentilationMode> {
         3 => Some(VentilationMode::VC_CMV),
         4 => Some(VentilationMode::VC_AC),
         _ => None,
+    }
+}
+
+fn selected_mode(config: &Config) -> VentilationMode {
+    if let Some(ref draft) = config.mode_settings.draft {
+        draft.mode
+    } else {
+        config.mode_settings.live.mode
     }
 }

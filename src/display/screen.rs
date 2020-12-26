@@ -142,7 +142,8 @@ impl<'a> Screen<'a> {
             background: self.ids.stop_background,
             container_borders: self.ids.stop_container_borders,
             container: self.ids.stop_container,
-            validate: None,
+            close: None,
+            save: None,
             width: DISPLAY_STOP_MESSAGE_CONTAINER_WIDTH,
             height: DISPLAY_STOP_MESSAGE_CONTAINER_HEIGHT,
             padding: None,
@@ -761,13 +762,18 @@ impl<'a> Screen<'a> {
             }));
     }
 
-    fn render_modal(&mut self, width: f64, height: f64, padding: Option<f64>) {
+    fn render_modal(&mut self, width: f64, height: f64, padding: Option<f64>, with_save: bool) {
         self.widgets.render(ControlWidgetType::Modal(modal::Config {
             parent: self.ids.background,
             background: self.ids.modal_background,
             container_borders: self.ids.modal_container_borders,
             container: self.ids.modal_container,
-            validate: Some((self.ids.modal_validate, self.ids.modal_validate_text)),
+            close: Some((self.ids.modal_close, self.ids.modal_close_text)),
+            save: if with_save {
+                Some((self.ids.modal_save, self.ids.modal_save_text))
+            } else {
+                None
+            },
             width,
             height,
             padding,
@@ -793,13 +799,14 @@ impl<'a> Screen<'a> {
             RUN_SETTINGS_MODAL_WIDTH,
             RUN_SETTINGS_MODAL_HEIGTH,
             Some(RUN_SETTINGS_MODAL_PADDING),
+            false,
         );
 
         self.widgets
             .render(ControlWidgetType::RunSettings(run_settings::Config {
                 width: RUN_SETTINGS_MODAL_WIDTH,
                 height: RUN_SETTINGS_MODAL_HEIGTH
-                    - MODAL_VALIDATE_BUTTON_HEIGHT
+                    - MODAL_FINALIZE_BUTTON_HEIGHT
                     - (RUN_SETTINGS_MODAL_PADDING * 2.0),
                 run_settings: settings,
 
@@ -816,13 +823,14 @@ impl<'a> Screen<'a> {
             SNOOZE_SETTINGS_MODAL_WIDTH,
             SNOOZE_SETTINGS_MODAL_HEIGTH,
             Some(SNOOZE_SETTINGS_MODAL_PADDING),
+            false,
         );
 
         self.widgets
             .render(ControlWidgetType::SnoozeSettings(snooze_settings::Config {
                 width: SNOOZE_SETTINGS_MODAL_WIDTH,
                 height: SNOOZE_SETTINGS_MODAL_HEIGTH
-                    - MODAL_VALIDATE_BUTTON_HEIGHT
+                    - MODAL_FINALIZE_BUTTON_HEIGHT
                     - (SNOOZE_SETTINGS_MODAL_PADDING * 2.0),
                 snooze_settings: settings,
 
@@ -839,13 +847,14 @@ impl<'a> Screen<'a> {
             ADVANCED_SETTINGS_MODAL_WIDTH,
             ADVANCED_SETTINGS_MODAL_HEIGTH,
             Some(ADVANCED_SETTINGS_MODAL_PADDING),
+            false,
         );
 
         self.widgets.render(ControlWidgetType::AdvancedSettings(
             advanced_settings::Config {
                 width: ADVANCED_SETTINGS_MODAL_WIDTH,
                 height: ADVANCED_SETTINGS_MODAL_HEIGTH
-                    - MODAL_VALIDATE_BUTTON_HEIGHT
+                    - MODAL_FINALIZE_BUTTON_HEIGHT
                     - (ADVANCED_SETTINGS_MODAL_PADDING * 2.0),
 
                 advanced_settings: settings,
@@ -886,13 +895,14 @@ impl<'a> Screen<'a> {
             MODE_SETTINGS_MODAL_WIDTH,
             MODE_SETTINGS_MODAL_HEIGTH,
             Some(MODE_SETTINGS_MODAL_PADDING),
+            settings.draft.is_some(),
         );
 
         self.widgets
             .render(ControlWidgetType::ModeSettings(mode_settings::Config {
                 width: MODE_SETTINGS_MODAL_WIDTH,
                 height: MODE_SETTINGS_MODAL_HEIGTH
-                    - MODAL_VALIDATE_BUTTON_HEIGHT
+                    - MODAL_FINALIZE_BUTTON_HEIGHT
                     - (MODE_SETTINGS_MODAL_PADDING * 2.0),
 
                 mode_settings: settings,

@@ -8,7 +8,7 @@ use std::time::{Duration, Instant};
 use conrod_core::Ui;
 use plotters_conrod::ConrodBackendReusableGraph;
 
-use crate::chip::settings::ChipSettingsEvent;
+use crate::chip::settings::{ChipSettingsEvent, ChipSettingsIntent};
 use crate::chip::{Chip, ChipError, ChipState};
 use crate::config::environment::*;
 use crate::utilities::parse::parse_version_number;
@@ -110,9 +110,9 @@ impl DisplayRenderer {
         chip: &mut Chip,
         last_heartbeat: &Instant,
         tick_time: &Instant,
-    ) -> (bool, bool, Vec<ChipSettingsEvent>) {
+    ) -> (bool, bool, Vec<ChipSettingsIntent>, Vec<ChipSettingsEvent>) {
         // Run all UI events (defer to sub-handler)
-        let (has_user_events, user_events) =
+        let (has_user_events, user_intents, user_events) =
             DisplayUIEvents::run(interface, &self.ids, chip, &mut self.states);
 
         // Check if should run heartbeat? (ie. if it should be sent to the firmware)
@@ -122,7 +122,7 @@ impl DisplayRenderer {
             has_heartbeat = true;
         }
 
-        (has_heartbeat, has_user_events, user_events)
+        (has_heartbeat, has_user_events, user_intents, user_events)
     }
 
     pub fn has_state_moderate_framerate(&self) -> bool {

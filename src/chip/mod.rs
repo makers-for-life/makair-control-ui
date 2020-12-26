@@ -15,7 +15,7 @@ use std::convert::TryFrom;
 use std::sync::mpsc::{self, Receiver, Sender};
 use std::time::Instant;
 
-use settings::{ChipSettings, ChipSettingsEvent, SettingActionState};
+use settings::{ChipSettings, ChipSettingsEvent, ChipSettingsIntent, SettingActionState};
 use telemetry::alarm::AlarmCode;
 use telemetry::control::{ControlMessage, ControlSetting};
 use telemetry::serial::core;
@@ -170,23 +170,35 @@ impl Chip {
         }
     }
 
+    pub fn dispatch_settings_intents(&mut self, intents: Vec<ChipSettingsIntent>) {
+        // Process all local intents immediately, while events will be dispatched to their \
+        //   receiver by the event queue manager.
+        for intent in intents {
+            debug!("processed immediate setting intent: {:?}", &intent);
+
+            self.settings.new_settings_intent(intent);
+        }
+    }
+
     pub fn dispatch_settings_events(&mut self, events: Vec<ChipSettingsEvent>) {
         for event in events {
-            let message = self.settings.new_settings_event(event);
+            let messages = self.settings.new_settings_event(event);
 
-            debug!(
-                "handled setting event: {:?}, sender: {:?}",
-                message, self.channel_for_settings
-            );
+            for message in messages {
+                debug!(
+                    "handled setting event: {:?}, sender: {:?}",
+                    message, self.channel_for_settings
+                );
 
-            if let Some(tx) = &self.channel_for_settings {
-                if let Err(err) = tx.send(message.clone()) {
-                    error!(
-                        "error sending event {:?} to the control unit: {:?}",
-                        message, err
-                    );
-                } else {
-                    debug!("setting event {:?} sent", message);
+                if let Some(tx) = &self.channel_for_settings {
+                    if let Err(err) = tx.send(message.clone()) {
+                        error!(
+                            "error sending event {:?} to the control unit: {:?}",
+                            message, err
+                        );
+                    } else {
+                        debug!("setting event {:?} sent", message);
+                    }
                 }
             }
         }

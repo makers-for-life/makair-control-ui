@@ -53,6 +53,8 @@ advanced-group-statistics = Statistics
 advanced-group-settings = Settings
 
 modal-close = Close
+modal-apply = Apply
+modal-cancel = Cancel
 
 modal-run-status = Ventilator unit status
 modal-run-status-started = Running — Tap to stop

@@ -114,14 +114,23 @@ macro_rules! gen_widget_text {
         $master:ident,
         text_id: $text_id:expr,
         value: $value:expr,
+        changed: $changed:expr,
         y_relative: $y_relative:expr,
         positions: $position_call:tt[$($position_arguments:expr,)*]
     ) => {
         // Initialize text style for value
         let mut value_style = widget::text::Style::default();
 
-        value_style.font_id = Some(Some($master.fonts.regular));
-        value_style.color = Some(color::WHITE);
+        value_style.font_id = Some(Some(if $changed {
+            $master.fonts.bold
+        } else {
+            $master.fonts.regular
+        }));
+        value_style.color = Some(if $changed {
+            Color::Rgba(110.0 / 255.0, 191.0 / 255.0, 255.0 / 255.0, 1.0)
+        } else {
+            color::WHITE
+        });
         value_style.font_size = Some(MODAL_TEXT_FONT_SIZE);
 
         // Create text for value
@@ -143,6 +152,7 @@ macro_rules! gen_widget_button_navigate {
         value_wrapper_id: $value_wrapper_id:expr,
         value_id: $value_id:expr,
         value: $value:expr,
+        changed: $changed:expr,
         positions: $position_call:tt[$($position_arguments:expr,)*]
     ) => {
         // Create less button
@@ -175,6 +185,7 @@ macro_rules! gen_widget_button_navigate {
             $master,
             text_id: $value_id,
             value: $value,
+            changed: $changed,
             y_relative: 3.0,
             positions: middle_of[
                 $value_wrapper_id,
@@ -277,5 +288,23 @@ macro_rules! gen_widget_group_tab {
             .middle_of($button_ids[$index])
             .y_relative(2.0)
             .set($text_ids[$index], &mut $master.ui);
+    };
+}
+
+macro_rules! gen_widget_mode_field_values {
+    ($config:ident, $field:tt) => {
+        FieldValues {
+            current: if let Some(ref draft) = $config.mode_settings.draft {
+                draft.$field
+            } else {
+                $config.mode_settings.live.$field
+            },
+            live: $config.mode_settings.live.$field,
+            draft: if let Some(ref draft) = $config.mode_settings.draft {
+                Some(draft.$field)
+            } else {
+                None
+            },
+        }
     };
 }

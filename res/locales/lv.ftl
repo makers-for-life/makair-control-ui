@@ -52,7 +52,9 @@ mode-group-alarms = Signāli
 advanced-group-statistics = Statistika
 advanced-group-settings = Iestatījumi
 
-modal-close = OK
+modal-close = Aizvērt
+modal-apply = Piesakies
+modal-cancel = Atcelt
 
 modal-run-status = Ventilatora bloka statuss
 modal-run-status-started = Skriet - apstāties?

@@ -25,6 +25,11 @@ pub enum ChipSettingsEvent {
     Mode(SettingsModeEvent),
 }
 
+#[derive(Debug)]
+pub enum ChipSettingsIntent {
+    Mode(SettingsModeIntent),
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SettingActionState {
     Disabled = 0,
@@ -101,11 +106,17 @@ impl ChipSettings {
         }
     }
 
-    pub fn new_settings_event(&mut self, event: ChipSettingsEvent) -> ControlMessage {
+    pub fn new_settings_event(&mut self, event: ChipSettingsEvent) -> Vec<ControlMessage> {
         match event {
             ChipSettingsEvent::Run(event) => self.run.new_event(event),
             ChipSettingsEvent::Snooze(event) => self.snooze.new_event(event),
             ChipSettingsEvent::Mode(event) => self.mode.new_event(event),
+        }
+    }
+
+    pub fn new_settings_intent(&mut self, intent: ChipSettingsIntent) {
+        match intent {
+            ChipSettingsIntent::Mode(intent) => self.mode.new_intent(intent),
         }
     }
 }

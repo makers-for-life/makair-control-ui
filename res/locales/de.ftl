@@ -52,7 +52,9 @@ mode-group-alarms = Alarm
 advanced-group-statistics = Statistiken
 advanced-group-settings = Optionen
 
-modal-close = OK
+modal-close = Schließen
+modal-apply = Anwenden
+modal-cancel = Stornieren
 
 modal-run-status = Status der Beatmungseinheit
 modal-run-status-started = Laufen - aufhören?

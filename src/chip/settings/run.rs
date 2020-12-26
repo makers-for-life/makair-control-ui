@@ -24,10 +24,12 @@ impl SettingsRun {
         }
     }
 
-    pub fn new_event(&self, event: SettingsRunEvent) -> ControlMessage {
-        match event {
+    pub fn new_event(&self, event: SettingsRunEvent) -> Vec<ControlMessage> {
+        let event = match event {
             SettingsRunEvent::RespirationEnabled => self.toggle_state(),
-        }
+        };
+
+        vec![event]
     }
 
     fn toggle_state(&self) -> ControlMessage {

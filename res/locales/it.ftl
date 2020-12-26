@@ -52,7 +52,9 @@ mode-group-alarms = Allarmi
 advanced-group-statistics = Statistiche
 advanced-group-settings = Impostazioni
 
-modal-close = OK
+modal-close = Cerca
+modal-apply = Aplicar
+modal-cancel = Annulla
 
 modal-run-status = Stato unità ventilatore
 modal-run-status-started = In esecuzione - Stop?

@@ -25,7 +25,9 @@ pub struct Config {
     pub background: WidgetId,
     pub container_borders: WidgetId,
     pub container: WidgetId,
-    pub validate: Option<(WidgetId, WidgetId)>,
+
+    pub close: Option<(WidgetId, WidgetId)>,
+    pub save: Option<(WidgetId, WidgetId)>,
 
     pub width: f64,
     pub height: f64,
@@ -90,17 +92,26 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
     container.set(config.container, &mut master.ui);
 
-    // Append validation button? (if any set)
-    if let Some((validate_button, validate_text)) = config.validate {
+    // Append close button? (if any set)
+    // Notice: if the save button is also set, the 'close' button becomes a 'cancel' button
+    if let Some((close_button, close_text)) = config.close {
         gen_widget_button!(
             master,
-            button_id: validate_button,
-            text_id: validate_text,
-            text_color: color::BLACK,
-            text_font_size: 16,
-            width: MODAL_VALIDATE_BUTTON_WIDTH,
-            value_top: 4.0,
-            value: &APP_I18N.t("modal-close"),
+            button_id: close_button,
+            text_id: close_text,
+            text_color: if config.save.is_some() {
+                color::RED
+            } else {
+                color::BLACK
+            },
+            text_font_size: MODAL_FINALIZE_BUTTON_FONT_SIZE,
+            width: MODAL_FINALIZE_BUTTON_WIDTH,
+            value_top: MODAL_FINALIZE_BUTTON_VALUE_TOP,
+            value: &(if config.save.is_some() {
+                APP_I18N.t("modal-cancel")
+            } else {
+                APP_I18N.t("modal-close")
+            }),
 
             positions: (
                 bottom_right_of[
@@ -108,6 +119,29 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
                 ]
             )
         );
+
+        // Append save button? (if any set)
+        // Notice: this requires the close button to be set
+        if let Some((save_button, save_text)) = config.save {
+            gen_widget_button!(
+                master,
+                button_id: save_button,
+                text_id: save_text,
+                text_color: color::BLUE,
+                text_font_size: MODAL_FINALIZE_BUTTON_FONT_SIZE,
+                width: MODAL_FINALIZE_BUTTON_WIDTH,
+                value_top: MODAL_FINALIZE_BUTTON_VALUE_TOP,
+                value: &APP_I18N.t("modal-apply"),
+
+                positions: (
+                    bottom_right_with_margins_on[
+                        close_button,
+                        0.0,
+                        MODAL_FINALIZE_BUTTON_WIDTH + MODAL_FINALIZE_BUTTON_MARGIN_RIGHT,
+                    ]
+                )
+            );
+        }
     }
 
     0 as _

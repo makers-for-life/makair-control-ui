@@ -52,7 +52,9 @@ mode-group-alarms = Будильники
 advanced-group-statistics = Статистика
 advanced-group-settings = Настройки
 
-modal-close = в порядке
+modal-close = Закрыть
+modal-apply = Применять
+modal-cancel = Отменить
 
 modal-run-status = Состояние вентиляционной установки
 modal-run-status-started = Бег - Стоп?

@@ -24,10 +24,12 @@ impl SettingsSnooze {
         }
     }
 
-    pub fn new_event(&self, event: SettingsSnoozeEvent) -> ControlMessage {
-        match event {
+    pub fn new_event(&self, event: SettingsSnoozeEvent) -> Vec<ControlMessage> {
+        let event = match event {
             SettingsSnoozeEvent::AlarmSnooze => self.toggle_alarms(),
-        }
+        };
+
+        vec![event]
     }
 
     fn toggle_alarms(&self) -> ControlMessage {

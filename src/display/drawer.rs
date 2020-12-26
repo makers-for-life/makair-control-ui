@@ -130,12 +130,13 @@ impl<'a> DisplayDrawer<'a> {
             }
 
             // Run events since the last render
-            let (has_heartbeat, has_user_events, user_events) = self.renderer.run_events(
-                &mut self.interface,
-                &mut self.chip,
-                &last_heartbeat,
-                &tick_start_time,
-            );
+            let (has_heartbeat, has_user_events, user_intents, user_events) =
+                self.renderer.run_events(
+                    &mut self.interface,
+                    &mut self.chip,
+                    &last_heartbeat,
+                    &tick_start_time,
+                );
 
             // Dispatch heartbeat?
             // Notice: heartbeats are critical, as they indicate the firmware that the Control UI \
@@ -163,9 +164,15 @@ impl<'a> DisplayDrawer<'a> {
                 || is_first_frame
                 || last_refresh.elapsed() >= FORCE_REFRESH_INACTIVE_PERIOD
             {
-                // Handle user events
-                if has_user_events && !user_events.is_empty() {
-                    self.chip.dispatch_settings_events(user_events);
+                // Unstack all user events & intents
+                if has_user_events {
+                    if !user_intents.is_empty() {
+                        self.chip.dispatch_settings_intents(user_intents);
+                    }
+
+                    if !user_events.is_empty() {
+                        self.chip.dispatch_settings_events(user_events);
+                    }
                 }
 
                 // Proceed UI refresh?

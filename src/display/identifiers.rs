@@ -358,8 +358,10 @@ widget_ids!(pub struct Ids {
   modal_background,
   modal_container_borders,
   modal_container,
-  modal_validate,
-  modal_validate_text,
+  modal_close,
+  modal_close_text,
+  modal_save,
+  modal_save_text,
 
   stop_background,
   stop_container_borders,
