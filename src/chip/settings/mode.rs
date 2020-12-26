@@ -266,7 +266,7 @@ impl SettingsMode {
             }
         }
 
-        // Ensure draft is reset back to none
+        // Ensure draft is cleared
         self.draft = None;
 
         events
