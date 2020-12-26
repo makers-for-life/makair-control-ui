@@ -24,7 +24,6 @@ use telemetry::structures::{
     TelemetryMessage, VentilationMode,
 };
 
-use crate::chip::settings::mode::SettingsModeGroupTab;
 use crate::config::environment::*;
 use crate::utilities::parse::parse_text_lines_to_single;
 use crate::utilities::units::{convert_cmh2o_to_mmh2o, convert_mmh2o_to_cmh2o, ConvertMode};
@@ -825,7 +824,6 @@ impl Chip {
 
                     if self.settings.mode.live.mode != ventilation_mode {
                         self.settings.mode.live.mode = ventilation_mode;
-                        self.settings.mode.group = SettingsModeGroupTab::default();
                     }
                 }
             }

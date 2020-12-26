@@ -281,6 +281,8 @@ impl SettingsMode {
         let old_mode = gen_get_mode_value!(self, mode);
 
         gen_set_mode_draft!(self, mode, old_mode, mode);
+
+        self.group = SettingsModeGroupTab::default();
     }
 
     fn set_inspiratory_time_minimum(&mut self, action: SettingActionRange) {
