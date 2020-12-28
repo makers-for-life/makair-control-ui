@@ -86,15 +86,15 @@ fn status_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         button_id: config.status_enabled_button_widget,
         text_id: config.status_enabled_button_text_widget,
         text_color: button_color,
-        text_font_size: 16,
+        text_font_size: MODAL_BUTTON_FONT_SIZE,
         width: 280.0,
-        value_top: 4.0,
+        value_top: MODAL_BUTTON_VALUE_TOP,
         value: &status_label,
 
         positions: (
             top_left_with_margins_on[
                 config.status_container_widget,
-                -3.0,
+                -4.5,
                 RUN_SETTINGS_MODAL_FORM_PADDING_LEFT,
             ]
         )

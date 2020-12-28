@@ -865,7 +865,7 @@ fn draw_field<'a>(
         changed: has_changed,
         positions: top_left_with_margins_on[
             field.ids.0,
-            -2.0,
+            MODAL_BUTTON_NAVIGATE_LEFT_ALIGN_TOP,
             MODE_SETTINGS_MODAL_FORM_PADDING_LEFT,
         ]
     );

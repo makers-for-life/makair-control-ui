@@ -398,7 +398,7 @@ fn draw_field<'a>(index: usize, master: &mut ControlWidget<'a>, config: &Config,
         changed: false,
         positions: top_left_with_margins_on[
             field.ids.0,
-            -2.0,
+            MODAL_BUTTON_NAVIGATE_LEFT_ALIGN_TOP,
             ADVANCED_SETTINGS_MODAL_FORM_PADDING_LEFT,
         ]
     );

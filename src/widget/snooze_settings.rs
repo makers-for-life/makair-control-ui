@@ -87,15 +87,15 @@ fn alarms_form<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         button_id: config.alarms_enabled_button_widget,
         text_id: config.alarms_enabled_button_text_widget,
         text_color: button_color,
-        text_font_size: 16,
+        text_font_size: MODAL_BUTTON_FONT_SIZE,
         width: 320.0,
-        value_top: 4.0,
+        value_top: MODAL_BUTTON_VALUE_TOP,
         value: &alarms_label,
 
         positions: (
             top_left_with_margins_on[
                 config.container_widget,
-                -3.0,
+                -4.5,
                 SNOOZE_SETTINGS_MODAL_FORM_PADDING_LEFT,
             ]
         )
