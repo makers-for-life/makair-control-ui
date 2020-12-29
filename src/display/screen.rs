@@ -861,6 +861,7 @@ impl<'a> Screen<'a> {
                 last_tick: self.timers.1,
                 machine_snapshot: &self.machine_snapshot.unwrap(),
                 data_snapshot: self.data_snapshot,
+                alarms: self.ongoing_alarms.unwrap(),
 
                 advanced_container_parent: self.ids.modal_container,
                 advanced_container_widget: self.ids.advanced_container,

@@ -15,7 +15,8 @@ use conrod_core::{
     Positionable, Sizeable, Widget,
 };
 
-use telemetry::structures::{DataSnapshot, MachineStateSnapshot};
+use telemetry::alarm::{AlarmCode, RMC_SW_16};
+use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot};
 
 use crate::chip::settings::advanced::{SettingsAdvanced, SettingsAdvancedGroupTab};
 use crate::config::environment::*;
@@ -48,6 +49,7 @@ pub struct Config<'a> {
     pub last_tick: Option<u64>,
     pub machine_snapshot: &'a MachineStateSnapshot,
     pub data_snapshot: Option<&'a DataSnapshot>,
+    pub alarms: &'a [(AlarmCode, AlarmPriority)],
 
     pub advanced_container_parent: WidgetId,
     pub advanced_container_widget: WidgetId,
@@ -255,6 +257,19 @@ fn form_statistics<'a>(master: &mut ControlWidget<'a>, config: &Config) {
                     .data_snapshot
                     .map(|data| convert_sub_ppm_to_ppm(data.blower_rpm)),
             ),
+        ),
+        // Power status flags (OB = Battery; OL = AC)
+        (
+            "power-status-flags",
+            if config
+                .alarms
+                .iter()
+                .any(|alarm| alarm.0.code() == RMC_SW_16)
+            {
+                "OB"
+            } else {
+                "OL"
+            },
         ),
         // Power input (in volts)
         (
