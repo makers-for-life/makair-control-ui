@@ -261,7 +261,7 @@ fn form_statistics<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             "power-input-volts",
             &config
                 .machine_snapshot
-                .battery_level_value
+                .battery_level
                 .map(|value| {
                     format!(
                         "{:.1}",

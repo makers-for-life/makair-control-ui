@@ -302,7 +302,7 @@ impl<'a> Screen<'a> {
                 unit_text: self.ids.status_unit_text,
                 power_box: self.ids.status_power_box,
                 power_text: self.ids.status_power_text,
-                battery_level: status_data.machine_snapshot.battery_level_value,
+                battery_level: status_data.machine_snapshot.battery_level,
                 chip_state: status_data.chip_state,
                 alarms: self.ongoing_alarms.unwrap(),
                 recording: if APP_ARGS.is_recording() {
