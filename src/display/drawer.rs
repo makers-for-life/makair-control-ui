@@ -4,6 +4,7 @@
 // License: Public Domain License
 
 use std::cmp::max;
+use std::io::prelude::*;
 use std::sync::mpsc::{Receiver, Sender};
 use std::time::{Duration, Instant};
 
@@ -16,6 +17,7 @@ use crate::chip::{Chip, ChipEventUpdate, ChipState};
 use crate::config::arguments::RunMode;
 use crate::config::environment::*;
 use crate::serial::poller::{PollEvent, SerialPoller, SerialPollerBuilder};
+use crate::utilities::units::{convert_dv_to_v, ConvertMode};
 use crate::APP_ARGS;
 
 use super::events::{DisplayEventsBuilder, DisplayEventsHandleOutcome};
@@ -102,6 +104,20 @@ impl<'a> DisplayDrawer<'a> {
         let (mut last_chip_state, mut last_refresh, mut last_heartbeat, mut is_first_frame) =
             (ChipState::WaitingData(now_time), now_time, now_time, true);
 
+        let mut last_kt_dump = now_time;
+        let mut tick_kt_dump: u16 = 0;
+
+        let kt_path = format!(
+            "/home/alarm/pbac-kt_{}.csv",
+            chrono::Local::now().format("%Y%m%d-%H%M%S")
+        );
+
+        let mut kt_file = std::fs::File::create(&kt_path)
+            .unwrap_or_else(|_| panic!("could not create kt file '{}'", &kt_path));
+
+        kt_file.write_all(b"Minute,Voltage\n").unwrap();
+        kt_file.flush().unwrap();
+
         'main: loop {
             // Measure loop tick start time
             // Notice: this will be used to prevent the FPS throttler from skipping frames, as the \
@@ -181,6 +197,33 @@ impl<'a> DisplayDrawer<'a> {
                 // Mark as refreshed now
                 is_first_frame = false;
                 last_refresh = tick_start_time;
+            }
+
+            // TODO: TEMPORARY BATTERY KT DUMP ON DISK (every minute)
+            if last_kt_dump.elapsed() >= Duration::from_secs(60) {
+                if let Some(battery_level) = self.chip.last_machine_snapshot.battery_level {
+                    let battery_volts =
+                        convert_dv_to_v(ConvertMode::WithDecimals, battery_level as _);
+
+                    last_kt_dump = tick_start_time;
+                    tick_kt_dump += 1;
+
+                    error!(
+                        "==> DUMP BATTERY KT TICK #{} WITH VOLTAGE {}V",
+                        tick_kt_dump, battery_volts
+                    );
+
+                    kt_file
+                        .write_all(&tick_kt_dump.to_string().into_bytes())
+                        .unwrap();
+                    kt_file.write_all(b",").unwrap();
+                    kt_file
+                        .write_all(&battery_volts.to_string().into_bytes())
+                        .unwrap();
+                    kt_file.write_all(b"\n").unwrap();
+
+                    kt_file.flush().unwrap();
+                }
             }
 
             // Measure loop tick total elapsed time
