@@ -236,7 +236,7 @@ impl Chip {
             .collect();
 
         // Sort final alarm list
-        alarm_list.sort_by(|(code1, _), (code2, _)| code1.cmp(&code2));
+        alarm_list.sort_by(|(_, priority1), (_, priority2)| priority2.cmp(&priority1));
 
         alarm_list
     }
