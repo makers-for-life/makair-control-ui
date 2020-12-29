@@ -750,7 +750,8 @@ impl Chip {
                 cpm_command,
                 trigger_enabled,
                 trigger_offset,
-                expiratory_term
+                expiratory_term,
+                current_alarm_codes
             ]
         );
     }

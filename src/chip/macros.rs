@@ -22,8 +22,8 @@ macro_rules! gen_override_snapshot_values_from_stopped_identity {
 macro_rules! gen_override_snapshot_values_from_stopped_optional {
     ($snapshot:expr, $stopped:expr, [$($key:ident),+]) => {
         $(
-            if let Some(value) = $stopped.$key {
-                $snapshot.$key = value;
+            if let Some(ref value) = $stopped.$key {
+                $snapshot.$key = value.to_owned();
             }
         )+
     };
