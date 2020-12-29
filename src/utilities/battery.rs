@@ -3,7 +3,7 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-pub fn estimate_lead_acid_12v_soc(voltage: f32) -> u16 {
+pub fn estimate_lead_acid_12v_soc(voltage: f64) -> u16 {
     // Notice: this is a rough estimation of the battery SoC for a lead-acid battery, regardless \
     //   of the discharge rate, temperature and ageing of the battery. Super rough, but gives \
     //   an estimation of the battery SoC for the end-user, when running on battery. This is \

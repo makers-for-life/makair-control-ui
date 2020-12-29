@@ -19,7 +19,7 @@ pub struct DisplayDataBranding<'a> {
 }
 
 pub struct DisplayDataStatus<'a> {
-    pub battery_level: Option<u8>,
+    pub machine_snapshot: &'a MachineStateSnapshot,
     pub chip_state: &'a ChipState,
 }
 

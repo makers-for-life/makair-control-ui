@@ -263,7 +263,7 @@ dependencies = [
  "proc-macro-error",
  "proc-macro2 1.0.24",
  "quote 1.0.8",
- "syn 1.0.55",
+ "syn 1.0.56",
 ]
 
 [[package]]
@@ -340,7 +340,7 @@ checksum = "f3608c2b51dfdd85355b113113d35118d9b0629bafc72b0d3e163239e5576728"
 dependencies = [
  "proc-macro2 1.0.24",
  "quote 1.0.8",
- "syn 1.0.55",
+ "syn 1.0.56",
 ]
 
 [[package]]
@@ -908,9 +908,9 @@ dependencies = [
 
 [[package]]
 name = "itoa"
-version = "0.4.6"
+version = "0.4.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dc6f3ad7b9d11a0c00842ff8de1b60ee58661048eb8049ed33c73594f359d7e6"
+checksum = "dd25036021b0de88a0aff6b850051563c6516d0bf53f8638938edbb9de732736"
 
 [[package]]
 name = "js-sys"
@@ -1092,7 +1092,7 @@ dependencies = [
 [[package]]
 name = "makair-telemetry"
 version = "2.0.0"
-source = "git+https://github.com/makers-for-life/makair-telemetry?rev=66a847cf667de3ec85e6fa7b57a08e5ff980c599#66a847cf667de3ec85e6fa7b57a08e5ff980c599"
+source = "git+https://github.com/makers-for-life/makair-telemetry?rev=9f469e3b21a85a34e89146445d58ea24d4d0700b#9f469e3b21a85a34e89146445d58ea24d4d0700b"
 dependencies = [
  "base64",
  "clap 3.0.0-beta.2",
@@ -1486,7 +1486,7 @@ dependencies = [
  "proc-macro-error-attr",
  "proc-macro2 1.0.24",
  "quote 1.0.8",
- "syn 1.0.55",
+ "syn 1.0.56",
  "version_check",
 ]
 
@@ -1657,7 +1657,7 @@ checksum = "475e68978dc5b743f2f40d8e0a8fdc83f1c5e78cbf4b8fa5e74e73beebc340de"
 dependencies = [
  "proc-macro2 1.0.24",
  "quote 1.0.8",
- "syn 1.0.55",
+ "syn 1.0.56",
 ]
 
 [[package]]
@@ -1708,7 +1708,7 @@ checksum = "6168c9daefd8dd3a1cf0e06a5f92a42537dc207f09cc6526e731dcfda979470e"
 dependencies = [
  "quote 1.0.8",
  "rust-embed-utils",
- "syn 1.0.55",
+ "syn 1.0.56",
  "walkdir",
 ]
 
@@ -1820,14 +1820,14 @@ checksum = "c84d3526699cd55261af4b941e4e725444df67aa4f9e6a3564f18030d12672df"
 dependencies = [
  "proc-macro2 1.0.24",
  "quote 1.0.8",
- "syn 1.0.55",
+ "syn 1.0.56",
 ]
 
 [[package]]
 name = "serde_json"
-version = "1.0.60"
+version = "1.0.61"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1500e84d27fe482ed1dc791a56eddc2f230046a040fa908c08bda1d9fb615779"
+checksum = "4fceb2595057b6891a4ee808f70054bd2d12f0e97f1cbb78689b59f676df325a"
 dependencies = [
  "itoa",
  "ryu",
@@ -2001,9 +2001,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "1.0.55"
+version = "1.0.56"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a571a711dddd09019ccc628e1b17fe87c59b09d513c06c026877aa708334f37a"
+checksum = "a9802ddde94170d186eeee5005b798d9c159fa970403f1be19976d0cfb939b72"
 dependencies = [
  "proc-macro2 1.0.24",
  "quote 1.0.8",
@@ -2215,7 +2215,7 @@ dependencies = [
  "log",
  "proc-macro2 1.0.24",
  "quote 1.0.8",
- "syn 1.0.55",
+ "syn 1.0.56",
  "wasm-bindgen-shared",
 ]
 
@@ -2237,7 +2237,7 @@ checksum = "b5a48c72f299d80557c7c62e37e7225369ecc0c963964059509fbafe917c7549"
 dependencies = [
  "proc-macro2 1.0.24",
  "quote 1.0.8",
- "syn 1.0.55",
+ "syn 1.0.56",
  "wasm-bindgen-backend",
  "wasm-bindgen-shared",
 ]

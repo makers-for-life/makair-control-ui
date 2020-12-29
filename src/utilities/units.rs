@@ -5,6 +5,7 @@
 
 const CONVERT_RATIO_MMH2O_TO_CMH2O: f64 = 10.0;
 const CONVERT_RATIO_ML_TO_L: f64 = 1000.0;
+const CONVERT_RATIO_DV_TO_V: f64 = 10.0;
 
 pub enum ConvertMode {
     Rounded,
@@ -30,5 +31,12 @@ pub fn convert_ml_to_l(mode: ConvertMode, value: f64) -> f64 {
     match mode {
         ConvertMode::WithDecimals => value / CONVERT_RATIO_ML_TO_L,
         ConvertMode::Rounded => (value / CONVERT_RATIO_ML_TO_L).round(),
+    }
+}
+
+pub fn convert_dv_to_v(mode: ConvertMode, value: f64) -> f64 {
+    match mode {
+        ConvertMode::WithDecimals => value / CONVERT_RATIO_DV_TO_V,
+        ConvertMode::Rounded => (value / CONVERT_RATIO_DV_TO_V).round(),
     }
 }

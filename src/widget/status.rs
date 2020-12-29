@@ -15,7 +15,10 @@ use telemetry::structures::AlarmPriority;
 use crate::chip::ChipState;
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
-use crate::utilities::battery::estimate_lead_acid_12v_soc;
+use crate::utilities::{
+    battery::estimate_lead_acid_12v_soc,
+    units::{convert_dv_to_v, ConvertMode},
+};
 use crate::APP_I18N;
 
 const POWER_BOX_BATTERY_WEAK_THRESHOLD: u16 = 25;
@@ -37,7 +40,7 @@ pub struct Config<'a> {
     pub power_text: WidgetId,
     pub recording: Option<(WidgetId, WidgetId)>,
 
-    pub battery_level: Option<u8>,
+    pub battery_level: Option<u16>,
     pub chip_state: &'a ChipState,
     pub alarms: &'a [(AlarmCode, AlarmPriority)],
 }
@@ -136,7 +139,8 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     let battery_soc = if is_battery_powered {
         if let Some(battery_level) = config.battery_level {
             Some(estimate_lead_acid_12v_soc(
-                battery_level as f32 / HARDWARE_BATTERY_SERIES_COUNT,
+                convert_dv_to_v(ConvertMode::WithDecimals, battery_level as _)
+                    / HARDWARE_BATTERY_SERIES_COUNT,
             ))
         } else {
             None

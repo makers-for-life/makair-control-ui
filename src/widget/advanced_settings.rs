@@ -23,7 +23,7 @@ use crate::display::widget::ControlWidget;
 use crate::locale::advanced::group_tab_to_locale as advanced_group_tab_to_locale;
 use crate::utilities::{
     parse::{parse_non_empty_number_to_string, parse_optional_number_to_string},
-    units::convert_sub_ppm_to_ppm,
+    units::{convert_dv_to_v, convert_sub_ppm_to_ppm, ConvertMode},
 };
 use crate::{APP_CONTEXT, APP_I18N};
 
@@ -259,9 +259,16 @@ fn form_statistics<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         // Power input (in volts)
         (
             "power-input-volts",
-            &parse_optional_number_to_string(
-                config.data_snapshot.map(|data| data.battery_level as usize),
-            ),
+            &config
+                .machine_snapshot
+                .battery_level_value
+                .map(|value| {
+                    format!(
+                        "{:.1}",
+                        convert_dv_to_v(ConvertMode::WithDecimals, value as _)
+                    )
+                })
+                .unwrap_or_else(|| "".to_string()),
         ),
     ];
 

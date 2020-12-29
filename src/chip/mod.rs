@@ -734,7 +734,8 @@ impl Chip {
                 low_expiratory_minute_volume_alarm_threshold,
                 high_expiratory_minute_volume_alarm_threshold,
                 low_respiratory_rate_alarm_threshold,
-                high_respiratory_rate_alarm_threshold
+                high_respiratory_rate_alarm_threshold,
+                battery_level_value
             ]
         );
 
