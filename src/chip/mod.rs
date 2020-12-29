@@ -235,7 +235,9 @@ impl Chip {
             .map(|(code, priority)| (*code, priority.clone()))
             .collect();
 
-        // Sort final alarm list
+        // Sort final alarm list by code, then priority (ensures codes are ordered within their \
+        //   priority group, which are themselves sorted by priority)
+        alarm_list.sort_by(|(code1, _), (code2, _)| code1.cmp(&code2));
         alarm_list.sort_by(|(_, priority1), (_, priority2)| priority2.cmp(&priority1));
 
         alarm_list
