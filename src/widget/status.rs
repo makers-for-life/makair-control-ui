@@ -16,12 +16,12 @@ use crate::chip::ChipState;
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::utilities::{
-    battery::estimate_lead_acid_12v_soc,
+    battery::estimate_lead_acid_12v_2s_soc,
     units::{convert_dv_to_v, ConvertMode},
 };
 use crate::APP_I18N;
 
-const POWER_BOX_BATTERY_WEAK_THRESHOLD: u16 = 25;
+const POWER_BOX_BATTERY_WEAK_THRESHOLD: u8 = 25;
 
 const WRAPPER_COLOR: Color = Color::Rgba(52.0 / 255.0, 52.0 / 255.0, 52.0 / 255.0, 1.0);
 
@@ -138,10 +138,10 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     //   need to divide battery level voltage by the number of series batteries.
     let battery_soc = if is_battery_powered {
         if let Some(battery_level) = config.battery_level {
-            Some(estimate_lead_acid_12v_soc(
-                convert_dv_to_v(ConvertMode::WithDecimals, battery_level as _)
-                    / HARDWARE_BATTERY_SERIES_COUNT,
-            ))
+            Some(estimate_lead_acid_12v_2s_soc(convert_dv_to_v(
+                ConvertMode::WithDecimals,
+                battery_level as _,
+            )))
         } else {
             None
         }

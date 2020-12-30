@@ -3,26 +3,21 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-pub fn estimate_lead_acid_12v_soc(voltage: f64) -> u16 {
+use std::cmp::{max, min};
+
+pub fn estimate_lead_acid_12v_2s_soc(voltage: f64) -> u8 {
     // Notice: this is a rough estimation of the battery SoC for a lead-acid battery, regardless \
     //   of the discharge rate, temperature and ageing of the battery. Super rough, but gives \
     //   an estimation of the battery SoC for the end-user, when running on battery. This is \
     //   based on threshold points taken from a typical lead-acid battery discharge curve, used \
-    //   in nominal conditions at 1C at 20C.
+    //   in nominal conditions at C/5 in a room at 20C.
 
-    // Fallback on 0% SoC if no threshold is reached
-    gen_number_threshold_check!(voltage, 0, [
-        13.0 => 100,
-        12.75 => 85,
-        12.5 => 75,
-        12.25 => 65,
-        12.0 => 55,
-        11.75 => 50,
-        11.5 => 40,
-        11.25 => 35,
-        11.0 => 25,
-        10.75 => 15,
-        10.5 => 10,
-        10.25 => 5,
-    ])
+    // Caracterization equation for a 2S-12V-7Ah PbAc battery pack is: \
+    //   SoC = 5,84 × POWER(VOLTAGE; 2) − 235,307 × VOLTAGE + 2355,3
+    let unchecked_percent = 5.84 * voltage.powf(2.0) - 235.307 * voltage + 2355.3;
+
+    // Apply boundaries to the calculated percent value, as it may go into the negatives (eg. -1%) \
+    //   or too high in positives (eg. 101%) at the extremes. Though it will not overflow \
+    //   further than 1%-2% under nominal battery conditions.
+    min(100, max(0, unchecked_percent as i8)) as u8
 }
