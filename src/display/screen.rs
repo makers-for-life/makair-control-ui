@@ -304,6 +304,7 @@ impl<'a> Screen<'a> {
                 power_text: self.ids.status_power_text,
                 battery_level: status_data.machine_snapshot.battery_level,
                 chip_state: status_data.chip_state,
+                data_snapshot: self.data_snapshot,
                 alarms: self.ongoing_alarms.unwrap(),
                 recording: if APP_ARGS.is_recording() {
                     Some((

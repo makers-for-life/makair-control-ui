@@ -10,14 +10,14 @@ use conrod_core::{
 };
 
 use telemetry::alarm::{AlarmCode, RMC_SW_16};
-use telemetry::structures::AlarmPriority;
+use telemetry::structures::{AlarmPriority, DataSnapshot};
 
 use crate::chip::ChipState;
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::utilities::{
     battery::estimate_lead_acid_12v_2s_soc,
-    units::{convert_dv_to_v, ConvertMode},
+    units::{convert_dv_to_v, convert_sub_ppm_to_ppm, ConvertMode},
 };
 use crate::APP_I18N;
 
@@ -42,6 +42,7 @@ pub struct Config<'a> {
 
     pub battery_level: Option<u16>,
     pub chip_state: &'a ChipState,
+    pub data_snapshot: Option<&'a DataSnapshot>,
     pub alarms: &'a [(AlarmCode, AlarmPriority)],
 }
 
@@ -138,10 +139,14 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     //   need to divide battery level voltage by the number of series batteries.
     let battery_soc = if is_battery_powered {
         if let Some(battery_level) = config.battery_level {
-            Some(estimate_lead_acid_12v_2s_soc(convert_dv_to_v(
-                ConvertMode::WithDecimals,
-                battery_level as _,
-            )))
+            Some(estimate_lead_acid_12v_2s_soc(
+                convert_dv_to_v(ConvertMode::WithDecimals, battery_level as _),
+                !is_unit_stopped,
+                config
+                    .data_snapshot
+                    .map(|data| convert_sub_ppm_to_ppm(data.blower_rpm))
+                    .unwrap_or(0),
+            ))
         } else {
             None
         }
