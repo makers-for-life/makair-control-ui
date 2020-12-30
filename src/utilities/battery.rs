@@ -13,7 +13,12 @@ pub fn estimate_lead_acid_12v_2s_soc(voltage: f64, is_started: bool, blower_ppm:
     //   in nominal conditions at C/5 in a room at 20C.
 
     // Apply an empiric voltage correction, based on current system load (estimated based on the \
-    //   blower PPM speed, which is the most power hungry component of the system).
+    //   blower PPM speed, which is the most power hungry component of the system). The battery \
+    //   measurements were done on a system with its blower running at full speed. Hence, a 180ppm \
+    //   reference is used in the equation. A machine in stopped state or with a slower blower \
+    //   speed will tend to show a higher battery voltage, as the power load is much reduced. \
+    //   Thus, we need to apply a correction factor to lower this measured voltage, so that it \
+    //   complies with the Voltage-to-SoC equation requirements below.
     let corrected_voltage = if is_started && blower_ppm > 0 {
         voltage - (0.327 - 0.0018 * blower_ppm as f64)
     } else {
