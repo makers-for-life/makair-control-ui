@@ -279,7 +279,7 @@ fn form_statistics<'a>(master: &mut ControlWidget<'a>, config: &Config) {
                 .battery_level
                 .map(|value| {
                     format!(
-                        "{:.3}",
+                        "{:.2}",
                         convert_cv_to_v(ConvertMode::WithDecimals, value as _)
                     )
                 })
