@@ -12,7 +12,7 @@ pub fn estimate_lead_acid_12v_2s_soc(voltage: f64) -> u8 {
     //   based on threshold points taken from a typical lead-acid battery discharge curve, used \
     //   in nominal conditions at C/5 in a room at 20C.
 
-    // Caracterization equation for a 2S-12V-7Ah PbAc battery pack is: \
+    // Kt equation for a 2S-12V-7Ah PbAc battery pack is: \
     //   SoC = 5,84 × POWER(VOLTAGE; 2) − 235,307 × VOLTAGE + 2355,3
     let unchecked_percent = 5.84 * voltage.powf(2.0) - 235.307 * voltage + 2355.3;
 
