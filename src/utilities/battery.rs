@@ -15,9 +15,9 @@ pub fn estimate_lead_acid_12v_2s_soc(voltage: f64, is_started: bool, blower_ppm:
     // Apply an empiric voltage correction, based on current system load (estimated based on the \
     //   blower PPM speed, which is the most power hungry component of the system).
     let corrected_voltage = if is_started && blower_ppm > 0 {
-        voltage - (0.49 - 0.0027 * blower_ppm as f64)
+        voltage - (0.327 - 0.0018 * blower_ppm as f64)
     } else {
-        voltage - 0.4
+        voltage - 0.3
     };
 
     // Kt equation for a 2S-12V-7Ah PbAc battery pack is: \
