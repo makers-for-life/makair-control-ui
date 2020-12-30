@@ -17,7 +17,7 @@ use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::utilities::{
     battery::estimate_lead_acid_12v_2s_soc,
-    units::{convert_dv_to_v, convert_sub_ppm_to_ppm, ConvertMode},
+    units::{convert_cv_to_v, convert_sub_ppm_to_ppm, ConvertMode},
 };
 use crate::APP_I18N;
 
@@ -140,7 +140,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     let battery_soc = if is_battery_powered {
         if let Some(battery_level) = config.battery_level {
             Some(estimate_lead_acid_12v_2s_soc(
-                convert_dv_to_v(ConvertMode::WithDecimals, battery_level as _),
+                convert_cv_to_v(ConvertMode::WithDecimals, battery_level as _),
                 !is_unit_stopped,
                 config
                     .data_snapshot
