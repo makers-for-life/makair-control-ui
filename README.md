@@ -10,8 +10,8 @@
 
 | Version | Last Changelog | Ready? | Release |
 | ------- | -------------- | ------ | ------- |
-| V1.1.x | Operational initial release | ✅ | [view](https://github.com/makers-for-life/makair-control-ui/releases/tag/v1.1.0)
-| V1.2.x | Crashes fixed + smoother graph + implemented medical staff feedbacks | ✅ | [view](https://github.com/makers-for-life/makair-control-ui/releases/tag/v1.2.0)
+| V1.1.x | Operational initial release | ✅ | none
+| V1.2.x | Crashes fixed + smoother graph + implemented medical staff feedbacks | ✅ | none
 | V1.3.x | Improve text readability, by increasing font sizes | ✅ | [view](https://github.com/makers-for-life/makair-control-ui/releases/tag/v1.3.0)
 | V1.4.x | Added internationalization capabilities | ✅ | [view](https://github.com/makers-for-life/makair-control-ui/releases/tag/v1.4.0)
 | V1.5.x | Improve UI readability + allow to change MakAir's settings | ✅ | [view](https://github.com/makers-for-life/makair-control-ui/releases/tag/v1.5.0)
