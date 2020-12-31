@@ -10,14 +10,14 @@
 
 | Version | Last Changelog | Ready? | Release |
 | ------- | -------------- | ------ | ------- |
-| V1.1.x | Operational initial release | ✅ | [view release](https://github.com/makers-for-life/makair-control-ui/releases/tag/v1.1.0)
-| V1.2.x | Crashes fixed + smoother graph + implemented medical staff feedbacks | ✅ | [view release](https://github.com/makers-for-life/makair-control-ui/releases/tag/v1.2.0)
-| V1.3.x | Improve text readability, by increasing font sizes | ✅ | [view release](https://github.com/makers-for-life/makair-control-ui/releases/tag/v1.3.0)
-| V1.4.x | Added internationalization capabilities | ✅ | [view release](https://github.com/makers-for-life/makair-control-ui/releases/tag/v1.4.0)
-| V1.5.x | Improve UI readability + allow to change MakAir's settings | ✅ | [view release](https://github.com/makers-for-life/makair-control-ui/releases/tag/v1.5.0)
-| V2.0.x | Telemetry protocol version update to V2 + large code rework + improved UI/UX + reduced CPU usage + translated alarms + regulatory compliance | ✅ | [view release](https://github.com/makers-for-life/makair-control-ui/releases/tag/v2.0.0)
-| V2.1.x | Ventilation modes + flow sensing + new options + new plot renderer | ✅ | [view release](https://github.com/makers-for-life/makair-control-ui/releases/tag/v2.1.0)
-| V2.2.x | Patient configuration modal + new error messages + UX improvements + moved configurations to EEPROM | ❌ | Unreleased
+| V1.1.x | Operational initial release | ✅ | [view](https://github.com/makers-for-life/makair-control-ui/releases/tag/v1.1.0)
+| V1.2.x | Crashes fixed + smoother graph + implemented medical staff feedbacks | ✅ | [view](https://github.com/makers-for-life/makair-control-ui/releases/tag/v1.2.0)
+| V1.3.x | Improve text readability, by increasing font sizes | ✅ | [view](https://github.com/makers-for-life/makair-control-ui/releases/tag/v1.3.0)
+| V1.4.x | Added internationalization capabilities | ✅ | [view](https://github.com/makers-for-life/makair-control-ui/releases/tag/v1.4.0)
+| V1.5.x | Improve UI readability + allow to change MakAir's settings | ✅ | [view](https://github.com/makers-for-life/makair-control-ui/releases/tag/v1.5.0)
+| V2.0.x | Telemetry protocol version update to V2 + large code rework + improved UI/UX + reduced CPU usage + translated alarms + regulatory compliance | ✅ | [view](https://github.com/makers-for-life/makair-control-ui/releases/tag/v2.0.0)
+| V2.1.x | Ventilation modes + flow sensing + new options + new plot renderer | ✅ | [view](https://github.com/makers-for-life/makair-control-ui/releases/tag/v2.1.0)
+| V2.2.x | Patient configuration modal + new error messages + UX improvements + moved configurations to EEPROM | ❌ | none
 
 ## How To Build?
 
