@@ -143,8 +143,8 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     gen_widget_container!(
         master,
         container_id: config.power_box,
-        color: if let Some(battery_soc) = battery_soc {
-            if battery_soc <= POWER_BOX_BATTERY_WEAK_THRESHOLD {
+        color: if is_battery_powered {
+            if battery_soc.unwrap_or(100) <= POWER_BOX_BATTERY_WEAK_THRESHOLD {
                 POWER_BOX_BATTERY_WEAK_COLOR
             } else {
                 POWER_BOX_BATTERY_NORMAL_COLOR
