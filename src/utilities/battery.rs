@@ -5,7 +5,7 @@
 
 use std::cmp::{max, min};
 
-pub fn estimate_lead_acid_12v_2s_soc(voltage: f64, is_started: bool, blower_ppm: usize) -> u8 {
+pub fn estimate_lead_acid_12v_2s_soc(voltage: f64, is_running: bool, blower_ppm: usize) -> u8 {
     // Notice: this is a rough estimation of the battery SoC for a lead-acid battery, regardless \
     //   of the discharge rate, temperature and ageing of the battery. Super rough, but gives \
     //   an estimation of the battery SoC for the end-user, when running on battery. This is \
@@ -19,7 +19,7 @@ pub fn estimate_lead_acid_12v_2s_soc(voltage: f64, is_started: bool, blower_ppm:
     //   speed will tend to show a higher battery voltage, as the power load is much reduced. \
     //   Thus, we need to apply a correction factor to lower this measured voltage, so that it \
     //   complies with the Voltage-to-SoC equation requirements below.
-    let corrected_voltage = if is_started && blower_ppm > 0 {
+    let corrected_voltage = if is_running && blower_ppm > 0 {
         voltage - (0.327 - 0.0018 * blower_ppm as f64)
     } else {
         voltage - 0.3

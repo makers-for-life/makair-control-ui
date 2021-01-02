@@ -353,7 +353,7 @@ impl Chip {
                 self.update_tick(snapshot.systick);
                 self.update_settings_from_snapshot(&snapshot);
                 self.update_alarms_from_snapshot(&snapshot);
-                self.update_estimated_soc(snapshot.battery_level);
+                self.update_estimated_soc(snapshot.battery_level, true);
 
                 self.last_machine_snapshot = snapshot;
 
@@ -368,7 +368,7 @@ impl Chip {
                 self.update_tick(message.systick);
                 self.update_settings_and_snapshot_from_stopped(&message);
                 self.update_alarms_from_stopped(&message);
-                self.update_estimated_soc(message.battery_level);
+                self.update_estimated_soc(message.battery_level, false);
 
                 // Last data snapshot is not relevant when the state went from running to stopped
                 self.last_data_snapshot = None;
@@ -406,7 +406,7 @@ impl Chip {
         }
     }
 
-    fn update_estimated_soc(&mut self, battery_level: Option<u16>) {
+    fn update_estimated_soc(&mut self, battery_level: Option<u16>, is_running: bool) {
         // Are we battery-powered? (estimate SoC if so, otherwise reset SoC value)
         if self
             .ongoing_alarms
@@ -417,7 +417,7 @@ impl Chip {
             if let Some(battery_level) = battery_level {
                 let new_estimated_soc = estimate_lead_acid_12v_2s_soc(
                     convert_cv_to_v(ConvertMode::WithDecimals, battery_level as _),
-                    self.state != ChipState::Stopped,
+                    is_running,
                     self.last_data_snapshot
                         .as_ref()
                         .map(|data| convert_sub_ppm_to_ppm(data.blower_rpm))
