@@ -269,7 +269,7 @@ impl DisplayRenderer {
 
         let screen_data_status = DisplayDataStatus {
             chip_state: &chip.state,
-            machine_snapshot: &chip.last_machine_snapshot,
+            battery_soc: chip.estimated_soc,
         };
         let screen_data_heartbeat = DisplayDataHeartbeat {
             data_pressure: &chip.data_pressure,

@@ -15,7 +15,7 @@ use std::sync::mpsc::{self, Receiver, Sender};
 use std::time::Instant;
 
 use settings::{ChipSettings, ChipSettingsEvent, ChipSettingsIntent, SettingActionState};
-use telemetry::alarm::AlarmCode;
+use telemetry::alarm::{AlarmCode, RMC_SW_16};
 use telemetry::control::{ControlMessage, ControlSetting};
 use telemetry::serial::core;
 use telemetry::structures::{
@@ -25,7 +25,13 @@ use telemetry::structures::{
 
 use crate::config::environment::*;
 use crate::utilities::parse::parse_text_lines_to_single;
-use crate::utilities::units::{convert_cmh2o_to_mmh2o, convert_mmh2o_to_cmh2o, ConvertMode};
+use crate::utilities::{
+    battery::estimate_lead_acid_12v_2s_soc,
+    units::{
+        convert_cmh2o_to_mmh2o, convert_cv_to_v, convert_mmh2o_to_cmh2o, convert_sub_ppm_to_ppm,
+        ConvertMode,
+    },
+};
 
 const DATA_STORE_EVERY_MILLISECONDS: i64 = 1000 / TELEMETRY_POINTS_PER_SECOND as i64;
 
@@ -98,6 +104,7 @@ pub struct Chip {
     pub last_machine_snapshot: MachineStateSnapshot,
     pub last_data_snapshot: Option<DataSnapshot>,
     pub ongoing_alarms: HashMap<AlarmCode, AlarmPriority>,
+    pub estimated_soc: Option<u8>,
     pub settings: ChipSettings,
     pub state: ChipState,
     lora_tx: Option<Sender<TelemetryMessage>>,
@@ -135,6 +142,7 @@ impl Chip {
             last_machine_snapshot: MachineStateSnapshot::default(),
             last_data_snapshot: None,
             ongoing_alarms: HashMap::new(),
+            estimated_soc: None,
             settings: ChipSettings::new(),
             state: ChipState::WaitingData(Instant::now()),
             lora_tx: lora_sender,
@@ -151,6 +159,7 @@ impl Chip {
         self.last_data_snapshot = None;
 
         self.ongoing_alarms.clear();
+        self.estimated_soc = None;
 
         self.update_boot_time();
     }
@@ -344,6 +353,7 @@ impl Chip {
                 self.update_tick(snapshot.systick);
                 self.update_settings_from_snapshot(&snapshot);
                 self.update_alarms_from_snapshot(&snapshot);
+                self.update_estimated_soc(snapshot.battery_level);
 
                 self.last_machine_snapshot = snapshot;
 
@@ -358,6 +368,7 @@ impl Chip {
                 self.update_tick(message.systick);
                 self.update_settings_and_snapshot_from_stopped(&message);
                 self.update_alarms_from_stopped(&message);
+                self.update_estimated_soc(message.battery_level);
 
                 // Last data snapshot is not relevant when the state went from running to stopped
                 self.last_data_snapshot = None;
@@ -392,6 +403,48 @@ impl Chip {
             self.ongoing_alarms.insert(code, priority);
         } else {
             self.ongoing_alarms.remove(&code);
+        }
+    }
+
+    fn update_estimated_soc(&mut self, battery_level: Option<u16>) {
+        // Are we battery-powered? (estimate SoC if so, otherwise reset SoC value)
+        if self
+            .ongoing_alarms
+            .iter()
+            .any(|alarm| alarm.0.code() == RMC_SW_16)
+        {
+            // Should we attempt to re-calculate SoC? (provided a battery level is set)
+            if let Some(battery_level) = battery_level {
+                let new_estimated_soc = estimate_lead_acid_12v_2s_soc(
+                    convert_cv_to_v(ConvertMode::WithDecimals, battery_level as _),
+                    self.state != ChipState::Stopped,
+                    self.last_data_snapshot
+                        .as_ref()
+                        .map(|data| convert_sub_ppm_to_ppm(data.blower_rpm))
+                        .unwrap_or(0),
+                );
+
+                if let Some(last_estimated_soc) = self.estimated_soc {
+                    // Update stored estimated SoC only if the new one is lower than the previous \
+                    //   one.
+                    // Notice: this prevents SoC to jump up and down when the blower adjusts its \
+                    //   PPM speed, or when starting or stopping the ventilation unit. The shown \
+                    //   SoC could jump up to a transient (invalid) value, but could never jump \
+                    //   lower than the actual value.
+                    if new_estimated_soc < last_estimated_soc {
+                        self.estimated_soc = Some(new_estimated_soc);
+                    }
+                } else {
+                    // Initialize first SoC value (there was no previous SoC value)
+                    self.estimated_soc = Some(new_estimated_soc);
+                }
+            }
+        } else {
+            // AC-powered, thus the battery is charging. We need to reset the lowest estimated SoC \
+            //   as the battery SoC will start raising again while charging, and thus we want to \
+            //   be able to re-estimate the higher battery SoC at a later point when unplugging \
+            //   the power supply.
+            self.estimated_soc = None;
         }
     }
 

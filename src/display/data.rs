@@ -19,8 +19,8 @@ pub struct DisplayDataBranding<'a> {
 }
 
 pub struct DisplayDataStatus<'a> {
-    pub machine_snapshot: &'a MachineStateSnapshot,
     pub chip_state: &'a ChipState,
+    pub battery_soc: Option<u8>,
 }
 
 pub struct DisplayDataHeartbeat<'a> {

@@ -302,7 +302,7 @@ impl<'a> Screen<'a> {
                 unit_text: self.ids.status_unit_text,
                 power_box: self.ids.status_power_box,
                 power_text: self.ids.status_power_text,
-                battery_level: status_data.machine_snapshot.battery_level,
+                battery_soc: status_data.battery_soc,
                 chip_state: status_data.chip_state,
                 data_snapshot: self.data_snapshot,
                 alarms: self.ongoing_alarms.unwrap(),
