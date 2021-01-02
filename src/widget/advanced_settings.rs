@@ -15,7 +15,7 @@ use conrod_core::{
     Positionable, Sizeable, Widget,
 };
 
-use telemetry::alarm::{AlarmCode, RMC_SW_16};
+use telemetry::alarm::AlarmCode;
 use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot};
 
 use crate::chip::settings::advanced::{SettingsAdvanced, SettingsAdvancedGroupTab};
@@ -23,6 +23,7 @@ use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
 use crate::locale::advanced::group_tab_to_locale as advanced_group_tab_to_locale;
 use crate::utilities::{
+    battery::power_status_flags,
     parse::{parse_non_empty_number_to_string, parse_optional_number_to_string},
     units::{convert_cv_to_v, convert_sub_ppm_to_ppm, ConvertMode},
 };
@@ -259,18 +260,7 @@ fn form_statistics<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             ),
         ),
         // Power status flags (OB = Battery; OL = AC)
-        (
-            "power-status-flags",
-            if config
-                .alarms
-                .iter()
-                .any(|alarm| alarm.0.code() == RMC_SW_16)
-            {
-                "OB"
-            } else {
-                "OL"
-            },
-        ),
+        ("power-status-flags", power_status_flags(config.alarms)),
         // Power input (in volts)
         (
             "power-input-volts",

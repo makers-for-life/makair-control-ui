@@ -5,6 +5,9 @@
 
 use std::cmp::{max, min};
 
+use telemetry::alarm::{AlarmCode, RMC_SW_11, RMC_SW_12, RMC_SW_16};
+use telemetry::structures::AlarmPriority;
+
 pub fn estimate_lead_acid_12v_2s_soc(voltage: f64, is_running: bool, blower_ppm: usize) -> u8 {
     // Notice: this is a rough estimation of the battery SoC for a lead-acid battery, regardless \
     //   of the discharge rate, temperature and ageing of the battery. Super rough, but gives \
@@ -34,4 +37,31 @@ pub fn estimate_lead_acid_12v_2s_soc(voltage: f64, is_running: bool, blower_ppm:
     //   or too high in positives (eg. 101%) at the extremes. Though it will not overflow \
     //   further than 1%-2% under nominal battery conditions.
     min(100, max(0, unchecked_percent as i8)) as u8
+}
+
+pub fn power_status_flags(alarms: &[(AlarmCode, AlarmPriority)]) -> &str {
+    // Flags:
+    //   - OB  = On: Battery
+    //   - OL  = On: Line
+    //   - ABL = Alarm: Battery Low
+    //   - ABC = Alarm: Battery Critical
+
+    // Map alarm code numbers
+    let alarm_codes: Vec<u8> = alarms.iter().map(|alarm| alarm.0.code()).collect();
+
+    // On battery, or on AC?
+    if alarm_codes.contains(&RMC_SW_16) {
+        if alarm_codes.contains(&RMC_SW_12) {
+            // Battery very low
+            "OB ABC"
+        } else if alarm_codes.contains(&RMC_SW_11) {
+            // Battery low
+            "OB ABL"
+        } else {
+            // Battery charge is OK
+            "OB"
+        }
+    } else {
+        "OL"
+    }
 }
