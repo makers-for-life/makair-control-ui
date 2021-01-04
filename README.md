@@ -33,7 +33,7 @@ In order to setup your environment and build the code, please follow these steps
 
 Wayland support may be available but it hasn't been tested. You need a working X11 server.
 
-As well, please make sure that you have at least 2GB of RAM for the build to complete. Though, running the UI requires less than 40MB of RAM.
+As well, please make sure that you have at least 2GB of RAM for the build to complete. Running the UI requires less than 40MB of RAM afterwards (in `release` mode).
 
 _Tested with Rust version: `rustc 1.48.0 (7eac88abb 2020-11-16)`_
 
