@@ -100,4 +100,4 @@ error-message-timed-out = Some components may have failed to start. Can you try 
 error-message-bad-protocol = The firmware is using an unsupported telemetry protocol. Please update software.
 
 stop-title = Ventilator unit inactive
-stop-description = Please start it to begin or resume ventilation
+stop-description = Tap any value to configure it, then press start.

@@ -100,4 +100,4 @@ error-message-timed-out = Certains composants pourraient ne pas avoir démarré.
 error-message-bad-protocol = La version du protocole de télémétrie du système n'est pas supportée. Mettez à niveau.
 
 stop-title = Unité de ventilation inactive
-stop-description = Démarrez-la pour commencer la ventilation
+stop-description = Touchez une valeur pour configurer la ventilation.
