@@ -7,8 +7,8 @@ use std::ops::RangeInclusive;
 
 use crate::chip::settings::SettingActionRange;
 
-const AGE_STEP: usize = 1;
-const AGE_RANGE: RangeInclusive<usize> = RangeInclusive::new(40, 280);
+const SIZE_STEP: usize = 1;
+const SIZE_RANGE: RangeInclusive<usize> = RangeInclusive::new(40, 280);
 
 const SIZE_BASE_BABY: usize = 50;
 const SIZE_BASE_CHILD: usize = 110;
@@ -84,6 +84,6 @@ impl SettingsPreset {
     }
 
     pub fn change_size(&mut self, action: SettingActionRange) {
-        self.size = action.to_new_value_bounds(self.size, AGE_STEP, AGE_RANGE);
+        self.size = action.to_new_value_bounds(self.size, SIZE_STEP, SIZE_RANGE);
     }
 }
