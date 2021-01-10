@@ -474,6 +474,62 @@ impl DisplayUIEvents {
             interface, ids, has_events,
 
             {
+                "preset", states.preset_settings,
+
+                {
+                    "preset age previous",
+
+                    [
+                        ids.preset_settings_field_age_less,
+                        ids.preset_settings_field_age_less_text,
+                    ],
+
+                    {
+                        chip.settings.preset.switch_age(SettingActionRange::Less);
+                    }
+                },
+
+                {
+                    "preset age next",
+
+                    [
+                        ids.preset_settings_field_age_more,
+                        ids.preset_settings_field_age_more_text,
+                    ],
+
+                    {
+                        chip.settings.preset.switch_age(SettingActionRange::More);
+                    }
+                },
+
+                {
+                    "preset height previous",
+
+                    [
+                        ids.preset_settings_field_height_less,
+                        ids.preset_settings_field_height_less_text,
+                    ],
+
+                    {
+                        chip.settings.preset.change_height(SettingActionRange::Less);
+                    }
+                },
+
+                {
+                    "preset height next",
+
+                    [
+                        ids.preset_settings_field_height_more,
+                        ids.preset_settings_field_height_more_text,
+                    ],
+
+                    {
+                        chip.settings.preset.change_height(SettingActionRange::More);
+                    }
+                }
+            },
+
+            {
                 "mode", states.mode_settings,
 
                 {
