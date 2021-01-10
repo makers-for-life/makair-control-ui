@@ -222,6 +222,10 @@ impl DisplayUIEvents {
             interface, ids, has_events,
 
             {
+                "preset", states.preset_settings, {}, {},
+            },
+
+            {
                 "run", states.run_settings, {}, {},
 
                 [

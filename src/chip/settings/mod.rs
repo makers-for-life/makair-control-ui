@@ -8,6 +8,7 @@ mod macros;
 
 pub mod advanced;
 pub mod mode;
+pub mod preset;
 pub mod run;
 pub mod snooze;
 
@@ -15,6 +16,7 @@ use telemetry::control::{ControlMessage, ControlSetting};
 
 use advanced::*;
 use mode::*;
+use preset::*;
 use run::*;
 use snooze::*;
 
@@ -92,6 +94,7 @@ impl SettingActionRange {
 pub struct ChipSettings {
     pub run: SettingsRun,
     pub snooze: SettingsSnooze,
+    pub preset: SettingsPreset,
     pub advanced: SettingsAdvanced,
     pub mode: SettingsMode,
 }
@@ -100,6 +103,7 @@ impl ChipSettings {
     pub fn new() -> ChipSettings {
         ChipSettings {
             run: SettingsRun::new(),
+            preset: SettingsPreset::new(),
             snooze: SettingsSnooze::new(),
             advanced: SettingsAdvanced::new(),
             mode: SettingsMode::new(),

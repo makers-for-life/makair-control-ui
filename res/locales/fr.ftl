@@ -56,6 +56,15 @@ modal-close = Fermer
 modal-apply = Valider
 modal-cancel = Annuler
 
+modal-preset-title = Bonjour. Veuillez configurer votre patient.
+modal-preset-subtitle = Les paramètres optimums seront appliqués, ils pourront être ajustés.
+modal-preset-age = Tranche d'âge
+modal-preset-size = Taille du corps
+modal-preset-age-baby = Bébé
+modal-preset-age-child = Enfant
+modal-preset-age-teenager = Adolescent
+modal-preset-age-adult = Adulte
+
 modal-run-status = Unité de ventilation
 modal-run-status-started = Active — La stopper ?
 modal-run-status-stopped = Arrêtée — La démarrer ?
@@ -98,7 +107,6 @@ error-title-timed-out = Oups. Échec d'initialisation du coeur.
 error-title-bad-protocol = Erreur générale du protocole de télémétrie.
 error-title-watchdog = Le contrôleur de ventilation est en défaut.
 error-title-sensor-failure = Un capteur est hors ligne. Sécurité compromise.
-error-title-calibration-failure = La calibration d'usine a échoué.
 error-title-other = Oups. Une erreur inconnue est survenue.
 
 error-message-no-device = Impossible d'atteindre la télémétrie. Est-elle configurée correctement ?
@@ -106,7 +114,6 @@ error-message-timed-out = Certains composants pourraient ne pas avoir démarré.
 error-message-bad-protocol = La version du protocole de télémétrie du système n'est pas supportée. Mettez à niveau.
 error-message-watchdog = Origine :
 error-message-sensor-failure = ID du capteur :
-error-message-calibration-failure = Mesure :
 error-message-other = Raison :
 
 stop-title = Unité de ventilation inactive

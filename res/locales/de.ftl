@@ -56,6 +56,15 @@ modal-close = Schließen
 modal-apply = Anwenden
 modal-cancel = Stornieren
 
+modal-preset-title = Hallo. Bitte konfigurieren Sie Ihre Patientendaten.
+modal-preset-subtitle = Es werden voreingestellte Einstellungen angewendet, die anschließend angepasst werden können.
+modal-preset-age = Altersgruppe
+modal-preset-size = Körpergröße
+modal-preset-age-baby = Baby
+modal-preset-age-child = Kind
+modal-preset-age-teenager = Teenager
+modal-preset-age-adult = Erwachsene
+
 modal-run-status = Status der Beatmungseinheit
 modal-run-status-started = Laufen - aufhören?
 modal-run-status-stopped = Gestoppt - Starten?
@@ -98,7 +107,6 @@ error-title-timed-out = Hoppla. Fehler beim Initialisieren des Kerns.
 error-title-bad-protocol = Allgemeiner Telemetrieprotokollfehler.
 error-title-watchdog = Äh. Der Lüftungsregler ist abgestürzt.
 error-title-sensor-failure = Ein Sensor ist offline. Die Sicherheit ist gefährdet.
-error-title-calibration-failure = Äh. Werkskalibrierung fehlgeschlagen.
 error-title-other = Hoppla. Ein unbekannter Fehler ist aufgetreten.
 
 error-message-no-device = Der Telemetriemaster kann nicht erreicht werden. Ist es richtig konfiguriert?
@@ -106,7 +114,6 @@ error-message-timed-out = Einige Komponenten konnten möglicherweise nicht gesta
 error-message-bad-protocol = Die Firmware verwendet ein nicht unterstütztes Telemetrieprotokoll. Bitte aktualisieren Sie die Software.
 error-message-watchdog = Ursprung:
 error-message-sensor-failure = Sensor ID:
-error-message-calibration-failure = Messen:
 error-message-other = Grund:
 
 stop-title = Das Beatmungsgerät ist nicht aktiv

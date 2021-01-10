@@ -56,6 +56,15 @@ modal-close = 关
 modal-apply = 应用
 modal-cancel = 取消
 
+modal-preset-title = 你好。 请配置您的患者详细信息。
+modal-preset-subtitle = 将应用预设设置，然后可以进行调整。
+modal-preset-age = 年龄阶层
+modal-preset-size = 身体尺寸
+modal-preset-age-baby = 宝宝
+modal-preset-age-child = 儿童
+modal-preset-age-teenager = 青少年
+modal-preset-age-adult = 成人
+
 modal-run-status = 呼吸机状态
 modal-run-status-started = 跑步-停下来吗？
 modal-run-status-stopped = 已停止-开始吗？
@@ -98,7 +107,6 @@ error-title-timed-out = 哎呀。 初始化核心失败。
 error-title-bad-protocol = 一般遥测协议错误。
 error-title-watchdog = 嗯 通风控制器已崩溃。
 error-title-sensor-failure = 传感器离线。 安全性受到损害。
-error-title-calibration-failure = 嗯 出厂校准失败。
 error-title-other = 哎呀。 出现未知错误。
 
 error-message-no-device = 无法到达遥测主机。 是否配置正确？
@@ -106,7 +114,6 @@ error-message-timed-out = 某些组件可能无法启动。 您可以尝试重�
 error-message-bad-protocol = 固件正在使用不受支持的遥测协议。 请更新软件。
 error-message-watchdog = 起源：
 error-message-sensor-failure = 传感器ID：
-error-message-calibration-failure = 测量：
 error-message-other = 原因：
 
 stop-title = 呼吸机单元无效

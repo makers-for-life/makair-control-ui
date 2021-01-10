@@ -33,6 +33,7 @@ gen_widget_impls!(
     TelemetryContainer -> telemetry_container,
     TelemetryView -> telemetry_view,
     Layout -> layout,
+    PresetSettings -> preset_settings['a],
     RunSettings -> run_settings['a],
     SnoozeSettings -> snooze_settings['a],
     AdvancedSettings -> advanced_settings['a],

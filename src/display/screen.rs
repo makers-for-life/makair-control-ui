@@ -12,8 +12,8 @@ use telemetry::structures::{
 };
 
 use crate::chip::settings::{
-    advanced::SettingsAdvanced, mode::SettingsMode, run::SettingsRun, snooze::SettingsSnooze,
-    ChipSettings,
+    advanced::SettingsAdvanced, mode::SettingsMode, preset::SettingsPreset, run::SettingsRun,
+    snooze::SettingsSnooze, ChipSettings,
 };
 use crate::config::environment::*;
 use crate::locale::error::error_to_locales;
@@ -28,6 +28,7 @@ use super::renderer::DisplayRendererStates;
 use super::widget::{ControlWidget, ControlWidgetType};
 
 pub struct ScreenModalsOpen {
+    preset: bool,
     run: bool,
     snooze: bool,
     advanced: bool,
@@ -46,6 +47,7 @@ pub struct Screen<'a> {
 impl ScreenModalsOpen {
     pub fn from_states(states: &DisplayRendererStates) -> Self {
         ScreenModalsOpen {
+            preset: states.preset_settings.is_open(),
             run: states.run_settings.is_open(),
             snooze: states.snooze_settings.is_open(),
             advanced: states.advanced_settings.is_open(),
@@ -779,7 +781,9 @@ impl<'a> Screen<'a> {
     }
 
     fn render_settings(&mut self, settings: &'a ChipSettings, modals: &ScreenModalsOpen) {
-        if modals.run {
+        if modals.preset {
+            self.render_preset_settings(&settings.preset);
+        } else if modals.run {
             self.render_run_settings(&settings.run);
         } else if modals.snooze {
             self.render_snooze_settings(&settings.snooze);
@@ -788,6 +792,38 @@ impl<'a> Screen<'a> {
         } else if modals.mode {
             self.render_mode_settings(&settings.mode);
         }
+    }
+
+    fn render_preset_settings(&mut self, settings: &'a SettingsPreset) {
+        self.render_modal(
+            PRESET_SETTINGS_MODAL_WIDTH,
+            PRESET_SETTINGS_MODAL_HEIGTH,
+            Some(PRESET_SETTINGS_MODAL_PADDING),
+            true,
+        );
+
+        self.widgets
+            .render(ControlWidgetType::PresetSettings(preset_settings::Config {
+                width: PRESET_SETTINGS_MODAL_WIDTH - (PRESET_SETTINGS_MODAL_PADDING * 2.0),
+                height: PRESET_SETTINGS_MODAL_HEIGTH
+                    - MODAL_FINALIZE_BUTTON_HEIGHT
+                    - (PRESET_SETTINGS_MODAL_PADDING * 3.0),
+                preset_settings: settings,
+
+                container_parent: self.ids.modal_container,
+                container_widget: self.ids.preset_settings_container,
+
+                title_primary: self.ids.preset_settings_title_primary,
+                title_secondary: self.ids.preset_settings_title_secondary,
+
+                content_wrapper: self.ids.preset_settings_content_wrapper,
+                content_image: self.ids.preset_settings_content_image,
+                content_separator: self.ids.preset_settings_content_separator,
+                content_form_wrapper: self.ids.preset_settings_content_form_wrapper,
+
+                field_age_ids: gen_render_preset_settings_field_ids!(self, age),
+                field_height_ids: gen_render_preset_settings_field_ids!(self, height),
+            }));
     }
 
     fn render_run_settings(&mut self, settings: &'a SettingsRun) {

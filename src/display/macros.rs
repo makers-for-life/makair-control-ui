@@ -331,6 +331,22 @@ macro_rules! gen_ui_events_modal_local_clicks {
     }
 }
 
+macro_rules! gen_render_preset_settings_field_ids {
+    ($self:ident, $name:tt) => {
+        paste! {
+            (
+                $self.ids.[<preset_settings_field_ $name _text>],
+                $self.ids.[<preset_settings_field_ $name _value_wrapper>],
+                $self.ids.[<preset_settings_field_ $name _value>],
+                $self.ids.[<preset_settings_field_ $name _more>],
+                $self.ids.[<preset_settings_field_ $name _more_text>],
+                $self.ids.[<preset_settings_field_ $name _less>],
+                $self.ids.[<preset_settings_field_ $name _less_text>],
+            )
+        }
+    };
+}
+
 macro_rules! gen_render_mode_settings_field_ids {
     ($self:ident, $name:tt) => {
         paste! {

@@ -40,6 +40,7 @@ pub struct DisplayRenderer {
 
 #[derive(Default)]
 pub struct DisplayRendererStates {
+    pub preset_settings: DisplayRendererSettingsState,
     pub run_settings: DisplayRendererSettingsState,
     pub snooze_settings: DisplayRendererSettingsState,
     pub advanced_settings: DisplayRendererSettingsState,
@@ -68,10 +69,16 @@ impl Default for DisplayRendererSettingsState {
 #[allow(clippy::new_ret_no_self)]
 impl DisplayRendererBuilder {
     pub fn new(fonts: Fonts, ids: Ids, images: ImageIds) -> DisplayRenderer {
+        // TODO: remove this indirect
+        let mut states = DisplayRendererStates::default();
+
+        // TODO: forced for dev
+        states.preset_settings = DisplayRendererSettingsState::Opened;
+
         DisplayRenderer {
             fonts,
             ids,
-            states: DisplayRendererStates::default(),
+            states: states,
             images,
             plot_graphs: (
                 ConrodBackendReusableGraph::build(),

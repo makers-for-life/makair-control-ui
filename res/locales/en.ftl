@@ -56,6 +56,15 @@ modal-close = Close
 modal-apply = Apply
 modal-cancel = Cancel
 
+modal-preset-title = Hello. Please configure your patient details.
+modal-preset-subtitle = Preset settings will be applied, which can be adjusted afterwards.
+modal-preset-age = Age group
+modal-preset-size = Body size
+modal-preset-age-baby = Baby
+modal-preset-age-child = Child
+modal-preset-age-teenager = Teenager
+modal-preset-age-adult = Adult
+
 modal-run-status = Ventilator unit status
 modal-run-status-started = Running — Tap to stop
 modal-run-status-stopped = Stopped — Tap to start
@@ -98,7 +107,6 @@ error-title-timed-out = Oops. Failed initializing core.
 error-title-bad-protocol = General telemetry protocol error.
 error-title-watchdog = Uh. The ventilation controller has crashed.
 error-title-sensor-failure = A sensor is offline. Safety is compromised.
-error-title-calibration-failure = Uh. Factory calibration failed.
 error-title-other = Oops. An unknown error occurred.
 
 error-message-no-device = Cannot reach the telemetry master. Is it properly configured?
@@ -106,7 +114,6 @@ error-message-timed-out = Some components may have failed to start. Can you try 
 error-message-bad-protocol = The firmware is using an unsupported telemetry protocol. Please update software.
 error-message-watchdog = Origin:
 error-message-sensor-failure = Sensor ID:
-error-message-calibration-failure = Measure:
 error-message-other = Reason:
 
 stop-title = Ventilator unit inactive

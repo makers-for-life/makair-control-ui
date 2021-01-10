@@ -56,6 +56,15 @@ modal-close = Cerca
 modal-apply = Aplicar
 modal-cancel = Cancelar
 
+modal-preset-title = Hola. Configure los datos de su paciente.
+modal-preset-subtitle = Se aplicarán los ajustes preestablecidos, que se pueden ajustar posteriormente.
+modal-preset-age = Grupo de edad
+modal-preset-size = Tamaño corporal
+modal-preset-age-baby = Bebé
+modal-preset-age-child = Niño
+modal-preset-age-teenager = Adolescente
+modal-preset-age-adult = Adulto
+
 modal-run-status = Estado de la unidad de ventilación
 modal-run-status-started = Corriendo - ¿Parar?
 modal-run-status-stopped = Detenido - ¿Empezar?
@@ -98,7 +107,6 @@ error-title-timed-out = ¡Ups! Error al inicializar el núcleo.
 error-title-bad-protocol = Error general del protocolo de telemetría.
 error-title-watchdog = Uh. El controlador de ventilación se ha bloqueado.
 error-title-sensor-failure = Un sensor está fuera de línea. La seguridad está comprometida.
-error-title-calibration-failure = Uh. Falló la calibración de fábrica.
 error-title-other = ¡Ups! Un error desconocido ocurrió.
 
 error-message-no-device = No se puede conectar con el maestro de telemetría. ¿Está configurado correctamente?
@@ -106,7 +114,6 @@ error-message-timed-out = Es posible que algunos componentes no se hayan iniciad
 error-message-bad-protocol = El firmware está usando un protocolo de telemetría no compatible. Actualice el software.
 error-message-watchdog = Origen:
 error-message-sensor-failure = ID del sensor:
-error-message-calibration-failure = Medida:
 error-message-other = Razón:
 
 stop-title = Unidad de ventilador inactiva

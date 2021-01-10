@@ -61,7 +61,6 @@ pub enum ChipError {
     BadProtocol,
     Watchdog(String),
     SensorFailure(String),
-    CalibrationFailure(String),
     Other(String),
 }
 
