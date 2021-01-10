@@ -424,6 +424,12 @@ image_ids!(pub struct ImageIds {
   header_stopped_snoozed,
   header_running,
   header_running_snoozed,
+
+  // Patient modal
+  patient_baby,
+  patient_child,
+  patient_teenager,
+  patient_adult,
 });
 
 impl Ids {

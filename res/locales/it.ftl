@@ -14,6 +14,7 @@ telemetry-unit-mlpm = mL/min
 telemetry-unit-per-minute = /minuto
 telemetry-unit-milliliters = mL
 telemetry-unit-milliseconds = ms
+telemetry-unit-centimeters = cm
 
 alarms-title = ALLARMI
 alarms-empty = Nessun allarme.

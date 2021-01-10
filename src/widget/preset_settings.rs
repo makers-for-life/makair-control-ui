@@ -14,9 +14,10 @@ use conrod_core::{
     Positionable, Sizeable, Widget,
 };
 
-use crate::chip::settings::preset::SettingsPreset;
+use crate::chip::settings::preset::{SettingsPreset, SettingsPresetAge};
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
+use crate::locale::preset::age_to_locale as preset_age_to_locale;
 use crate::APP_I18N;
 
 type FieldWidgetIds = (
@@ -48,6 +49,11 @@ pub struct Config<'a> {
 
     pub field_age_ids: FieldWidgetIds,
     pub field_height_ids: FieldWidgetIds,
+
+    pub baby_image: conrod_core::image::Id,
+    pub child_image: conrod_core::image::Id,
+    pub teenager_image: conrod_core::image::Id,
+    pub adult_image: conrod_core::image::Id,
 }
 
 struct Field {
@@ -137,23 +143,26 @@ fn content<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 }
 
 fn content_image<'a>(master: &mut ControlWidget<'a>, config: &Config) {
-    // TODO: render actual image instead of placeholder
+    // Acquire image (depending on age group)
+    let image = match config.preset_settings.age {
+        SettingsPresetAge::Baby => config.baby_image,
+        SettingsPresetAge::Child => config.child_image,
+        SettingsPresetAge::Teenager => config.teenager_image,
+        SettingsPresetAge::Adult => config.adult_image,
+    };
 
-    // TOOD: Mock image size
-    gen_widget_container!(
-        master,
-        container_id: config.content_image,
-        color: color::GREEN,
-        width: PRESET_SETTINGS_MODAL_CONTENT_IMAGE_WIDTH,
-        height: PRESET_SETTINGS_MODAL_CONTENT_IMAGE_HEIGHT,
-        positions: mid_left_of[
-            config.content_wrapper,
-        ]
-    );
+    // Create image
+    widget::Image::new(image)
+        .w_h(
+            PRESET_SETTINGS_MODAL_CONTENT_IMAGE_WIDTH,
+            PRESET_SETTINGS_MODAL_CONTENT_IMAGE_HEIGHT,
+        )
+        .mid_left_of(config.content_wrapper)
+        .set(config.content_image, &mut master.ui);
 }
 
 fn content_separator<'a>(master: &mut ControlWidget<'a>, config: &Config, size: (f64, f64)) {
-    widget::Rectangle::fill_with([1.0, size.1], color::WHITE.alpha(0.05))
+    widget::Rectangle::fill_with([1.0, size.1], color::WHITE.alpha(0.035))
         .mid_right_with_margin_on(
             config.content_image,
             -PRESET_SETTINGS_MODAL_CONTENT_SEPARATOR_MARGIN_SIDES,
@@ -180,7 +189,7 @@ fn content_form<'a>(master: &mut ControlWidget<'a>, config: &Config, size: (f64,
         config,
         Field {
             label_text: APP_I18N.t("modal-preset-age"),
-            value_text: APP_I18N.t("modal-preset-age-adult"), // TODO
+            value_text: preset_age_to_locale(&config.preset_settings.age),
             ids: config.field_age_ids,
         },
     );
@@ -191,7 +200,11 @@ fn content_form<'a>(master: &mut ControlWidget<'a>, config: &Config, size: (f64,
         config,
         Field {
             label_text: APP_I18N.t("modal-preset-size"),
-            value_text: "176 cm".to_string(), // TODO
+            value_text: format!(
+                "{} {}",
+                config.preset_settings.size,
+                APP_I18N.t("telemetry-unit-centimeters")
+            ),
             ids: config.field_height_ids,
         },
     );

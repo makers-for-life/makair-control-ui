@@ -8,6 +8,8 @@ use telemetry::structures::MachineStateSnapshot;
 
 use crate::chip::{ChipData, ChipError, ChipState};
 
+use super::identifiers::ImageIds;
+
 pub struct DisplayDataLayout {
     pub texture_header_image_id: conrod_core::image::Id,
 }
@@ -49,4 +51,8 @@ pub struct DisplayDataError<'a> {
     pub width: f64,
     pub height: f64,
     pub error: &'a ChipError,
+}
+
+pub struct DisplayDataSettings<'a> {
+    pub images: &'a ImageIds,
 }

@@ -292,6 +292,10 @@ impl DisplayRenderer {
             plot_graphs: &mut self.plot_graphs,
         };
 
+        let screen_data_settings = DisplayDataSettings {
+            images: &self.images,
+        };
+
         // Render screen data (depending on state, running or stopped)
         match chip.state {
             ChipState::Running => screen.render_running(
@@ -300,6 +304,7 @@ impl DisplayRenderer {
                 screen_data_status,
                 screen_data_heartbeat,
                 screen_data_graph,
+                screen_data_settings,
                 &chip.settings,
                 &ScreenModalsOpen::from_states(&self.states),
             ),
@@ -310,6 +315,7 @@ impl DisplayRenderer {
                 screen_data_status,
                 screen_data_heartbeat,
                 screen_data_graph,
+                screen_data_settings,
                 &chip.settings,
                 &ScreenModalsOpen::from_states(&self.states),
             ),

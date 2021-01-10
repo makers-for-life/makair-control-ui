@@ -14,6 +14,7 @@ telemetry-unit-mlpm = 毫升/分钟
 telemetry-unit-per-minute = /分钟
 telemetry-unit-milliliters = 毫升
 telemetry-unit-milliseconds = 毫秒
+telemetry-unit-centimeters = 厘米
 
 alarms-title = 警报
 alarms-empty = 没有警报

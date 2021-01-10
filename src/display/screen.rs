@@ -84,6 +84,7 @@ impl<'a> Screen<'a> {
         status_data: DisplayDataStatus<'a>,
         heartbeat_data: DisplayDataHeartbeat<'a>,
         graph_data: DisplayDataGraph<'a>,
+        settings_data: DisplayDataSettings<'a>,
         settings: &'a ChipSettings,
         modals: &ScreenModalsOpen,
     ) {
@@ -112,7 +113,7 @@ impl<'a> Screen<'a> {
         self.render_telemetry(&settings.mode);
 
         // Render modals (as needed)
-        self.render_settings(settings, modals);
+        self.render_settings(settings, modals, settings_data);
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -123,6 +124,7 @@ impl<'a> Screen<'a> {
         status_data: DisplayDataStatus<'a>,
         heartbeat_data: DisplayDataHeartbeat<'a>,
         graph_data: DisplayDataGraph<'a>,
+        settings_data: DisplayDataSettings<'a>,
         settings: &'a ChipSettings,
         modals: &ScreenModalsOpen,
     ) {
@@ -133,6 +135,7 @@ impl<'a> Screen<'a> {
             status_data,
             heartbeat_data,
             graph_data,
+            settings_data,
             settings,
             modals,
         );
@@ -780,9 +783,14 @@ impl<'a> Screen<'a> {
         }));
     }
 
-    fn render_settings(&mut self, settings: &'a ChipSettings, modals: &ScreenModalsOpen) {
+    fn render_settings(
+        &mut self,
+        settings: &'a ChipSettings,
+        modals: &ScreenModalsOpen,
+        settings_data: DisplayDataSettings<'a>,
+    ) {
         if modals.preset {
-            self.render_preset_settings(&settings.preset);
+            self.render_preset_settings(&settings.preset, settings_data);
         } else if modals.run {
             self.render_run_settings(&settings.run);
         } else if modals.snooze {
@@ -794,7 +802,11 @@ impl<'a> Screen<'a> {
         }
     }
 
-    fn render_preset_settings(&mut self, settings: &'a SettingsPreset) {
+    fn render_preset_settings(
+        &mut self,
+        settings: &'a SettingsPreset,
+        settings_data: DisplayDataSettings<'a>,
+    ) {
         self.render_modal(
             PRESET_SETTINGS_MODAL_WIDTH,
             PRESET_SETTINGS_MODAL_HEIGTH,
@@ -823,6 +835,11 @@ impl<'a> Screen<'a> {
 
                 field_age_ids: gen_render_preset_settings_field_ids!(self, age),
                 field_height_ids: gen_render_preset_settings_field_ids!(self, height),
+
+                baby_image: settings_data.images.patient_baby,
+                child_image: settings_data.images.patient_child,
+                teenager_image: settings_data.images.patient_teenager,
+                adult_image: settings_data.images.patient_adult,
             }));
     }
 

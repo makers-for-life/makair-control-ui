@@ -14,6 +14,7 @@ telemetry-unit-mlpm = мл/мин
 telemetry-unit-per-minute = /минута
 telemetry-unit-milliliters = миллилитров
 telemetry-unit-milliseconds = миллисекунды
+telemetry-unit-centimeters = см
 
 alarms-title = ТРЕВОГИ
 alarms-empty = Тревоги нет.
