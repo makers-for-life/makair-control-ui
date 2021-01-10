@@ -93,11 +93,21 @@ modal-advanced-timezone = Fuseau horaire
 initializing-connecting = Démarrage en cours...
 initializing-connected = Préparation en cours...
 
-error-title = Oups. Une erreur est survenue.
+error-title-no-device = Oups. Impossible d'atteindre le coeur.
+error-title-timed-out = Oups. Échec d'initialisation du coeur.
+error-title-bad-protocol = Erreur générale du protocole de télémétrie.
+error-title-watchdog = Le contrôleur de ventilation est en défaut.
+error-title-sensor-failure = Un capteur est hors ligne. Sécurité compromise.
+error-title-calibration-failure = La calibration d'usine a échoué.
+error-title-other = Oups. Une erreur inconnue est survenue.
 
 error-message-no-device = Impossible d'atteindre la télémétrie. Est-elle configurée correctement ?
 error-message-timed-out = Certains composants pourraient ne pas avoir démarré. Redémarrez la machine.
 error-message-bad-protocol = La version du protocole de télémétrie du système n'est pas supportée. Mettez à niveau.
+error-message-watchdog = Origine :
+error-message-sensor-failure = ID du capteur :
+error-message-calibration-failure = Mesure :
+error-message-other = Raison :
 
 stop-title = Unité de ventilation inactive
 stop-description = Touchez une valeur pour configurer la ventilation.

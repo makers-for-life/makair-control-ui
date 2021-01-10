@@ -93,11 +93,21 @@ modal-advanced-timezone = Timezone
 initializing-connecting = Starting up...
 initializing-connected = Initializing...
 
-error-title = Oops. An error occurred.
+error-title-no-device = Oops. Could not reach core.
+error-title-timed-out = Oops. Failed initializing core.
+error-title-bad-protocol = General telemetry protocol error.
+error-title-watchdog = Uh. The ventilation controller has crashed.
+error-title-sensor-failure = A sensor is offline. Safety is compromised.
+error-title-calibration-failure = Uh. Factory calibration failed.
+error-title-other = Oops. An unknown error occurred.
 
 error-message-no-device = Cannot reach the telemetry master. Is it properly configured?
 error-message-timed-out = Some components may have failed to start. Can you try power cycling?
 error-message-bad-protocol = The firmware is using an unsupported telemetry protocol. Please update software.
+error-message-watchdog = Origin:
+error-message-sensor-failure = Sensor ID:
+error-message-calibration-failure = Measure:
+error-message-other = Reason:
 
 stop-title = Ventilator unit inactive
 stop-description = Tap any value to configure it, then press start.

@@ -11,7 +11,6 @@ use conrod_core::{
 
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
-use crate::APP_I18N;
 
 pub struct Config {
     pub container: WidgetId,
@@ -25,6 +24,7 @@ pub struct Config {
 
     pub image: conrod_core::image::Id,
 
+    pub title: String,
     pub message: String,
 }
 
@@ -81,7 +81,7 @@ fn text_title<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     text_style.font_size = Some(ERROR_TITLE_FONT_SIZE);
 
     // Create text
-    widget::Text::new(&APP_I18N.t("error-title"))
+    widget::Text::new(&config.title)
         .mid_top_of(config.text_wrapper)
         .with_style(text_style)
         .set(config.text_title, &mut master.ui);

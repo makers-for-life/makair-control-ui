@@ -93,11 +93,21 @@ modal-advanced-timezone = Часовой пояс
 initializing-connecting = Начиная...
 initializing-connected = Инициализация...
 
-error-title = Ой. Произошла ошибка.
+error-title-no-device = Ой. Не удалось достучаться до ядра.
+error-title-timed-out = Ой. Не удалось инициализировать ядро.
+error-title-bad-protocol = Общая ошибка протокола телеметрии.
+error-title-watchdog = Эээ. Контроллер вентиляции сломался.
+error-title-sensor-failure = Датчик отключен. Безопасность поставлена под угрозу.
+error-title-calibration-failure = Эээ. Заводская калибровка не удалась.
+error-title-other = Ой. Произошла неизвестная ошибка.
 
-error-message-no-device = Невозможно связаться с мастером телеметрии.
-error-message-timed-out = Некоторые компоненты не запускались.
-error-message-bad-protocol = Неподдерживаемый протокол телеметрии.
+error-message-no-device = Невозможно связаться с мастером телеметрии. Это правильно настроено?
+error-message-timed-out = Некоторые компоненты могли не запуститься. Можете ли вы попробовать велоспорт?
+error-message-bad-protocol = Прошивка использует неподдерживаемый протокол телеметрии. Обновите программное обеспечение.
+error-message-watchdog = Происхождение:
+error-message-sensor-failure = ID датчика:
+error-message-calibration-failure = Мера:
+error-message-other = Причина:
 
 stop-title = Аппарат ИВЛ не активен
 stop-description = Включите снова, чтобы проветрить

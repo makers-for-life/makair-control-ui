@@ -59,6 +59,9 @@ pub enum ChipError {
     NoDevice,
     TimedOut,
     BadProtocol,
+    Watchdog(String),
+    SensorFailure(String),
+    CalibrationFailure(String),
     Other(String),
 }
 

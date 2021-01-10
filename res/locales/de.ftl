@@ -93,11 +93,21 @@ modal-advanced-timezone = Zeitzone
 initializing-connecting = Inbetriebnahme...
 initializing-connected = Initialisierung...
 
-error-title = Hoppla. Ein Fehler ist aufgetreten.
+error-title-no-device = Hoppla. Kern konnte nicht erreicht werden.
+error-title-timed-out = Hoppla. Fehler beim Initialisieren des Kerns.
+error-title-bad-protocol = Allgemeiner Telemetrieprotokollfehler.
+error-title-watchdog = Äh. Der Lüftungsregler ist abgestürzt.
+error-title-sensor-failure = Ein Sensor ist offline. Die Sicherheit ist gefährdet.
+error-title-calibration-failure = Äh. Werkskalibrierung fehlgeschlagen.
+error-title-other = Hoppla. Ein unbekannter Fehler ist aufgetreten.
 
-error-message-no-device = Der Telemetriemaster kann nicht erreicht werden.
-error-message-timed-out = Einige Komponenten konnten nicht gestartet werden.
-error-message-bad-protocol = Nicht unterstütztes Telemetrieprotokoll.
+error-message-no-device = Der Telemetriemaster kann nicht erreicht werden. Ist es richtig konfiguriert?
+error-message-timed-out = Einige Komponenten konnten möglicherweise nicht gestartet werden. Können Sie Power Cycling ausprobieren?
+error-message-bad-protocol = Die Firmware verwendet ein nicht unterstütztes Telemetrieprotokoll. Bitte aktualisieren Sie die Software.
+error-message-watchdog = Ursprung:
+error-message-sensor-failure = Sensor ID:
+error-message-calibration-failure = Messen:
+error-message-other = Grund:
 
 stop-title = Das Beatmungsgerät ist nicht aktiv
 stop-description = Bitte aktivieren Sie es wieder, um zu lüften

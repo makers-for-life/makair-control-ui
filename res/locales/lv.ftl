@@ -93,11 +93,21 @@ modal-advanced-timezone = Laika zona
 initializing-connecting = Notiek palaišana...
 initializing-connected = Notiek inicializēšana...
 
-error-title = Hmm ... Notika kļūda.
+error-title-no-device = Hmm ... Nevarēja sasniegt kodolu.
+error-title-timed-out = Hmm ... Neizdevās inicializēt kodolu.
+error-title-bad-protocol = Vispārīga telemetrijas protokola kļūda.
+error-title-watchdog = Uh. Ventilācijas kontrolieris ir avarējis.
+error-title-sensor-failure = Sensors ir bezsaistē. Drošība ir apdraudēta.
+error-title-calibration-failure = Uh. Rūpnīcas kalibrēšana neizdevās.
+error-title-other = Hmm ... Radās nezināma kļūda.
 
-error-message-no-device = Nevar sasniegt telemetrijas kapteini.
-error-message-timed-out = Dažus komponentus neizdevās palaist.
-error-message-bad-protocol = Neatbalstīts telemetrijas protokols.
+error-message-no-device = Nevar sasniegt telemetrijas kapteini. Vai tas ir pareizi konfigurēts?
+error-message-timed-out = Dažus komponentus, iespējams, neizdevās palaist. Vai varat izmēģināt spēka riteņbraukšanu?
+error-message-bad-protocol = Programmaparatūra izmanto neatbalstītu telemetrijas protokolu. Lūdzu, atjauniniet programmatūru.
+error-message-watchdog = Izcelsme:
+error-message-sensor-failure = Sensora ID:
+error-message-calibration-failure = Mērs:
+error-message-other = Iemesls:
 
 stop-title = Ventilatora ierīce neaktīva
 stop-description = Lūdzu, atkārtoti ieslēdziet to, lai atsāktu elpošanu

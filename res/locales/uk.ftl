@@ -93,11 +93,21 @@ modal-advanced-timezone = Часовий пояс
 initializing-connecting = Запуск...
 initializing-connected = Ініціалізація...
 
-error-title = На жаль Сталася помилка.
+error-title-no-device = На жаль Не вдалося досягти ядра.
+error-title-timed-out = На жаль Помилка ініціалізації ядра.
+error-title-bad-protocol = Загальна помилка протоколу телеметрії.
+error-title-watchdog = Ух Виникла аварія контролера вентиляції.
+error-title-sensor-failure = Датчик у режимі офлайн. Безпека порушена.
+error-title-calibration-failure = Ух Помилка заводського калібрування.
+error-title-other = На жаль Сталася невідома помилка.
 
-error-message-no-device = Не вдається зв’язатися з майстром телеметрії.
-error-message-timed-out = Не вдалося запустити деякі компоненти.
-error-message-bad-protocol = Непідтримуваний протокол телеметрії.
+error-message-no-device = Не вдається зв’язатися з майстром телеметрії. Чи правильно налаштовано?
+error-message-timed-out = Можливо, деякі компоненти не вдалося запустити. Чи можете ви спробувати силовий велосипед?
+error-message-bad-protocol = Прошивка використовує непідтримуваний протокол телеметрії. Будь ласка, оновіть програмне забезпечення.
+error-message-watchdog = Походження:
+error-message-sensor-failure = Ідентифікатор датчика:
+error-message-calibration-failure = Міра:
+error-message-other = Причина:
 
 stop-title = Апарат ШВЛ не активний
 stop-description = Повторно включіть його для провітрювання

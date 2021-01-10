@@ -93,11 +93,21 @@ modal-advanced-timezone = 时区
 initializing-connecting = 启动...
 initializing-connected = 初始化中...
 
-error-title = 哎呀。 发生错误。
+error-title-no-device = 哎呀。 无法到达核心。
+error-title-timed-out = 哎呀。 初始化核心失败。
+error-title-bad-protocol = 一般遥测协议错误。
+error-title-watchdog = 嗯 通风控制器已崩溃。
+error-title-sensor-failure = 传感器离线。 安全性受到损害。
+error-title-calibration-failure = 嗯 出厂校准失败。
+error-title-other = 哎呀。 出现未知错误。
 
-error-message-no-device = 无法到达遥测主机。
-error-message-timed-out = 某些组件无法启动。
-error-message-bad-protocol = 不支持的遥测协议。
+error-message-no-device = 无法到达遥测主机。 是否配置正确？
+error-message-timed-out = 某些组件可能无法启动。 您可以尝试重新启动电源吗？
+error-message-bad-protocol = 固件正在使用不受支持的遥测协议。 请更新软件。
+error-message-watchdog = 起源：
+error-message-sensor-failure = 传感器ID：
+error-message-calibration-failure = 测量：
+error-message-other = 原因：
 
 stop-title = 呼吸机单元无效
 stop-description = 请重新启用它以恢复呼吸

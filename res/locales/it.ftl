@@ -93,11 +93,21 @@ modal-advanced-timezone = Fuso orario
 initializing-connecting = Cominciando...
 initializing-connected = Inizializzazione in corso...
 
-error-title = Ops. Si è verificato un errore.
+error-title-no-device = Ops. Impossibile raggiungere il nucleo.
+error-title-timed-out = Ops. Inizializzazione del core non riuscita.
+error-title-bad-protocol = Errore di protocollo di telemetria generale.
+error-title-watchdog = Uh. Il controller della ventilazione è andato in crash.
+error-title-sensor-failure = Un sensore è offline. La sicurezza è compromessa.
+error-title-calibration-failure = Uh. Calibrazione di fabbrica fallita.
+error-title-other = Ops. Si è verificato un errore sconosciuto.
 
-error-message-no-device = Impossibile raggiungere il master della telemetria.
-error-message-timed-out = Alcuni componenti non sono stati avviati.
-error-message-bad-protocol = Protocollo di telemetria non supportato.
+error-message-no-device = Impossibile raggiungere il master della telemetria. È configurato correttamente?
+error-message-timed-out = Alcuni componenti potrebbero non essere stati avviati. Puoi provare il power cycling?
+error-message-bad-protocol = Il firmware utilizza un protocollo di telemetria non supportato. Aggiorna il software.
+error-message-watchdog = Origine:
+error-message-sensor-failure = ID sensore:
+error-message-calibration-failure = Misurare:
+error-message-other = Motivo:
 
 stop-title = Ventilatore inattivo
 stop-description = Riattivalo per riprendere la respirazione

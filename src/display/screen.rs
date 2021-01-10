@@ -15,8 +15,8 @@ use crate::chip::settings::{
     advanced::SettingsAdvanced, mode::SettingsMode, run::SettingsRun, snooze::SettingsSnooze,
     ChipSettings,
 };
-use crate::chip::ChipError;
 use crate::config::environment::*;
+use crate::locale::error::error_to_locales;
 use crate::utilities::units::{convert_ml_to_l, convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::widget::*;
 use crate::{APP_ARGS, APP_I18N};
@@ -161,13 +161,8 @@ impl<'a> Screen<'a> {
     }
 
     pub fn render_error(&mut self, config: DisplayDataError<'a>) {
-        // Generate error message
-        let message = match config.error {
-            ChipError::NoDevice => APP_I18N.t("error-message-no-device"),
-            ChipError::TimedOut => APP_I18N.t("error-message-timed-out"),
-            ChipError::BadProtocol => APP_I18N.t("error-message-bad-protocol"),
-            ChipError::Other(details) => details.to_owned(),
-        };
+        // Generate error texts
+        let error_texts = error_to_locales(config.error);
 
         // Render background
         self.render_background();
@@ -182,7 +177,8 @@ impl<'a> Screen<'a> {
             width: config.width,
             height: config.height,
             image: config.image_id,
-            message,
+            title: error_texts.0,
+            message: error_texts.1,
         }));
     }
 
