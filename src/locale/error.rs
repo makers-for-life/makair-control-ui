@@ -10,12 +10,12 @@ use crate::APP_I18N;
 pub fn error_to_locales(error: &ChipError) -> (String, String) {
     // Acquire target locale attributes
     let (locale_key, error_details) = match error {
-        &ChipError::NoDevice => ("no-device", None),
-        &ChipError::TimedOut => ("timed-out", None),
-        &ChipError::BadProtocol => ("bad-protocol", None),
-        &ChipError::Watchdog(ref details) => ("watchdog", Some(details)),
-        &ChipError::SensorFailure(ref details) => ("sensor-failure", Some(details)),
-        &ChipError::Other(ref details) => ("other", Some(details)),
+        ChipError::NoDevice => ("no-device", None),
+        ChipError::TimedOut => ("timed-out", None),
+        ChipError::BadProtocol => ("bad-protocol", None),
+        ChipError::Watchdog(ref details) => ("watchdog", Some(details)),
+        ChipError::SensorFailure(ref details) => ("sensor-failure", Some(details)),
+        ChipError::Other(ref details) => ("other", Some(details)),
     };
 
     // Acquire title
@@ -27,7 +27,7 @@ pub fn error_to_locales(error: &ChipError) -> (String, String) {
     if let Some(error_details) = error_details {
         message.push_str(" '");
         message.push_str(error_details);
-        message.push_str("'");
+        message.push('\'');
     }
 
     (title, message)

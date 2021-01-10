@@ -69,16 +69,10 @@ impl Default for DisplayRendererSettingsState {
 #[allow(clippy::new_ret_no_self)]
 impl DisplayRendererBuilder {
     pub fn new(fonts: Fonts, ids: Ids, images: ImageIds) -> DisplayRenderer {
-        // TODO: remove this indirect
-        let mut states = DisplayRendererStates::default();
-
-        // TODO: forced for dev
-        states.preset_settings = DisplayRendererSettingsState::Opened;
-
         DisplayRenderer {
             fonts,
             ids,
-            states: states,
+            states: DisplayRendererStates::default(),
             images,
             plot_graphs: (
                 ConrodBackendReusableGraph::build(),
