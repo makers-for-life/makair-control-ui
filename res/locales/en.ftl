@@ -55,7 +55,7 @@ advanced-group-settings = Settings
 
 modal-close = Close
 modal-apply = Apply
-modal-cancel = Cancel
+modal-cancel = Ignore
 
 modal-preset-title = Hello. Please configure your patient details.
 modal-preset-subtitle = Preset settings will be applied, which can be adjusted afterwards.

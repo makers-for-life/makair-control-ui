@@ -55,7 +55,7 @@ advanced-group-settings = Paramètres
 
 modal-close = Fermer
 modal-apply = Valider
-modal-cancel = Annuler
+modal-cancel = Ignorer
 
 modal-preset-title = Bonjour. Veuillez configurer votre patient.
 modal-preset-subtitle = Les paramètres optimums seront appliqués, ils pourront être ajustés.
