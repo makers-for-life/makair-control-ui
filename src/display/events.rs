@@ -511,7 +511,7 @@ impl DisplayUIEvents {
                     ],
 
                     {
-                        chip.settings.preset.change_height(SettingActionRange::Less);
+                        chip.settings.preset.change_size(SettingActionRange::Less);
                     }
                 },
 
@@ -524,7 +524,7 @@ impl DisplayUIEvents {
                     ],
 
                     {
-                        chip.settings.preset.change_height(SettingActionRange::More);
+                        chip.settings.preset.change_size(SettingActionRange::More);
                     }
                 }
             },

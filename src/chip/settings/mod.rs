@@ -12,6 +12,8 @@ pub mod preset;
 pub mod run;
 pub mod snooze;
 
+use std::ops::RangeInclusive;
+
 use telemetry::control::{ControlMessage, ControlSetting};
 
 use advanced::*;
@@ -63,11 +65,20 @@ impl SettingActionState {
 
 impl SettingActionRange {
     fn to_new_value(&self, setting: &ControlSetting, value: usize, step: usize) -> usize {
+        self.to_new_value_bounds(value, step, setting.bounds())
+    }
+
+    fn to_new_value_bounds(
+        &self,
+        value: usize,
+        step: usize,
+        bounds: RangeInclusive<usize>,
+    ) -> usize {
         match self {
             SettingActionRange::More => {
                 let new_value = value + step;
 
-                if setting.bounds().contains(&new_value) {
+                if bounds.contains(&new_value) {
                     new_value
                 } else {
                     value
@@ -77,7 +88,7 @@ impl SettingActionRange {
                 if value >= step {
                     let new_value = value - step;
 
-                    if setting.bounds().contains(&new_value) {
+                    if bounds.contains(&new_value) {
                         new_value
                     } else {
                         value

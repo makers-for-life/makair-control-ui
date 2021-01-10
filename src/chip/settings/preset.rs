@@ -3,17 +3,22 @@
 // Copyright: 2021, Makers For Life
 // License: Public Domain License
 
+use std::ops::RangeInclusive;
+
 use crate::chip::settings::SettingActionRange;
 
-const SIZE_BASE_BABY: u8 = 50;
-const SIZE_BASE_CHILD: u8 = 110;
-const SIZE_BASE_TEENAGER: u8 = 150;
-const SIZE_BASE_ADULT: u8 = 170;
+const AGE_STEP: usize = 1;
+const AGE_RANGE: RangeInclusive<usize> = RangeInclusive::new(40, 280);
+
+const SIZE_BASE_BABY: usize = 50;
+const SIZE_BASE_CHILD: usize = 110;
+const SIZE_BASE_TEENAGER: usize = 150;
+const SIZE_BASE_ADULT: usize = 170;
 
 #[derive(Debug)]
 pub struct SettingsPreset {
     pub age: SettingsPresetAge,
-    pub size: u8,
+    pub size: usize,
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -35,7 +40,7 @@ impl SettingsPresetAge {
         [Self::Baby, Self::Child, Self::Teenager, Self::Adult]
     }
 
-    fn base_size(&self) -> u8 {
+    fn base_size(&self) -> usize {
         match self {
             Self::Baby => SIZE_BASE_BABY,
             Self::Child => SIZE_BASE_CHILD,
@@ -78,7 +83,7 @@ impl SettingsPreset {
         }
     }
 
-    pub fn change_height(&mut self, action: SettingActionRange) {
-        // TODO
+    pub fn change_size(&mut self, action: SettingActionRange) {
+        self.size = action.to_new_value_bounds(self.size, AGE_STEP, AGE_RANGE);
     }
 }
