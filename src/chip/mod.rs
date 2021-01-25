@@ -396,6 +396,21 @@ impl Chip {
                 //   interacted w/ the UI)
                 ChipEventUpdate::May
             }
+
+            TelemetryMessage::FatalError(error) => {
+                // TODO: to be implemented
+
+                // A fatal error should always trigger an UI refresh
+                ChipEventUpdate::May
+            }
+
+            TelemetryMessage::EolTestSnapshot(snapshot) => {
+                // TODO: to be implemented
+
+                // An end-of-line test snapshot should only trigger an UI refresh if there are \
+                //   changes
+                ChipEventUpdate::MayNot
+            }
         }
     }
 
@@ -734,7 +749,9 @@ impl Chip {
                 high_expiratory_minute_volume_alarm_threshold,
                 low_respiratory_rate_alarm_threshold,
                 high_respiratory_rate_alarm_threshold,
-                battery_level
+                battery_level,
+                patient_height,
+                locale
             ]
         );
 
@@ -928,6 +945,14 @@ impl Chip {
             ControlSetting::InspiratoryDuration => {
                 self.settings.mode.live.duration_inspiration = ack.value as usize;
                 self.last_machine_snapshot.inspiratory_duration_command = Some(ack.value);
+            }
+
+            ControlSetting::Locale => {
+                // TODO: to be implemented
+            }
+
+            ControlSetting::PatientHeight => {
+                // TODO: to be implemented
             }
         }
     }

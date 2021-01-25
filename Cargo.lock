@@ -1083,7 +1083,7 @@ dependencies = [
 [[package]]
 name = "makair-telemetry"
 version = "2.0.0"
-source = "git+https://github.com/makers-for-life/makair-telemetry?rev=c6fc555726f14810b2773c9b6f346fe31139a38b#c6fc555726f14810b2773c9b6f346fe31139a38b"
+source = "git+https://github.com/makers-for-life/makair-telemetry?rev=79fe676bbfc10973984fd080ecd2579521038b21#79fe676bbfc10973984fd080ecd2579521038b21"
 dependencies = [
  "base64",
  "clap 3.0.0-beta.2",
