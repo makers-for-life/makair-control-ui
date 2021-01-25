@@ -406,7 +406,7 @@ impl Chip {
                 }
             }
 
-            TelemetryMessage::EolTestSnapshot(snapshot) => {
+            TelemetryMessage::EolTestSnapshot(_snapshot) => {
                 // TODO: to be implemented
                 // @see: https://github.com/makers-for-life/makair-control-ui/issues/81
 
