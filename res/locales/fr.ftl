@@ -113,7 +113,7 @@ error-title-other = Oups. Une erreur inconnue est survenue.
 error-message-no-device = Impossible d'atteindre la télémétrie. Est-elle configurée correctement ?
 error-message-timed-out = Certains composants pourraient ne pas avoir démarré. Redémarrez la machine.
 error-message-bad-protocol = La version du protocole de télémétrie du système n'est pas supportée. Mettez à niveau.
-error-message-watchdog = Origine :
+error-message-watchdog = Un minuteur de surveillance a été déclenché. Le microcontrôleur interne a donc redémarré.
 error-message-sensor-failure = ID du capteur :
 error-message-other = Raison :
 

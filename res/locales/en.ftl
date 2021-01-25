@@ -113,7 +113,7 @@ error-title-other = Oops. An unknown error occurred.
 error-message-no-device = Cannot reach the telemetry master. Is it properly configured?
 error-message-timed-out = Some components may have failed to start. Can you try power cycling?
 error-message-bad-protocol = The firmware is using an unsupported telemetry protocol. Please update software.
-error-message-watchdog = Origin:
+error-message-watchdog = A watchdog timer has been raised, and thus the internal microcontroller has restarted.
 error-message-sensor-failure = Sensor ID:
 error-message-other = Reason:
 

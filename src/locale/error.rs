@@ -13,7 +13,7 @@ pub fn error_to_locales(error: &ChipError) -> (String, String) {
         ChipError::NoDevice => ("no-device", None),
         ChipError::TimedOut => ("timed-out", None),
         ChipError::BadProtocol => ("bad-protocol", None),
-        ChipError::Watchdog(ref details) => ("watchdog", Some(details)),
+        ChipError::Watchdog => ("watchdog", None),
         ChipError::SensorFailure(ref details) => ("sensor-failure", Some(details)),
         ChipError::Other(ref details) => ("other", Some(details)),
     };

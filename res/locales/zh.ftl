@@ -113,7 +113,7 @@ error-title-other = 哎呀。 出现未知错误。
 error-message-no-device = 无法到达遥测主机。 是否配置正确？
 error-message-timed-out = 某些组件可能无法启动。 您可以尝试重新启动电源吗？
 error-message-bad-protocol = 固件正在使用不受支持的遥测协议。 请更新软件。
-error-message-watchdog = 起源：
+error-message-watchdog = 看门狗定时器已增加，因此内部微控制器已重新启动。
 error-message-sensor-failure = 传感器ID：
 error-message-other = 原因：
 

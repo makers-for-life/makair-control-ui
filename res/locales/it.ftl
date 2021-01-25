@@ -113,7 +113,7 @@ error-title-other = Ops. Si è verificato un errore sconosciuto.
 error-message-no-device = Impossibile raggiungere il master della telemetria. È configurato correttamente?
 error-message-timed-out = Alcuni componenti potrebbero non essere stati avviati. Puoi provare il power cycling?
 error-message-bad-protocol = Il firmware utilizza un protocollo di telemetria non supportato. Aggiorna il software.
-error-message-watchdog = Origine:
+error-message-watchdog = È stato attivato un timer watchdog e quindi il microcontrollore interno è stato riavviato.
 error-message-sensor-failure = ID sensore:
 error-message-other = Motivo:
 

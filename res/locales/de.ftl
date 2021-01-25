@@ -113,7 +113,7 @@ error-title-other = Hoppla. Ein unbekannter Fehler ist aufgetreten.
 error-message-no-device = Der Telemetriemaster kann nicht erreicht werden. Ist es richtig konfiguriert?
 error-message-timed-out = Einige Komponenten konnten möglicherweise nicht gestartet werden. Können Sie Power Cycling ausprobieren?
 error-message-bad-protocol = Die Firmware verwendet ein nicht unterstütztes Telemetrieprotokoll. Bitte aktualisieren Sie die Software.
-error-message-watchdog = Ursprung:
+error-message-watchdog = Ein Watchdog-Timer wurde ausgelöst und somit der interne Mikrocontroller neu gestartet.
 error-message-sensor-failure = Sensor ID:
 error-message-other = Grund:
 

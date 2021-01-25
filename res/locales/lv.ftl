@@ -113,7 +113,7 @@ error-title-other = Hmm ... Radās nezināma kļūda.
 error-message-no-device = Nevar sasniegt telemetrijas kapteini. Vai tas ir pareizi konfigurēts?
 error-message-timed-out = Dažus komponentus, iespējams, neizdevās palaist. Vai varat izmēģināt spēka riteņbraukšanu?
 error-message-bad-protocol = Programmaparatūra izmanto neatbalstītu telemetrijas protokolu. Lūdzu, atjauniniet programmatūru.
-error-message-watchdog = Izcelsme:
+error-message-watchdog = Sardzes taimeris ir pacelts, un tādējādi iekšējais mikrokontrolleris ir restartēts.
 error-message-sensor-failure = Sensora ID:
 error-message-other = Iemesls:
 

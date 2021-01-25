@@ -113,7 +113,7 @@ error-title-other = ¡Ups! Un error desconocido ocurrió.
 error-message-no-device = No se puede conectar con el maestro de telemetría. ¿Está configurado correctamente?
 error-message-timed-out = Es posible que algunos componentes no se hayan iniciado. ¿Puedes probar el ciclo de potencia?
 error-message-bad-protocol = El firmware está usando un protocolo de telemetría no compatible. Actualice el software.
-error-message-watchdog = Origen:
+error-message-watchdog = Se ha activado un temporizador de vigilancia y, por tanto, se ha reiniciado el microcontrolador interno.
 error-message-sensor-failure = ID del sensor:
 error-message-other = Razón:
 

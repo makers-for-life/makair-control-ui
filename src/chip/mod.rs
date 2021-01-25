@@ -19,8 +19,8 @@ use telemetry::alarm::{AlarmCode, RMC_SW_16};
 use telemetry::control::{ControlMessage, ControlSetting};
 use telemetry::serial::core;
 use telemetry::structures::{
-    AlarmPriority, ControlAck, DataSnapshot, HighLevelError, MachineStateSnapshot, StoppedMessage,
-    TelemetryMessage, VentilationMode,
+    AlarmPriority, ControlAck, DataSnapshot, FatalErrorDetails, HighLevelError,
+    MachineStateSnapshot, StoppedMessage, TelemetryMessage, VentilationMode,
 };
 
 use crate::config::environment::*;
@@ -59,7 +59,7 @@ pub enum ChipError {
     NoDevice,
     TimedOut,
     BadProtocol,
-    Watchdog(String),
+    Watchdog,
     SensorFailure(String),
     Other(String),
 }
@@ -397,11 +397,13 @@ impl Chip {
                 ChipEventUpdate::May
             }
 
-            TelemetryMessage::FatalError(error) => {
-                // TODO: to be implemented
-
-                // A fatal error should always trigger an UI refresh
-                ChipEventUpdate::May
+            TelemetryMessage::FatalError(err) => {
+                // A fatal error should only trigger an UI refresh if the error state changed
+                if self.update_state_error(err.error) {
+                    ChipEventUpdate::May
+                } else {
+                    ChipEventUpdate::MayNot
+                }
             }
 
             TelemetryMessage::EolTestSnapshot(snapshot) => {
@@ -563,6 +565,40 @@ impl Chip {
     fn update_state_stopped(&mut self) {
         self.settings.run.state = SettingActionState::Disabled;
         self.state = ChipState::Stopped;
+    }
+
+    fn update_state_error(&mut self, details: FatalErrorDetails) -> bool {
+        // Map fatal error to internal chip error
+        let chip_error = ChipState::Error(match details {
+            FatalErrorDetails::WatchdogRestart => ChipError::Watchdog,
+
+            FatalErrorDetails::CalibrationError { .. } => {
+                ChipError::Other("calibration-error".to_string())
+            }
+
+            FatalErrorDetails::BatteryDeeplyDischarged { battery_level } => {
+                ChipError::Other(format!("battery-deeply-discharged <{}>", battery_level))
+            }
+
+            FatalErrorDetails::MassFlowMeterError => {
+                ChipError::SensorFailure("mass-flow-meter".to_string())
+            }
+
+            FatalErrorDetails::InconsistentPressure { pressure } => {
+                ChipError::SensorFailure(format!("inconsistent-pressure <{}>", pressure))
+            }
+        });
+
+        // Update state? (only if changed)
+        if self.state != chip_error {
+            self.state = chip_error;
+
+            // State updated
+            true
+        } else {
+            // State not updated
+            false
+        }
     }
 
     fn update_settings_from_parameters(&mut self, update: ChipSettingsUpdate) {
