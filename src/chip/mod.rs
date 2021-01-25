@@ -408,6 +408,7 @@ impl Chip {
 
             TelemetryMessage::EolTestSnapshot(snapshot) => {
                 // TODO: to be implemented
+                // @see: https://github.com/makers-for-life/makair-control-ui/issues/81
 
                 // An end-of-line test snapshot should only trigger an UI refresh if there are \
                 //   changes
@@ -985,10 +986,12 @@ impl Chip {
 
             ControlSetting::Locale => {
                 // TODO: to be implemented
+                // @see: https://github.com/makers-for-life/makair-control-ui/issues/78
             }
 
             ControlSetting::PatientHeight => {
                 // TODO: to be implemented
+                // @see: https://github.com/makers-for-life/makair-control-ui/issues/75
             }
         }
     }
