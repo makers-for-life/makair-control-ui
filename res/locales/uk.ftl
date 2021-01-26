@@ -96,8 +96,8 @@ modal-mode-alarm-low-respiratory-rate = Частота видиху (низьк�
 modal-mode-alarm-high-respiratory-rate = Частота видиху (висока)
 modal-mode-alarm-low-tidal-volume = Дихальний об'єм (низький)
 modal-mode-alarm-high-tidal-volume = Дихальний об'єм (високий)
-modal-mode-alarm-leak = Об'єм витоку
-modal-mode-alarm-peak-pressure = Піковий тиск
+modal-mode-alarm-leak = Об'єм витоку (високий)
+modal-mode-alarm-peak-pressure = Піковий тиск (високий)
 
 modal-advanced-locale = Мова
 modal-advanced-date = Дата

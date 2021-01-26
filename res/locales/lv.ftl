@@ -96,8 +96,8 @@ modal-mode-alarm-low-respiratory-rate = Derīguma termiņš (zems)
 modal-mode-alarm-high-respiratory-rate = Derīguma termiņš (augsts)
 modal-mode-alarm-low-tidal-volume = Plūdmaiņu daudzums (zems)
 modal-mode-alarm-high-tidal-volume = Plūdmaiņu daudzums (liels)
-modal-mode-alarm-leak = Noplūdes apjoms
-modal-mode-alarm-peak-pressure = Maksimālais spiediens
+modal-mode-alarm-leak = Noplūdes apjoms (liels)
+modal-mode-alarm-peak-pressure = Maksimālais spiediens (liels)
 
 modal-advanced-locale = Valoda
 modal-advanced-date = Datums

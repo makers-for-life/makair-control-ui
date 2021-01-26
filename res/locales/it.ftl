@@ -96,8 +96,8 @@ modal-mode-alarm-low-respiratory-rate = Tasso espiratorio (basso)
 modal-mode-alarm-high-respiratory-rate = Tasso espiratorio (alto)
 modal-mode-alarm-low-tidal-volume = Volume corrente (basso)
 modal-mode-alarm-high-tidal-volume = Volume corrente (alto)
-modal-mode-alarm-leak = Perdita di volume
-modal-mode-alarm-peak-pressure = Pressione di picco
+modal-mode-alarm-leak = Perdita di volume (alto)
+modal-mode-alarm-peak-pressure = Pressione di picco (alto)
 
 modal-advanced-locale = Linguaggio
 modal-advanced-date = Data
