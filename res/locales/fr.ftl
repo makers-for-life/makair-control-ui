@@ -94,6 +94,7 @@ modal-mode-alarm-high-respiratory-rate = Cycles par minute (haut)
 modal-mode-alarm-low-tidal-volume = Volume courant (bas)
 modal-mode-alarm-high-tidal-volume = Volume courant (haut)
 modal-mode-alarm-leak = Volume de fuite
+modal-mode-peak-pressure = Pression de crête
 
 modal-advanced-locale = Langue
 modal-advanced-date = Date

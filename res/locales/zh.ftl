@@ -94,6 +94,7 @@ modal-mode-alarm-high-respiratory-rate = 呼气率（高）
 modal-mode-alarm-low-tidal-volume = 潮气量（低）
 modal-mode-alarm-high-tidal-volume = 潮气量（高）
 modal-mode-alarm-leak = 泄漏量
+modal-mode-peak-pressure = 峰值压力
 
 modal-advanced-locale = 语言
 modal-advanced-date = 日期

@@ -452,6 +452,12 @@ impl DisplayUIEvents {
                         "alarm leak",
                         LeakAlarmThreshold,
                         alarm_threshold_leak
+                    ],
+
+                    [
+                        "alarm peak pressure",
+                        PeakPressureAlarmThreshold,
+                        alarm_threshold_peak_pressure
                     ]
                 }
             },
