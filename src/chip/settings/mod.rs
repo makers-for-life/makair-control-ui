@@ -14,7 +14,7 @@ pub mod snooze;
 
 use std::ops::RangeInclusive;
 
-use telemetry::control::{ControlMessage, ControlSetting};
+use makair_telemetry::control::{ControlMessage, ControlSetting};
 
 use advanced::*;
 use mode::*;

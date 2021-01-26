@@ -15,10 +15,10 @@ use std::sync::mpsc::{self, Receiver, Sender};
 use std::time::Instant;
 
 use settings::{ChipSettings, ChipSettingsEvent, ChipSettingsIntent, SettingActionState};
-use telemetry::alarm::{AlarmCode, RMC_SW_16};
-use telemetry::control::{ControlMessage, ControlSetting};
-use telemetry::serial::core;
-use telemetry::structures::{
+use makair_telemetry::alarm::{AlarmCode, RMC_SW_16};
+use makair_telemetry::control::{ControlMessage, ControlSetting};
+use makair_telemetry::serial::core;
+use makair_telemetry::structures::{
     AlarmPriority, ControlAck, DataSnapshot, FatalErrorDetails, HighLevelError,
     MachineStateSnapshot, StoppedMessage, TelemetryMessage, VentilationMode,
 };
@@ -270,15 +270,22 @@ impl Chip {
         channel.1
     }
 
-    pub fn new_core_error(&mut self, error: core::Error) {
-        match error.kind() {
-            core::ErrorKind::NoDevice => self.state = ChipState::Error(ChipError::NoDevice),
-            err => {
-                self.state = ChipState::Error(ChipError::Other(parse_text_lines_to_single(
-                    &format!("{:?}", err),
-                    "; ",
-                )))
+    pub fn new_core_error(&mut self, error: makair_telemetry::error::Error) {
+        use makair_telemetry::error::Error;
+
+        match error {
+            Error::SerialError(serial_error) => {
+                match serial_error.kind() {
+                    core::ErrorKind::NoDevice => self.state = ChipState::Error(ChipError::NoDevice),
+                    err => {
+                        self.state = ChipState::Error(ChipError::Other(parse_text_lines_to_single(
+                            &format!("{:?}", err),
+                            "; ",
+                        )))
+                    }
+                };
             }
+            _ => (),
         };
     }
 

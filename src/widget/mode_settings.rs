@@ -8,7 +8,7 @@ use conrod_core::{
     widget::{self, Id as WidgetId},
     Positionable, Sizeable, Widget,
 };
-use telemetry::structures::VentilationMode;
+use makair_telemetry::structures::VentilationMode;
 
 use crate::chip::settings::mode::{SettingsMode, SettingsModeGroupTab};
 use crate::config::environment::*;

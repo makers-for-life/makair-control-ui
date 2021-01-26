@@ -3,7 +3,7 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-use telemetry::structures::{VentilationModeClass, VentilationModeKind};
+use makair_telemetry::structures::{VentilationModeClass, VentilationModeKind};
 
 use crate::chip::settings::mode::SettingsModeGroupTab;
 

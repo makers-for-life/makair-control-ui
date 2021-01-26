@@ -5,7 +5,7 @@
 
 use rn2903::Rn2903;
 use sysfs_gpio::{Direction, Pin};
-use telemetry::structures::TelemetryMessage;
+use makair_telemetry::structures::TelemetryMessage;
 
 use std::sync::mpsc::channel;
 use std::sync::mpsc::{self, Sender};

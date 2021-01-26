@@ -3,7 +3,7 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-use telemetry::alarm::AlarmCodeDescription;
+use makair_telemetry::alarm::AlarmCodeDescription;
 
 use crate::APP_I18N;
 

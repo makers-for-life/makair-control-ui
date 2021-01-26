@@ -4,7 +4,7 @@
 // License: Public Domain License
 
 use plotters_conrod::ConrodBackendReusableGraph;
-use telemetry::structures::MachineStateSnapshot;
+use makair_telemetry::structures::MachineStateSnapshot;
 
 use crate::chip::{ChipData, ChipError, ChipState};
 

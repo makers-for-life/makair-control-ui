@@ -9,8 +9,8 @@ use conrod_core::{
     Positionable, Sizeable, Widget,
 };
 
-use telemetry::alarm::{AlarmCode, RMC_SW_16};
-use telemetry::structures::{AlarmPriority, DataSnapshot};
+use makair_telemetry::alarm::{AlarmCode, RMC_SW_16};
+use makair_telemetry::structures::{AlarmPriority, DataSnapshot};
 
 use crate::chip::ChipState;
 use crate::config::environment::*;

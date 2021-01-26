@@ -9,8 +9,8 @@ use conrod_core::{
     Colorable, Positionable, Sizeable, Widget,
 };
 
-use telemetry::alarm::AlarmCode;
-use telemetry::structures::AlarmPriority;
+use makair_telemetry::alarm::AlarmCode;
+use makair_telemetry::structures::AlarmPriority;
 
 use super::alarms;
 

@@ -6,8 +6,8 @@
 use chrono::{offset::Utc, DateTime};
 use conrod_core::color::{self, Color};
 
-use telemetry::alarm::AlarmCode;
-use telemetry::structures::{
+use makair_telemetry::alarm::AlarmCode;
+use makair_telemetry::structures::{
     AlarmPriority, DataSnapshot, MachineStateSnapshot, VentilationMode, VentilationModeClass,
 };
 
