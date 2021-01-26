@@ -3,7 +3,7 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-use telemetry::control::{ControlMessage, ControlSetting};
+use makair_telemetry::control::{ControlMessage, ControlSetting};
 
 use crate::chip::settings::SettingActionState;
 

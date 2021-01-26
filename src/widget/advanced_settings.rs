@@ -15,8 +15,8 @@ use conrod_core::{
     Positionable, Sizeable, Widget,
 };
 
-use telemetry::alarm::AlarmCode;
-use telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot};
+use makair_telemetry::alarm::AlarmCode;
+use makair_telemetry::structures::{AlarmPriority, DataSnapshot, MachineStateSnapshot};
 
 use crate::chip::settings::advanced::{SettingsAdvanced, SettingsAdvancedGroupTab};
 use crate::config::environment::*;

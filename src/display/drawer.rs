@@ -10,7 +10,7 @@ use std::time::{Duration, Instant};
 use conrod_core::Ui;
 use glium::glutin::{ContextBuilder, EventsLoop, WindowBuilder};
 use glium::{texture, Surface};
-use telemetry::{self, TelemetryChannelType};
+use makair_telemetry::{self, TelemetryChannelType};
 
 use crate::chip::{Chip, ChipEventUpdate, ChipState};
 use crate::config::arguments::RunMode;
@@ -252,7 +252,7 @@ impl<'a> DisplayDrawer<'a> {
                 let settings_receiver = self.chip.init_settings_receiver();
 
                 std::thread::spawn(move || {
-                    telemetry::gather_telemetry(
+                    makair_telemetry::gather_telemetry(
                         &port,
                         tx,
                         optional_file_buffer,
@@ -265,7 +265,7 @@ impl<'a> DisplayDrawer<'a> {
                 std::thread::spawn(move || loop {
                     let file = std::fs::File::open(path).expect("input file not found");
 
-                    telemetry::gather_telemetry_from_file(file, tx.clone(), true);
+                    makair_telemetry::gather_telemetry_from_file(file, tx.clone(), true);
                 });
             }
         }

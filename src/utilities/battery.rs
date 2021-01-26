@@ -5,8 +5,8 @@
 
 use std::cmp::{max, min};
 
-use telemetry::alarm::{AlarmCode, RMC_SW_11, RMC_SW_12, RMC_SW_16};
-use telemetry::structures::AlarmPriority;
+use makair_telemetry::alarm::{AlarmCode, RMC_SW_11, RMC_SW_12, RMC_SW_16};
+use makair_telemetry::structures::AlarmPriority;
 
 pub fn estimate_lead_acid_12v_2s_soc(voltage: f64, is_running: bool, blower_ppm: usize) -> u8 {
     // Notice: this is a rough estimation of the battery SoC for a lead-acid battery, regardless \

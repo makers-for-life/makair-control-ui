@@ -14,7 +14,7 @@ use conrod_core::{
 use plotters::prelude::*;
 use plotters::style::{Color, ShapeStyle, TextStyle};
 use plotters_conrod::{ConrodBackend, ConrodBackendReusableGraph};
-use telemetry::structures::MachineStateSnapshot;
+use makair_telemetry::structures::MachineStateSnapshot;
 
 use crate::chip::{ChipData, ChipState};
 use crate::config::environment::*;
