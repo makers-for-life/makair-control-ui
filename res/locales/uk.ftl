@@ -35,6 +35,7 @@ alarms-message-respiratory-rate-high = Частота дихання занад�
 alarms-message-leak-high = Обсяг витоку занадто великий
 alarms-message-tidal-volume-low = Дихальний об'єм занадто низький
 alarms-message-tidal-volume-high = Дихальний об’єм занадто високий
+alarms-message-peak-pressure-high = Піковий тиск занадто високий
 alarms-message-unknown = Невідомий сигнал тривоги
 
 status-unit-stopped = Зупинився

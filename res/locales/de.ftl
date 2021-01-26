@@ -35,6 +35,7 @@ alarms-message-respiratory-rate-high = Atemfrequenz ist zu hoch
 alarms-message-leak-high = Leckvolumen ist zu hoch
 alarms-message-tidal-volume-low = Das Atemvolumen ist zu gering
 alarms-message-tidal-volume-high = Das Atemvolumen ist zu hoch
+alarms-message-peak-pressure-high = Der Spitzendruck ist zu hoch
 alarms-message-unknown = Unbekannter Alarm (Code prüfen)
 
 status-unit-stopped = Gerät gestoppt

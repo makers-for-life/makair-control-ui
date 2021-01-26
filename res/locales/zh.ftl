@@ -35,6 +35,7 @@ alarms-message-respiratory-rate-high = 呼吸频率过高
 alarms-message-leak-high = 泄漏量太大
 alarms-message-tidal-volume-low = 潮气量太低
 alarms-message-tidal-volume-high = 潮气量过高
+alarms-message-peak-pressure-high = 峰值压力太高
 alarms-message-unknown = 未知警报（校验码）
 
 status-unit-stopped = 单位停止

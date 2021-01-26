@@ -35,6 +35,7 @@ alarms-message-respiratory-rate-high = A frequência respiratória é muito alta
 alarms-message-leak-high = O volume de vazamento está muito alto
 alarms-message-tidal-volume-low = O volume corrente está muito baixo
 alarms-message-tidal-volume-high = O volume corrente está muito alto
+alarms-message-peak-pressure-high = A pressão de pico é muito alta
 alarms-message-unknown = Alarme desconhecido (código de verificação)
 
 status-unit-stopped = Unidade parada

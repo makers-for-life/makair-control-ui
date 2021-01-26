@@ -35,6 +35,7 @@ alarms-message-respiratory-rate-high = Respiratory rate is too high
 alarms-message-leak-high = Leak volume is too high
 alarms-message-tidal-volume-low = Tidal volume is too low
 alarms-message-tidal-volume-high = Tidal volume is too high
+alarms-message-peak-pressure-high = Peak pressure is too high
 alarms-message-unknown = Unknown alarm (check code)
 
 status-unit-stopped = Unit stopped
