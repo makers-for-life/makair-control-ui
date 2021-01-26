@@ -12,6 +12,7 @@ const INSPIRATORY_TIME_STEP: usize = 10;
 const CYCLES_PER_MINUTE_STEP: usize = 1;
 const TRIGGER_OFFSET_STEP: usize = 1;
 const TRIGGER_FLOW_STEP: usize = 1;
+const LEAK_VOLUME_STEP: usize = 10;
 const PRESSURE_STEP: usize = 10;
 const FLOW_STEP: usize = 1;
 const VOLUME_STEP: usize = 10;
@@ -126,7 +127,7 @@ gen_mode_impls!(
     HighTidalVolumeAlarmThreshold
         |-> alarm_threshold_high_tidal_volume [VOLUME_STEP],
     LeakAlarmThreshold
-        |-> alarm_threshold_leak [VOLUME_STEP],
+        |-> alarm_threshold_leak [LEAK_VOLUME_STEP],
     PeakPressureAlarmThreshold
         |-> alarm_threshold_peak_pressure [PRESSURE_STEP],
 );

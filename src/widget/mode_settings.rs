@@ -17,7 +17,7 @@ use crate::locale::modes::{
     class_to_locale as mode_class_to_locale, group_tab_to_locale as mode_group_tab_to_locale,
     kind_to_locale as mode_kind_to_locale,
 };
-use crate::utilities::units::{convert_mmh2o_to_cmh2o, ConvertMode};
+use crate::utilities::units::{convert_cl_to_ml, convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::APP_I18N;
 
 const SELECTOR_BORDER_COLOR: Color = Color::Rgba(81.0 / 255.0, 81.0 / 255.0, 81.0 / 255.0, 1.0);
@@ -822,7 +822,7 @@ fn field_alarm_threshold_leak<'a>(index: usize, master: &mut ControlWidget<'a>, 
             label_text: APP_I18N.t("modal-mode-alarm-leak"),
             value_text: format!(
                 "{} {}",
-                field_values.current,
+                convert_cl_to_ml(ConvertMode::Rounded, field_values.current as f64),
                 APP_I18N.t("telemetry-unit-mlpm")
             ),
             ids: config.field_alarm_threshold_leak_ids,
