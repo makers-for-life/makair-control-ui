@@ -5,6 +5,7 @@
 
 use std::ops::RangeInclusive;
 
+use makair_telemetry::control::{ControlMessage, ControlSetting};
 use makair_telemetry::structures::PatientGender;
 
 use crate::chip::settings::SettingActionRange;
@@ -16,6 +17,14 @@ const SIZE_BASE_CHILD: usize = 110;
 const SIZE_BASE_TEENAGER: usize = 150;
 const SIZE_BASE_ADULT: usize = 170;
 
+const SIZE_FALLBACK_DEFAULT: usize = SIZE_BASE_ADULT;
+
+#[derive(Debug)]
+pub enum SettingsPresetEvent {
+    CommitIgnore,
+    CommitSubmit,
+}
+
 #[derive(Debug)]
 pub struct SettingsPreset {
     pub gender: SettingsPresetGender,
@@ -23,7 +32,7 @@ pub struct SettingsPreset {
     pub size: usize,
 }
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum SettingsPresetGender {
     Male,
     Female,
@@ -96,6 +105,39 @@ impl SettingsPreset {
             age,
             size,
         }
+    }
+
+    pub fn new_event(&self, event: SettingsPresetEvent) -> Vec<ControlMessage> {
+        match event {
+            SettingsPresetEvent::CommitIgnore => self.commit(false),
+            SettingsPresetEvent::CommitSubmit => self.commit(true),
+        }
+    }
+
+    pub fn commit(&self, submit: bool) -> Vec<ControlMessage> {
+        let mut events = Vec::new();
+
+        // Acquire selected gender and size values, or use defaults?
+        let (patient_gender, patient_size) = if submit {
+            (self.gender, self.size)
+        } else {
+            (SettingsPresetGender::default(), SIZE_FALLBACK_DEFAULT)
+        };
+
+        // Acquire internal value for gender
+        let patient_gender_internal = PatientGender::from(&patient_gender);
+
+        // Append all events
+        events.push(ControlMessage {
+            setting: ControlSetting::PatientGender,
+            value: u8::from(&patient_gender_internal) as _,
+        });
+        events.push(ControlMessage {
+            setting: ControlSetting::PatientHeight,
+            value: patient_size as _,
+        });
+
+        events
     }
 
     pub fn switch_gender(&mut self, action: SettingActionRange) {

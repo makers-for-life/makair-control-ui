@@ -24,6 +24,7 @@ use snooze::*;
 
 #[derive(Debug)]
 pub enum ChipSettingsEvent {
+    Preset(SettingsPresetEvent),
     Run(SettingsRunEvent),
     Snooze(SettingsSnoozeEvent),
     Mode(SettingsModeEvent),
@@ -131,6 +132,7 @@ impl ChipSettings {
 
     pub fn new_settings_event(&mut self, event: ChipSettingsEvent) -> Vec<ControlMessage> {
         match event {
+            ChipSettingsEvent::Preset(event) => self.preset.new_event(event),
             ChipSettingsEvent::Run(event) => self.run.new_event(event),
             ChipSettingsEvent::Snooze(event) => self.snooze.new_event(event),
             ChipSettingsEvent::Mode(event) => self.mode.new_event(event),

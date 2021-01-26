@@ -10,6 +10,7 @@ use crate::chip::{
     settings::{
         advanced::SettingsAdvancedGroupTab,
         mode::{SettingsModeEvent, SettingsModeGroupTab, SettingsModeIntent},
+        preset::SettingsPresetEvent,
         run::SettingsRunEvent,
         snooze::SettingsSnoozeEvent,
         ChipSettingsEvent, ChipSettingsIntent, SettingActionRange,
@@ -118,8 +119,7 @@ impl DisplayUIEvents {
         let mut has_events = false;
 
         // Open the preset settings modal?
-        // TODO: rollback to Some(0) check for retro compat
-        let new_preset_state = if chip.last_machine_snapshot.patient_height.unwrap_or(0) == 0 {
+        let new_preset_state = if chip.last_machine_snapshot.patient_height == Some(0) {
             DisplayRendererSettingsState::Opened
         } else {
             DisplayRendererSettingsState::Closed
@@ -250,7 +250,21 @@ impl DisplayUIEvents {
             interface, ids, has_events,
 
             {
-                "preset", states.preset_settings, {}, {},
+                "preset", states.preset_settings,
+
+                {
+                    // Commit all values (ignore button)
+                    events.push(
+                        ChipSettingsEvent::Preset(SettingsPresetEvent::CommitIgnore)
+                    );
+                },
+
+                {
+                    // Commit all values (submit button)
+                    events.push(
+                        ChipSettingsEvent::Preset(SettingsPresetEvent::CommitSubmit)
+                    );
+                },
             },
 
             {
