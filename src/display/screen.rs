@@ -287,6 +287,7 @@ impl<'a> Screen<'a> {
 
         self.widgets
             .render(ControlWidgetType::Heartbeat(heartbeat::Config {
+                mode: machine_snapshot.ventilation_mode,
                 data_pressure: heartbeat_data.data_pressure,
                 peak_command: machine_snapshot.peak_command,
                 peak_alarm: machine_snapshot

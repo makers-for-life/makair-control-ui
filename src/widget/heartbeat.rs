@@ -10,6 +10,7 @@ use conrod_core::{
     widget::{self, Id as WidgetId},
     Positionable, Widget,
 };
+use makair_telemetry::structures::{VentilationMode, VentilationModeClass};
 
 use crate::chip::ChipData;
 use crate::config::environment::*;
@@ -28,6 +29,7 @@ const GROUND_CIRCLE_COLOR_OVERFLOW: Color =
     Color::Rgba(204.0 / 255.0, 204.0 / 255.0, 204.0 / 255.0, 1.0);
 
 pub struct Config<'a> {
+    pub mode: VentilationMode,
     pub data_pressure: &'a ChipData,
     pub peak_command: u8,
     pub peak_alarm: u8,
@@ -68,11 +70,13 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     };
 
     // Acquire maximum allowed pressure
-    let pressure_alert_threshold = process_max_allowed_pressure(if config.peak_alarm > 0 {
-        config.peak_alarm
-    } else {
-        config.peak_command
-    }) as f64;
+    let pressure_alert_threshold = process_max_allowed_pressure(
+        if config.mode.class() == VentilationModeClass::Volume && config.peak_alarm > 0 {
+            config.peak_alarm
+        } else {
+            config.peak_command
+        },
+    ) as f64;
 
     let last_pressure_ratio = if pressure_alert_threshold > 0.0 {
         last_pressure as f64 / pressure_alert_threshold
