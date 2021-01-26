@@ -94,7 +94,7 @@ modal-mode-alarm-high-respiratory-rate = Respiratory rate (max)
 modal-mode-alarm-low-tidal-volume = Tidal volume (min)
 modal-mode-alarm-high-tidal-volume = Tidal volume (max)
 modal-mode-alarm-leak = Leak volume
-modal-mode-peak-pressure = Peak pressure
+modal-mode-alarm-peak-pressure = Peak pressure
 
 modal-advanced-locale = Language
 modal-advanced-date = Date

@@ -94,7 +94,7 @@ modal-mode-alarm-high-respiratory-rate = Exspirationsrate (hoch)
 modal-mode-alarm-low-tidal-volume = Atemzugvolumen (gering)
 modal-mode-alarm-high-tidal-volume = Atemzugvolumen (hoch)
 modal-mode-alarm-leak = Leckvolumen
-modal-mode-peak-pressure = Spitzendruck
+modal-mode-alarm-peak-pressure = Spitzendruck
 
 modal-advanced-locale = Sprache
 modal-advanced-date = Datum

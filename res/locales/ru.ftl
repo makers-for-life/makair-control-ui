@@ -94,7 +94,7 @@ modal-mode-alarm-high-respiratory-rate = Частота выдоха (высок
 modal-mode-alarm-low-tidal-volume = Дыхательный объем (низкий)
 modal-mode-alarm-high-tidal-volume = Дыхательный объем (высокий)
 modal-mode-alarm-leak = Объем утечки
-modal-mode-peak-pressure = Пиковое давление
+modal-mode-alarm-peak-pressure = Пиковое давление
 
 modal-advanced-locale = Язык
 modal-advanced-date = Свидание
