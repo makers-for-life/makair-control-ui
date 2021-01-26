@@ -96,6 +96,7 @@ struct ChipSettingsUpdate {
     low_tidal_volume_alarm_threshold: Option<u16>,
     high_tidal_volume_alarm_threshold: Option<u16>,
     leak_alarm_threshold: Option<u16>,
+    peak_pressure_alarm_threshold: Option<u16>,
 }
 
 pub struct Chip {
@@ -688,7 +689,8 @@ impl Chip {
                 high_respiratory_rate,
                 low_tidal_volume,
                 high_tidal_volume,
-                leak
+                leak,
+                peak_pressure
             ]
         );
     }
@@ -727,6 +729,7 @@ impl Chip {
             low_tidal_volume_alarm_threshold: snapshot.low_tidal_volume_alarm_threshold,
             high_tidal_volume_alarm_threshold: snapshot.high_tidal_volume_alarm_threshold,
             leak_alarm_threshold: snapshot.leak_alarm_threshold,
+            peak_pressure_alarm_threshold: snapshot.peak_pressure_alarm_threshold,
         });
     }
 
@@ -765,6 +768,7 @@ impl Chip {
             low_tidal_volume_alarm_threshold: message.low_tidal_volume_alarm_threshold,
             high_tidal_volume_alarm_threshold: message.high_tidal_volume_alarm_threshold,
             leak_alarm_threshold: message.leak_alarm_threshold,
+            peak_pressure_alarm_threshold: message.peak_pressure_alarm_threshold,
         });
 
         // Assign same-type message values to snapshot (that must be cloned)
@@ -794,8 +798,9 @@ impl Chip {
                 low_respiratory_rate_alarm_threshold,
                 high_respiratory_rate_alarm_threshold,
                 battery_level,
+                locale,
                 patient_height,
-                locale
+                patient_gender
             ]
         );
 
@@ -1007,8 +1012,8 @@ impl Chip {
             }
 
             ControlSetting::PeakPressureAlarmThreshold => {
-                // TODO: to be implemented
-                // @see: https://github.com/makers-for-life/makair-control-ui/issues/83
+                self.settings.mode.live.alarm_threshold_peak_pressure = ack.value as usize;
+                self.last_machine_snapshot.peak_pressure_alarm_threshold = Some(ack.value as _);
             }
         }
     }

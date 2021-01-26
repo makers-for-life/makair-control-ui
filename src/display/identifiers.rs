@@ -342,6 +342,14 @@ widget_ids!(pub struct Ids {
   mode_settings_alarm_threshold_leak_less,
   mode_settings_alarm_threshold_leak_less_text,
 
+  mode_settings_alarm_threshold_peak_pressure_text,
+  mode_settings_alarm_threshold_peak_pressure_value,
+  mode_settings_alarm_threshold_peak_pressure_value_wrapper,
+  mode_settings_alarm_threshold_peak_pressure_more,
+  mode_settings_alarm_threshold_peak_pressure_more_text,
+  mode_settings_alarm_threshold_peak_pressure_less,
+  mode_settings_alarm_threshold_peak_pressure_less_text,
+
   run_status_container,
   run_status_text,
   run_status_button,

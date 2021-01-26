@@ -71,6 +71,7 @@ pub struct Config<'a> {
     pub field_alarm_threshold_low_tidal_volume_ids: FieldWidgetIds,
     pub field_alarm_threshold_high_tidal_volume_ids: FieldWidgetIds,
     pub field_alarm_threshold_leak_ids: FieldWidgetIds,
+    pub field_alarm_threshold_peak_pressure_ids: FieldWidgetIds,
 
     pub group_wrapper: WidgetId,
     pub content_wrapper: WidgetId,
@@ -362,6 +363,7 @@ fn form_vc_cmv<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         }
         SettingsModeGroupTab::Alarms => {
             field_alarm_threshold_leak(0, master, config);
+            field_alarm_threshold_peak_pressure(1, master, config);
         }
     }
 }
@@ -378,12 +380,13 @@ fn form_vc_ac<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         }
         SettingsModeGroupTab::Alarms => {
             field_alarm_threshold_leak(0, master, config);
-            field_alarm_threshold_low_inspiratory_minute_volume(1, master, config);
-            field_alarm_threshold_high_inspiratory_minute_volume(2, master, config);
-            field_alarm_threshold_low_expiratory_minute_volume(3, master, config);
-            field_alarm_threshold_high_expiratory_minute_volume(4, master, config);
-            field_alarm_threshold_low_respiratory_rate(5, master, config);
-            field_alarm_threshold_high_respiratory_rate(6, master, config);
+            field_alarm_threshold_peak_pressure(1, master, config);
+            field_alarm_threshold_low_inspiratory_minute_volume(2, master, config);
+            field_alarm_threshold_high_inspiratory_minute_volume(3, master, config);
+            field_alarm_threshold_low_expiratory_minute_volume(4, master, config);
+            field_alarm_threshold_high_expiratory_minute_volume(5, master, config);
+            field_alarm_threshold_low_respiratory_rate(6, master, config);
+            field_alarm_threshold_high_respiratory_rate(7, master, config);
         }
     }
 }
@@ -823,6 +826,30 @@ fn field_alarm_threshold_leak<'a>(index: usize, master: &mut ControlWidget<'a>, 
                 APP_I18N.t("telemetry-unit-mlpm")
             ),
             ids: config.field_alarm_threshold_leak_ids,
+        },
+        field_values,
+    )
+}
+
+fn field_alarm_threshold_peak_pressure<'a>(
+    index: usize,
+    master: &mut ControlWidget<'a>,
+    config: &Config,
+) {
+    let field_values = gen_widget_mode_field_values!(config, alarm_threshold_peak_pressure);
+
+    draw_field(
+        index,
+        master,
+        config,
+        Field {
+            label_text: APP_I18N.t("modal-mode-alarm-peak-pressure"),
+            value_text: format!(
+                "{} {}",
+                convert_mmh2o_to_cmh2o(ConvertMode::Rounded, field_values.current as f64),
+                APP_I18N.t("telemetry-unit-cmh2o")
+            ),
+            ids: config.field_alarm_threshold_peak_pressure_ids,
         },
         field_values,
     )

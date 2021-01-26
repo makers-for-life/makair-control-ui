@@ -1027,6 +1027,10 @@ impl<'a> Screen<'a> {
                     self,
                     threshold_leak
                 ),
+                field_alarm_threshold_peak_pressure_ids: gen_render_mode_settings_alarm_ids!(
+                    self,
+                    threshold_peak_pressure
+                ),
 
                 field_pressure_inspiratory_ids: gen_render_mode_settings_field_ids!(
                     self,

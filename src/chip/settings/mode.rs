@@ -127,4 +127,6 @@ gen_mode_impls!(
         |-> alarm_threshold_high_tidal_volume [VOLUME_STEP],
     LeakAlarmThreshold
         |-> alarm_threshold_leak [VOLUME_STEP],
+    PeakPressureAlarmThreshold
+        |-> alarm_threshold_peak_pressure [PRESSURE_STEP],
 );
