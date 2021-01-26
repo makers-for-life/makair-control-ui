@@ -15,7 +15,7 @@ pub struct Config {
     pub id: WidgetId,
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
+pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
     // Create canvas
     widget::Canvas::new()
         .color(config.color)

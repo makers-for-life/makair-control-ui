@@ -28,7 +28,7 @@ pub struct Config {
     pub connecting: bool,
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
+pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
     // Generate initialization text
     let initialization_text = if config.connecting {
         APP_I18N.t("initializing-connecting")

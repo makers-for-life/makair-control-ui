@@ -36,7 +36,7 @@ pub struct Config {
     pub background_sizes: Option<(u32, u32)>,
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
+pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
     // Create background
     gen_widget_container!(
         master,

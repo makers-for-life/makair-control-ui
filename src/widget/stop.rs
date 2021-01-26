@@ -21,7 +21,7 @@ pub struct Config {
     pub message: WidgetId,
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
+pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
     // Initialize title style
     let mut title_style = widget::text::Style::default();
 

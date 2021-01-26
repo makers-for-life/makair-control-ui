@@ -5,6 +5,8 @@
 
 // Notice: increasing the recursion limit is required for all display identifiers to be used
 #![recursion_limit = "512"]
+// Some Clippy rules should be ignored, as they go against code design choices that were made
+#![cfg_attr(feature = "cargo-clippy", allow(clippy::field_reassign_with_default))]
 
 #[macro_use]
 extern crate log;

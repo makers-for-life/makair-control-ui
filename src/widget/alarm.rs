@@ -26,8 +26,8 @@ const ALARM_HIGH_MESSAGE_COLOR: Color = Color::Rgba(180.0 / 255.0, 24.0 / 255.0,
 const ALARM_MEDIUM_MESSAGE_COLOR: Color = Color::Rgba(189.0 / 255.0, 93.0 / 255.0, 0.0, 1.0);
 const ALARM_LOW_MESSAGE_COLOR: Color = Color::Rgba(174.0 / 255.0, 133.0 / 255.0, 0.0, 1.0);
 
-pub fn render<'a>(
-    master: &mut ControlWidget<'a>,
+pub fn render(
+    master: &mut ControlWidget,
     config: &alarms::Config,
 
     alarm_code: AlarmCode,

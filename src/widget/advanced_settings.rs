@@ -82,7 +82,7 @@ struct Text {
     ids: TextWidgetIds,
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
+pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
     // Create canvas
     gen_widget_container!(
         master,

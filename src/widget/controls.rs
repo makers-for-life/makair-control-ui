@@ -20,7 +20,7 @@ pub struct Config {
     pub advanced_button: WidgetId,
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
+pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
     // Notice: all button circles must be transparent here, as they are drawn via the header \
     //   layout texture, which is more optimal CPU-wise than rending sub-images of icons here.
 

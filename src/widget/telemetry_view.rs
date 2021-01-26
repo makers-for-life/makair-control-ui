@@ -39,7 +39,7 @@ pub struct Config {
     pub height: f64,
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
+pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
     // Create rounded rectangle
     widget::rounded_rectangle::RoundedRectangle::fill_with(
         [config.width, config.height],

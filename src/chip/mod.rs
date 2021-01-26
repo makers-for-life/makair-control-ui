@@ -247,7 +247,7 @@ impl Chip {
         // Map final alarm list
         let mut alarm_list: Vec<(AlarmCode, AlarmPriority)> = ongoing_alarms
             .iter()
-            .map(|(code, priority)| (*code, priority.clone()))
+            .map(|(code, priority)| (*code, *priority))
             .collect();
 
         // Sort final alarm list by code, then priority (ensures codes are ordered within their \
@@ -276,20 +276,17 @@ impl Chip {
     pub fn new_core_error(&mut self, error: makair_telemetry::error::Error) {
         use makair_telemetry::error::Error;
 
-        match error {
-            Error::SerialError(serial_error) => {
-                match serial_error.kind() {
-                    core::ErrorKind::NoDevice => self.state = ChipState::Error(ChipError::NoDevice),
-                    err => {
-                        self.state = ChipState::Error(ChipError::Other(parse_text_lines_to_single(
-                            &format!("{:?}", err),
-                            "; ",
-                        )))
-                    }
-                };
-            }
-            _ => (),
-        };
+        if let Error::SerialError(serial_error) = error {
+            match serial_error.kind() {
+                core::ErrorKind::NoDevice => self.state = ChipState::Error(ChipError::NoDevice),
+                err => {
+                    self.state = ChipState::Error(ChipError::Other(parse_text_lines_to_single(
+                        &format!("{:?}", err),
+                        "; ",
+                    )))
+                }
+            };
+        }
     }
 
     pub fn new_telemetry_error(&mut self, error: HighLevelError) {

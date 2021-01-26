@@ -24,7 +24,7 @@ pub struct Config<'a> {
     pub ids: (WidgetId, WidgetId),
 }
 
-pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
+pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
     // Create rectangle
     widget::rectangle::Rectangle::fill_with([config.width, config.height], color::TRANSPARENT)
         .top_left_with_margins_on(
