@@ -88,6 +88,14 @@ impl DisplayUIEvents {
     ) -> (bool, Vec<ChipSettingsIntent>, Vec<ChipSettingsEvent>) {
         let (mut has_events, mut intents, mut events) = (false, Vec::new(), Vec::new());
 
+        // Handle 'forced' clicks
+        // Notice: those are non-user events, but rather interface clicks that are forced based \
+        //   on data coming from the firmware itself, as to force the UI into a specific state \
+        //   with which the user must interact.
+        if Self::run_forced_clicks(chip, states) {
+            has_events = true;
+        }
+
         // Handle telemetry clicks
         if Self::run_opener_clicks(interface, ids, states) {
             has_events = true;
@@ -104,6 +112,26 @@ impl DisplayUIEvents {
         }
 
         (has_events, intents, events)
+    }
+
+    fn run_forced_clicks(chip: &mut Chip, states: &mut DisplayRendererStates) -> bool {
+        let mut has_events = false;
+
+        // Open the preset settings modal?
+        // TODO: rollback to Some(0) check for retro compat
+        let new_preset_state = if chip.last_machine_snapshot.patient_height.unwrap_or(0) == 0 {
+            DisplayRendererSettingsState::Opened
+        } else {
+            DisplayRendererSettingsState::Closed
+        };
+
+        if states.preset_settings != new_preset_state {
+            states.preset_settings = new_preset_state;
+
+            has_events = true;
+        }
+
+        has_events
     }
 
     fn run_opener_clicks(
@@ -505,6 +533,32 @@ impl DisplayUIEvents {
 
                     {
                         chip.settings.preset.switch_age(SettingActionRange::More);
+                    }
+                },
+
+                {
+                    "preset gender previous",
+
+                    [
+                        ids.preset_settings_field_gender_less,
+                        ids.preset_settings_field_gender_less_text,
+                    ],
+
+                    {
+                        chip.settings.preset.switch_gender(SettingActionRange::Less);
+                    }
+                },
+
+                {
+                    "preset gender next",
+
+                    [
+                        ids.preset_settings_field_gender_more,
+                        ids.preset_settings_field_gender_more_text,
+                    ],
+
+                    {
+                        chip.settings.preset.switch_gender(SettingActionRange::More);
                     }
                 },
 

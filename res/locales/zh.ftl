@@ -59,9 +59,11 @@ modal-cancel = 取消
 
 modal-preset-title = 你好。 请配置您的患者详细信息。
 modal-preset-subtitle = 将应用预设设置，然后可以进行调整。
+modal-preset-gender = 性别
+modal-preset-gender-male = 男
+modal-preset-gender-female = 女
 modal-preset-age = 年龄阶层
 modal-preset-size = 身体尺寸
-modal-preset-age-baby = 宝宝
 modal-preset-age-child = 儿童
 modal-preset-age-teenager = 青少年
 modal-preset-age-adult = 成人

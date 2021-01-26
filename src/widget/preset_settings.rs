@@ -17,7 +17,9 @@ use conrod_core::{
 use crate::chip::settings::preset::{SettingsPreset, SettingsPresetAge};
 use crate::config::environment::*;
 use crate::display::widget::ControlWidget;
-use crate::locale::preset::age_to_locale as preset_age_to_locale;
+use crate::locale::preset::{
+    age_to_locale as preset_age_to_locale, gender_to_locale as preset_gender_to_locale,
+};
 use crate::APP_I18N;
 
 type FieldWidgetIds = (
@@ -47,10 +49,10 @@ pub struct Config<'a> {
     pub content_separator: WidgetId,
     pub content_form_wrapper: WidgetId,
 
+    pub field_gender_ids: FieldWidgetIds,
     pub field_age_ids: FieldWidgetIds,
     pub field_height_ids: FieldWidgetIds,
 
-    pub baby_image: conrod_core::image::Id,
     pub child_image: conrod_core::image::Id,
     pub teenager_image: conrod_core::image::Id,
     pub adult_image: conrod_core::image::Id,
@@ -145,7 +147,6 @@ fn content<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 fn content_image<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Acquire image (depending on age group)
     let image = match config.preset_settings.age {
-        SettingsPresetAge::Baby => config.baby_image,
         SettingsPresetAge::Child => config.child_image,
         SettingsPresetAge::Teenager => config.teenager_image,
         SettingsPresetAge::Adult => config.adult_image,
@@ -188,6 +189,17 @@ fn content_form<'a>(master: &mut ControlWidget<'a>, config: &Config, size: (f64,
         master,
         config,
         Field {
+            label_text: APP_I18N.t("modal-preset-gender"),
+            value_text: preset_gender_to_locale(&config.preset_settings.gender),
+            ids: config.field_gender_ids,
+        },
+    );
+
+    draw_field(
+        1,
+        master,
+        config,
+        Field {
             label_text: APP_I18N.t("modal-preset-age"),
             value_text: preset_age_to_locale(&config.preset_settings.age),
             ids: config.field_age_ids,
@@ -195,7 +207,7 @@ fn content_form<'a>(master: &mut ControlWidget<'a>, config: &Config, size: (f64,
     );
 
     draw_field(
-        1,
+        2,
         master,
         config,
         Field {

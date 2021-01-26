@@ -140,6 +140,14 @@ widget_ids!(pub struct Ids {
   preset_settings_content_separator,
   preset_settings_content_form_wrapper,
 
+  preset_settings_field_gender_text,
+  preset_settings_field_gender_value,
+  preset_settings_field_gender_value_wrapper,
+  preset_settings_field_gender_more,
+  preset_settings_field_gender_more_text,
+  preset_settings_field_gender_less,
+  preset_settings_field_gender_less_text,
+
   preset_settings_field_age_text,
   preset_settings_field_age_value,
   preset_settings_field_age_value_wrapper,
@@ -434,7 +442,6 @@ image_ids!(pub struct ImageIds {
   header_running_snoozed,
 
   // Patient modal
-  patient_baby,
   patient_child,
   patient_teenager,
   patient_adult,

@@ -55,11 +55,7 @@ impl SettingsAdvanced {
                 .unwrap_or(0);
 
             // Increment or decrement next locale index
-            let mut next_index = current_index as i16
-                + match action {
-                    SettingActionRange::Less => -1,
-                    SettingActionRange::More => 1,
-                };
+            let mut next_index = action.to_next_index(current_index as _);
 
             // Roll circle?
             if next_index < 0 {

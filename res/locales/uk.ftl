@@ -59,9 +59,11 @@ modal-cancel = Скасувати
 
 modal-preset-title = Привіт. Будь ласка, налаштуйте дані свого пацієнта.
 modal-preset-subtitle = Будуть застосовані попередньо встановлені налаштування, які згодом можна буде регулювати.
+modal-preset-gender = Секс
+modal-preset-gender-male = Самець
+modal-preset-gender-female = Самка
 modal-preset-age = Вікова група
 modal-preset-size = Розмір тіла
-modal-preset-age-baby = Дитина
 modal-preset-age-child = Дитина
 modal-preset-age-teenager = Підліток
 modal-preset-age-adult = Дорослий

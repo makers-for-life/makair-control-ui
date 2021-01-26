@@ -19,9 +19,12 @@ use makair_telemetry::control::{ControlMessage, ControlSetting};
 use makair_telemetry::serial::core;
 use makair_telemetry::structures::{
     AlarmPriority, ControlAck, DataSnapshot, FatalErrorDetails, HighLevelError,
-    MachineStateSnapshot, StoppedMessage, TelemetryMessage, VentilationMode,
+    MachineStateSnapshot, PatientGender, StoppedMessage, TelemetryMessage, VentilationMode,
 };
-use settings::{ChipSettings, ChipSettingsEvent, ChipSettingsIntent, SettingActionState};
+use settings::{
+    preset::SettingsPresetGender, ChipSettings, ChipSettingsEvent, ChipSettingsIntent,
+    SettingActionState,
+};
 
 use crate::config::environment::*;
 use crate::utilities::parse::parse_text_lines_to_single;
@@ -1002,13 +1005,15 @@ impl Chip {
             }
 
             ControlSetting::PatientHeight => {
-                // TODO: to be implemented
-                // @see: https://github.com/makers-for-life/makair-control-ui/issues/75
+                self.settings.preset.size = ack.value as usize;
+                self.last_machine_snapshot.patient_height = Some(ack.value as _);
             }
 
             ControlSetting::PatientGender => {
-                // TODO: to be implemented
-                // @see: https://github.com/makers-for-life/makair-control-ui/issues/75
+                if let Ok(patient_gender) = PatientGender::try_from(ack.value as u8) {
+                    self.settings.preset.gender = SettingsPresetGender::from(&patient_gender);
+                    self.last_machine_snapshot.patient_gender = Some(patient_gender);
+                }
             }
 
             ControlSetting::PeakPressureAlarmThreshold => {

@@ -59,9 +59,11 @@ modal-cancel = Atcelt
 
 modal-preset-title = Sveiki. Lūdzu, konfigurējiet pacienta datus.
 modal-preset-subtitle = Tiks izmantoti iepriekš iestatītie iestatījumi, kurus pēc tam var pielāgot.
+modal-preset-gender = Dzimums
+modal-preset-gender-male = Vīrietis
+modal-preset-gender-female = Sieviete
 modal-preset-age = Vecuma grupa
 modal-preset-size = Ķermeņa izmērs
-modal-preset-age-baby = Mazulīt
 modal-preset-age-child = Bērns
 modal-preset-age-teenager = Pusaudzis
 modal-preset-age-adult = Pieaugušais

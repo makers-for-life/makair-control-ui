@@ -99,6 +99,14 @@ impl SettingActionRange {
             }
         }
     }
+
+    fn to_next_index(&self, current_index: i16) -> i16 {
+        current_index as i16
+            + match self {
+                SettingActionRange::Less => -1,
+                SettingActionRange::More => 1,
+            }
+    }
 }
 
 #[derive(Debug)]

@@ -5,28 +5,41 @@
 
 use std::ops::RangeInclusive;
 
+use makair_telemetry::structures::PatientGender;
+
 use crate::chip::settings::SettingActionRange;
 
 const SIZE_STEP: usize = 1;
 const SIZE_RANGE: RangeInclusive<usize> = RangeInclusive::new(40, 280);
 
-const SIZE_BASE_BABY: usize = 50;
 const SIZE_BASE_CHILD: usize = 110;
 const SIZE_BASE_TEENAGER: usize = 150;
 const SIZE_BASE_ADULT: usize = 170;
 
 #[derive(Debug)]
 pub struct SettingsPreset {
+    pub gender: SettingsPresetGender,
     pub age: SettingsPresetAge,
     pub size: usize,
 }
 
 #[derive(Debug, PartialEq, Clone)]
+pub enum SettingsPresetGender {
+    Male,
+    Female,
+}
+
+#[derive(Debug, PartialEq, Clone)]
 pub enum SettingsPresetAge {
-    Baby,
     Child,
     Teenager,
     Adult,
+}
+
+impl Default for SettingsPresetGender {
+    fn default() -> Self {
+        Self::Male
+    }
 }
 
 impl Default for SettingsPresetAge {
@@ -35,14 +48,37 @@ impl Default for SettingsPresetAge {
     }
 }
 
+impl SettingsPresetGender {
+    fn list_all() -> [Self; 2] {
+        [Self::Male, Self::Female]
+    }
+}
+
+impl From<&PatientGender> for SettingsPresetGender {
+    fn from(gender: &PatientGender) -> Self {
+        match gender {
+            PatientGender::Male => Self::Male,
+            PatientGender::Female => Self::Female,
+        }
+    }
+}
+
+impl From<&SettingsPresetGender> for PatientGender {
+    fn from(gender: &SettingsPresetGender) -> Self {
+        match gender {
+            SettingsPresetGender::Male => Self::Male,
+            SettingsPresetGender::Female => Self::Female,
+        }
+    }
+}
+
 impl SettingsPresetAge {
-    fn list_all() -> [Self; 4] {
-        [Self::Baby, Self::Child, Self::Teenager, Self::Adult]
+    fn list_all() -> [Self; 3] {
+        [Self::Child, Self::Teenager, Self::Adult]
     }
 
     fn base_size(&self) -> usize {
         match self {
-            Self::Baby => SIZE_BASE_BABY,
             Self::Child => SIZE_BASE_CHILD,
             Self::Teenager => SIZE_BASE_TEENAGER,
             Self::Adult => SIZE_BASE_ADULT,
@@ -55,7 +91,31 @@ impl SettingsPreset {
         let age = SettingsPresetAge::default();
         let size = age.base_size();
 
-        SettingsPreset { age, size }
+        SettingsPreset {
+            gender: SettingsPresetGender::default(),
+            age,
+            size,
+        }
+    }
+
+    pub fn switch_gender(&mut self, action: SettingActionRange) {
+        let genders = SettingsPresetGender::list_all();
+        let genders_size = genders.len() as i16;
+
+        if genders_size > 1 {
+            // Get index of current gender in list of genders
+            let current_index = genders
+                .iter()
+                .position(|gender| gender == &self.gender)
+                .unwrap_or(0);
+
+            // Increment or decrement next gender index
+            let next_index = action.to_next_index(current_index as _);
+
+            if next_index >= 0 && next_index < genders_size {
+                self.gender = genders[next_index as usize].to_owned();
+            }
+        }
     }
 
     pub fn switch_age(&mut self, action: SettingActionRange) {
@@ -67,11 +127,7 @@ impl SettingsPreset {
             let current_index = ages.iter().position(|age| age == &self.age).unwrap_or(0);
 
             // Increment or decrement next age index
-            let next_index = current_index as i16
-                + match action {
-                    SettingActionRange::Less => -1,
-                    SettingActionRange::More => 1,
-                };
+            let next_index = action.to_next_index(current_index as _);
 
             if next_index >= 0 && next_index < ages_size {
                 // Update age

@@ -28,8 +28,6 @@ lazy_static! {
         gen_load_image_reverse!("header-running", LAYOUT_TEXTURE_HEADER_WIDTH);
     static ref IMAGE_HEADER_RUNNING_SNOOZED_RGBA_RAW: Vec<u8> =
         gen_load_image_reverse!("header-running-snoozed", LAYOUT_TEXTURE_HEADER_WIDTH);
-    static ref IMAGE_PATIENT_BABY_RGBA_RAW: Vec<u8> =
-        gen_load_image_reverse!("patient-baby", PRESET_SETTINGS_MODAL_TEXTURE_WIDTH);
     static ref IMAGE_PATIENT_CHILD_RGBA_RAW: Vec<u8> =
         gen_load_image_reverse!("patient-child", PRESET_SETTINGS_MODAL_TEXTURE_WIDTH);
     static ref IMAGE_PATIENT_TEENAGER_RGBA_RAW: Vec<u8> =
@@ -93,15 +91,6 @@ impl DisplayImages {
         gen_draw_cached_image!(
             display <= IMAGE_HEADER_RUNNING_SNOOZED_RGBA_RAW[
                 LAYOUT_TEXTURE_HEADER_WIDTH, LAYOUT_TEXTURE_HEADER_HEIGHT
-            ]
-        )
-    }
-
-    pub fn patient_baby(display: &GliumDisplayWinitWrapper) -> glium::texture::SrgbTexture2d {
-        // Create image from raw buffer (cached)
-        gen_draw_cached_image!(
-            display <= IMAGE_PATIENT_BABY_RGBA_RAW[
-                PRESET_SETTINGS_MODAL_TEXTURE_WIDTH, PRESET_SETTINGS_MODAL_TEXTURE_HEIGHT
             ]
         )
     }

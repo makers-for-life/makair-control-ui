@@ -833,10 +833,10 @@ impl<'a> Screen<'a> {
                 content_separator: self.ids.preset_settings_content_separator,
                 content_form_wrapper: self.ids.preset_settings_content_form_wrapper,
 
+                field_gender_ids: gen_render_preset_settings_field_ids!(self, gender),
                 field_age_ids: gen_render_preset_settings_field_ids!(self, age),
                 field_height_ids: gen_render_preset_settings_field_ids!(self, height),
 
-                baby_image: settings_data.images.patient_baby,
                 child_image: settings_data.images.patient_child,
                 teenager_image: settings_data.images.patient_teenager,
                 adult_image: settings_data.images.patient_adult,

@@ -59,9 +59,11 @@ modal-cancel = Ignore
 
 modal-preset-title = Hello. Please configure your patient details.
 modal-preset-subtitle = Preset settings will be applied, which can be adjusted afterwards.
+modal-preset-gender = Gender
+modal-preset-gender-male = Male
+modal-preset-gender-female = Female
 modal-preset-age = Age group
 modal-preset-size = Body size
-modal-preset-age-baby = Baby
 modal-preset-age-child = Child
 modal-preset-age-teenager = Teenager
 modal-preset-age-adult = Adult
