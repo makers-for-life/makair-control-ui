@@ -5,9 +5,9 @@
 
 use crate::config::environment::*;
 
-pub fn process_max_allowed_pressure(peak_command: u8) -> u8 {
-    let mut max_pressure = if peak_command > 0 {
-        peak_command as f64
+pub fn process_max_allowed_pressure(peak_pressure: u8) -> u8 {
+    let mut max_pressure = if peak_pressure > 0 {
+        peak_pressure as f64
     } else {
         MAX_ALLOWED_PRESSURE_INITIAL_MINIMUM
     };

@@ -283,10 +283,16 @@ impl<'a> Screen<'a> {
     }
 
     fn render_heartbeat(&mut self, heartbeat_data: DisplayDataHeartbeat<'a>) {
+        let machine_snapshot = self.machine_snapshot.unwrap();
+
         self.widgets
             .render(ControlWidgetType::Heartbeat(heartbeat::Config {
                 data_pressure: heartbeat_data.data_pressure,
-                peak_command: self.machine_snapshot.unwrap().peak_command,
+                peak_command: machine_snapshot.peak_command,
+                peak_alarm: machine_snapshot
+                    .peak_pressure_alarm_threshold
+                    .map(|value| convert_mmh2o_to_cmh2o(ConvertMode::Rounded, value as f64) as u8)
+                    .unwrap_or(0),
                 container: self.ids.layout_header,
                 ground: self.ids.heartbeat_ground,
                 surround: self.ids.heartbeat_surround,

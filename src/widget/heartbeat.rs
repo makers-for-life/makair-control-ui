@@ -30,6 +30,7 @@ const GROUND_CIRCLE_COLOR_OVERFLOW: Color =
 pub struct Config<'a> {
     pub data_pressure: &'a ChipData,
     pub peak_command: u8,
+    pub peak_alarm: u8,
 
     pub container: WidgetId,
     pub ground: WidgetId,
@@ -67,7 +68,11 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
     };
 
     // Acquire maximum allowed pressure
-    let pressure_alert_threshold = process_max_allowed_pressure(config.peak_command) as f64;
+    let pressure_alert_threshold = process_max_allowed_pressure(if config.peak_alarm > 0 {
+        config.peak_alarm
+    } else {
+        config.peak_command
+    }) as f64;
 
     let last_pressure_ratio = if pressure_alert_threshold > 0.0 {
         last_pressure as f64 / pressure_alert_threshold
