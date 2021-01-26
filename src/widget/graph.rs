@@ -11,10 +11,10 @@ use conrod_core::{
     widget::{self, Id as WidgetId},
     Positionable, Sizeable, Widget,
 };
+use makair_telemetry::structures::MachineStateSnapshot;
 use plotters::prelude::*;
 use plotters::style::{Color, ShapeStyle, TextStyle};
 use plotters_conrod::{ConrodBackend, ConrodBackendReusableGraph};
-use makair_telemetry::structures::MachineStateSnapshot;
 
 use crate::chip::{ChipData, ChipState};
 use crate::config::environment::*;

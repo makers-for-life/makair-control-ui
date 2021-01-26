@@ -14,7 +14,6 @@ use std::convert::TryFrom;
 use std::sync::mpsc::{self, Receiver, Sender};
 use std::time::Instant;
 
-use settings::{ChipSettings, ChipSettingsEvent, ChipSettingsIntent, SettingActionState};
 use makair_telemetry::alarm::{AlarmCode, RMC_SW_16};
 use makair_telemetry::control::{ControlMessage, ControlSetting};
 use makair_telemetry::serial::core;
@@ -22,6 +21,7 @@ use makair_telemetry::structures::{
     AlarmPriority, ControlAck, DataSnapshot, FatalErrorDetails, HighLevelError,
     MachineStateSnapshot, StoppedMessage, TelemetryMessage, VentilationMode,
 };
+use settings::{ChipSettings, ChipSettingsEvent, ChipSettingsIntent, SettingActionState};
 
 use crate::config::environment::*;
 use crate::utilities::parse::parse_text_lines_to_single;

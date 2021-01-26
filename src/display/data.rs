@@ -3,8 +3,8 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-use plotters_conrod::ConrodBackendReusableGraph;
 use makair_telemetry::structures::MachineStateSnapshot;
+use plotters_conrod::ConrodBackendReusableGraph;
 
 use crate::chip::{ChipData, ChipError, ChipState};
 
