@@ -45,7 +45,7 @@ impl LocaleLoader {
     }
 
     pub fn into_bundle(self) -> FluentBundle<FluentResource> {
-        let mut bundle = FluentBundle::new(&[self.locale_id]);
+        let mut bundle = FluentBundle::new(vec![self.locale_id]);
 
         bundle
             .add_resource(self.resource)
