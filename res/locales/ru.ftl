@@ -36,6 +36,7 @@ alarms-message-leak-high = Объем утечки слишком велик
 alarms-message-tidal-volume-low = Дыхательный объем слишком низкий
 alarms-message-tidal-volume-high = Дыхательный объем слишком высокий
 alarms-message-peak-pressure-high = Пиковое давление слишком высокое
+alarms-message-expiratory-flow-too-low = Слишком низкий поток выдоха
 alarms-message-unknown = Неизвестный сигнал тревоги
 
 status-unit-stopped = Остановлен

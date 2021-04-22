@@ -36,6 +36,7 @@ alarms-message-leak-high = Noplūdes apjoms ir pārāk liels
 alarms-message-tidal-volume-low = Plūdmaiņu daudzums ir pārāk mazs
 alarms-message-tidal-volume-high = Plūdmaiņu apjoms ir pārāk liels
 alarms-message-peak-pressure-high = Maksimālais spiediens ir pārāk augsts
+alarms-message-expiratory-flow-too-low = Izelpas plūsma ir pārāk maza
 alarms-message-unknown = Nezināms trauksme (pārbaudes kods)
 
 status-unit-stopped = Ierīce apstājās

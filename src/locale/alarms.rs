@@ -26,6 +26,7 @@ pub fn description_to_locale(description: AlarmCodeDescription) -> String {
         AlarmCodeDescription::TidalVolumeLow => "tidal-volume-low",
         AlarmCodeDescription::TidalVolumeHigh => "tidal-volume-high",
         AlarmCodeDescription::PeakPressureHigh => "peak-pressure-high",
+        AlarmCodeDescription::ExpiratoryFlowTooLow => "expiratory-flow-too-low",
         AlarmCodeDescription::Unknown(_) => "unknown",
     };
 

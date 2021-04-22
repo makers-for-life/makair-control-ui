@@ -36,6 +36,7 @@ alarms-message-leak-high = Volume de fuite trop élevé
 alarms-message-tidal-volume-low = Volume courant trop faible
 alarms-message-tidal-volume-high = Volume courant trop élevé
 alarms-message-peak-pressure-high = Pression de crête trop élevée
+alarms-message-expiratory-flow-too-low = Débit expiratoire trop faible
 alarms-message-unknown = Alarme inconnue (vérifiez le code)
 
 status-unit-stopped = Unité arrêtée
