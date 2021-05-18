@@ -3,7 +3,13 @@
 ENV_FILE="/etc/makair-env"
 
 if USB_KEY=$(find /media -mount -mindepth 1 -type d -not -name makair); then
-  # USB KEY detected, setup output
+  # Check for upgrade and install it
+  UPDATE_PACKAGE=$(find $USB_KEY -maxdepth 1 -type f -name 'makair-control-*.pkg.tar.zst' -print -quit)
+  if test -n $UPDATE_PACKAGE; then
+      pacman -U $UPDATE_PACKAGE
+  fi
+
+  # Setup output
   AVAILABLE_SIZE=$(df --output=avail $USB_KEY | tail -n 1)
 
   if [ $AVAILABLE_SIZE -gt 1000000 ]; then

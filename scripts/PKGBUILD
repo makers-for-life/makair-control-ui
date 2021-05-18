@@ -1,0 +1,20 @@
+# Maintainer: Makers for Life <contaft@makair.life>
+pkgname=makair-control
+pkgver=2.2.0
+pkgrel=1
+pkgdesc="Control UI for Makair"
+arch=('armv7h')
+url="https://github.com/makers-for-life/makair-control-ui"
+license=('Unlicense')
+depends=('cage' 'fontconfig' 'ttf-opensans' 'libxcb')
+makedepends=('git' 'gcc' 'make' 'cmake' 'pkg-config')
+optdepends=()
+backup=()
+options=()
+source=("$pkgname")
+md5sums=()
+validpgpkeys=()
+
+package() {
+    install -o alarm -g alarm $pkgname /home/alarm
+}
