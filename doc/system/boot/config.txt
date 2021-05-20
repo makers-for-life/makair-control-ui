@@ -9,6 +9,10 @@ dtoverlay=uart3
 
 dtoverlay=rpi-ft5406
 
+# Disable all wireless
+dtoverlay=disable-wifi
+dtoverlay=disable-bt
+
 [pi4]
 dtoverlay=vc4-fkms-v3d
 max_framebuffers=2
