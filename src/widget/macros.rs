@@ -300,11 +300,11 @@ macro_rules! gen_widget_mode_field_values {
                 $config.mode_settings.live.$field
             },
             live: $config.mode_settings.live.$field,
-            draft: if let Some(ref draft) = $config.mode_settings.draft {
-                Some(draft.$field)
-            } else {
-                None
-            },
+            draft: $config
+                .mode_settings
+                .draft
+                .as_ref()
+                .map(|draft| draft.$field),
         }
     };
 }

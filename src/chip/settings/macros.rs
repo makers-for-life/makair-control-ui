@@ -46,6 +46,7 @@ macro_rules! gen_commit_mode_events_numeric {
 macro_rules! gen_mode_impls {
     ($($setting:tt |-> $field:tt [$step:ident],)+) => {
         #[derive(Debug)]
+        #[allow(clippy::upper_case_acronyms)]
         pub enum SettingsModeIntent {
             ClearDraft,
             ModePcCmv,
