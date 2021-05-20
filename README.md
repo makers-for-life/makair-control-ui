@@ -36,7 +36,7 @@ Wayland support may be available but it hasn't been tested. You need a working X
 
 As well, please make sure that you have at least 2GB of RAM for the build to complete. Running the UI requires less than 40MB of RAM afterwards (in `release` mode).
 
-_Tested with Rust version: `rustc 1.48.0 (7eac88abb 2020-11-16)`_
+_Tested with Rust version: `rustc 1.52.1 (9bc8c42bb 2021-05-09)`_
 
 **Note:** as the MakAir Control UI currently targets a single 7" touch display, the UI only supports a static resolution of 800 x 480 pixels.
 
