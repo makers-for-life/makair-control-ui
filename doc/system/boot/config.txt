@@ -7,11 +7,21 @@ dtoverlay=uart0
 # UART for the MakAir telemetry protocol
 dtoverlay=uart3
 
+# Touch screen support
 dtoverlay=rpi-ft5406
 
 # Disable all wireless
 dtoverlay=disable-wifi
 dtoverlay=disable-bt
+
+# Disable audio (loads snd_bcm2835)
+dtparam=audio=off
+
+# Disable the LED (to save power)
+dtparam=act_led_trigger=none
+dtparam=act_led_activelow=on
+dtparam=eth_led0=4
+dtparam=eth_led1=4
 
 [pi4]
 dtoverlay=vc4-fkms-v3d
