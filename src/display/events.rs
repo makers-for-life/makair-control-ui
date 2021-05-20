@@ -28,7 +28,7 @@ pub struct DisplayEvents {
     event_loop: EventLoop,
 }
 
-pub struct DisplayUIEvents;
+pub struct DisplayUiEvents;
 
 pub enum DisplayEventsHandleOutcome {
     Break,
@@ -80,7 +80,7 @@ impl DisplayEvents {
     }
 }
 
-impl DisplayUIEvents {
+impl DisplayUiEvents {
     pub fn run(
         interface: &mut Ui,
         ids: &Ids,

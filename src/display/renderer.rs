@@ -14,7 +14,7 @@ use crate::config::environment::*;
 use crate::utilities::parse::parse_version_number;
 
 use super::data::*;
-use super::events::DisplayUIEvents;
+use super::events::DisplayUiEvents;
 use super::fonts::Fonts;
 use super::identifiers::{Ids, ImageIds};
 use super::screen::{Screen, ScreenModalsOpen};
@@ -114,7 +114,7 @@ impl DisplayRenderer {
     ) -> (bool, bool, Vec<ChipSettingsIntent>, Vec<ChipSettingsEvent>) {
         // Run all UI events (defer to sub-handler)
         let (has_user_events, user_intents, user_events) =
-            DisplayUIEvents::run(interface, &self.ids, chip, &mut self.states);
+            DisplayUiEvents::run(interface, &self.ids, chip, &mut self.states);
 
         // Check if should run heartbeat? (ie. if it should be sent to the firmware)
         let mut has_heartbeat = false;

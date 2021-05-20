@@ -12,7 +12,7 @@ use inflate::inflate_bytes_zlib;
 use crate::chip::Chip;
 use crate::config::environment::*;
 #[cfg(feature = "fonts-cjk")]
-use crate::EmbeddedFontsCJK;
+use crate::EmbeddedFontsCjk;
 use crate::EmbeddedFontsDefault;
 use crate::EmbeddedImages;
 use crate::APP_ARGS;
@@ -45,7 +45,7 @@ lazy_static! {
 #[cfg(feature = "fonts-cjk")]
 lazy_static! {
     static ref FONT_CJK_NOTOSANS_ALL: conrod_core::text::Font =
-        gen_load_font!(EmbeddedFontsCJK, "notosans_cjk_regular");
+        gen_load_font!(EmbeddedFontsCjk, "notosans_cjk_regular");
 }
 
 impl DisplayWindow {

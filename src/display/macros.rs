@@ -94,7 +94,7 @@ macro_rules! gen_widget_impls {
 macro_rules! gen_ui_events_opener_settings_clicks {
     ($interface:ident, $has:ident, $({$name:expr, $settings_state:expr, $widget_ids:expr}),+,) => {
         $(
-            let clicks = DisplayUIEvents::count_clicks(
+            let clicks = DisplayUiEvents::count_clicks(
                 $interface,
                 &$widget_ids,
             );
@@ -132,7 +132,7 @@ macro_rules! gen_ui_events_modal_settings_clicks {
         $(
             if $settings_state == DisplayRendererSettingsState::Opened {
                 // Handle clicks on the close button
-                for _ in 0..DisplayUIEvents::count_clicks(
+                for _ in 0..DisplayUiEvents::count_clicks(
                     $interface,
                     &[
                         $ids.modal_background,
@@ -151,7 +151,7 @@ macro_rules! gen_ui_events_modal_settings_clicks {
                 }
 
                 // Handle clicks on the save button (if any)
-                for _ in 0..DisplayUIEvents::count_clicks(
+                for _ in 0..DisplayUiEvents::count_clicks(
                     $interface,
                     &[
                         $ids.modal_save,
@@ -170,7 +170,7 @@ macro_rules! gen_ui_events_modal_settings_clicks {
 
                 // Handle clicks on dynamic form elements
                 $(
-                    for _ in 0..DisplayUIEvents::count_clicks(
+                    for _ in 0..DisplayUiEvents::count_clicks(
                         $interface,
                         &$widget_ids,
                     ) {
@@ -314,7 +314,7 @@ macro_rules! gen_ui_events_modal_local_clicks {
             if $settings_state == DisplayRendererSettingsState::Opened {
                 // Handle clicks on local elements
                 $(
-                    for _ in 0..DisplayUIEvents::count_clicks(
+                    for _ in 0..DisplayUiEvents::count_clicks(
                         $interface,
                         &$widget_ids,
                     ) {

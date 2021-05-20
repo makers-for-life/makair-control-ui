@@ -62,7 +62,7 @@ pub struct EmbeddedFontsDefault;
 #[cfg(feature = "fonts-cjk")]
 #[derive(RustEmbed)]
 #[folder = "res/fonts/cjk/"]
-pub struct EmbeddedFontsCJK;
+pub struct EmbeddedFontsCjk;
 
 #[derive(RustEmbed)]
 #[folder = "res/locales/"]
