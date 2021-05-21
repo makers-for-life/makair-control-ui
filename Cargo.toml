@@ -1,6 +1,6 @@
 [package]
 name = "makair-control"
-version = "2.2.2"
+version = "2.3.0"
 description = "Control UI for the MakAir open source ventilator."
 readme = "README.md"
 license-file = "LICENSE.md"
