@@ -302,6 +302,8 @@ fn form_pc_cmv<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             field_alarm_threshold_high_inspiratory_minute_volume(1, master, config);
             field_alarm_threshold_low_expiratory_minute_volume(2, master, config);
             field_alarm_threshold_high_expiratory_minute_volume(3, master, config);
+            field_alarm_threshold_low_tidal_volume(4, master, config);
+            field_alarm_threshold_high_tidal_volume(5, master, config);
         }
     }
 }
