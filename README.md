@@ -18,7 +18,7 @@
 | V2.0.x | Telemetry protocol version update to V2 + large code rework + improved UI/UX + reduced CPU usage + translated alarms + regulatory compliance | ✅ | [view](https://github.com/makers-for-life/makair-control-ui/releases/tag/v2.0.0)
 | V2.1.x | Ventilation modes + flow sensing + new options + new plot renderer | ✅ | [view](https://github.com/makers-for-life/makair-control-ui/releases/tag/v2.1.0)
 | V2.2.x | Patient configuration modal + new error messages + UX improvements | ✅ | [view](https://github.com/makers-for-life/makair-control-ui/releases/tag/v2.2.0)
-| V2.3.x | Factory calibration utility + moved configurations to EEPROM | ❌ | none
+| V2.3.x | Factory calibration utility + show more errors from the firmware + moved configurations to EEPROM | ❌ | none
 
 ## How To Build?
 
