@@ -25,7 +25,8 @@ serde = { version = "1.0", features = ["derive"] }
 paste = "1.0"
 rust-embed = { version = "5.6", default-features = false, features = ["compression"] }
 chrono = { version = "0.4", default-features = false }
-fluent = "0.14"
+fluent = "0.15"
+intl-memoizer = "0.5"
 unic-langid = "0.9"
 inflate = "0.4"
 winit = "0.19"

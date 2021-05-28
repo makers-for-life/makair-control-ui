@@ -3,8 +3,9 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-use fluent::concurrent::FluentBundle;
+use fluent::bundle::FluentBundle;
 use fluent::FluentResource;
+use intl_memoizer::concurrent::IntlLangMemoizer;
 use unic_langid::LanguageIdentifier;
 
 use crate::EmbeddedLocales;
@@ -44,8 +45,8 @@ impl LocaleLoader {
         }
     }
 
-    pub fn into_bundle(self) -> FluentBundle<FluentResource> {
-        let mut bundle = FluentBundle::new(vec![self.locale_id]);
+    pub fn into_bundle(self) -> FluentBundle<FluentResource, IntlLangMemoizer> {
+        let mut bundle = FluentBundle::new_concurrent(vec![self.locale_id]);
 
         bundle
             .add_resource(self.resource)
