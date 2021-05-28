@@ -54,7 +54,7 @@ pub struct DisplayRendererStates {
 
 impl DisplayRendererSettingsState {
     pub fn toggle(&mut self) {
-        let new_visibility = self.visibility.to_invert();
+        let new_visibility = self.visibility.to_inverse();
 
         self.update_to(new_visibility);
     }
@@ -108,7 +108,7 @@ impl Default for DisplayRendererSettingsState {
 }
 
 impl DisplayRendererSettingsStateVisibility {
-    pub fn to_invert(&mut self) -> Self {
+    pub fn to_inverse(&self) -> Self {
         match self {
             Self::Closed => Self::Opened,
             Self::Opened => Self::Closed,
