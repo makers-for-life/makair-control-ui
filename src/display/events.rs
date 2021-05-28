@@ -3,6 +3,8 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+use std::time::Duration;
+
 use conrod_core::{widget::Id as WidgetId, Ui};
 use glium::glutin::{Event, EventsLoop, KeyboardInput, WindowEvent};
 
@@ -21,6 +23,8 @@ use crate::chip::{
 use super::identifiers::Ids;
 use super::renderer::{DisplayRendererSettingsStateVisibility, DisplayRendererStates};
 use super::support::{self, EventLoop, GliumDisplayWinitWrapper};
+
+const FORCED_CLICKS_PRESET_SETTINGS_OPEN_DEBOUNCE_DELAY: Duration = Duration::from_secs(2);
 
 pub struct DisplayEventsBuilder;
 
@@ -119,13 +123,21 @@ impl DisplayUiEvents {
         let mut has_events = false;
 
         // Open the preset settings modal?
+        // Notice: only if not open lastly (prevents visual jitters where the modal would \
+        //   re-open right after submitting it as telemetry acknowledgement would not yet be \
+        //   received on next frame)
         let new_preset_visibility = if chip.last_machine_snapshot.patient_height == Some(0) {
             DisplayRendererSettingsStateVisibility::Opened
         } else {
             DisplayRendererSettingsStateVisibility::Closed
         };
 
-        if states.preset_settings.has_change(&new_preset_visibility) {
+        if states.preset_settings.has_change(&new_preset_visibility)
+            && !states.preset_settings.is_debounced(
+                &new_preset_visibility,
+                FORCED_CLICKS_PRESET_SETTINGS_OPEN_DEBOUNCE_DELAY,
+            )
+        {
             states.preset_settings.update_to(new_preset_visibility);
 
             has_events = true;

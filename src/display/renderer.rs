@@ -24,7 +24,7 @@ const DISPATCH_HEARTBEAT_EVERY: Duration = Duration::from_secs(1);
 
 pub struct DisplayRendererSettingsState {
     visibility: DisplayRendererSettingsStateVisibility,
-    pub last_change: Option<Instant>,
+    last_open: Option<Instant>,
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -63,16 +63,38 @@ impl DisplayRendererSettingsState {
         // Update values? (if changed)
         if self.visibility != visibility {
             self.visibility = visibility;
-            self.last_change = Some(Instant::now());
+
+            // Update last open value? (if went from closed to opened visibility)
+            if self.visibility == DisplayRendererSettingsStateVisibility::Opened {
+                self.last_open = Some(Instant::now());
+            }
         }
     }
 
-    pub fn has_change(&self, visibility: &DisplayRendererSettingsStateVisibility) -> bool {
-        &self.visibility != visibility
+    pub fn has_change(&self, new_visibility: &DisplayRendererSettingsStateVisibility) -> bool {
+        &self.visibility != new_visibility
     }
 
     pub fn is_open(&self) -> bool {
         self.visibility == DisplayRendererSettingsStateVisibility::Opened
+    }
+
+    pub fn is_debounced(
+        &self,
+        new_visibility: &DisplayRendererSettingsStateVisibility,
+        delay: Duration,
+    ) -> bool {
+        // Only check debounce status if new visibility is 'opened'
+        // Notice: 'closed' visibility updates do not need to be debounced, hence why this method \
+        //   returns 'false' all the time in such case.
+        if new_visibility == &DisplayRendererSettingsStateVisibility::Opened {
+            // Return whether modal was last opened before provided delay
+            if let Some(last_open) = self.last_open {
+                return last_open.elapsed() < delay;
+            }
+        }
+
+        false
     }
 }
 
@@ -80,7 +102,7 @@ impl Default for DisplayRendererSettingsState {
     fn default() -> Self {
         Self {
             visibility: DisplayRendererSettingsStateVisibility::Closed,
-            last_change: None,
+            last_open: None,
         }
     }
 }
