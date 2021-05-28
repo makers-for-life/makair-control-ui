@@ -22,8 +22,13 @@ use super::screen::{Screen, ScreenModalsOpen};
 const WAITING_FOR_DATA_TIMEOUT_AFTER: Duration = Duration::from_secs(10);
 const DISPATCH_HEARTBEAT_EVERY: Duration = Duration::from_secs(1);
 
+pub struct DisplayRendererSettingsState {
+    visibility: DisplayRendererSettingsStateVisibility,
+    pub last_change: Option<Instant>,
+}
+
 #[derive(Debug, PartialEq, Eq)]
-pub enum DisplayRendererSettingsState {
+pub enum DisplayRendererSettingsStateVisibility {
     Opened,
     Closed,
 }
@@ -49,20 +54,43 @@ pub struct DisplayRendererStates {
 
 impl DisplayRendererSettingsState {
     pub fn toggle(&mut self) {
-        *self = match self {
-            Self::Closed => Self::Opened,
-            Self::Opened => Self::Closed,
-        };
+        let new_visibility = self.visibility.to_invert();
+
+        self.update_to(new_visibility);
+    }
+
+    pub fn update_to(&mut self, visibility: DisplayRendererSettingsStateVisibility) {
+        // Update values? (if changed)
+        if self.visibility != visibility {
+            self.visibility = visibility;
+            self.last_change = Some(Instant::now());
+        }
+    }
+
+    pub fn has_change(&self, visibility: &DisplayRendererSettingsStateVisibility) -> bool {
+        &self.visibility != visibility
     }
 
     pub fn is_open(&self) -> bool {
-        self == &Self::Opened
+        self.visibility == DisplayRendererSettingsStateVisibility::Opened
     }
 }
 
 impl Default for DisplayRendererSettingsState {
     fn default() -> Self {
-        Self::Closed
+        Self {
+            visibility: DisplayRendererSettingsStateVisibility::Closed,
+            last_change: None,
+        }
+    }
+}
+
+impl DisplayRendererSettingsStateVisibility {
+    pub fn to_invert(&mut self) -> Self {
+        match self {
+            Self::Closed => Self::Opened,
+            Self::Opened => Self::Closed,
+        }
     }
 }
 

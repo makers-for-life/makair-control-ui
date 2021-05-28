@@ -130,7 +130,7 @@ macro_rules! gen_ui_events_modal_settings_clicks {
         }),+,
     ) => {
         $(
-            if $settings_state == DisplayRendererSettingsState::Opened {
+            if $settings_state.is_open() {
                 // Handle clicks on the close button
                 for _ in 0..DisplayUiEvents::count_clicks(
                     $interface,
@@ -311,7 +311,7 @@ macro_rules! gen_ui_events_modal_local_clicks {
         }),+,
     ) => {
         $(
-            if $settings_state == DisplayRendererSettingsState::Opened {
+            if $settings_state.is_open() {
                 // Handle clicks on local elements
                 $(
                     for _ in 0..DisplayUiEvents::count_clicks(

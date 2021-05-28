@@ -19,7 +19,7 @@ use crate::chip::{
 };
 
 use super::identifiers::Ids;
-use super::renderer::{DisplayRendererSettingsState, DisplayRendererStates};
+use super::renderer::{DisplayRendererSettingsStateVisibility, DisplayRendererStates};
 use super::support::{self, EventLoop, GliumDisplayWinitWrapper};
 
 pub struct DisplayEventsBuilder;
@@ -119,14 +119,14 @@ impl DisplayUiEvents {
         let mut has_events = false;
 
         // Open the preset settings modal?
-        let new_preset_state = if chip.last_machine_snapshot.patient_height == Some(0) {
-            DisplayRendererSettingsState::Opened
+        let new_preset_visibility = if chip.last_machine_snapshot.patient_height == Some(0) {
+            DisplayRendererSettingsStateVisibility::Opened
         } else {
-            DisplayRendererSettingsState::Closed
+            DisplayRendererSettingsStateVisibility::Closed
         };
 
-        if states.preset_settings != new_preset_state {
-            states.preset_settings = new_preset_state;
+        if states.preset_settings.has_change(&new_preset_visibility) {
+            states.preset_settings.update_to(new_preset_visibility);
 
             has_events = true;
         }
@@ -287,7 +287,9 @@ impl DisplayUiEvents {
                         //   is confusing to users otherwise, and is prone to user making mistakes \
                         //    by double tapping the button and thus cycling the respirator between \
                         //    states quickly, which is not intended and can be dangerous.
-                        states.run_settings = DisplayRendererSettingsState::Closed;
+                        states.run_settings.update_to(
+                            DisplayRendererSettingsStateVisibility::Closed
+                        );
                     }
                 ]
             },
@@ -311,7 +313,9 @@ impl DisplayUiEvents {
                         // Auto-close the modal upon pressing the snooze alarms toggle button, as \
                         //   this results in the user spending less time tapping on the UI as to \
                         //   proceed quick actions.
-                        states.snooze_settings = DisplayRendererSettingsState::Closed;
+                        states.snooze_settings.update_to(
+                            DisplayRendererSettingsStateVisibility::Closed
+                        );
                     }
                 ]
             },
