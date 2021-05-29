@@ -6,7 +6,7 @@
 use makair_telemetry::structures::MachineStateSnapshot;
 use plotters_conrod::ConrodBackendReusableGraph;
 
-use crate::chip::{ChipData, ChipError, ChipState};
+use crate::chip::{ChipData, ChipEndOfLine, ChipError, ChipState};
 
 use super::identifiers::ImageIds;
 
@@ -51,6 +51,14 @@ pub struct DisplayDataError<'a> {
     pub width: f64,
     pub height: f64,
     pub error: &'a ChipError,
+}
+
+pub struct DisplayDataEndOfLine<'a> {
+    pub error: bool,
+    pub success: bool,
+    pub step: u8,
+    pub icon_image_id: conrod_core::image::Id,
+    pub eol: &'a ChipEndOfLine,
 }
 
 pub struct DisplayDataSettings<'a> {

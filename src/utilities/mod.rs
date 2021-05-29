@@ -5,6 +5,7 @@
 
 pub mod battery;
 pub mod image;
+pub mod index;
 pub mod parse;
 pub mod pressure;
 pub mod units;

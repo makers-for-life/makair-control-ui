@@ -415,6 +415,22 @@ widget_ids!(pub struct Ids {
   error_text_title,
   error_text_message,
 
+  end_of_line_title_wrapper,
+  end_of_line_title_separator,
+  end_of_line_title_primary,
+  end_of_line_title_secondary,
+  end_of_line_steps_wrapper,
+  end_of_line_steps_items,
+  end_of_line_steps_progress[],
+  end_of_line_steps_circles[],
+  end_of_line_steps_indexes[],
+  end_of_line_content_wrapper,
+  end_of_line_content_box,
+  end_of_line_content_icon,
+  end_of_line_content_text_wrapper,
+  end_of_line_content_text_title,
+  end_of_line_content_text_message,
+
   initializing_container,
   initializing_logo,
   initializing_text,
@@ -434,6 +450,11 @@ image_ids!(pub struct ImageIds {
 
   // Error screen
   error_icon,
+
+  // End-of-line screen
+  end_of_line_ongoing_icon,
+  end_of_line_error_icon,
+  end_of_line_success_icon,
 
   // Running / stopped screens (most images are textures here)
   header_stopped,
@@ -456,6 +477,20 @@ impl Ids {
         );
         self.advanced_line_values.resize(
             ADVANCED_SETTINGS_LINES_COUNT,
+            &mut interface.widget_id_generator(),
+        );
+
+        // Allocate end-of-line steps items
+        self.end_of_line_steps_progress.resize(
+            (END_OF_LINE_STEPS_COUNT - 1) as _,
+            &mut interface.widget_id_generator(),
+        );
+        self.end_of_line_steps_circles.resize(
+            END_OF_LINE_STEPS_COUNT as _,
+            &mut interface.widget_id_generator(),
+        );
+        self.end_of_line_steps_indexes.resize(
+            END_OF_LINE_STEPS_COUNT as _,
             &mut interface.widget_id_generator(),
         );
     }

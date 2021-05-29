@@ -12,6 +12,7 @@ pub mod alarms;
 pub mod background;
 pub mod branding;
 pub mod controls;
+pub mod end_of_line;
 pub mod error;
 pub mod graph;
 pub mod heartbeat;

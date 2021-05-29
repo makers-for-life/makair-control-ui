@@ -27,6 +27,7 @@ gen_widget_impls!(
     Status -> status['a],
     Heartbeat -> heartbeat['a],
     Initializing -> initializing,
+    EndOfLine -> end_of_line['a],
     Graph -> graph['a],
     Modal -> modal,
     Stop -> stop,

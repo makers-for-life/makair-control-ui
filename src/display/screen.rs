@@ -16,6 +16,7 @@ use crate::chip::settings::{
     snooze::SettingsSnooze, ChipSettings,
 };
 use crate::config::environment::*;
+use crate::locale::end_of_line::end_of_line_to_locales;
 use crate::locale::error::error_to_locales;
 use crate::utilities::units::{convert_ml_to_l, convert_mmh2o_to_cmh2o, ConvertMode};
 use crate::widget::*;
@@ -185,6 +186,40 @@ impl<'a> Screen<'a> {
             title: error_texts.0,
             message: error_texts.1,
         }));
+    }
+
+    pub fn render_end_of_line(&mut self, config: DisplayDataEndOfLine<'a>) {
+        // Generate end-of-line texts
+        let end_of_line_texts = end_of_line_to_locales(config.eol);
+
+        // Render background
+        self.render_background();
+
+        // Render end-of-line
+        self.widgets
+            .render(ControlWidgetType::EndOfLine(end_of_line::Config {
+                title_wrapper: self.ids.end_of_line_title_wrapper,
+                title_primary: self.ids.end_of_line_title_primary,
+                title_secondary: self.ids.end_of_line_title_secondary,
+                title_separator: self.ids.end_of_line_title_separator,
+                steps_wrapper: self.ids.end_of_line_steps_wrapper,
+                steps_items: self.ids.end_of_line_steps_items,
+                steps_progress: &self.ids.end_of_line_steps_progress,
+                steps_circles: &self.ids.end_of_line_steps_circles,
+                steps_indexes: &self.ids.end_of_line_steps_indexes,
+                content_wrapper: self.ids.end_of_line_content_wrapper,
+                content_box: self.ids.end_of_line_content_box,
+                content_icon: self.ids.end_of_line_content_icon,
+                content_text_wrapper: self.ids.end_of_line_content_text_wrapper,
+                content_text_title: self.ids.end_of_line_content_text_title,
+                content_text_message: self.ids.end_of_line_content_text_message,
+                error: config.error,
+                success: config.success,
+                step: config.step,
+                icon: config.icon_image_id,
+                title: end_of_line_texts.0,
+                message: end_of_line_texts.1,
+            }));
     }
 
     pub fn render_initializing(&mut self, config: DisplayDataBootloader) {

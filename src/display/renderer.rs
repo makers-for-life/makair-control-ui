@@ -9,9 +9,12 @@ use conrod_core::Ui;
 use plotters_conrod::ConrodBackendReusableGraph;
 
 use crate::chip::settings::{ChipSettingsEvent, ChipSettingsIntent};
-use crate::chip::{Chip, ChipError, ChipState};
+use crate::chip::{Chip, ChipEndOfLine, ChipError, ChipState};
 use crate::config::environment::*;
-use crate::utilities::parse::parse_version_number;
+use crate::utilities::{
+    index::{index_from_end_of_line_failure, index_from_end_of_line_step},
+    parse::parse_version_number,
+};
 
 use super::data::*;
 use super::events::DisplayUiEvents;
@@ -152,6 +155,8 @@ impl DisplayRenderer {
             ChipState::Running | ChipState::Stopped => self.data(interface, chip),
             // An error occured
             ChipState::Error(err) => self.error(interface, err),
+            // End-of-line test mode active
+            ChipState::EndOfLine(eol) => self.end_of_line(interface, eol),
         };
     }
 
@@ -232,6 +237,41 @@ impl DisplayRenderer {
         );
 
         screen.render_error(screen_error);
+    }
+
+    fn end_of_line(&mut self, interface: &mut Ui, eol: &ChipEndOfLine) {
+        // Create end-of-line screen
+        let screen_eol = DisplayDataEndOfLine {
+            error: matches!(eol, ChipEndOfLine::Failed(_, _)),
+            success: matches!(eol, ChipEndOfLine::Succeeded(_)),
+            step: match eol {
+                ChipEndOfLine::Ongoing(eol_step) => {
+                    index_from_end_of_line_step(&eol_step).unwrap_or(0)
+                }
+                ChipEndOfLine::Failed(eol_failure, _) => {
+                    index_from_end_of_line_failure(&eol_failure).unwrap_or(0)
+                }
+                ChipEndOfLine::Succeeded(_) => END_OF_LINE_STEPS_COUNT,
+            },
+            icon_image_id: match eol {
+                ChipEndOfLine::Ongoing(_) => self.images.end_of_line_ongoing_icon,
+                ChipEndOfLine::Failed(_, _) => self.images.end_of_line_error_icon,
+                ChipEndOfLine::Succeeded(_) => self.images.end_of_line_success_icon,
+            },
+            eol,
+        };
+
+        let mut screen = Screen::new(
+            interface.set_widgets(),
+            &self.ids,
+            &self.fonts,
+            (None, None),
+            None,
+            None,
+            None,
+        );
+
+        screen.render_end_of_line(screen_eol);
     }
 
     fn data(&mut self, interface: &mut Ui, chip: &Chip) {

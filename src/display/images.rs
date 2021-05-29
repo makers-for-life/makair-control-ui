@@ -20,6 +20,12 @@ lazy_static! {
         gen_load_image_reverse!("bootloader-logo", BOOTLOADER_LOGO_WIDTH);
     static ref IMAGE_ERROR_ICON_RGBA_RAW: Vec<u8> =
         gen_load_image_reverse!("error-icon", ERROR_ICON_WIDTH);
+    static ref IMAGE_END_OF_LINE_ONGOING_ICON_RGBA_RAW: Vec<u8> =
+        gen_load_image_reverse!("end-of-line-ongoing-icon", END_OF_LINE_CONTENT_ICON_WIDTH);
+    static ref IMAGE_END_OF_LINE_SUCCESS_ICON_RGBA_RAW: Vec<u8> =
+        gen_load_image_reverse!("end-of-line-success-icon", END_OF_LINE_CONTENT_ICON_WIDTH);
+    static ref IMAGE_END_OF_LINE_ERROR_ICON_RGBA_RAW: Vec<u8> =
+        gen_load_image_reverse!("end-of-line-error-icon", END_OF_LINE_CONTENT_ICON_WIDTH);
     static ref IMAGE_HEADER_STOPPED_RGBA_RAW: Vec<u8> =
         gen_load_image_reverse!("header-stopped", LAYOUT_TEXTURE_HEADER_WIDTH);
     static ref IMAGE_HEADER_STOPPED_SNOOZED_RGBA_RAW: Vec<u8> =
@@ -51,6 +57,39 @@ impl DisplayImages {
         gen_draw_cached_image!(
             display <= IMAGE_ERROR_ICON_RGBA_RAW[
                 ERROR_ICON_WIDTH, ERROR_ICON_HEIGHT
+            ]
+        )
+    }
+
+    pub fn end_of_line_ongoing_icon(
+        display: &GliumDisplayWinitWrapper,
+    ) -> glium::texture::SrgbTexture2d {
+        // Create image from raw buffer (cached)
+        gen_draw_cached_image!(
+            display <= IMAGE_END_OF_LINE_ONGOING_ICON_RGBA_RAW[
+                END_OF_LINE_CONTENT_ICON_WIDTH, END_OF_LINE_CONTENT_ICON_HEIGHT
+            ]
+        )
+    }
+
+    pub fn end_of_line_success_icon(
+        display: &GliumDisplayWinitWrapper,
+    ) -> glium::texture::SrgbTexture2d {
+        // Create image from raw buffer (cached)
+        gen_draw_cached_image!(
+            display <= IMAGE_END_OF_LINE_SUCCESS_ICON_RGBA_RAW[
+                END_OF_LINE_CONTENT_ICON_WIDTH, END_OF_LINE_CONTENT_ICON_HEIGHT
+            ]
+        )
+    }
+
+    pub fn end_of_line_error_icon(
+        display: &GliumDisplayWinitWrapper,
+    ) -> glium::texture::SrgbTexture2d {
+        // Create image from raw buffer (cached)
+        gen_draw_cached_image!(
+            display <= IMAGE_END_OF_LINE_ERROR_ICON_RGBA_RAW[
+                END_OF_LINE_CONTENT_ICON_WIDTH, END_OF_LINE_CONTENT_ICON_HEIGHT
             ]
         )
     }
