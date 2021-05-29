@@ -124,3 +124,69 @@ error-message-other = Причина:
 
 stop-title = Апарат ШВЛ не активний
 stop-description = Повторно включіть його для провітрювання
+
+end-of-line-title-primary = Режим обслуговування
+end-of-line-title-secondary = Кінцевий тест
+
+end-of-line-content-title-step-start = Запуск тесту EOL ...
+end-of-line-content-title-step-check-fan = Будь ласка, перевірте шанувальників.
+end-of-line-content-title-step-test-battery-dead = Перевірка стану акумулятора ...
+end-of-line-content-title-step-disconnect-mains = Будь ласка, від'єднайте шнур живлення змінного струму.
+end-of-line-content-title-step-connect-mains = Підключіть шнур живлення змінного струму.
+end-of-line-content-title-step-check-buzzer = Тестування зумера ...
+end-of-line-content-title-step-check-all-buttons = Натисніть усі кнопки.
+end-of-line-content-title-step-check-ui-screen = Натисніть сенсорний екран.
+end-of-line-content-title-step-plug-air-test-system = Будь ласка, підключіть систему дослідження легенів.
+end-of-line-content-title-step-reach-maximum-pressure = Перевірка максимального тиску ...
+end-of-line-content-title-step-maximum-pressure-reached = Досягнуто максимального тиску. Закриття клапанів ...
+end-of-line-content-title-step-start-leak-measure = Тестування на герметичність ...
+end-of-line-content-title-step-reach-null-pressure = Витоку не виявлено. Відкриття клапанів ...
+end-of-line-content-title-step-confirm-before-oxygen-test = Будь ласка, підключіть систему тесту на кисень.
+end-of-line-content-title-step-start-oxygen-test = Випробування на кисень ...
+end-of-line-content-title-step-wait-before-blower-long-run = Будь ласка, відключіть систему тесту на кисень.
+end-of-line-content-title-step-start-blower-long-run = Випробування на стійкість повітродувки ...
+
+end-of-line-content-title-failure-expander-not-connected = Еспандер не підключений.
+end-of-line-content-title-failure-battery-deeply-discharged = Акумулятор глибоко розряджений.
+end-of-line-content-title-failure-maximum-pressure-not-reached = Не вдалося досягти максимального тиску.
+
+end-of-line-content-title-failure-leak-too-high = Витік повітря занадто високий.
+end-of-line-content-title-failure-minimum-pressure-not-reached = Не вдалося досягти мінімального тиску.
+end-of-line-content-title-failure-oxygen-pressure-not-reached = Не вдалося досягти тиску кисню.
+end-of-line-content-title-failure-pressure-not-stable = Тиск повітродувки не є стабільним.
+end-of-line-content-title-failure-flow-not-stable = Потік повітродувки не є стабільним.
+
+end-of-line-content-title-end-confirm = Всі тести вдалися!
+end-of-line-content-title-end-display-pressure = Відображення деталей тиску.
+end-of-line-content-title-end-display-flow = Відображення деталей потоку.
+
+end-of-line-content-message-step-start = Тест EOL розпочнеться через кілька хвилин.
+end-of-line-content-message-step-check-fan = Два вентилятори охолодження повинні працювати. Натисніть «Пуск», щоб продовжити.
+end-of-line-content-message-step-test-battery-dead = Буде перевірено стан акумулятора. Будь ласка, почекайте.
+end-of-line-content-message-step-disconnect-mains = Потужність змінного струму перешкоджає тестуванню батарей. Будь ласка, відключіть його.
+end-of-line-content-message-step-connect-mains = Справність джерела живлення перевірятиметься після підключення до змінного струму.
+end-of-line-content-message-step-check-buzzer = Звуковий сигнал повинен працювати. Натисніть паузу для підтвердження.
+end-of-line-content-message-step-check-all-buttons = Кожну кнопку слід натискати по одній.
+end-of-line-content-message-step-check-ui-screen = Змініть режим вентиляції на сенсорному екрані.
+end-of-line-content-message-step-plug-air-test-system = Потрібно підключити досліджувану легеню. Натисніть «Пуск», щоб продовжити.
+end-of-line-content-message-step-reach-maximum-pressure = Тиск у легені підвищується. Будь ласка, почекайте.
+end-of-line-content-message-step-maximum-pressure-reached = Досягнуто максимального тиску. Будь ласка, почекайте.
+end-of-line-content-message-step-start-leak-measure = Повітряна система тестується на наявність витоків. Будь ласка, почекайте.
+end-of-line-content-message-step-reach-null-pressure = Витоку не виявлено. Будь ласка, почекайте.
+end-of-line-content-message-step-confirm-before-oxygen-test = Кисневий порт повинен бути підключений. Натисніть «Пуск», щоб продовжити.
+end-of-line-content-message-step-start-oxygen-test = Кисневий змішувач проходить випробування. Будь ласка, почекайте.
+end-of-line-content-message-step-wait-before-blower-long-run = Повітродувка перевіряється на стабільність. Натисніть «Пуск», щоб продовжити.
+end-of-line-content-message-step-start-blower-long-run = Повітродувка проходить випробування. Це займе трохи часу.
+
+end-of-line-content-message-failure-expander-not-connected = Будь ласка, підключіть блок живлення до материнської плати.
+end-of-line-content-message-failure-battery-deeply-discharged = Слід замінити акумулятор, оскільки вони перебувають у стані низької напруги.
+end-of-line-content-message-failure-maximum-pressure-not-reached = Не вдалося досягти цільового тиску в повітряному контурі.
+end-of-line-content-message-failure-leak-too-high = Повітряна система випускає занадто багато повітря. Будь ласка, перевірте повітряний контур.
+end-of-line-content-message-failure-minimum-pressure-not-reached = Можливо, клапани відкрились неправильно. Будь ласка, перевірте їх.
+end-of-line-content-message-failure-oxygen-pressure-not-reached = Кисневі труби можуть бути заблоковані. Будь ласка, перевірте їх.
+end-of-line-content-message-failure-pressure-not-stable = Повітродувка не змогла підтримувати стабільний тиск повітря.
+end-of-line-content-message-failure-flow-not-stable = Повітродувка не змогла підтримувати стабільний потік повітря.
+
+end-of-line-content-message-end-confirm = Цей вентилятор пройшов всі випробування. Натисніть «Пуск», щоб переглянути деталі.
+end-of-line-content-message-end-display-pressure = Деталі тесту на тиск видно на екрані налагодження.
+end-of-line-content-message-end-display-flow = Деталі тесту потоку видно на екрані налагодження.

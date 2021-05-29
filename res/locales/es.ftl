@@ -124,3 +124,69 @@ error-message-other = Razón:
 
 stop-title = Unidad de ventilador inactiva
 stop-description = Por favor re-active para reanudar respiración
+
+end-of-line-title-primary = Modo de servicio
+end-of-line-title-secondary = Prueba de fin de línea
+
+end-of-line-content-title-step-start = Iniciando la prueba de fin de línea...
+end-of-line-content-title-step-check-fan = Por favor, compruebe los ventiladores.
+end-of-line-content-title-step-test-battery-dead = Comprobando el estado de la batería...
+end-of-line-content-title-step-disconnect-mains = Desenchufe el cable de alimentación de CA.
+end-of-line-content-title-step-connect-mains = Por favor, enchufe el cable de alimentación de CA.
+end-of-line-content-title-step-check-buzzer = Probando el zumbido...
+end-of-line-content-title-step-check-all-buttons = Por favor, pulse todos los botones.
+end-of-line-content-title-step-check-ui-screen = Pulse la pantalla táctil.
+end-of-line-content-title-step-plug-air-test-system = Por favor, enchufe el sistema de prueba de pulmón.
+end-of-line-content-title-step-reach-maximum-pressure = Probando la presión máxima...
+end-of-line-content-title-step-maximum-pressure-reached = Presión máxima alcanzada. Cerrando válvulas...
+end-of-line-content-title-step-start-leak-measure = Probando fugas...
+end-of-line-content-title-step-reach-null-pressure = No se ha detectado ninguna fuga. Abriendo válvulas...
+end-of-line-content-title-step-confirm-before-oxygen-test = Por favor, tapone el sistema de prueba de oxígeno.
+end-of-line-content-title-step-start-oxygen-test = Probando el oxígeno...
+end-of-line-content-title-step-wait-before-blower-long-run = Por favor, desenchufe el sistema de prueba de oxígeno.
+end-of-line-content-title-step-start-blower-long-run = Probando la estabilidad del expansor...
+
+end-of-line-content-title-failure-expander-not-connected = El expansor no está conectado.
+end-of-line-content-title-failure-battery-deeply-discharged = La batería está muy descargada.
+end-of-line-content-title-failure-maximum-pressure-not-reached = No se ha podido alcanzar la presión máxima.
+
+end-of-line-content-title-failure-leak-too-high = La fuga de aire es demasiado alta.
+end-of-line-content-title-failure-minimum-pressure-not-reached = No se ha podido alcanzar la presión mínima.
+end-of-line-content-title-failure-oxygen-pressure-not-reached = No se ha podido alcanzar la presión de oxígeno.
+end-of-line-content-title-failure-pressure-not-stable = La presión del soplador no es estable.
+end-of-line-content-title-failure-flow-not-stable = El flujo del soplador no es estable.
+
+end-of-line-content-title-end-confirm = Todas las pruebas se han realizado con éxito.
+end-of-line-content-title-end-display-pressure = Visualización de los detalles de la presión.
+end-of-line-content-title-end-display-flow = Visualización de los detalles del flujo.
+
+end-of-line-content-message-step-start = La prueba EOL comenzará en unos momentos.
+end-of-line-content-message-step-check-fan = Los dos ventiladores de refrigeración deberían funcionar. Pulse el botón de inicio para continuar.
+end-of-line-content-message-step-test-battery-dead = Se comprobará el estado de la batería. Por favor, espere.
+end-of-line-content-message-step-disconnect-mains = La alimentación de CA impide la comprobación de las baterías. Desenchúfela.
+end-of-line-content-message-step-connect-mains = La salud de la fuente de alimentación se comprobará una vez enchufada a la CA.
+end-of-line-content-message-step-check-buzzer = El zumbador debería funcionar. Pulse la pausa para confirmar.
+end-of-line-content-message-step-check-all-buttons = Cada botón debe ser presionado uno por uno.
+end-of-line-content-message-step-check-ui-screen = Cambie el modo de ventilación en la pantalla táctil.
+end-of-line-content-message-step-plug-air-test-system = El pulmón de prueba debe estar conectado. Pulse Inicio para continuar.
+end-of-line-content-message-step-reach-maximum-pressure = La presión en el pulmón está aumentando. Por favor, espere.
+end-of-line-content-message-step-maximum-pressure-reached = Se ha alcanzado la presión máxima. Espere.
+end-of-line-content-message-step-start-leak-measure = Se está comprobando si el sistema de aire tiene alguna fuga. Por favor, espere.
+end-of-line-content-message-step-reach-null-pressure = No se ha detectado ninguna fuga. Por favor, espere.
+end-of-line-content-message-step-confirm-before-oxygen-test = El puerto de oxígeno debería estar conectado. Pulse Inicio para continuar.
+end-of-line-content-message-step-start-oxygen-test = Se está probando el mezclador de oxígeno. Por favor, espere.
+end-of-line-content-message-step-wait-before-blower-long-run = Se comprobará la estabilidad del soplador. Pulse Inicio para continuar.
+end-of-line-content-message-step-start-blower-long-run = Se está probando el soplador. Esto llevará algún tiempo.
+
+end-of-line-content-message-failure-expander-not-connected = Por favor, conecte la fuente de alimentación a la placa base.
+end-of-line-content-message-failure-battery-deeply-discharged = La batería debe ser reemplazada, ya que se encuentra en un estado de bajo voltaje.
+end-of-line-content-message-failure-maximum-pressure-not-reached = No se ha podido alcanzar la presión objetivo en el circuito de aire.
+end-of-line-content-message-failure-leak-too-high = El sistema de aire pierde demasiado aire. Compruebe el circuito de aire.
+end-of-line-content-message-failure-minimum-pressure-not-reached = Es posible que las válvulas no se hayan abierto correctamente. Compruébelas.
+end-of-line-content-message-failure-oxygen-pressure-not-reached = Los tubos de oxígeno pueden estar bloqueados. Revíselos.
+end-of-line-content-message-failure-pressure-not-stable = El soplador no ha podido mantener una presión de aire estable.
+end-of-line-content-message-failure-flow-not-stable = El ventilador no pudo mantener un flujo de aire estable.
+
+end-of-line-content-message-end-confirm = Este ventilador ha superado todas las pruebas. Pulse el botón de inicio para ver los detalles.
+end-of-line-content-message-end-display-pressure = Los detalles de la prueba de presión son visibles en la pantalla de depuración.
+end-of-line-content-message-end-display-flow = Los detalles de la prueba de flujo son visibles en la pantalla de depuración.

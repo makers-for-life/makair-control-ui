@@ -124,3 +124,69 @@ error-message-other = Grund:
 
 stop-title = Das Beatmungsgerät ist nicht aktiv
 stop-description = Bitte aktivieren Sie es wieder, um zu lüften
+
+end-of-line-title-primary = Service-Modus
+end-of-line-title-secondary = End-of-Line-Test
+
+end-of-line-content-title-step-start = Start des EOL-Tests...
+end-of-line-content-title-step-check-fan = Bitte Lüfter prüfen.
+end-of-line-content-title-step-test-battery-dead = Batteriezustand prüfen...
+end-of-line-content-title-step-disconnect-mains = Bitte ziehen Sie das AC-Netzkabel ab.
+end-of-line-content-title-step-connect-mains = Bitte stecken Sie das AC-Netzkabel ein.
+end-of-line-content-title-step-check-buzzer = Test des Summers...
+end-of-line-content-title-step-check-all-buttons = Bitte drücken Sie alle Tasten.
+end-of-line-content-title-step-check-ui-screen = Bitte tippen Sie auf den Touchscreen.
+end-of-line-content-title-step-plug-air-test-system = Bitte schließen Sie das Lungentestsystem an.
+end-of-line-content-title-step-reach-maximum-pressure = Test des maximalen Drucks...
+end-of-line-content-title-step-maximum-pressure-reached = Maximaler Druck erreicht. Ventile schließen...
+end-of-line-content-title-step-start-leak-measure = Testen auf Lecks...
+end-of-line-content-title-step-reach-null-pressure = Kein Leck entdeckt. Ventile öffnen...
+end-of-line-content-title-step-confirm-before-oxygen-test = Bitte schließen Sie das Sauerstoff-Testsystem.
+end-of-line-content-title-step-start-oxygen-test = Testen auf Sauerstoff...
+end-of-line-content-title-step-wait-before-blower-long-run = Bitte ziehen Sie den Stecker des Sauerstoff-Testsystems heraus.
+end-of-line-content-title-step-start-blower-long-run = Testen auf Gebläsestabilität...
+
+end-of-line-content-title-failure-expander-not-connected = Der Expander ist nicht angeschlossen.
+end-of-line-content-title-failure-battery-deeply-discharged = Die Batterie ist tiefentladen.
+end-of-line-content-title-failure-maximum-pressure-not-reached = Der maximale Druck konnte nicht erreicht werden.
+
+end-of-line-content-title-failure-leak-too-high = Die Leckluft ist zu hoch.
+end-of-line-content-title-failure-minimum-pressure-not-reached = Minimaler Druck konnte nicht erreicht werden.
+end-of-line-content-title-failure-oxygen-pressure-not-reached = Sauerstoffdruck konnte nicht erreicht werden.
+end-of-line-content-title-failure-pressure-not-stable = Gebläsedruck ist nicht stabil.
+end-of-line-content-title-failure-flow-not-stable = Gebläsedurchfluss ist nicht stabil.
+
+end-of-line-content-title-end-confirm = Alle Tests erfolgreich!
+end-of-line-content-title-end-display-pressure = Druckdetails werden angezeigt.
+end-of-line-content-title-end-display-flow = Anzeige der Flow-Details.
+
+end-of-line-content-message-step-start = Der EOL-Test wird in wenigen Augenblicken beginnen.
+end-of-line-content-message-step-check-fan = Die beiden Kühlgebläse sollten arbeiten. Drücken Sie Start, um fortzufahren.
+end-of-line-content-message-step-test-battery-dead = Der Zustand der Batterie wird geprüft. Bitte warten Sie.
+end-of-line-content-message-step-disconnect-mains = Die Netzspannung verhindert den Batterietest. Bitte ziehen Sie den Netzstecker.
+end-of-line-content-message-step-connect-mains = Der Zustand des Netzteils wird geprüft, sobald es an das Stromnetz angeschlossen ist.
+end-of-line-content-message-step-check-buzzer = Der Buzzer sollte funktionieren. Drücken Sie zur Bestätigung die Pausetaste.
+end-of-line-content-message-step-check-all-buttons = Jede Taste sollte nacheinander gedrückt werden.
+end-of-line-content-message-step-check-ui-screen = Bitte ändern Sie den Beatmungsmodus auf dem Touchscreen.
+end-of-line-content-message-step-plug-air-test-system = Die Testlunge sollte angeschlossen sein. Drücken Sie Start, um fortzufahren.
+end-of-line-content-message-step-reach-maximum-pressure = Der Druck in der Lunge wird erhöht. Bitte warten Sie.
+end-of-line-content-message-step-maximum-pressure-reached = Der maximale Druck wurde erreicht. Bitte warten Sie.
+end-of-line-content-message-step-start-leak-measure = Das Luftsystem wird auf ein Leck geprüft. Bitte warten Sie.
+end-of-line-content-message-step-reach-null-pressure = Es wurde kein Leck festgestellt. Bitte warten Sie.
+end-of-line-content-message-step-confirm-before-oxygen-test = Der Sauerstoffanschluss sollte angeschlossen sein. Drücken Sie Start, um fortzufahren.
+end-of-line-content-message-step-start-oxygen-test = Der Sauerstoffmischer wird getestet. Bitte warten Sie.
+end-of-line-content-message-step-wait-before-blower-long-run = Das Gebläse wird auf Stabilität geprüft. Drücken Sie Start, um fortzufahren.
+end-of-line-content-message-step-start-blower-long-run = Das Gebläse wird getestet. Dies wird einige Zeit dauern.
+
+end-of-line-content-message-failure-expander-not-connected = Bitte schließen Sie die Spannungsversorgung an das Motherboard an.
+end-of-line-content-message-failure-battery-deeply-discharged = Die Batterie sollte ausgetauscht werden, da sie sich in einem Unterspannungszustand befindet.
+end-of-line-content-message-failure-maximum-pressure-not-reached = Der Solldruck konnte im Luftkreislauf nicht erreicht werden.
+end-of-line-content-message-failure-leak-too-high = Aus dem Luftkreislauf entweicht zu viel Luft. Bitte überprüfen Sie den Luftkreislauf.
+end-of-line-content-message-failure-minimum-pressure-not-reached = Die Ventile haben möglicherweise nicht richtig geöffnet. Bitte überprüfen Sie diese.
+end-of-line-content-message-failure-oxygen-pressure-not-reached = Möglicherweise sind die Sauerstoffleitungen verstopft. Bitte überprüfen Sie diese.
+end-of-line-content-message-failure-pressure-not-stable = Das Gebläse war nicht in der Lage, einen stabilen Luftdruck aufrechtzuerhalten.
+end-of-line-content-message-failure-flow-not-stable = Das Gebläse war nicht in der Lage, einen stabilen Luftstrom aufrechtzuerhalten.
+
+end-of-line-content-message-end-confirm = Dieses Beatmungsgerät hat alle Tests bestanden. Drücken Sie Start, um Details zu sehen.
+end-of-line-content-message-end-display-pressure = Details zum Drucktest sind auf dem Debug-Bildschirm sichtbar.
+end-of-line-content-message-end-display-flow = Details zum Durchflusstest sind auf dem Fehlerbehebungsbildschirm zu sehen.

@@ -124,3 +124,69 @@ error-message-other = Motivo:
 
 stop-title = Ventilatore inattivo
 stop-description = Riattivalo per riprendere la respirazione
+
+end-of-line-title-primary = Modalità di servizio
+end-of-line-title-secondary = Test di fine linea
+
+end-of-line-content-title-step-start = Avvio del test EOL...
+end-of-line-content-title-step-check-fan = Controllare le ventole.
+end-of-line-content-title-step-test-battery-dead = Test delle condizioni della batteria...
+end-of-line-content-title-step-disconnect-mains = Scollegare il cavo di alimentazione CA.
+end-of-line-content-title-step-connect-mains = Inserire il cavo di alimentazione AC.
+end-of-line-content-title-step-check-buzzer = Test del cicalino...
+end-of-line-content-title-step-check-all-buttons = Premere tutti i pulsanti.
+end-of-line-content-title-step-check-ui-screen = Si prega di toccare il touch screen.
+end-of-line-content-title-step-plug-air-test-system = Si prega di collegare il sistema di test dei polmoni.
+end-of-line-content-title-step-reach-maximum-pressure = Test della pressione massima...
+end-of-line-content-title-step-maximum-pressure-reached = Pressione massima raggiunta. Chiusura delle valvole...
+end-of-line-content-title-step-start-leak-measure = Test di tenuta...
+end-of-line-content-title-step-reach-null-pressure = Nessuna perdita rilevata. Apertura valvole...
+end-of-line-content-title-step-confirm-before-oxygen-test = Chiudere il sistema di prova dell'ossigeno.
+end-of-line-content-title-step-start-oxygen-test = Test dell'ossigeno...
+end-of-line-content-title-step-wait-before-blower-long-run = Si prega di scollegare il sistema di test dell'ossigeno.
+end-of-line-content-title-step-start-blower-long-run = Test di stabilità del soffiante...
+
+end-of-line-content-title-failure-expander-not-connected = L'espansore non è collegato.
+end-of-line-content-title-failure-battery-deeply-discharged = La batteria è molto scarica.
+end-of-line-content-title-failure-maximum-pressure-not-reached = La pressione massima non può essere raggiunta.
+
+end-of-line-content-title-failure-leak-too-high = La perdita d'aria è troppo alta.
+end-of-line-content-title-failure-minimum-pressure-not-reached = Non è stato possibile raggiungere la pressione minima.
+end-of-line-content-title-failure-oxygen-pressure-not-reached = Non è stato possibile raggiungere la pressione dell'ossigeno.
+end-of-line-content-title-failure-pressure-not-stable = La pressione del soffiante non è stabile.
+end-of-line-content-title-failure-flow-not-stable = Il flusso del soffiante non è stabile.
+
+end-of-line-content-title-end-confirm = Tutti i test sono riusciti!
+end-of-line-content-title-end-display-pressure = Visualizzazione dei dettagli della pressione.
+end-of-line-content-title-end-display-flow = Visualizzazione dei dettagli del flusso.
+
+end-of-line-content-message-step-start = Il test EOL inizierà tra qualche istante.
+end-of-line-content-message-step-check-fan = Le due ventole di raffreddamento dovrebbero funzionare. Premere start per continuare.
+end-of-line-content-message-step-test-battery-dead = Verrà controllato lo stato di salute della batteria. Si prega di attendere.
+end-of-line-content-message-step-disconnect-mains = L'alimentazione AC impedisce il test delle batterie. Per favore scollegatela.
+end-of-line-content-message-step-connect-mains = La salute dell'alimentatore sarà controllata una volta collegato alla corrente alternata.
+end-of-line-content-message-step-check-buzzer = Il cicalino dovrebbe funzionare. Premere pausa per confermare.
+end-of-line-content-message-step-check-all-buttons = Ogni pulsante deve essere premuto uno per uno.
+end-of-line-content-message-step-check-ui-screen = Si prega di cambiare la modalità di ventilazione sul touch screen.
+end-of-line-content-message-step-plug-air-test-system = Il polmone di prova dovrebbe essere collegato. Premere start per continuare.
+end-of-line-content-message-step-reach-maximum-pressure = La pressione nel polmone sta aumentando. Si prega di attendere.
+end-of-line-content-message-step-maximum-pressure-reached = La pressione massima è stata raggiunta. Si prega di attendere.
+end-of-line-content-message-step-start-leak-measure = Il sistema dell'aria viene testato per eventuali perdite. Si prega di attendere.
+end-of-line-content-message-step-reach-null-pressure = Non è stata rilevata alcuna perdita. Si prega di attendere.
+end-of-line-content-message-step-confirm-before-oxygen-test = La porta dell'ossigeno dovrebbe essere collegata. Premere start per continuare.
+end-of-line-content-message-step-start-oxygen-test = Il miscelatore di ossigeno è in fase di test. Si prega di attendere.
+end-of-line-content-message-step-wait-before-blower-long-run = Verrà controllata la stabilità del soffiante. Premere start per continuare.
+end-of-line-content-message-step-start-blower-long-run = Il soffiante viene testato. Questo richiederà del tempo.
+
+end-of-line-content-message-failure-expander-not-connected = Si prega di collegare l'alimentazione alla scheda madre.
+end-of-line-content-message-failure-battery-deeply-discharged = La batteria dovrebbe essere sostituita, poiché è in uno stato di sottotensione.
+end-of-line-content-message-failure-maximum-pressure-not-reached = Non è stato possibile raggiungere la pressione target nel circuito dell'aria.
+end-of-line-content-message-failure-leak-too-high = Il sistema dell'aria perde troppa aria. Controllare il circuito dell'aria.
+end-of-line-content-message-failure-minimum-pressure-not-reached = Le valvole potrebbero non essersi aperte correttamente. Si prega di controllarle.
+end-of-line-content-message-failure-oxygen-pressure-not-reached = I tubi dell'ossigeno potrebbero essere bloccati. Controllarli.
+end-of-line-content-message-failure-pressure-not-stable = Il soffiatore non era in grado di sostenere una pressione dell'aria stabile.
+end-of-line-content-message-failure-flow-not-stable = Il ventilatore non è stato in grado di sostenere un flusso d'aria stabile.
+
+end-of-line-content-message-end-confirm = Questo ventilatore ha superato tutti i test. Premi start per vedere i dettagli.
+end-of-line-content-message-end-display-pressure = I dettagli del test di pressione sono visibili sulla schermata di debug.
+end-of-line-content-message-end-display-flow = I dettagli del test del flusso sono visibili sulla schermata di debug.

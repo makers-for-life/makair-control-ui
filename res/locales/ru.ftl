@@ -124,3 +124,69 @@ error-message-other = Причина:
 
 stop-title = Аппарат ИВЛ не активен
 stop-description = Включите снова, чтобы проветрить
+
+end-of-line-title-primary = Режим обслуживания
+end-of-line-title-secondary = Тест конца линии
+
+end-of-line-content-title-step-start = Начинаем тест EOL...
+end-of-line-content-title-step-check-fan = Пожалуйста, проверьте вентиляторы.
+end-of-line-content-title-step-test-battery-dead = Проверка состояния батареи...
+end-of-line-content-title-step-disconnect-mains = Пожалуйста, отсоедините шнур питания переменного тока.
+end-of-line-content-title-step-connect-mains = Пожалуйста, подключите шнур питания переменного тока.
+end-of-line-content-title-step-check-buzzer = Проверка зуммера...
+end-of-line-content-title-step-check-all-buttons = Пожалуйста, нажмите все кнопки.
+end-of-line-content-title-step-check-ui-screen = Пожалуйста, коснитесь сенсорного экрана.
+end-of-line-content-title-step-plug-air-test-system = Пожалуйста, подключите систему проверки легких.
+end-of-line-content-title-step-reach-maximum-pressure = Проверка максимального давления...
+end-of-line-content-title-step-maximum-pressure-reached = Максимальное давление достигнуто. Закрытие клапанов...
+end-of-line-content-title-step-start-leak-measure = Проверка на утечку...
+end-of-line-content-title-step-reach-null-pressure = Утечек не обнаружено. Открытие клапанов...
+end-of-line-content-title-step-confirm-before-oxygen-test = Пожалуйста, заглушите систему проверки кислорода.
+end-of-line-content-title-step-start-oxygen-test = Проверка на наличие кислорода...
+end-of-line-content-title-step-wait-before-blower-long-run = Пожалуйста, отключите систему проверки кислорода.
+end-of-line-content-title-step-start-blower-long-run = Проверка стабильности работы нагнетателя...
+
+end-of-line-content-title-failure-expander-not-connected = Расширитель не подключен.
+end-of-line-content-title-failure-battery-deeply-discharged = Батарея глубоко разряжена.
+end-of-line-content-title-failure-maximum-pressure-not-reached = Не удалось достичь максимального давления.
+
+end-of-line-content-title-failure-leak-too-high = Утечка воздуха слишком велика.
+end-of-line-content-title-failure-minimum-pressure-not-reached = Не удалось достичь минимального давления.
+end-of-line-content-title-failure-oxygen-pressure-not-reached = Давление кислорода не может быть достигнуто.
+end-of-line-content-title-failure-pressure-not-stable = Давление воздуходувки не стабильно.
+end-of-line-content-title-failure-flow-not-stable = Поток воздуха не стабилен.
+
+end-of-line-content-title-end-confirm = Все тесты прошли успешно!
+end-of-line-content-title-end-display-pressure = Отображение данных о давлении.
+end-of-line-content-title-end-display-flow = Отображение информации о потоке.
+
+end-of-line-content-message-step-start = Через несколько мгновений начнется тест EOL.
+end-of-line-content-message-step-check-fan = Два вентилятора охлаждения должны работать. Нажмите старт для продолжения.
+end-of-line-content-message-step-test-battery-dead = Будет проверено состояние батареи. Пожалуйста, подождите.
+end-of-line-content-message-step-disconnect-mains = Питание от сети переменного тока препятствует проверке батарей. Пожалуйста, отключите его.
+end-of-line-content-message-step-connect-mains = Здоровье блока питания будет проверено после подключения к сети переменного тока.
+end-of-line-content-message-step-check-buzzer = Зуммер должен работать. Нажмите на паузу для подтверждения.
+end-of-line-content-message-step-check-all-buttons = Каждую кнопку следует нажимать по очереди.
+end-of-line-content-message-step-check-ui-screen = Пожалуйста, измените режим вентиляции на сенсорном экране.
+end-of-line-content-message-step-plug-air-test-system = Тестовое легкое должно быть подключено. Нажмите старт, чтобы продолжить.
+end-of-line-content-message-step-reach-maximum-pressure = Давление в легком увеличивается. Пожалуйста, подождите.
+end-of-line-content-message-step-maximum-pressure-reached = Достигнуто максимальное давление. Пожалуйста, подождите.
+end-of-line-content-message-step-start-leak-measure = Воздушная система проверяется на наличие утечки. Пожалуйста, подождите.
+end-of-line-content-message-step-reach-null-pressure = Утечка не обнаружена. Пожалуйста, подождите.
+end-of-line-content-message-step-confirm-before-oxygen-test = Кислородный порт должен быть подключен. Нажмите "Пуск", чтобы продолжить.
+end-of-line-content-message-step-start-oxygen-test = Идет проверка кислородного смесителя. Пожалуйста, подождите.
+end-of-line-content-message-step-wait-before-blower-long-run = Воздуходувка будет проверена на стабильность. Нажмите старт, чтобы продолжить.
+end-of-line-content-message-step-start-blower-long-run = Воздуходувка проходит проверку. Это займет некоторое время.
+
+end-of-line-content-message-failure-expander-not-connected = Пожалуйста, подключите блок питания к материнской плате.
+end-of-line-content-message-failure-battery-deeply-discharged = Батарею следует заменить, так как она находится в состоянии пониженного напряжения.
+end-of-line-content-message-failure-maximum-pressure-not-reached = Не удалось достичь заданного давления в воздушном контуре.
+end-of-line-content-message-failure-leak-too-high = Воздушная система пропускает слишком много воздуха. Пожалуйста, проверьте воздушный контур.
+end-of-line-content-message-failure-minimum-pressure-not-reached = Возможно, клапаны открыты неправильно. Проверьте их.
+end-of-line-content-message-failure-oxygen-pressure-not-reached = Возможно, кислородные трубки заблокированы. Пожалуйста, проверьте их.
+end-of-line-content-message-failure-pressure-not-stable = Воздуходувка не смогла обеспечить стабильное давление воздуха.
+end-of-line-content-message-failure-flow-not-stable = Вентилятор не смог обеспечить стабильный поток воздуха.
+
+end-of-line-content-message-end-confirm = Этот вентилятор прошел все тесты. Нажмите "Пуск", чтобы увидеть подробности.
+end-of-line-content-message-end-display-pressure = Подробности теста на давление видны на экране отладки.
+end-of-line-content-message-end-display-flow = Подробности теста на расход воздуха видны на экране отладки.

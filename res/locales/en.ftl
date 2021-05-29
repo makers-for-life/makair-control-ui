@@ -122,6 +122,9 @@ error-message-watchdog = A watchdog timer has been raised, and thus the internal
 error-message-sensor-failure = Sensor ID:
 error-message-other = Reason:
 
+stop-title = Ventilator unit inactive
+stop-description = Tap any value to configure it, then press start.
+
 end-of-line-title-primary = Service Mode
 end-of-line-title-secondary = End-of-Line Test
 
@@ -186,6 +189,3 @@ end-of-line-content-message-failure-flow-not-stable = The blower was unable to s
 end-of-line-content-message-end-confirm = This ventilator passed all tests. Press start to see details.
 end-of-line-content-message-end-display-pressure = Pressure test details are visible on the debug screen.
 end-of-line-content-message-end-display-flow = Flow test details are visible on the debug screen.
-
-stop-title = Ventilator unit inactive
-stop-description = Tap any value to configure it, then press start.

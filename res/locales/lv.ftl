@@ -124,3 +124,69 @@ error-message-other = Iemesls:
 
 stop-title = Ventilatora ierīce neaktīva
 stop-description = Lūdzu, atkārtoti ieslēdziet to, lai atsāktu elpošanu
+
+end-of-line-title-primary = Pakalpojumu režīms
+end-of-line-title-secondary = Līnijas beigu tests
+
+end-of-line-content-title-step-start = Uzsākt EOL testu...
+end-of-line-content-title-step-check-fan = Lūdzu, pārbaudiet ventilatorus.
+end-of-line-content-title-step-test-battery-dead = Akumulatora stāvokļa pārbaude...
+end-of-line-content-title-step-disconnect-mains = Lūdzu, atvienojiet maiņstrāvas barošanas kabeli.
+end-of-line-content-title-step-connect-mains = Lūdzu, pievienojiet maiņstrāvas barošanas kabeli.
+end-of-line-content-title-step-check-buzzer = Zvanītāja pārbaude...
+end-of-line-content-title-step-check-all-buttons = Lūdzu, nospiediet visas pogas.
+end-of-line-content-title-step-check-ui-screen = Pieskarieties skārienekrānam.
+end-of-line-content-title-step-plug-air-test-system = Lūdzu, pievienojiet plaušu pārbaudes sistēmu.
+end-of-line-content-title-step-reach-maximum-pressure = Maksimālā spiediena pārbaude...
+end-of-line-content-title-step-maximum-pressure-reached = Sasniegts maksimālais spiediens. Vārstu aizvēršana...
+end-of-line-content-title-step-start-leak-measure = Noplūdes pārbaude...
+end-of-line-content-title-step-reach-null-pressure = Noplūdes nav konstatētas. Atver vārstus...
+end-of-line-content-title-step-confirm-before-oxygen-test = Lūdzu, aizbāzt skābekļa testa sistēmu.
+end-of-line-content-title-step-start-oxygen-test = Skābekļa pārbaude...
+end-of-line-content-title-step-wait-before-blower-long-run = Lūdzu, atvienojiet skābekļa testa sistēmu.
+end-of-line-content-title-step-start-blower-long-run = Dūmvada stabilitātes pārbaude...
+
+end-of-line-content-title-failure-expander-not-connected = Paplašinātājs nav pieslēgts.
+end-of-line-content-title-failure-battery-deeply-discharged = Akumulators ir dziļi izlādējies.
+end-of-line-content-title-failure-maximum-pressure-not-reached = Nav iespējams sasniegt maksimālo spiedienu.
+
+end-of-line-content-title-failure-leak-too-high = Gaisa noplūde ir pārāk liela.
+end-of-line-content-title-failure-minimum-pressure-not-reached = Nav izdevies sasniegt minimālo spiedienu.
+end-of-line-content-title-failure-oxygen-pressure-not-reached = Skābekļa spiediens nav sasniegts.
+end-of-line-content-title-failure-pressure-not-stable = Pūtēja spiediens nav stabils.
+end-of-line-content-title-failure-flow-not-stable = Pūtēja plūsma nav stabila.
+
+end-of-line-content-title-end-confirm = Visi testi ir veiksmīgi!
+end-of-line-content-title-end-display-pressure = Tiek parādīta spiediena informācija.
+end-of-line-content-title-end-display-flow = Tiek parādīta plūsmas informācija.
+
+end-of-line-content-message-step-start = EOL tests sāksies pēc dažiem mirkļiem.
+end-of-line-content-message-step-check-fan = Abiem dzesēšanas ventilatoriem ir jādarbojas. Nospiediet start, lai turpinātu.
+end-of-line-content-message-step-test-battery-dead = Tiks pārbaudīts akumulatora stāvoklis. Lūdzu, uzgaidiet.
+end-of-line-content-message-step-disconnect-mains = Maiņstrāvas barošana neļauj pārbaudīt akumulatorus. Lūdzu, atvienojiet to no tīkla.
+end-of-line-content-message-step-connect-mains = Barošanas avota veselība tiks pārbaudīta, tiklīdz tas būs pieslēgts maiņstrāvas tīklam.
+end-of-line-content-message-step-check-buzzer = Zvanītājam ir jādarbojas. Nospiediet pauzi, lai apstiprinātu.
+end-of-line-content-message-step-check-all-buttons = Katra poga jānospiež pa vienai.
+end-of-line-content-message-step-check-ui-screen = Lūdzu, nomainiet ventilācijas režīmu skārienekrānā.
+end-of-line-content-message-step-plug-air-test-system = Jāpievieno testa plaušas. Nospiediet start, lai turpinātu.
+end-of-line-content-message-step-reach-maximum-pressure = Tiek palielināts spiediens plaušā. Lūdzu, pagaidiet.
+end-of-line-content-message-step-maximum-pressure-reached = Ir sasniegts maksimālais spiediens. Lūdzu, uzgaidiet.
+end-of-line-content-message-step-start-leak-measure = Gaisa sistēma tiek pārbaudīta, vai nav noplūdes. Lūdzu, uzgaidiet.
+end-of-line-content-message-step-reach-null-pressure = Noplūde nav konstatēta. Lūdzu, uzgaidiet.
+end-of-line-content-message-step-confirm-before-oxygen-test = Skābekļa pieslēgvietai jābūt savienotai. Nospiediet start, lai turpinātu.
+end-of-line-content-message-step-start-oxygen-test = Tiek veikta skābekļa maisītāja pārbaude. Lūdzu, uzgaidiet.
+end-of-line-content-message-step-wait-before-blower-long-run = Tiks pārbaudīta ventilatora stabilitāte. Nospiediet start, lai turpinātu.
+end-of-line-content-message-step-start-blower-long-run = Tiek testēts ventilators. Tas aizņems kādu laiku.
+
+end-of-line-content-message-failure-expander-not-connected = Lūdzu, pievienojiet barošanas avotu pamatplatei.
+end-of-line-content-message-failure-battery-deeply-discharged = Akumulators ir jānomaina, jo tie ir zemsprieguma stāvoklī.
+end-of-line-content-message-failure-maximum-pressure-not-reached = Gaisa kontūrā nav izdevies sasniegt mērķa spiedienu.
+end-of-line-content-message-failure-leak-too-high = Gaisa sistēmā noplūst pārāk daudz gaisa. Lūdzu, pārbaudiet gaisa ķēdi.
+end-of-line-content-message-failure-minimum-pressure-not-reached = Ventiļi, iespējams, nav pareizi atvērti. Lūdzu, pārbaudiet tos.
+end-of-line-content-message-failure-oxygen-pressure-not-reached = Skābekļa caurules var būt aizsērējušas. Lūdzu, pārbaudiet tās.
+end-of-line-content-message-failure-pressure-not-stable = Pūtējs nespēja uzturēt stabilu gaisa spiedienu.
+end-of-line-content-message-failure-flow-not-stable = Pūtējs nespēja uzturēt stabilu gaisa plūsmu.
+
+end-of-line-content-message-end-confirm = Šis ventilators izturēja visus testus. Nospiediet starta taustiņu, lai redzētu sīkāku informāciju.
+end-of-line-content-message-end-display-pressure = Spiediena testa informācija ir redzama atkļūdošanas ekrānā.
+end-of-line-content-message-end-display-flow = Detalizēta informācija par plūsmas testu ir redzama atkļūdošanas ekrānā.

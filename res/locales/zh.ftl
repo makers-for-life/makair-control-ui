@@ -124,3 +124,69 @@ error-message-other = 原因：
 
 stop-title = 呼吸机单元无效
 stop-description = 请重新启用它以恢复呼吸
+
+end-of-line-title-primary = 服务模式
+end-of-line-title-secondary = 线路末端测试
+
+end-of-line-content-title-step-start = 开始EOL测试...
+end-of-line-content-title-step-check-fan = 请检查风扇。
+end-of-line-content-title-step-test-battery-dead = 测试电池状况...
+end-of-line-content-title-step-disconnect-mains = 请拔掉AC电源线。
+end-of-line-content-title-step-connect-mains = 请插上交流电源线。
+end-of-line-content-title-step-check-buzzer = 测试蜂鸣器...
+end-of-line-content-title-step-check-all-buttons = 请按下所有按钮。
+end-of-line-content-title-step-check-ui-screen = 请敲击触摸屏。
+end-of-line-content-title-step-plug-air-test-system = 请插上肺部测试系统。
+end-of-line-content-title-step-reach-maximum-pressure = 测试最大压力...
+end-of-line-content-title-step-maximum-pressure-reached = 达到最大压力。关闭阀门...
+end-of-line-content-title-step-start-leak-measure = 测试泄漏...
+end-of-line-content-title-step-reach-null-pressure = 没有发现泄漏。打开阀门...
+end-of-line-content-title-step-confirm-before-oxygen-test = 请堵塞氧气测试系统。
+end-of-line-content-title-step-start-oxygen-test = 测试氧气...
+end-of-line-content-title-step-wait-before-blower-long-run = 请拔掉氧气测试系统的插头。
+end-of-line-content-title-step-start-blower-long-run = 测试鼓风机稳定性...
+
+end-of-line-content-title-failure-expander-not-connected = 膨胀器未连接。
+end-of-line-content-title-failure-battery-deeply-discharged = 电池深度放电。
+end-of-line-content-title-failure-maximum-pressure-not-reached = 无法达到最大压力。
+
+end-of-line-content-title-failure-leak-too-high = 空气泄漏太高。
+end-of-line-content-title-failure-minimum-pressure-not-reached = 无法达到最低压力。
+end-of-line-content-title-failure-oxygen-pressure-not-reached = 氧气压力无法达到。
+end-of-line-content-title-failure-pressure-not-stable = 鼓风机压力不稳定。
+end-of-line-content-title-failure-flow-not-stable = 鼓风机流量不稳定。
+
+end-of-line-content-title-end-confirm = 所有测试成功!
+end-of-line-content-title-end-display-pressure = 显示压力详情。
+end-of-line-content-title-end-display-flow = 显示流量详情。
+
+end-of-line-content-message-step-start = EOL测试将在片刻后开始。
+end-of-line-content-message-step-check-fan = 两个冷却风扇应该工作。按启动键继续。
+end-of-line-content-message-step-test-battery-dead = 将检查电池健康状况。请等待。
+end-of-line-content-message-step-disconnect-mains = 交流电会阻止测试电池。请拔掉插头。
+end-of-line-content-message-step-connect-mains = 一旦插上交流电，将检查电源的健康状况。
+end-of-line-content-message-step-check-buzzer = 蜂鸣器应该工作。按暂停键来确认。
+end-of-line-content-message-step-check-all-buttons = 每个按钮应逐一按下。
+end-of-line-content-message-step-check-ui-screen = 请在触摸屏上改变通气模式。
+end-of-line-content-message-step-plug-air-test-system = 测试肺应已连接。按开始键继续。
+end-of-line-content-message-step-reach-maximum-pressure = 肺部的压力正在增加。请等待。
+end-of-line-content-message-step-maximum-pressure-reached = 已达到最大压力。请等待。
+end-of-line-content-message-step-start-leak-measure = 空气系统正在测试是否有泄漏。请等待。
+end-of-line-content-message-step-reach-null-pressure = 没有检测到泄漏。请等待。
+end-of-line-content-message-step-confirm-before-oxygen-test = 氧气接口应该已经连接。按开始键继续。
+end-of-line-content-message-step-start-oxygen-test = 氧气混合器正在测试中。请等待。
+end-of-line-content-message-step-wait-before-blower-long-run = 鼓风机将被检查是否稳定。按开始键继续。
+end-of-line-content-message-step-start-blower-long-run = 鼓风机正在进行测试。这将需要一些时间。
+
+end-of-line-content-message-failure-expander-not-connected = 请将电源连接到主板上。
+end-of-line-content-message-failure-battery-deeply-discharged = 应该更换电池，因为它们处于欠压状态。
+end-of-line-content-message-failure-maximum-pressure-not-reached = 空气回路中无法达到目标压力。
+end-of-line-content-message-failure-leak-too-high = 空气系统泄漏了太多的空气。请检查气路。
+end-of-line-content-message-failure-minimum-pressure-not-reached = 阀门可能没有正确打开。请检查它们。
+end-of-line-content-message-failure-oxygen-pressure-not-reached = 氧气管可能被堵塞。请检查它们。
+end-of-line-content-message-failure-pressure-not-stable = 鼓风机无法维持稳定的空气压力。
+end-of-line-content-message-failure-flow-not-stable = 鼓风机无法维持稳定的空气流量。
+
+end-of-line-content-message-end-confirm = 该呼吸机通过了所有测试。按开始键查看细节。
+end-of-line-content-message-end-display-pressure = 在调试屏幕上可以看到压力测试的细节。
+end-of-line-content-message-end-display-flow = 流量测试的细节在调试屏幕上可见。
