@@ -145,9 +145,9 @@ checksum = "0d8c1fef690941d3e7788d328517591fecc684c084084702d6ff1641e993699a"
 
 [[package]]
 name = "bumpalo"
-version = "3.6.1"
+version = "3.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "63396b8a4b9de3f4fdfb320ab6080762242f66a8ef174c49d8e19b674db4cdbe"
+checksum = "9c59e7af012c713f529e7a3ee57ce9b31ddd858d4b512923602f74608b009631"
 
 [[package]]
 name = "bytemuck"
@@ -956,8 +956,8 @@ dependencies = [
 
 [[package]]
 name = "makair-telemetry"
-version = "2.0.0"
-source = "git+https://github.com/makers-for-life/makair-telemetry?tag=v2.0.0#83bacf70b7c73b80d947a9f69d1b50341ed81ffb"
+version = "2.1.0"
+source = "git+https://github.com/makers-for-life/makair-telemetry?rev=996142b22b1efd115feae212ac860d70fca19498#996142b22b1efd115feae212ac860d70fca19498"
 dependencies = [
  "base64",
  "crc32fast",

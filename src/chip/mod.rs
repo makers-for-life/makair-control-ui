@@ -71,9 +71,9 @@ pub enum ChipError {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ChipEndOfLine {
-    Ongoing(ChipEndOfLineStep),
+    Ongoing(ChipEndOfLineStep, String),
     Failed(ChipEndOfLineFailure, String),
-    Succeeded(ChipEndOfLineEnd),
+    Succeeded(ChipEndOfLineEnd, String),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -661,8 +661,8 @@ impl Chip {
     }
 
     fn update_state_end_of_line(&mut self, snapshot: EolTestSnapshot) -> bool {
-        // Acquire failure reason (if any; used for failed states only)
-        let failure_reason = if let EolTestSnapshotContent::Error(reason) = snapshot.content {
+        // Acquire message (if any; used for failed states only)
+        let message = if let EolTestSnapshotContent::Error(reason) = snapshot.content {
             reason
         } else {
             "".to_string()
@@ -670,82 +670,86 @@ impl Chip {
 
         // Map end-of-line test snapshot to internal chip end-of-line
         let chip_eol = ChipState::EndOfLine(match snapshot.current_step {
-            EolTestStep::START => ChipEndOfLine::Ongoing(ChipEndOfLineStep::Start),
+            EolTestStep::START => ChipEndOfLine::Ongoing(ChipEndOfLineStep::Start, message),
             EolTestStep::SUPPLY_TO_EXPANDER_NOT_CONNECTED => {
-                ChipEndOfLine::Failed(ChipEndOfLineFailure::ExpanderNotConnected, failure_reason)
+                ChipEndOfLine::Failed(ChipEndOfLineFailure::ExpanderNotConnected, message)
             }
-            EolTestStep::CHECK_FAN => ChipEndOfLine::Ongoing(ChipEndOfLineStep::CheckFan),
+            EolTestStep::CHECK_FAN => ChipEndOfLine::Ongoing(ChipEndOfLineStep::CheckFan, message),
             EolTestStep::TEST_BAT_DEAD => {
-                ChipEndOfLine::Ongoing(ChipEndOfLineStep::TestBatteryDead)
+                ChipEndOfLine::Ongoing(ChipEndOfLineStep::TestBatteryDead, message)
             }
-            EolTestStep::BATTERY_DEEP_DISCHARGE => ChipEndOfLine::Failed(
-                ChipEndOfLineFailure::BatteryDeeplyDischarged,
-                failure_reason,
-            ),
+            EolTestStep::BATTERY_DEEP_DISCHARGE => {
+                ChipEndOfLine::Failed(ChipEndOfLineFailure::BatteryDeeplyDischarged, message)
+            }
             EolTestStep::DISCONNECT_MAINS => {
-                ChipEndOfLine::Ongoing(ChipEndOfLineStep::DisconnectMains)
+                ChipEndOfLine::Ongoing(ChipEndOfLineStep::DisconnectMains, message)
             }
-            EolTestStep::CONNECT_MAINS => ChipEndOfLine::Ongoing(ChipEndOfLineStep::ConnectMains),
-            EolTestStep::CHECK_BUZZER => ChipEndOfLine::Ongoing(ChipEndOfLineStep::CheckBuzzer),
+            EolTestStep::CONNECT_MAINS => {
+                ChipEndOfLine::Ongoing(ChipEndOfLineStep::ConnectMains, message)
+            }
+            EolTestStep::CHECK_BUZZER => {
+                ChipEndOfLine::Ongoing(ChipEndOfLineStep::CheckBuzzer, message)
+            }
             EolTestStep::CHECK_ALL_BUTTONS => {
-                ChipEndOfLine::Ongoing(ChipEndOfLineStep::CheckAllButtons)
+                ChipEndOfLine::Ongoing(ChipEndOfLineStep::CheckAllButtons, message)
             }
             EolTestStep::CHECK_UI_SCREEN => {
-                ChipEndOfLine::Ongoing(ChipEndOfLineStep::CheckUiScreen)
+                ChipEndOfLine::Ongoing(ChipEndOfLineStep::CheckUiScreen, message)
             }
             EolTestStep::PLUG_AIR_TEST_SYTEM => {
-                ChipEndOfLine::Ongoing(ChipEndOfLineStep::PlugAirTestSystem)
+                ChipEndOfLine::Ongoing(ChipEndOfLineStep::PlugAirTestSystem, message)
             }
             EolTestStep::REACH_MAX_PRESSURE => {
-                ChipEndOfLine::Ongoing(ChipEndOfLineStep::ReachMaximumPressure)
+                ChipEndOfLine::Ongoing(ChipEndOfLineStep::ReachMaximumPressure, message)
             }
             EolTestStep::MAX_PRESSURE_REACHED_OK => {
-                ChipEndOfLine::Ongoing(ChipEndOfLineStep::MaximumPressureReached)
+                ChipEndOfLine::Ongoing(ChipEndOfLineStep::MaximumPressureReached, message)
             }
-            EolTestStep::MAX_PRESSURE_NOT_REACHED => ChipEndOfLine::Failed(
-                ChipEndOfLineFailure::MaximumPressureNotReached,
-                failure_reason,
-            ),
+            EolTestStep::MAX_PRESSURE_NOT_REACHED => {
+                ChipEndOfLine::Failed(ChipEndOfLineFailure::MaximumPressureNotReached, message)
+            }
             EolTestStep::START_LEAK_MESURE => {
-                ChipEndOfLine::Ongoing(ChipEndOfLineStep::StartLeakMeasure)
+                ChipEndOfLine::Ongoing(ChipEndOfLineStep::StartLeakMeasure, message)
             }
             EolTestStep::LEAK_IS_TOO_HIGH => {
-                ChipEndOfLine::Failed(ChipEndOfLineFailure::LeakTooHigh, failure_reason)
+                ChipEndOfLine::Failed(ChipEndOfLineFailure::LeakTooHigh, message)
             }
             EolTestStep::REACH_NULL_PRESSURE => {
-                ChipEndOfLine::Ongoing(ChipEndOfLineStep::ReachNullPressure)
+                ChipEndOfLine::Ongoing(ChipEndOfLineStep::ReachNullPressure, message)
             }
-            EolTestStep::MIN_PRESSURE_NOT_REACHED => ChipEndOfLine::Failed(
-                ChipEndOfLineFailure::MinimumPressureNotReached,
-                failure_reason,
-            ),
+            EolTestStep::MIN_PRESSURE_NOT_REACHED => {
+                ChipEndOfLine::Failed(ChipEndOfLineFailure::MinimumPressureNotReached, message)
+            }
             EolTestStep::USER_CONFIRMATION_BEFORE_O2_TEST => {
-                ChipEndOfLine::Ongoing(ChipEndOfLineStep::ConfirmBeforeOxygenTest)
+                ChipEndOfLine::Ongoing(ChipEndOfLineStep::ConfirmBeforeOxygenTest, message)
             }
             EolTestStep::START_O2_TEST => {
-                ChipEndOfLine::Ongoing(ChipEndOfLineStep::StartOxygenTest)
+                ChipEndOfLine::Ongoing(ChipEndOfLineStep::StartOxygenTest, message)
             }
-            EolTestStep::O2_PRESSURE_NOT_REACH => ChipEndOfLine::Failed(
-                ChipEndOfLineFailure::OxygenPressureNotReached,
-                failure_reason,
-            ),
+            EolTestStep::O2_PRESSURE_NOT_REACH => {
+                ChipEndOfLine::Failed(ChipEndOfLineFailure::OxygenPressureNotReached, message)
+            }
             EolTestStep::WAIT_USER_BEFORE_LONG_RUN => {
-                ChipEndOfLine::Ongoing(ChipEndOfLineStep::WaitBeforeBlowerLongRun)
+                ChipEndOfLine::Ongoing(ChipEndOfLineStep::WaitBeforeBlowerLongRun, message)
             }
             EolTestStep::START_LONG_RUN_BLOWER => {
-                ChipEndOfLine::Ongoing(ChipEndOfLineStep::StartBlowerLongRun)
+                ChipEndOfLine::Ongoing(ChipEndOfLineStep::StartBlowerLongRun, message)
             }
             EolTestStep::PRESSURE_NOT_STABLE => {
-                ChipEndOfLine::Failed(ChipEndOfLineFailure::PressureNotStable, failure_reason)
+                ChipEndOfLine::Failed(ChipEndOfLineFailure::PressureNotStable, message)
             }
             EolTestStep::FLOW_NOT_STABLE => {
-                ChipEndOfLine::Failed(ChipEndOfLineFailure::FlowNotStable, failure_reason)
+                ChipEndOfLine::Failed(ChipEndOfLineFailure::FlowNotStable, message)
             }
-            EolTestStep::END_SUCCESS => ChipEndOfLine::Succeeded(ChipEndOfLineEnd::Confirm),
+            EolTestStep::END_SUCCESS => {
+                ChipEndOfLine::Succeeded(ChipEndOfLineEnd::Confirm, message)
+            }
             EolTestStep::DISPLAY_PRESSURE => {
-                ChipEndOfLine::Succeeded(ChipEndOfLineEnd::DisplayPressure)
+                ChipEndOfLine::Succeeded(ChipEndOfLineEnd::DisplayPressure, message)
             }
-            EolTestStep::DISPLAY_FLOW => ChipEndOfLine::Succeeded(ChipEndOfLineEnd::DisplayFlow),
+            EolTestStep::DISPLAY_FLOW => {
+                ChipEndOfLine::Succeeded(ChipEndOfLineEnd::DisplayFlow, message)
+            }
         });
 
         // Update state? (only if changed)

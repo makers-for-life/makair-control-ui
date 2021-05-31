@@ -243,20 +243,20 @@ impl DisplayRenderer {
         // Create end-of-line screen
         let screen_eol = DisplayDataEndOfLine {
             error: matches!(eol, ChipEndOfLine::Failed(_, _)),
-            success: matches!(eol, ChipEndOfLine::Succeeded(_)),
+            success: matches!(eol, ChipEndOfLine::Succeeded(_, _)),
             step: match eol {
-                ChipEndOfLine::Ongoing(eol_step) => {
+                ChipEndOfLine::Ongoing(eol_step, _) => {
                     index_from_end_of_line_step(&eol_step).unwrap_or(0)
                 }
                 ChipEndOfLine::Failed(eol_failure, _) => {
                     index_from_end_of_line_failure(&eol_failure).unwrap_or(0)
                 }
-                ChipEndOfLine::Succeeded(_) => END_OF_LINE_STEPS_COUNT,
+                ChipEndOfLine::Succeeded(_, _) => END_OF_LINE_STEPS_COUNT,
             },
             icon_image_id: match eol {
-                ChipEndOfLine::Ongoing(_) => self.images.end_of_line_ongoing_icon,
+                ChipEndOfLine::Ongoing(_, _) => self.images.end_of_line_ongoing_icon,
                 ChipEndOfLine::Failed(_, _) => self.images.end_of_line_error_icon,
-                ChipEndOfLine::Succeeded(_) => self.images.end_of_line_success_icon,
+                ChipEndOfLine::Succeeded(_, _) => self.images.end_of_line_success_icon,
             },
             eol,
         };
