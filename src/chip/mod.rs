@@ -661,11 +661,11 @@ impl Chip {
     }
 
     fn update_state_end_of_line(&mut self, snapshot: EolTestSnapshot) -> bool {
-        // Acquire message (if any; used for failed states only)
-        let message = if let EolTestSnapshotContent::Error(reason) = snapshot.content {
-            reason
-        } else {
-            "".to_string()
+        // Reflect message from telemetry structure to internal value
+        let message = match snapshot.content {
+            EolTestSnapshotContent::InProgress(message) => message,
+            EolTestSnapshotContent::Error(message) => message,
+            EolTestSnapshotContent::Success(message) => message,
         };
 
         // Map end-of-line test snapshot to internal chip end-of-line
