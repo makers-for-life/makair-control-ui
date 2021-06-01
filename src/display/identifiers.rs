@@ -430,6 +430,8 @@ widget_ids!(pub struct Ids {
   end_of_line_content_text_wrapper,
   end_of_line_content_text_title,
   end_of_line_content_text_message,
+  end_of_line_content_details_box,
+  end_of_line_content_details_text,
 
   initializing_container,
   initializing_logo,

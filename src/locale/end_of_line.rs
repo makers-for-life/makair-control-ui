@@ -7,7 +7,7 @@ use crate::chip::{ChipEndOfLine, ChipEndOfLineEnd, ChipEndOfLineFailure, ChipEnd
 
 use crate::APP_I18N;
 
-pub fn end_of_line_to_locales(eol: &ChipEndOfLine) -> (String, String) {
+pub fn end_of_line_to_locales(eol: &ChipEndOfLine) -> (String, String, String) {
     // Acquire target locale attributes and attached details
     let (locale_keys, details) = match eol {
         ChipEndOfLine::Ongoing(end_of_line_step, details) => (
@@ -74,18 +74,11 @@ pub fn end_of_line_to_locales(eol: &ChipEndOfLine) -> (String, String) {
         locale_keys.0, locale_keys.1
     ));
 
-    // Generate full message (with optional details, if any)
-    let mut message = APP_I18N.t(&format!(
+    // Acquire message
+    let message = APP_I18N.t(&format!(
         "end-of-line-content-message-{}-{}",
         locale_keys.0, locale_keys.1
     ));
 
-    // Append details? (if any)
-    if !details.is_empty() {
-        message.push('\n');
-        message.push_str("#> ");
-        message.push_str(details);
-    }
-
-    (title, message)
+    (title, message, details.to_owned())
 }

@@ -21,6 +21,8 @@ const CONTENT_BOX_ERROR_BORDER_COLOR: Color =
     Color::Rgba(219.0 / 255.0, 16.0 / 255.0, 16.0 / 255.0, 1.0);
 const CONTENT_BOX_SUCCESS_BORDER_COLOR: Color =
     Color::Rgba(6.0 / 255.0, 174.0 / 255.0, 33.0 / 255.0, 1.0);
+const CONTENT_DETAILS_BOX_BORDER_COLOR: Color =
+    Color::Rgba(255.0 / 255.0, 255.0 / 255.0, 255.0 / 255.0, 0.3);
 
 pub struct Config<'a> {
     pub title_wrapper: WidgetId,
@@ -40,6 +42,8 @@ pub struct Config<'a> {
     pub content_text_wrapper: WidgetId,
     pub content_text_title: WidgetId,
     pub content_text_message: WidgetId,
+    pub content_details_box: WidgetId,
+    pub content_details_text: WidgetId,
 
     pub error: bool,
     pub success: bool,
@@ -50,6 +54,7 @@ pub struct Config<'a> {
 
     pub title: String,
     pub message: String,
+    pub details: String,
 }
 
 pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
@@ -73,6 +78,8 @@ pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
     content_text_wrapper(master, &config);
     content_text_title(master, &config);
     content_text_message(master, &config);
+    content_details_box(master, &config);
+    content_details_text(master, &config);
 
     0 as _
 }
@@ -255,7 +262,11 @@ fn content_box<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Initialize container style
     let mut container_style = widget::canvas::Style::default();
 
-    container_style.color = Some(color::WHITE.alpha(0.01));
+    container_style.color = Some(if config.error || config.success {
+        color::TRANSPARENT
+    } else {
+        color::WHITE.alpha(0.01)
+    });
     container_style.border = Some(2.0);
 
     container_style.border_color = Some(if config.error {
@@ -330,4 +341,47 @@ fn content_text_message<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         )
         .with_style(text_style)
         .set(config.content_text_message, &mut master.ui);
+}
+
+fn content_details_box<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+    if !config.details.is_empty() {
+        // Initialize container style
+        let mut container_style = widget::canvas::Style::default();
+
+        container_style.color = Some(color::BLACK);
+        container_style.border = Some(1.0);
+
+        container_style.border_color = Some(CONTENT_DETAILS_BOX_BORDER_COLOR);
+
+        // Create container
+        widget::Canvas::new()
+            .with_style(container_style)
+            .w_h(
+                END_OF_LINE_CONTENT_DETAILS_BOX_WIDTH,
+                END_OF_LINE_CONTENT_DETAILS_BOX_HEIGHT,
+            )
+            .down_from(
+                config.content_box,
+                END_OF_LINE_CONTENT_DETAILS_BOX_MARGIN_TOP,
+            )
+            .set(config.content_details_box, &mut master.ui);
+    }
+}
+
+fn content_details_text<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+    if !config.details.is_empty() {
+        // Initialize text style
+        let mut text_style = conrod_core::widget::primitive::text::Style::default();
+
+        text_style.font_id = Some(Some(master.fonts.regular));
+        text_style.color = Some(color::WHITE);
+        text_style.font_size = Some(END_OF_LINE_CONTENT_DETAILS_TEXT_FONT_SIZE);
+
+        // Create text
+        widget::Text::new(&config.details)
+            .middle_of(config.content_details_box)
+            .y_relative(2.0)
+            .with_style(text_style)
+            .set(config.content_details_text, &mut master.ui);
+    }
 }

@@ -213,12 +213,15 @@ impl<'a> Screen<'a> {
                 content_text_wrapper: self.ids.end_of_line_content_text_wrapper,
                 content_text_title: self.ids.end_of_line_content_text_title,
                 content_text_message: self.ids.end_of_line_content_text_message,
+                content_details_box: self.ids.end_of_line_content_details_box,
+                content_details_text: self.ids.end_of_line_content_details_text,
                 error: config.error,
                 success: config.success,
                 step: config.step,
                 icon: config.icon_image_id,
                 title: end_of_line_texts.0,
                 message: end_of_line_texts.1,
+                details: end_of_line_texts.2,
             }));
     }
 
