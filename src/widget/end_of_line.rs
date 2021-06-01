@@ -21,8 +21,7 @@ const CONTENT_BOX_ERROR_BORDER_COLOR: Color =
     Color::Rgba(219.0 / 255.0, 16.0 / 255.0, 16.0 / 255.0, 1.0);
 const CONTENT_BOX_SUCCESS_BORDER_COLOR: Color =
     Color::Rgba(6.0 / 255.0, 174.0 / 255.0, 33.0 / 255.0, 1.0);
-const CONTENT_DETAILS_BOX_BORDER_COLOR: Color =
-    Color::Rgba(255.0 / 255.0, 255.0 / 255.0, 255.0 / 255.0, 0.3);
+const CONTENT_DETAILS_BOX_BORDER_COLOR: Color = Color::Rgba(1.0, 1.0, 1.0, 0.3);
 
 pub struct Config<'a> {
     pub title_wrapper: WidgetId,
@@ -380,7 +379,7 @@ fn content_details_text<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         // Create text
         widget::Text::new(&config.details)
             .middle_of(config.content_details_box)
-            .y_relative(2.0)
+            .y_relative(2.5)
             .with_style(text_style)
             .set(config.content_details_text, &mut master.ui);
     }
