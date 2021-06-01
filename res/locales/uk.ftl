@@ -190,3 +190,5 @@ end-of-line-content-message-failure-flow-not-stable = Повітродувка �
 end-of-line-content-message-end-confirm = Цей вентилятор пройшов всі випробування. Натисніть «Пуск», щоб переглянути деталі.
 end-of-line-content-message-end-display-pressure = Деталі тесту на тиск видно на екрані налагодження.
 end-of-line-content-message-end-display-flow = Деталі тесту потоку видно на екрані налагодження.
+
+end-of-line-content-button-continue = Продовжуйте

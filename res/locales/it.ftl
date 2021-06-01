@@ -190,3 +190,5 @@ end-of-line-content-message-failure-flow-not-stable = Il ventilatore non è stat
 end-of-line-content-message-end-confirm = Questo ventilatore ha superato tutti i test. Premi start per vedere i dettagli.
 end-of-line-content-message-end-display-pressure = I dettagli del test di pressione sono visibili sulla schermata di debug.
 end-of-line-content-message-end-display-flow = I dettagli del test del flusso sono visibili sulla schermata di debug.
+
+end-of-line-content-button-continue = Continua

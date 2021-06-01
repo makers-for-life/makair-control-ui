@@ -110,6 +110,43 @@ macro_rules! gen_ui_events_opener_settings_clicks {
     }
 }
 
+macro_rules! gen_ui_events_generic_settings_clicks {
+    (
+        $interface:ident,
+        $ids:ident,
+        $has:ident,
+
+        $({
+            $name:expr,
+
+            $([
+                $field_name:expr,
+                $widget_ids:expr,
+                $form_handler:block
+            ]),*$(,)?
+        }),+,
+    ) => {
+        $(
+            // Handle clicks on dynamic form elements
+            $(
+                for _ in 0..DisplayUiEvents::count_clicks(
+                    $interface,
+                    &$widget_ids,
+                ) {
+                    debug!(
+                        "pressed the {} settings {} field button once", $name, $field_name
+                    );
+
+                    // Call form handler block
+                    $form_handler;
+
+                    $has = true;
+                }
+            )*
+        )+
+    }
+}
+
 macro_rules! gen_ui_events_modal_settings_clicks {
     (
         $interface:ident,
@@ -140,7 +177,7 @@ macro_rules! gen_ui_events_modal_settings_clicks {
                         $ids.modal_close_text,
                     ],
                 ) {
-                    debug!("pressed the {} settings cleose button once", $name);
+                    debug!("pressed the {} settings close button once", $name);
 
                     $settings_state.toggle();
 
@@ -168,22 +205,22 @@ macro_rules! gen_ui_events_modal_settings_clicks {
                     $has = true;
                 }
 
-                // Handle clicks on dynamic form elements
-                $(
-                    for _ in 0..DisplayUiEvents::count_clicks(
-                        $interface,
-                        &$widget_ids,
-                    ) {
-                        debug!(
-                            "pressed the {} settings {} field button once", $name, $field_name
-                        );
+                // Handle other clicks
+                gen_ui_events_generic_settings_clicks!(
+                    $interface, $ids, $has,
 
-                        // Call form handler block
-                        $form_handler;
+                    {
+                        $name,
 
-                        $has = true;
-                    }
-                )*
+                        $(
+                            [
+                                $field_name,
+                                $widget_ids,
+                                $form_handler
+                            ],
+                        )*
+                    },
+                );
             }
         )+
     }

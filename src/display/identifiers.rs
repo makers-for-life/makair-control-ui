@@ -432,6 +432,8 @@ widget_ids!(pub struct Ids {
   end_of_line_content_text_message,
   end_of_line_content_details_box,
   end_of_line_content_details_text,
+  end_of_line_content_button,
+  end_of_line_content_button_text,
 
   initializing_container,
   initializing_logo,

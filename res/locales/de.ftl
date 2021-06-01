@@ -190,3 +190,5 @@ end-of-line-content-message-failure-flow-not-stable = Das Gebläse war nicht in 
 end-of-line-content-message-end-confirm = Dieses Beatmungsgerät hat alle Tests bestanden. Drücken Sie Start, um Details zu sehen.
 end-of-line-content-message-end-display-pressure = Details zum Drucktest sind auf dem Debug-Bildschirm sichtbar.
 end-of-line-content-message-end-display-flow = Details zum Durchflusstest sind auf dem Fehlerbehebungsbildschirm zu sehen.
+
+end-of-line-content-button-continue = Fortsetzen

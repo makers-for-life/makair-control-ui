@@ -160,21 +160,21 @@ end-of-line-content-title-end-display-pressure = Displaying pressure details.
 end-of-line-content-title-end-display-flow = Displaying flow details.
 
 end-of-line-content-message-step-start = The EOL test will start in a few moments.
-end-of-line-content-message-step-check-fan = The two cooling fans should be working. Press start to continue.
+end-of-line-content-message-step-check-fan = The two cooling fans should be working. Tap continue.
 end-of-line-content-message-step-test-battery-dead = The battery health will be checked. Please wait.
 end-of-line-content-message-step-disconnect-mains = AC power prevents testing batteries. Please unplug it.
 end-of-line-content-message-step-connect-mains = The power supply health will be checked once plugged to AC.
-end-of-line-content-message-step-check-buzzer = The buzzer should be working. Press pause to confirm.
+end-of-line-content-message-step-check-buzzer = The buzzer should be working. Tap to confirm.
 end-of-line-content-message-step-check-all-buttons = Each button should be pressed one by one.
 end-of-line-content-message-step-check-ui-screen = Please change ventilation mode on the touch screen.
-end-of-line-content-message-step-plug-air-test-system = The test lung should be connected. Press start to continue.
+end-of-line-content-message-step-plug-air-test-system = The test lung should be connected. Tap continue.
 end-of-line-content-message-step-reach-maximum-pressure = The pressure in the lung is being increased. Please wait.
 end-of-line-content-message-step-maximum-pressure-reached = The maximum pressure has been reached. Please wait.
 end-of-line-content-message-step-start-leak-measure = The air system is being tested for any leak. Please wait.
 end-of-line-content-message-step-reach-null-pressure = No leak was detected. Please wait.
-end-of-line-content-message-step-confirm-before-oxygen-test = The oxygen port should be connected. Press start to continue.
+end-of-line-content-message-step-confirm-before-oxygen-test = The oxygen port should be connected. Tap continue.
 end-of-line-content-message-step-start-oxygen-test = The oxygen mixer is being tested. Please wait.
-end-of-line-content-message-step-wait-before-blower-long-run = The blower will be checked for stability. Press start to continue.
+end-of-line-content-message-step-wait-before-blower-long-run = The blower will be checked for stability. Tap continue.
 end-of-line-content-message-step-start-blower-long-run = The blower is being tested. This will take some time.
 
 end-of-line-content-message-failure-expander-not-connected = Please connect power supply to the motherboard.
@@ -186,6 +186,8 @@ end-of-line-content-message-failure-oxygen-pressure-not-reached = The oxygen pip
 end-of-line-content-message-failure-pressure-not-stable = The blower was unable to sustain a stable air pressure.
 end-of-line-content-message-failure-flow-not-stable = The blower was unable to sustain a stable air flow.
 
-end-of-line-content-message-end-confirm = This ventilator passed all tests. Press start to see details.
+end-of-line-content-message-end-confirm = This ventilator passed all tests. Tap to see details.
 end-of-line-content-message-end-display-pressure = Pressure test details are visible on the debug screen.
 end-of-line-content-message-end-display-flow = Flow test details are visible on the debug screen.
+
+end-of-line-content-button-continue = Continue

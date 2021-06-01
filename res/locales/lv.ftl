@@ -190,3 +190,5 @@ end-of-line-content-message-failure-flow-not-stable = Pūtējs nespēja uzturēt
 end-of-line-content-message-end-confirm = Šis ventilators izturēja visus testus. Nospiediet starta taustiņu, lai redzētu sīkāku informāciju.
 end-of-line-content-message-end-display-pressure = Spiediena testa informācija ir redzama atkļūdošanas ekrānā.
 end-of-line-content-message-end-display-flow = Detalizēta informācija par plūsmas testu ir redzama atkļūdošanas ekrānā.
+
+end-of-line-content-button-continue = Turpināt

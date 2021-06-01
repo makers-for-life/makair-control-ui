@@ -190,3 +190,5 @@ end-of-line-content-message-failure-flow-not-stable = 鼓风机无法维持稳�
 end-of-line-content-message-end-confirm = 该呼吸机通过了所有测试。按开始键查看细节。
 end-of-line-content-message-end-display-pressure = 在调试屏幕上可以看到压力测试的细节。
 end-of-line-content-message-end-display-flow = 流量测试的细节在调试屏幕上可见。
+
+end-of-line-content-button-continue = 继续

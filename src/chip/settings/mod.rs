@@ -7,6 +7,7 @@
 mod macros;
 
 pub mod advanced;
+pub mod end_of_line;
 pub mod mode;
 pub mod preset;
 pub mod run;
@@ -17,6 +18,7 @@ use std::ops::RangeInclusive;
 use makair_telemetry::control::{ControlMessage, ControlSetting};
 
 use advanced::*;
+use end_of_line::*;
 use mode::*;
 use preset::*;
 use run::*;
@@ -28,6 +30,7 @@ pub enum ChipSettingsEvent {
     Run(SettingsRunEvent),
     Snooze(SettingsSnoozeEvent),
     Mode(SettingsModeEvent),
+    EndOfLine(SettingsEndOfLineEvent),
 }
 
 #[derive(Debug)]
@@ -117,6 +120,7 @@ pub struct ChipSettings {
     pub preset: SettingsPreset,
     pub advanced: SettingsAdvanced,
     pub mode: SettingsMode,
+    pub end_of_line: SettingsEndOfLine,
 }
 
 impl ChipSettings {
@@ -127,6 +131,7 @@ impl ChipSettings {
             snooze: SettingsSnooze::new(),
             advanced: SettingsAdvanced::new(),
             mode: SettingsMode::new(),
+            end_of_line: SettingsEndOfLine::new(),
         }
     }
 
@@ -136,6 +141,7 @@ impl ChipSettings {
             ChipSettingsEvent::Run(event) => self.run.new_event(event),
             ChipSettingsEvent::Snooze(event) => self.snooze.new_event(event),
             ChipSettingsEvent::Mode(event) => self.mode.new_event(event),
+            ChipSettingsEvent::EndOfLine(event) => self.end_of_line.new_event(event),
         }
     }
 

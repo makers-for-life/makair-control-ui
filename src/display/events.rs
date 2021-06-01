@@ -11,6 +11,7 @@ use glium::glutin::{Event, EventsLoop, KeyboardInput, WindowEvent};
 use crate::chip::{
     settings::{
         advanced::SettingsAdvancedGroupTab,
+        end_of_line::SettingsEndOfLineEvent,
         mode::{SettingsModeEvent, SettingsModeGroupTab, SettingsModeIntent},
         preset::SettingsPresetEvent,
         run::SettingsRunEvent,
@@ -113,6 +114,11 @@ impl DisplayUiEvents {
 
         // Handle modal local clicks
         if Self::run_modal_local_clicks(interface, ids, chip, states) {
+            has_events = true;
+        }
+
+        // Handle end-of-line settings clicks
+        if Self::run_end_of_line_settings_clicks(interface, ids, &mut events) {
             has_events = true;
         }
 
@@ -703,6 +709,38 @@ impl DisplayUiEvents {
                         chip.settings.advanced.switch_locale(SettingActionRange::More);
                     }
                 }
+            },
+        );
+
+        has_events
+    }
+
+    fn run_end_of_line_settings_clicks(
+        interface: &mut Ui,
+        ids: &Ids,
+        events: &mut Vec<ChipSettingsEvent>,
+    ) -> bool {
+        let mut has_events = false;
+
+        // Generate all event handlers for end-of-line clicks
+        gen_ui_events_generic_settings_clicks!(
+            interface, ids, has_events,
+
+            {
+                "end_of_line",
+
+                [
+                    "confirm",
+
+                    [
+                        ids.end_of_line_content_button,
+                        ids.end_of_line_content_button_text,
+                    ],
+
+                    {
+                        events.push(ChipSettingsEvent::EndOfLine(SettingsEndOfLineEvent::Confirm));
+                    }
+                ]
             },
         );
 

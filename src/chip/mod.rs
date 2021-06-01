@@ -1170,6 +1170,10 @@ impl Chip {
                 self.settings.mode.live.alarm_threshold_peak_pressure = ack.value as usize;
                 self.last_machine_snapshot.peak_pressure_alarm_threshold = Some(ack.value as _);
             }
+
+            ControlSetting::EolConfirm => {
+                // Nothing done there.
+            }
         }
     }
 

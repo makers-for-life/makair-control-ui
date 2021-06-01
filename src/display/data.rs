@@ -56,6 +56,7 @@ pub struct DisplayDataError<'a> {
 pub struct DisplayDataEndOfLine<'a> {
     pub error: bool,
     pub success: bool,
+    pub confirm: bool,
     pub step: u8,
     pub icon_image_id: conrod_core::image::Id,
     pub eol: &'a ChipEndOfLine,

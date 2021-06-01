@@ -9,7 +9,7 @@ use conrod_core::Ui;
 use plotters_conrod::ConrodBackendReusableGraph;
 
 use crate::chip::settings::{ChipSettingsEvent, ChipSettingsIntent};
-use crate::chip::{Chip, ChipEndOfLine, ChipError, ChipState};
+use crate::chip::{Chip, ChipEndOfLine, ChipEndOfLineEnd, ChipEndOfLineStep, ChipError, ChipState};
 use crate::config::environment::*;
 use crate::utilities::{
     index::{index_from_end_of_line_failure, index_from_end_of_line_step},
@@ -244,6 +244,17 @@ impl DisplayRenderer {
         let screen_eol = DisplayDataEndOfLine {
             error: matches!(eol, ChipEndOfLine::Failed(_, _)),
             success: matches!(eol, ChipEndOfLine::Succeeded(_, _)),
+            confirm: matches!(
+                eol,
+                ChipEndOfLine::Ongoing(ChipEndOfLineStep::CheckFan, _)
+                    | ChipEndOfLine::Ongoing(ChipEndOfLineStep::CheckBuzzer, _)
+                    | ChipEndOfLine::Ongoing(ChipEndOfLineStep::PlugAirTestSystem, _)
+                    | ChipEndOfLine::Ongoing(ChipEndOfLineStep::ConfirmBeforeOxygenTest, _)
+                    | ChipEndOfLine::Ongoing(ChipEndOfLineStep::WaitBeforeBlowerLongRun, _)
+                    | ChipEndOfLine::Succeeded(ChipEndOfLineEnd::Confirm, _)
+                    | ChipEndOfLine::Succeeded(ChipEndOfLineEnd::DisplayPressure, _)
+                    | ChipEndOfLine::Succeeded(ChipEndOfLineEnd::DisplayFlow, _)
+            ),
             step: match eol {
                 ChipEndOfLine::Ongoing(eol_step, _) => {
                     index_from_end_of_line_step(&eol_step).unwrap_or(0)

@@ -161,21 +161,21 @@ end-of-line-content-title-end-display-pressure = Affichage des détails de la pr
 end-of-line-content-title-end-display-flow = Affichage des détails du débit.
 
 end-of-line-content-message-step-start = Le test EOL va commencer dans quelques instants.
-end-of-line-content-message-step-check-fan = Les deux refroidisseurs doivent fonctionner. Appuyez sur start.
+end-of-line-content-message-step-check-fan = Les deux refroidisseurs doivent fonctionner. Touchez continuer.
 end-of-line-content-message-step-test-battery-dead = L'état de la batterie va être vérifié. Veuillez patienter.
 end-of-line-content-message-step-disconnect-mains = L'alimentation secteur empêche le test des batteries. Veuillez la débrancher.
 end-of-line-content-message-step-connect-mains = Le convertisseur AC sera vérifié une fois branché sur le secteur.
-end-of-line-content-message-step-check-buzzer = Le buzzer devrait fonctionner. Appuyez sur pause.
+end-of-line-content-message-step-check-buzzer = Le buzzer devrait fonctionner. Touchez continuer.
 end-of-line-content-message-step-check-all-buttons = Chaque bouton doit être pressé un par un.
 end-of-line-content-message-step-check-ui-screen = Changez le mode de ventilation sur l'écran tactile.
-end-of-line-content-message-step-plug-air-test-system = Le poumon de test doit être connecté. Appuyez sur start.
+end-of-line-content-message-step-plug-air-test-system = Le poumon de test doit être connecté. Touchez continuer.
 end-of-line-content-message-step-reach-maximum-pressure = La pression dans le poumon est en train d'augmenter. Veuillez patienter.
 end-of-line-content-message-step-maximum-pressure-reached = La pression maximale a été atteinte. Veuillez patienter.
 end-of-line-content-message-step-start-leak-measure = Le système d'air est testé pour détecter toute fuite. Veuillez patienter.
 end-of-line-content-message-step-reach-null-pressure = Aucune fuite n'a été détectée. Veuillez patienter.
-end-of-line-content-message-step-confirm-before-oxygen-test = Le port d'oxygène doit être connecté. Appuyez sur start.
+end-of-line-content-message-step-confirm-before-oxygen-test = Le port d'oxygène doit être connecté. Touchez continuer.
 end-of-line-content-message-step-start-oxygen-test = Le mélangeur d'oxygène est en cours de test. Veuillez patienter.
-end-of-line-content-message-step-wait-before-blower-long-run = La stabilité de la turbine va être vérifiée. Appuyez sur start.
+end-of-line-content-message-step-wait-before-blower-long-run = La stabilité de la turbine va être vérifiée. Touchez continuer.
 end-of-line-content-message-step-start-blower-long-run = La turbine est en cours de test. Cela va prendre un certain temps.
 
 end-of-line-content-message-failure-expander-not-connected = Veuillez connecter l'alimentation à la carte mère.
@@ -187,6 +187,8 @@ end-of-line-content-message-failure-oxygen-pressure-not-reached = Les tuyaux d'o
 end-of-line-content-message-failure-pressure-not-stable = La turbine n'a pas pu maintenir une pression d'air stable.
 end-of-line-content-message-failure-flow-not-stable = La turbine n'a pas pu maintenir un débit d'air stable.
 
-end-of-line-content-message-end-confirm = Ce ventilateur a passé tous les tests. Appuyez sur start pour voir les détails.
+end-of-line-content-message-end-confirm = Ce ventilateur a passé tous les tests. Touchez continuer pour voir les détails.
 end-of-line-content-message-end-display-pressure = Les détails du test de pression sont visibles sur l'écran de débogage.
 end-of-line-content-message-end-display-flow = Les détails du test de débit sont visibles sur l'écran de débogage.
+
+end-of-line-content-button-continue = Continuer

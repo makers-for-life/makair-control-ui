@@ -190,3 +190,5 @@ end-of-line-content-message-failure-flow-not-stable = Вентилятор не 
 end-of-line-content-message-end-confirm = Этот вентилятор прошел все тесты. Нажмите "Пуск", чтобы увидеть подробности.
 end-of-line-content-message-end-display-pressure = Подробности теста на давление видны на экране отладки.
 end-of-line-content-message-end-display-flow = Подробности теста на расход воздуха видны на экране отладки.
+
+end-of-line-content-button-continue = Продолжать

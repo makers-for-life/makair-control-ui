@@ -190,3 +190,5 @@ end-of-line-content-message-failure-flow-not-stable = O ventilador não foi capa
 end-of-line-content-message-end-confirm = Este ventilador passou todos os testes. Pressione começar a ver detalhes.
 end-of-line-content-message-end-display-pressure = Os detalhes dos testes de pressão são visíveis no ecrã de depuração.
 end-of-line-content-message-end-display-flow = Os detalhes do teste de fluxo são visíveis no ecrã de depuração.
+
+end-of-line-content-button-continue = Prosseguir

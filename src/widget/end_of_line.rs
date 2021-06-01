@@ -43,9 +43,12 @@ pub struct Config<'a> {
     pub content_text_message: WidgetId,
     pub content_details_box: WidgetId,
     pub content_details_text: WidgetId,
+    pub content_button: WidgetId,
+    pub content_button_text: WidgetId,
 
     pub error: bool,
     pub success: bool,
+    pub confirm: bool,
 
     pub step: u8,
 
@@ -79,6 +82,7 @@ pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
     content_text_message(master, &config);
     content_details_box(master, &config);
     content_details_text(master, &config);
+    content_button(master, &config);
 
     0 as _
 }
@@ -359,9 +363,9 @@ fn content_details_box<'a>(master: &mut ControlWidget<'a>, config: &Config) {
                 END_OF_LINE_CONTENT_DETAILS_BOX_WIDTH,
                 END_OF_LINE_CONTENT_DETAILS_BOX_HEIGHT,
             )
-            .down_from(
+            .up_from(
                 config.content_box,
-                END_OF_LINE_CONTENT_DETAILS_BOX_MARGIN_TOP,
+                END_OF_LINE_CONTENT_DETAILS_BOX_MARGIN_BOTTOM,
             )
             .set(config.content_details_box, &mut master.ui);
     }
@@ -382,5 +386,32 @@ fn content_details_text<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             .y_relative(2.5)
             .with_style(text_style)
             .set(config.content_details_text, &mut master.ui);
+    }
+}
+
+fn content_button<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+    // Append button? (if confirm enabled)
+    if config.confirm {
+        gen_widget_button!(
+            master,
+            button_id: config.content_button,
+            text_id: config.content_button_text,
+            text_color: color::BLACK,
+            text_font_size: END_OF_LINE_CONTENT_BUTTON_FONT_SIZE,
+            width: END_OF_LINE_CONTENT_BUTTON_WIDTH,
+            value_top: END_OF_LINE_CONTENT_BUTTON_VALUE_TOP,
+            value: &APP_I18N.t("end-of-line-content-button-continue"),
+
+            positions: (
+                down_from[
+                    config.content_box,
+                    END_OF_LINE_CONTENT_BUTTON_MARGIN_BOTTOM,
+                ],
+
+                align_right_of[
+                    config.content_box,
+                ]
+            )
+        );
     }
 }
