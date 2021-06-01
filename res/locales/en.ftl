@@ -160,7 +160,7 @@ end-of-line-content-title-end-display-pressure = Displaying pressure details.
 end-of-line-content-title-end-display-flow = Displaying flow details.
 
 end-of-line-content-message-step-start = The EOL test will start in a few moments.
-end-of-line-content-message-step-check-fan = The two cooling fans should be working. Tap continue.
+end-of-line-content-message-step-check-fan = The cooling fans should be working. Tap continue.
 end-of-line-content-message-step-test-battery-dead = The battery health will be checked. Please wait.
 end-of-line-content-message-step-disconnect-mains = AC power prevents testing batteries. Please unplug it.
 end-of-line-content-message-step-connect-mains = The power supply health will be checked once plugged to AC.
