@@ -25,7 +25,7 @@ use super::identifiers::Ids;
 use super::renderer::{DisplayRendererSettingsStateVisibility, DisplayRendererStates};
 use super::support::{self, EventLoop, GliumDisplayWinitWrapper};
 
-const FORCED_CLICKS_PRESET_SETTINGS_OPEN_DEBOUNCE_DELAY: Duration = Duration::from_secs(10);
+const FORCED_CLICKS_PRESET_SETTINGS_OPEN_DEBOUNCE_DELAY: Duration = Duration::from_secs(5);
 
 pub struct DisplayEventsBuilder;
 

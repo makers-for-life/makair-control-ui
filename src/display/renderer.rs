@@ -27,7 +27,7 @@ const DISPATCH_HEARTBEAT_EVERY: Duration = Duration::from_secs(1);
 
 pub struct DisplayRendererSettingsState {
     visibility: DisplayRendererSettingsStateVisibility,
-    last_open: Option<Instant>,
+    last_close: Option<Instant>,
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -69,9 +69,9 @@ impl DisplayRendererSettingsState {
         if self.visibility != visibility {
             self.visibility = visibility;
 
-            // Update last open value? (if went from closed to opened visibility)
-            if self.visibility == DisplayRendererSettingsStateVisibility::Opened {
-                self.last_open = Some(Instant::now());
+            // Update last close value? (if went from opened to closed visibility)
+            if self.visibility == DisplayRendererSettingsStateVisibility::Closed {
+                self.last_close = Some(Instant::now());
             }
         }
     }
@@ -89,13 +89,17 @@ impl DisplayRendererSettingsState {
         new_visibility: &DisplayRendererSettingsStateVisibility,
         delay: Duration,
     ) -> bool {
-        // Only check debounce status if new visibility is 'opened'
+        // Only check debounce status if new visibility is 'opened', the goal being avoiding \
+        //   re-opening the modal as soon as it gets closed by the user, due to the telemetry \
+        //   channel not having yet acknowledged submitted data, and still broadcasting telemetry \
+        //   snapshots w/ the previous data. It should only be a matter of milliseconds, hence why \
+        //   this debounce is an efficient yet simple way to fix that UI blink 'glitch'.
         // Notice: 'closed' visibility updates do not need to be debounced, hence why this method \
         //   returns 'false' all the time in such case.
         if new_visibility == &DisplayRendererSettingsStateVisibility::Opened {
-            // Return whether modal was last opened before provided delay
-            if let Some(last_open) = self.last_open {
-                return last_open.elapsed() < delay;
+            // Return whether modal is requested to be opened before last closed delay
+            if let Some(last_close) = self.last_close {
+                return last_close.elapsed() < delay;
             }
         }
 
@@ -107,7 +111,7 @@ impl Default for DisplayRendererSettingsState {
     fn default() -> Self {
         Self {
             visibility: DisplayRendererSettingsStateVisibility::Closed,
-            last_open: None,
+            last_close: None,
         }
     }
 }
