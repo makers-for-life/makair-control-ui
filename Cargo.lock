@@ -927,7 +927,7 @@ dependencies = [
 
 [[package]]
 name = "makair-control"
-version = "2.3.0"
+version = "2.4.0"
 dependencies = [
  "chrono",
  "clap",

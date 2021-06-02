@@ -19,6 +19,7 @@
 | V2.1.x | Ventilation modes + flow sensing + new options + new plot renderer | ✅ | [view](https://github.com/makers-for-life/makair-control-ui/releases/tag/v2.1.0)
 | V2.2.x | Patient configuration modal + new error messages + UX improvements | ✅ | [view](https://github.com/makers-for-life/makair-control-ui/releases/tag/v2.2.0)
 | V2.3.x | Factory calibration utility + show more errors from the firmware | ✅ | [view](https://github.com/makers-for-life/makair-control-ui/releases/tag/v2.3.0)
+| V2.4.x | Store user configurations in firmware EEPROM, eg. locale | ❌ | none
 
 ## How To Build?
 
