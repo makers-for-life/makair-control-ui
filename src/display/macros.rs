@@ -102,7 +102,7 @@ macro_rules! gen_ui_events_opener_settings_clicks {
             for _ in 0..clicks {
                 debug!("pressed the {} widget once", $name);
 
-                $settings_state.toggle();
+                $settings_state.open();
 
                 $has = true;
             }
@@ -179,7 +179,7 @@ macro_rules! gen_ui_events_modal_settings_clicks {
                 ) {
                     debug!("pressed the {} settings close button once", $name);
 
-                    $settings_state.toggle();
+                    $settings_state.close();
 
                     // Call close handler block
                     $close_handler;
@@ -197,7 +197,7 @@ macro_rules! gen_ui_events_modal_settings_clicks {
                 ) {
                     debug!("pressed the {} settings save button once", $name);
 
-                    $settings_state.toggle();
+                    $settings_state.close();
 
                     // Call save handler block
                     $save_handler;

@@ -56,10 +56,12 @@ pub struct DisplayRendererStates {
 }
 
 impl DisplayRendererSettingsState {
-    pub fn toggle(&mut self) {
-        let new_visibility = self.visibility.to_inverse();
+    pub fn open(&mut self) {
+        self.update_to(DisplayRendererSettingsStateVisibility::Opened);
+    }
 
-        self.update_to(new_visibility);
+    pub fn close(&mut self) {
+        self.update_to(DisplayRendererSettingsStateVisibility::Closed);
     }
 
     pub fn update_to(&mut self, visibility: DisplayRendererSettingsStateVisibility) {
@@ -106,15 +108,6 @@ impl Default for DisplayRendererSettingsState {
         Self {
             visibility: DisplayRendererSettingsStateVisibility::Closed,
             last_open: None,
-        }
-    }
-}
-
-impl DisplayRendererSettingsStateVisibility {
-    pub fn to_inverse(&self) -> Self {
-        match self {
-            Self::Closed => Self::Opened,
-            Self::Opened => Self::Closed,
         }
     }
 }
