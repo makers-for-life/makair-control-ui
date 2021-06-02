@@ -248,6 +248,7 @@ impl DisplayRenderer {
                 eol,
                 ChipEndOfLine::Ongoing(ChipEndOfLineStep::CheckFan, _)
                     | ChipEndOfLine::Ongoing(ChipEndOfLineStep::CheckBuzzer, _)
+                    | ChipEndOfLine::Ongoing(ChipEndOfLineStep::CheckUiScreen, _)
                     | ChipEndOfLine::Ongoing(ChipEndOfLineStep::PlugAirTestSystem, _)
                     | ChipEndOfLine::Ongoing(ChipEndOfLineStep::ConfirmBeforeOxygenTest, _)
                     | ChipEndOfLine::Ongoing(ChipEndOfLineStep::WaitBeforeBlowerLongRun, _)
