@@ -161,7 +161,7 @@ end-of-line-content-title-end-display-pressure = Affichage des détails de la pr
 end-of-line-content-title-end-display-flow = Affichage des détails du débit.
 
 end-of-line-content-message-step-start = Le test EOL va commencer. Touchez continuer.
-end-of-line-content-message-step-check-fan = Les refroidisseurs doivent fonctionner. Touchez continuer.
+end-of-line-content-message-step-check-fan = Les refroidisseurs doivent tourner. Touchez continuer.
 end-of-line-content-message-step-test-battery-dead = L'état de la batterie va être vérifié. Veuillez patienter.
 end-of-line-content-message-step-disconnect-mains = L'alimentation secteur empêche le test des batteries. Veuillez la débrancher.
 end-of-line-content-message-step-connect-mains = Le convertisseur AC sera vérifié une fois branché sur le secteur.
