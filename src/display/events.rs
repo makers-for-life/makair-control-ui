@@ -305,9 +305,7 @@ impl DisplayUiEvents {
                         //   is confusing to users otherwise, and is prone to user making mistakes \
                         //    by double tapping the button and thus cycling the respirator between \
                         //    states quickly, which is not intended and can be dangerous.
-                        states.run_settings.update_to(
-                            DisplayRendererSettingsStateVisibility::Closed
-                        );
+                        states.run_settings.close();
                     }
                 ]
             },
@@ -331,9 +329,7 @@ impl DisplayUiEvents {
                         // Auto-close the modal upon pressing the snooze alarms toggle button, as \
                         //   this results in the user spending less time tapping on the UI as to \
                         //   proceed quick actions.
-                        states.snooze_settings.update_to(
-                            DisplayRendererSettingsStateVisibility::Closed
-                        );
+                        states.snooze_settings.close();
                     }
                 ]
             },
