@@ -243,7 +243,8 @@ impl DisplayRenderer {
             success: matches!(eol, ChipEndOfLine::Succeeded(_, _)),
             confirm: matches!(
                 eol,
-                ChipEndOfLine::Ongoing(ChipEndOfLineStep::CheckFan, _)
+                ChipEndOfLine::Ongoing(ChipEndOfLineStep::Start, _)
+                    | ChipEndOfLine::Ongoing(ChipEndOfLineStep::CheckFan, _)
                     | ChipEndOfLine::Ongoing(ChipEndOfLineStep::CheckBuzzer, _)
                     | ChipEndOfLine::Ongoing(ChipEndOfLineStep::CheckUiScreen, _)
                     | ChipEndOfLine::Ongoing(ChipEndOfLineStep::PlugAirTestSystem, _)

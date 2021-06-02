@@ -128,7 +128,7 @@ stop-description = Tap any value to configure it, then press start.
 end-of-line-title-primary = Service Mode
 end-of-line-title-secondary = End-of-Line Test
 
-end-of-line-content-title-step-start = Starting EOL test...
+end-of-line-content-title-step-start = Start the EOL test.
 end-of-line-content-title-step-check-fan = Please check fans.
 end-of-line-content-title-step-test-battery-dead = Testing battery condition...
 end-of-line-content-title-step-disconnect-mains = Please unplug the AC power cord.
@@ -159,7 +159,7 @@ end-of-line-content-title-end-confirm = All tests succeeded!
 end-of-line-content-title-end-display-pressure = Displaying pressure details.
 end-of-line-content-title-end-display-flow = Displaying flow details.
 
-end-of-line-content-message-step-start = The EOL test will start in a few moments.
+end-of-line-content-message-step-start = The end-of-line test will be started. Tap continue.
 end-of-line-content-message-step-check-fan = The cooling fans should be working. Tap continue.
 end-of-line-content-message-step-test-battery-dead = The battery health will be checked. Please wait.
 end-of-line-content-message-step-disconnect-mains = AC power prevents testing batteries. Please unplug it.

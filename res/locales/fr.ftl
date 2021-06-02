@@ -128,7 +128,7 @@ stop-description = Touchez une valeur pour configurer la ventilation.
 end-of-line-title-primary = Mode de service
 end-of-line-title-secondary = Test de fin de ligne
 
-end-of-line-content-title-step-start = Début du test EOL...
+end-of-line-content-title-step-start = Test de fin de ligne.
 end-of-line-content-title-step-check-fan = Veuillez vérifier les refroidisseurs.
 end-of-line-content-title-step-test-battery-dead = Test de l'état de la batterie...
 end-of-line-content-title-step-disconnect-mains = Veuillez débrancher le cordon d'alimentation.
@@ -160,7 +160,7 @@ end-of-line-content-title-end-confirm = Tous les tests ont été passés !
 end-of-line-content-title-end-display-pressure = Affichage des détails de la pression.
 end-of-line-content-title-end-display-flow = Affichage des détails du débit.
 
-end-of-line-content-message-step-start = Le test EOL va commencer dans quelques instants.
+end-of-line-content-message-step-start = Le test EOL va commencer. Touchez continuer.
 end-of-line-content-message-step-check-fan = Les refroidisseurs doivent fonctionner. Touchez continuer.
 end-of-line-content-message-step-test-battery-dead = L'état de la batterie va être vérifié. Veuillez patienter.
 end-of-line-content-message-step-disconnect-mains = L'alimentation secteur empêche le test des batteries. Veuillez la débrancher.
