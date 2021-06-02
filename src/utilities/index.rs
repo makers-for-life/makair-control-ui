@@ -14,15 +14,13 @@ pub fn index_from_end_of_line_step(end_of_line_step: &ChipEndOfLineStep) -> Opti
         ChipEndOfLineStep::CheckBuzzer => Some(4),
         ChipEndOfLineStep::CheckAllButtons => Some(5),
         ChipEndOfLineStep::CheckUiScreen => Some(6),
-        ChipEndOfLineStep::PlugAirTestSystem => Some(7),
-        ChipEndOfLineStep::ReachMaximumPressure | ChipEndOfLineStep::MaximumPressureReached => {
-            Some(8)
-        }
-        ChipEndOfLineStep::StartLeakMeasure => Some(9),
-        ChipEndOfLineStep::ReachNullPressure => Some(10),
-        ChipEndOfLineStep::ConfirmBeforeOxygenTest | ChipEndOfLineStep::StartOxygenTest => Some(11),
+        ChipEndOfLineStep::PlugAirTestSystem
+        | ChipEndOfLineStep::ReachMaximumPressure
+        | ChipEndOfLineStep::MaximumPressureReached => Some(7),
+        ChipEndOfLineStep::StartLeakMeasure | ChipEndOfLineStep::ReachNullPressure => Some(8),
+        ChipEndOfLineStep::ConfirmBeforeOxygenTest | ChipEndOfLineStep::StartOxygenTest => Some(9),
         ChipEndOfLineStep::WaitBeforeBlowerLongRun | ChipEndOfLineStep::StartBlowerLongRun => {
-            Some(12)
+            Some(10)
         }
     }
 }
