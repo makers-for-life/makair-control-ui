@@ -135,6 +135,12 @@ The Control UI behavior can be tuned at compile time, by enabling some optional 
   * Build command: `cargo build --features=lora`
   * Purpose: enables periodic radio broadcasts of metrics, using an attached LoRa transmitter chip. This is an experimental feature, that is turned off by default. It aims at helping us build a central monitoring dashboard for hospitals, nesting all running MakAir metrics together.
 
+## Prepared System Images
+
+Prepared system images that run on a Raspberry Pi and pack the Control UI are available in the [makair-files](https://github.com/makers-for-life/makair-files) repository (over Git LFS).
+
+You may use a base system image and update it with any newer version of the UI (compiled on the same image, with additional build tools installed). Image update and flash instructions are available within this repository.
+
 ## Troubleshooting
 
 In case of an issue, please review the following points and check if any could help:
