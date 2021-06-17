@@ -137,7 +137,7 @@ The Control UI behavior can be tuned at compile time, by enabling some optional 
 
 ## Prepared System Images
 
-Prepared system images that run on a Raspberry Pi and pack the Control UI are available in the [makair-files](https://github.com/makers-for-life/makair-files) repository (over Git LFS). They can be flashed to a micro SD card and ran in a MakAir ventilator in a matter of minutes.
+Prepared system images that run on a Raspberry Pi and pack the Control UI are available in the [makair-files](https://github.com/makers-for-life/makair-files) repository (over Git LFS). They can be flashed to a microSD card and ran in a MakAir in a matter of minutes.
 
 You may use a base system image and update it with any newer version of the UI (compiled on the same image, with additional build tools installed). Image update and flash instructions are available within this repository.
 
