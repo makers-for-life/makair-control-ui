@@ -31,11 +31,15 @@ impl DisplayWindowBuilder {
 }
 
 lazy_static! {
-    static ref IMAGE_WINDOW_ICON_RGBA_RAW: Vec<u8> =
-        load_from_memory(EmbeddedImages::get("window-icon.png").unwrap().to_mut())
+    static ref IMAGE_WINDOW_ICON_RGBA_RAW: Vec<u8> = load_from_memory(
+        EmbeddedImages::get("window-icon.png")
             .unwrap()
-            .into_rgba8()
-            .into_raw();
+            .data
+            .to_mut()
+    )
+    .unwrap()
+    .into_rgba8()
+    .into_raw();
     static ref FONT_DEFAULT_NOTOSANS_REGULAR: conrod_core::text::Font =
         gen_load_font!(EmbeddedFontsDefault, "notosans_regular");
     static ref FONT_DEFAULT_NOTOSANS_BOLD: conrod_core::text::Font =

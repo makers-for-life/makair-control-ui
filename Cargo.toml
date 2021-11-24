@@ -23,7 +23,7 @@ confy = "0.4"
 lazy_static = "1.4"
 serde = { version = "1.0", features = ["derive"] }
 paste = "1.0"
-rust-embed = { version = "5.6", default-features = false, features = ["compression", "debug-embed"] }
+rust-embed = { version = "6.2", default-features = false, features = ["compression", "debug-embed"] }
 chrono = { version = "0.4", default-features = false }
 fluent = "0.15"
 intl-memoizer = "0.5"

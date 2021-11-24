@@ -30,8 +30,12 @@ macro_rules! image_ids {
 macro_rules! gen_load_font {
     ($embedded_fonts:ident, $name:expr) => {
         conrod_core::text::Font::from_bytes(
-            inflate_bytes_zlib(&$embedded_fonts::get(&format!("{}.ttf.zz", $name)).unwrap())
-                .unwrap(),
+            inflate_bytes_zlib(
+                &$embedded_fonts::get(&format!("{}.ttf.zz", $name))
+                    .unwrap()
+                    .data,
+            )
+            .unwrap(),
         )
         .unwrap()
     };
@@ -43,6 +47,7 @@ macro_rules! gen_load_image_reverse {
             &load_from_memory(
                 EmbeddedImages::get(&format!("{}.png", $name))
                     .unwrap()
+                    .data
                     .to_mut(),
             )
             .unwrap()
