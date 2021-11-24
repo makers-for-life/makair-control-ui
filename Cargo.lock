@@ -376,7 +376,7 @@ dependencies = [
  "crossbeam-utils",
  "lazy_static",
  "maybe-uninit",
- "memoffset",
+ "memoffset 0.5.6",
  "scopeguard",
 ]
 
@@ -472,9 +472,9 @@ checksum = "86d4de0081402f5e88cdac65c8dcdcc73118c1a7a465e2a05f0da05843a8ea33"
 
 [[package]]
 name = "fluent"
-version = "0.15.0"
+version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bc4d7142005e2066e4844caf9f271b93fc79836ee96ec85057b8c109687e629a"
+checksum = "61f69378194459db76abd2ce3952b790db103ceb003008d3d50d97c41ff847a7"
 dependencies = [
  "fluent-bundle",
  "unic-langid",
@@ -971,7 +971,7 @@ dependencies = [
 [[package]]
 name = "makair-simulator"
 version = "0.1.0"
-source = "git+https://github.com/makers-for-life/makair-simulator?rev=f8f6da6467d556d5e79f827cec275f34cae44240#f8f6da6467d556d5e79f827cec275f34cae44240"
+source = "git+https://github.com/makers-for-life/makair-simulator?rev=9cba9863592791f2d6bcd36fcfc9103d552243f1#9cba9863592791f2d6bcd36fcfc9103d552243f1"
 dependencies = [
  "cc",
  "log",
@@ -1032,6 +1032,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "memoffset"
+version = "0.6.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "59accc507f1338036a0477ef61afdae33cde60840f4dfe481319ce3ad116ddf9"
+dependencies = [
+ "autocfg",
+]
+
+[[package]]
 name = "minimal-lexical"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1067,6 +1076,19 @@ dependencies = [
  "cfg-if 0.1.10",
  "libc 0.2.108",
  "void",
+]
+
+[[package]]
+name = "nix"
+version = "0.23.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f305c2c2e4c39a82f7bf0bf65fb557f9070ce06781d4f2454295cc34b1c43188"
+dependencies = [
+ "bitflags",
+ "cc",
+ "cfg-if 1.0.0",
+ "libc 0.2.108",
+ "memoffset 0.6.4",
 ]
 
 [[package]]
@@ -1679,7 +1701,7 @@ dependencies = [
  "cfg-if 0.1.10",
  "libudev",
  "mach 0.2.3",
- "nix",
+ "nix 0.14.1",
  "regex",
  "winapi",
 ]
@@ -1733,7 +1755,7 @@ dependencies = [
  "dlib",
  "lazy_static",
  "memmap",
- "nix",
+ "nix 0.14.1",
  "wayland-client 0.21.13",
  "wayland-commons 0.21.13",
  "wayland-protocols 0.21.13",
@@ -1750,7 +1772,7 @@ dependencies = [
  "dlib",
  "lazy_static",
  "memmap",
- "nix",
+ "nix 0.14.1",
  "wayland-client 0.23.6",
  "wayland-protocols 0.23.6",
 ]
@@ -1761,7 +1783,7 @@ version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "917e8ec7f535cd1a6cbf749c8866c24d67c548a80ac48c8e88a182eab5c07bd1"
 dependencies = [
- "nix",
+ "nix 0.14.1",
  "smithay-client-toolkit 0.6.6",
 ]
 
@@ -1787,11 +1809,11 @@ dependencies = [
 
 [[package]]
 name = "sysfs_gpio"
-version = "0.5.4"
+version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "24961a55846623d8e4f6cec38718945116fed8d6970336a7110710a07aa9b5d1"
+checksum = "9ef9c9bcbfeb596ce4da59b2c59736235f35dcd516f03958ea10834473224157"
 dependencies = [
- "nix",
+ "nix 0.23.0",
 ]
 
 [[package]]
@@ -2001,7 +2023,7 @@ dependencies = [
  "bitflags",
  "downcast-rs",
  "libc 0.2.108",
- "nix",
+ "nix 0.14.1",
  "wayland-commons 0.21.13",
  "wayland-scanner 0.21.13",
  "wayland-sys 0.21.13",
@@ -2016,7 +2038,7 @@ dependencies = [
  "bitflags",
  "downcast-rs",
  "libc 0.2.108",
- "nix",
+ "nix 0.14.1",
  "wayland-commons 0.23.6",
  "wayland-scanner 0.23.6",
  "wayland-sys 0.23.6",
@@ -2028,7 +2050,7 @@ version = "0.21.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "40c08896768b667e1df195d88a62a53a2d1351a1ed96188be79c196b35bb32ec"
 dependencies = [
- "nix",
+ "nix 0.14.1",
  "wayland-sys 0.21.13",
 ]
 
@@ -2038,7 +2060,7 @@ version = "0.23.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bb66b0d1a27c39bbce712b6372131c6e25149f03ffb0cd017cf8f7de8d66dbdb"
 dependencies = [
- "nix",
+ "nix 0.14.1",
  "wayland-sys 0.23.6",
 ]
 
