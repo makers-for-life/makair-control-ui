@@ -59,7 +59,7 @@ impl SettingActionState {
         }
     }
 
-    fn to_toggled(&self) -> Self {
+    fn as_toggled(&self) -> Self {
         match self {
             Self::Enabled => Self::Disabled,
             Self::Disabled => Self::Enabled,

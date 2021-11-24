@@ -65,8 +65,8 @@ pub fn render(
         .set(config.alarm_widgets[index], &mut master.ui);
 
     // Draw code & message
-    code(master, &config, alarm_code, alarm_priority, index);
-    message(master, &config, alarm_code, alarm_priority, index);
+    code(master, config, alarm_code, alarm_priority, index);
+    message(master, config, alarm_code, alarm_priority, index);
 }
 
 fn code_color(alarm_priority: &AlarmPriority) -> Color {

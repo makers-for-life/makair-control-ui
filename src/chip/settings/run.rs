@@ -35,7 +35,7 @@ impl SettingsRun {
     fn toggle_state(&self) -> ControlMessage {
         ControlMessage {
             setting: ControlSetting::RespirationEnabled,
-            value: self.state.to_toggled() as u16,
+            value: self.state.as_toggled() as u16,
         }
     }
 }

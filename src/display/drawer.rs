@@ -231,16 +231,15 @@ impl<'a> DisplayDrawer<'a> {
         match &APP_ARGS.mode {
             RunMode::Port { port, output_dir } => {
                 let optional_file_buffer = output_dir.as_ref().map(|dir| {
-                    let file_count: Vec<std::io::Result<std::fs::DirEntry>> =
-                        std::fs::read_dir(dir)
-                            .expect("should read directory")
-                            .collect();
+                    let file_count = std::fs::read_dir(dir)
+                        .expect("should read directory")
+                        .count();
 
                     let path = format!(
                         "{}/{}-{}.record",
                         &dir,
                         chrono::Local::now().format("%Y%m%d-%H%M%S"),
-                        file_count.len() + 1
+                        file_count + 1
                     );
 
                     let file = std::fs::File::create(&path)
@@ -253,7 +252,7 @@ impl<'a> DisplayDrawer<'a> {
 
                 std::thread::spawn(move || {
                     makair_telemetry::gather_telemetry(
-                        &port,
+                        port,
                         tx,
                         optional_file_buffer,
                         Some(settings_receiver),

@@ -256,10 +256,10 @@ impl DisplayRenderer {
             ),
             step: match eol {
                 ChipEndOfLine::Ongoing(eol_step, _) => {
-                    index_from_end_of_line_step(&eol_step).unwrap_or(0)
+                    index_from_end_of_line_step(eol_step).unwrap_or(0)
                 }
                 ChipEndOfLine::Failed(eol_failure, _) => {
-                    index_from_end_of_line_failure(&eol_failure).unwrap_or(0)
+                    index_from_end_of_line_failure(eol_failure).unwrap_or(0)
                 }
                 ChipEndOfLine::Succeeded(_, _) => END_OF_LINE_STEPS_COUNT,
             },

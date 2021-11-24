@@ -423,25 +423,25 @@ impl<'a> Screen<'a> {
         self.render_telemetry_mode_overview(mode);
 
         // Initialize the peak widget
-        self.render_telemetry_peak(&machine_snapshot, has_target_pressure);
+        self.render_telemetry_peak(machine_snapshot, has_target_pressure);
 
         // Initialize the plateau widget
-        self.render_telemetry_plateau(&machine_snapshot, mode, has_target_pressure);
+        self.render_telemetry_plateau(machine_snapshot, mode, has_target_pressure);
 
         // Initialize the PEEP widget
-        self.render_telemetry_peep(&machine_snapshot, has_target_pressure);
+        self.render_telemetry_peep(machine_snapshot, has_target_pressure);
 
         // Initialize the cycles widget
-        self.render_telemetry_cycles(&machine_snapshot);
+        self.render_telemetry_cycles(machine_snapshot);
 
         // Initialize the tidal widget
-        self.render_telemetry_tidal(&machine_snapshot, mode);
+        self.render_telemetry_tidal(machine_snapshot, mode);
 
         // Initialize the minute volume widget
-        self.render_telemetry_minute_volume(&machine_snapshot);
+        self.render_telemetry_minute_volume(machine_snapshot);
 
         // Initialize the ratio widget
-        self.render_telemetry_ratio(&machine_snapshot, mode);
+        self.render_telemetry_ratio(machine_snapshot, mode);
     }
 
     fn render_telemetry_graph(&mut self) {
@@ -957,7 +957,7 @@ impl<'a> Screen<'a> {
                 advanced_settings: settings,
 
                 last_tick: self.timers.1,
-                machine_snapshot: &self.machine_snapshot.unwrap(),
+                machine_snapshot: self.machine_snapshot.unwrap(),
                 data_snapshot: self.data_snapshot,
                 alarms: self.ongoing_alarms.unwrap(),
 

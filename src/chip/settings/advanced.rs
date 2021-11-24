@@ -82,7 +82,7 @@ impl SettingsAdvanced {
                 }
 
                 // Replace current locale with new locale
-                APP_I18N.replace(LocaleLoader::new(&self.locale.to_code()).into_bundle());
+                APP_I18N.replace(LocaleLoader::new(self.locale.to_code()).into_bundle());
             }
         }
     }

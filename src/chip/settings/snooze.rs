@@ -35,7 +35,7 @@ impl SettingsSnooze {
     fn toggle_alarms(&self) -> ControlMessage {
         ControlMessage {
             setting: ControlSetting::AlarmSnooze,
-            value: self.alarms.to_toggled() as u16,
+            value: self.alarms.as_toggled() as u16,
         }
     }
 }

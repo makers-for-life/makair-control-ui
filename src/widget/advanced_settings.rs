@@ -290,6 +290,7 @@ fn form_statistics_lines<'a>(
         let line_text = line_data[index].0;
 
         // Render line label (the positioning method varies if the line is the first one)
+        #[allow(clippy::branches_sharing_code)]
         if index == 0 {
             gen_widget_label_styled!(
                 master,
@@ -326,7 +327,7 @@ fn form_statistics_lines<'a>(
         widget::Text::new(if line_data[index].1.is_empty() {
             ADVANCED_SETTINGS_LINE_VALUE_EMPTY
         } else {
-            &line_data[index].1
+            line_data[index].1
         })
         .with_style(value_text_style)
         .top_left_with_margins_on(
