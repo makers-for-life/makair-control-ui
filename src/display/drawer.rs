@@ -268,6 +268,19 @@ impl<'a> DisplayDrawer<'a> {
                     makair_telemetry::gather_telemetry_from_file(file, tx.clone(), true);
                 });
             }
+
+            #[cfg(feature = "simulator")]
+            RunMode::Simulator => {
+                let mut simulator = makair_simulator::MakAirSimulator::new(tx);
+                simulator.initialize();
+
+                let settings_receiver = self.chip.init_settings_receiver();
+                std::thread::spawn(move || {
+                    while let Ok(message) = settings_receiver.recv() {
+                        simulator.send_control_message(message);
+                    }
+                });
+            }
         }
 
         rx
