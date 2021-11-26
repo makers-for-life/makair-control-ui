@@ -70,12 +70,11 @@ pub struct Config<'a> {
     pub text_timezone_ids: TextWidgetIds,
 
     pub field_resistance_ids: FieldWidgetIds,
-    pub field_compliance_ids : FieldWidgetIds,
+    pub field_compliance_ids: FieldWidgetIds,
     pub field_spontaneous_breath_rate_ids: FieldWidgetIds,
     pub field_spontaneous_breath_effort_ids: FieldWidgetIds,
     pub field_spontaneous_breath_duration_ids: FieldWidgetIds,
     pub field_acceleration_factor_ids: FieldWidgetIds,
-
 }
 
 struct Field {
@@ -397,7 +396,6 @@ fn form_settings<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 }
 
 fn form_simulator<'a>(master: &mut ControlWidget<'a>, config: &Config) {
-
     draw_field(
         0,
         master,
@@ -437,7 +435,10 @@ fn form_simulator<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         config,
         Field {
             label_text: APP_I18N.t("modal-advanced-simulator-spontaneous-breath-effort"),
-            value_text: config.advanced_settings.spontaneous_breath_effort.to_string(),
+            value_text: config
+                .advanced_settings
+                .spontaneous_breath_effort
+                .to_string(),
             ids: config.field_spontaneous_breath_effort_ids,
         },
     );
@@ -448,7 +449,10 @@ fn form_simulator<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         config,
         Field {
             label_text: APP_I18N.t("modal-advanced-simulator-spontaneous-breath-duration"),
-            value_text: config.advanced_settings.spontaneous_breath_duration.to_string(),
+            value_text: config
+                .advanced_settings
+                .spontaneous_breath_duration
+                .to_string(),
             ids: config.field_spontaneous_breath_duration_ids,
         },
     );

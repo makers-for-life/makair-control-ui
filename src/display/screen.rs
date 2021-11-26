@@ -988,10 +988,22 @@ impl<'a> Screen<'a> {
 
                 field_resistance_ids: gen_render_advanced_settings_field_ids!(self, resistance),
                 field_compliance_ids: gen_render_advanced_settings_field_ids!(self, compliance),
-                field_spontaneous_breath_rate_ids: gen_render_advanced_settings_field_ids!(self, spontaneous_breath_rate),
-                field_spontaneous_breath_effort_ids: gen_render_advanced_settings_field_ids!(self, spontaneous_breath_effort),
-                field_spontaneous_breath_duration_ids: gen_render_advanced_settings_field_ids!(self, spontaneous_breath_duration),
-                field_acceleration_factor_ids: gen_render_advanced_settings_field_ids!(self, acceleration_factor),
+                field_spontaneous_breath_rate_ids: gen_render_advanced_settings_field_ids!(
+                    self,
+                    spontaneous_breath_rate
+                ),
+                field_spontaneous_breath_effort_ids: gen_render_advanced_settings_field_ids!(
+                    self,
+                    spontaneous_breath_effort
+                ),
+                field_spontaneous_breath_duration_ids: gen_render_advanced_settings_field_ids!(
+                    self,
+                    spontaneous_breath_duration
+                ),
+                field_acceleration_factor_ids: gen_render_advanced_settings_field_ids!(
+                    self,
+                    acceleration_factor
+                ),
             },
         ));
     }

@@ -621,7 +621,7 @@ impl DisplayUiEvents {
                         chip.settings.advanced.group = SettingsAdvancedGroupTab::Settings;
                     }
                 },
-                
+
                 {
                     "group simulator",
 
