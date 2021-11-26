@@ -299,7 +299,7 @@ impl DisplayDrawer {
             #[cfg(feature = "simulator")]
             RunMode::Simulator => {
                 let mut simulator = makair_simulator::MakAirSimulator::new(tx);
-                simulator.initialize();
+                simulator.initialize(false);
 
                 let settings_receiver = chip.init_settings_receiver();
                 std::thread::spawn(move || {
