@@ -6,7 +6,6 @@
 use std::time::Duration;
 
 use conrod_core::{widget::Id as WidgetId, Ui};
-use glium::glutin::{Event, EventsLoop, KeyboardInput, WindowEvent};
 
 use crate::chip::{
     settings::{
@@ -23,67 +22,10 @@ use crate::chip::{
 
 use super::identifiers::Ids;
 use super::renderer::{DisplayRendererSettingsStateVisibility, DisplayRendererStates};
-use super::support::{self, EventLoop, GliumDisplayWinitWrapper};
 
 const FORCED_CLICKS_PRESET_SETTINGS_OPEN_DEBOUNCE_DELAY: Duration = Duration::from_secs(5);
 
-pub struct DisplayEventsBuilder;
-
-pub struct DisplayEvents {
-    event_loop: EventLoop,
-}
-
 pub struct DisplayUiEvents;
-
-pub enum DisplayEventsHandleOutcome {
-    Break,
-    Continue,
-}
-
-#[allow(clippy::new_ret_no_self)]
-impl DisplayEventsBuilder {
-    pub fn new() -> DisplayEvents {
-        DisplayEvents {
-            event_loop: EventLoop::new(),
-        }
-    }
-}
-
-impl DisplayEvents {
-    pub fn handle(
-        &mut self,
-        display: &GliumDisplayWinitWrapper,
-        interface: &mut Ui,
-        mut events_loop: &mut EventsLoop,
-    ) -> DisplayEventsHandleOutcome {
-        for event in self.event_loop.next(&mut events_loop) {
-            // Use the `winit` backend feature to convert the winit event to a conrod one.
-            if let Some(event) = support::convert_event(event.clone(), display) {
-                interface.handle_event(event);
-            }
-
-            // Break from the loop upon `Escape` or closed window.
-            if let Event::WindowEvent { event, .. } = event.clone() {
-                match event {
-                    WindowEvent::CloseRequested
-                    | WindowEvent::KeyboardInput {
-                        input:
-                            KeyboardInput {
-                                virtual_keycode: Some(glium::glutin::VirtualKeyCode::Escape),
-                                ..
-                            },
-                        ..
-                    } => {
-                        return DisplayEventsHandleOutcome::Break;
-                    }
-                    _ => (),
-                }
-            }
-        }
-
-        DisplayEventsHandleOutcome::Continue
-    }
-}
 
 impl DisplayUiEvents {
     pub fn run(

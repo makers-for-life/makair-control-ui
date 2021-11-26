@@ -126,6 +126,4 @@ fn main() {
 
     // Spawn window manager
     DisplayWindowBuilder::new().spawn(chip);
-
-    info!("stopped");
 }

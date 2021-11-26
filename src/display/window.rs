@@ -4,10 +4,12 @@
 // License: Public Domain License
 
 use conrod_core::UiBuilder;
-use glium::glutin::Icon;
-use glium::glutin::{ContextBuilder, EventsLoop, GlProfile, WindowBuilder};
+use glium::glutin::event_loop::EventLoop;
+use glium::glutin::window::{Fullscreen, Icon, WindowBuilder};
+use glium::glutin::{ContextBuilder, GlProfile};
 use image::load_from_memory;
 use inflate::inflate_bytes_zlib;
+use winit::dpi::LogicalSize;
 
 use crate::chip::Chip;
 use crate::config::environment::*;
@@ -17,7 +19,7 @@ use crate::EmbeddedFontsDefault;
 use crate::EmbeddedImages;
 use crate::APP_ARGS;
 
-use super::drawer::DisplayDrawerBuilder;
+use super::drawer::DisplayDrawer;
 use super::fonts::Fonts;
 
 pub struct DisplayWindowBuilder;
@@ -53,11 +55,11 @@ lazy_static! {
 }
 
 impl DisplayWindow {
-    pub fn spawn(&self, chip: Chip) {
+    pub fn spawn(&self, chip: Chip) -> ! {
         debug!("spawning window...");
 
         // Create event loop
-        let events_loop = EventsLoop::new();
+        let event_loop = EventLoop::new();
 
         // Create window
         let window = WindowBuilder::new()
@@ -70,15 +72,18 @@ impl DisplayWindow {
                 )
                 .unwrap(),
             ))
-            .with_dimensions((DISPLAY_WINDOW_SIZE_WIDTH, DISPLAY_WINDOW_SIZE_HEIGHT).into())
+            .with_inner_size(LogicalSize::new(
+                DISPLAY_WINDOW_SIZE_WIDTH,
+                DISPLAY_WINDOW_SIZE_HEIGHT,
+            ))
             .with_decorations(!APP_ARGS.fullscreen)
             .with_resizable(false)
             .with_always_on_top(APP_ARGS.fullscreen);
 
         let window = if APP_ARGS.fullscreen {
-            let primary_monitor = events_loop.get_primary_monitor();
+            let primary_monitor = event_loop.primary_monitor();
 
-            window.with_fullscreen(Some(primary_monitor))
+            window.with_fullscreen(Some(Fullscreen::Borderless(primary_monitor)))
         } else {
             window
         };
@@ -116,12 +121,7 @@ impl DisplayWindow {
             ),
         };
 
-        // Create window contents drawer
-        let mut drawer =
-            DisplayDrawerBuilder::new(window, context, events_loop, &mut interface, fonts, chip);
-
-        debug!("window built, will spawn now");
-
-        drawer.run();
+        // Create and run window contents drawer
+        DisplayDrawer::run(window, context, event_loop, interface, fonts, chip)
     }
 }
