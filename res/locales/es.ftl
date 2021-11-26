@@ -54,6 +54,8 @@ mode-group-alarms = Alarmas
 
 advanced-group-statistics = Estadísticas
 advanced-group-settings = Configuraciones
+advanced-group-simulator = Simulator
+
 
 modal-close = Cerca
 modal-apply = Aplicar
@@ -104,6 +106,13 @@ modal-advanced-locale = Idioma
 modal-advanced-date = Fecha
 modal-advanced-time = Hora
 modal-advanced-timezone = Zona horaria
+
+modal-advanced-simulator-airway-resistance = Resistance
+modal-advanced-simulator-airway-compliance = Compliance
+modal-advanced-simulator-spontaneous-breath-rate = Breath rate
+modal-advanced-simulator-spontaneous-breath-effort = Breath effort
+modal-advanced-simulator-spontaneous-breath-duration = Breath duration
+modal-advanced-simulator-acceleration-factor = Acceleration factor
 
 initializing-connecting = Empezando...
 initializing-connected = Inicializando...

@@ -11,12 +11,19 @@ use crate::{APP_I18N, APP_SETTINGS};
 pub struct SettingsAdvanced {
     pub group: SettingsAdvancedGroupTab,
     pub locale: LocaleCode,
+    pub resistance : i32,
+    pub compliance : i32,
+    pub spontaneous_breath_rate : i32,
+    pub spontaneous_breath_effort : i32,
+    pub spontaneous_breath_duration : i32,
+    pub acceleration_factor : f32,
 }
 
 #[derive(Debug, PartialEq)]
 pub enum SettingsAdvancedGroupTab {
     Statistics,
     Settings,
+    Simulator,
 }
 
 impl SettingsAdvancedGroupTab {
@@ -24,6 +31,7 @@ impl SettingsAdvancedGroupTab {
         match index {
             0 => Some(Self::Statistics),
             1 => Some(Self::Settings),
+            2 => Some(Self::Simulator),
             _ => None,
         }
     }
@@ -40,6 +48,12 @@ impl SettingsAdvanced {
         SettingsAdvanced {
             group: SettingsAdvancedGroupTab::default(),
             locale: LocaleCode::from_code(&APP_SETTINGS.read().unwrap().locale).unwrap_or_default(),
+            resistance : 1, // TODO get value from simulator
+            compliance : 1, // TODO get value from simulator
+            spontaneous_breath_rate : 0, // TODO get value from simulator
+            spontaneous_breath_effort : 0,// TODO get value from simulator
+            spontaneous_breath_duration : 0,// TODO get value from simulator
+            acceleration_factor : 1.0,// TODO get value from simulator
         }
     }
 
@@ -86,4 +100,77 @@ impl SettingsAdvanced {
             }
         }
     }
+
+    pub fn switch_resistance(&mut self, action: SettingActionRange) {
+
+        let next_resistance = action.to_next_index(self.resistance as _);
+        // TODO : check if value is allowed and send it to simulator
+
+        if next_resistance as i32 != self.resistance {
+            self.resistance = next_resistance as i32;
+
+            
+        }
+    }
+
+    pub fn switch_compliance(&mut self, action: SettingActionRange) {
+
+        let next_compliance = action.to_next_index(self.compliance as _);
+        // TODO : check if value is allowed and send it to simulator
+
+        if next_compliance as i32 != self.compliance {
+            self.compliance = next_compliance as i32;
+
+            
+        }
+    }
+
+    pub fn switch_spontaneous_breath_rate(&mut self, action: SettingActionRange) {
+
+        let next_spontaneous_breath_rate = action.to_next_index(self.spontaneous_breath_rate as _);
+        // TODO : check if value is allowed and send it to simulator
+
+        if next_spontaneous_breath_rate as i32 != self.spontaneous_breath_rate {
+            self.spontaneous_breath_rate = next_spontaneous_breath_rate as i32;
+
+            
+        }
+    }
+
+    pub fn switch_spontaneous_breath_effort(&mut self, action: SettingActionRange) {
+
+        let next_spontaneous_breath_effort = action.to_next_index(self.spontaneous_breath_effort as _);
+        // TODO : check if value is allowed and send it to simulator
+
+        if next_spontaneous_breath_effort as i32 != self.spontaneous_breath_effort {
+            self.spontaneous_breath_effort = next_spontaneous_breath_effort as i32;
+
+            
+        }
+    }
+
+    pub fn switch_spontaneous_breath_duration(&mut self, action: SettingActionRange) {
+
+        let next_spontaneous_breath_duration = action.to_next_index(self.spontaneous_breath_duration as _);
+        // TODO : check if value is allowed and send it to simulator
+
+        if next_spontaneous_breath_duration as i32 != self.spontaneous_breath_duration {
+            self.spontaneous_breath_duration = next_spontaneous_breath_duration as i32;
+
+            
+        }
+    }
+
+    pub fn switch_acceleration_factor(&mut self, action: SettingActionRange) {
+
+        let next_acceleration_factor = action.to_next_index(self.acceleration_factor as _);
+        // TODO : check if value is allowed and send it to simulator
+        
+        if next_acceleration_factor as f32 != self.acceleration_factor {
+            self.acceleration_factor = next_acceleration_factor as f32;
+
+            
+        }
+    }
+    
 }

@@ -621,6 +621,20 @@ impl DisplayUiEvents {
                         chip.settings.advanced.group = SettingsAdvancedGroupTab::Settings;
                     }
                 },
+                
+                {
+                    "group simulator",
+
+                    [
+                        ids.advanced_group_tab_simulator_button,
+                        ids.advanced_group_tab_simulator_text,
+                    ],
+
+                    {
+                        chip.settings.advanced.group = SettingsAdvancedGroupTab::Simulator;
+                    }
+                },
+
 
                 {
                     "settings locale previous",
@@ -646,7 +660,164 @@ impl DisplayUiEvents {
                     {
                         chip.settings.advanced.switch_locale(SettingActionRange::More);
                     }
+                },
+
+                {
+                    "settings resistance previous",
+
+                    [
+                        ids.advanced_field_resistance_less,
+                        ids.advanced_field_resistance_less_text,
+                    ],
+
+                    {
+                        chip.settings.advanced.switch_resistance(SettingActionRange::Less);
+                    }
+                },
+
+                {
+                    "settings resistance next",
+
+                    [
+                        ids.advanced_field_resistance_more,
+                        ids.advanced_field_resistance_more_text,
+                    ],
+
+                    {
+                        chip.settings.advanced.switch_resistance(SettingActionRange::More);
+                    }
+                },
+
+                {
+                    "settings compliance previous",
+
+                    [
+                        ids.advanced_field_compliance_less,
+                        ids.advanced_field_compliance_less_text,
+                    ],
+
+                    {
+                        chip.settings.advanced.switch_compliance(SettingActionRange::Less);
+                    }
+                },
+
+                {
+                    "settings compliance next",
+
+                    [
+                        ids.advanced_field_compliance_more,
+                        ids.advanced_field_compliance_more_text,
+                    ],
+
+                    {
+                        chip.settings.advanced.switch_compliance(SettingActionRange::More);
+                    }
+                },
+
+                {
+                    "settings spontaneous_breath_rate previous",
+
+                    [
+                        ids.advanced_field_spontaneous_breath_rate_less,
+                        ids.advanced_field_spontaneous_breath_rate_less_text,
+                    ],
+
+                    {
+                        chip.settings.advanced.switch_spontaneous_breath_rate(SettingActionRange::Less);
+                    }
+                },
+
+                {
+                    "settings spontaneous_breath_rate next",
+
+                    [
+                        ids.advanced_field_spontaneous_breath_rate_more,
+                        ids.advanced_field_spontaneous_breath_rate_more_text,
+                    ],
+
+                    {
+                        chip.settings.advanced.switch_spontaneous_breath_rate(SettingActionRange::More);
+                    }
+                },
+
+                {
+                    "settings spontaneous_breath_effort previous",
+
+                    [
+                        ids.advanced_field_spontaneous_breath_effort_less,
+                        ids.advanced_field_spontaneous_breath_effort_less_text,
+                    ],
+
+                    {
+                        chip.settings.advanced.switch_spontaneous_breath_effort(SettingActionRange::Less);
+                    }
+                },
+
+                {
+                    "settings spontaneous_breath_effort next",
+
+                    [
+                        ids.advanced_field_spontaneous_breath_effort_more,
+                        ids.advanced_field_spontaneous_breath_effort_more_text,
+                    ],
+
+                    {
+                        chip.settings.advanced.switch_spontaneous_breath_effort(SettingActionRange::More);
+                    }
+                },
+
+                {
+                    "settings spontaneous_breath_duration previous",
+
+                    [
+                        ids.advanced_field_spontaneous_breath_duration_less,
+                        ids.advanced_field_spontaneous_breath_duration_less_text,
+                    ],
+
+                    {
+                        chip.settings.advanced.switch_spontaneous_breath_duration(SettingActionRange::Less);
+                    }
+                },
+
+                {
+                    "settings spontaneous_breath_duration next",
+
+                    [
+                        ids.advanced_field_spontaneous_breath_duration_more,
+                        ids.advanced_field_spontaneous_breath_duration_more_text,
+                    ],
+
+                    {
+                        chip.settings.advanced.switch_spontaneous_breath_duration(SettingActionRange::More);
+                    }
+                },
+
+                {
+                    "settings acceleration_factor previous",
+
+                    [
+                        ids.advanced_field_acceleration_factor_less,
+                        ids.advanced_field_acceleration_factor_less_text,
+                    ],
+
+                    {
+                        chip.settings.advanced.switch_acceleration_factor(SettingActionRange::Less);
+                    }
+                },
+
+                {
+                    "settings acceleration_factor next",
+
+                    [
+                        ids.advanced_field_acceleration_factor_more,
+                        ids.advanced_field_acceleration_factor_more_text,
+                    ],
+
+                    {
+                        chip.settings.advanced.switch_acceleration_factor(SettingActionRange::More);
+                    }
                 }
+
             },
         );
 

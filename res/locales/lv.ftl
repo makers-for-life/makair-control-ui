@@ -54,6 +54,8 @@ mode-group-alarms = Signāli
 
 advanced-group-statistics = Statistika
 advanced-group-settings = Iestatījumi
+advanced-group-simulator = Simulator
+
 
 modal-close = Aizvērt
 modal-apply = Piesakies
@@ -104,6 +106,13 @@ modal-advanced-locale = Valoda
 modal-advanced-date = Datums
 modal-advanced-time = Laiks
 modal-advanced-timezone = Laika zona
+
+modal-advanced-simulator-airway-resistance = Resistance
+modal-advanced-simulator-airway-compliance = Compliance
+modal-advanced-simulator-spontaneous-breath-rate = Breath rate
+modal-advanced-simulator-spontaneous-breath-effort = Breath effort
+modal-advanced-simulator-spontaneous-breath-duration = Breath duration
+modal-advanced-simulator-acceleration-factor = Acceleration factor
 
 initializing-connecting = Notiek palaišana...
 initializing-connected = Notiek inicializēšana...

@@ -54,6 +54,7 @@ mode-group-alarms = 警报器
 
 advanced-group-statistics = 统计
 advanced-group-settings = 设定值
+advanced-group-simulator = Simulator
 
 modal-close = 关
 modal-apply = 应用
@@ -104,6 +105,13 @@ modal-advanced-locale = 语言
 modal-advanced-date = 日期
 modal-advanced-time = 时间
 modal-advanced-timezone = 时区
+
+modal-advanced-simulator-airway-resistance = Resistance
+modal-advanced-simulator-airway-compliance = Compliance
+modal-advanced-simulator-spontaneous-breath-rate = Breath rate
+modal-advanced-simulator-spontaneous-breath-effort = Breath effort
+modal-advanced-simulator-spontaneous-breath-duration = Breath duration
+modal-advanced-simulator-acceleration-factor = Acceleration factor
 
 initializing-connecting = 启动...
 initializing-connected = 初始化中...

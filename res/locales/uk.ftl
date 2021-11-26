@@ -54,6 +54,7 @@ mode-group-alarms = Сигналізація
 
 advanced-group-statistics = Статистика
 advanced-group-settings = Налаштування
+advanced-group-simulator = Simulator
 
 modal-close = Закрити
 modal-apply = Подати заявку
@@ -104,6 +105,13 @@ modal-advanced-locale = Мова
 modal-advanced-date = Дата
 modal-advanced-time = Час
 modal-advanced-timezone = Часовий пояс
+
+modal-advanced-simulator-airway-resistance = Resistance
+modal-advanced-simulator-airway-compliance = Compliance
+modal-advanced-simulator-spontaneous-breath-rate = Breath rate
+modal-advanced-simulator-spontaneous-breath-effort = Breath effort
+modal-advanced-simulator-spontaneous-breath-duration = Breath duration
+modal-advanced-simulator-acceleration-factor = Acceleration factor
 
 initializing-connecting = Запуск...
 initializing-connected = Ініціалізація...

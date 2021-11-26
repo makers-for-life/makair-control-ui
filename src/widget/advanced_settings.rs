@@ -68,6 +68,14 @@ pub struct Config<'a> {
     pub text_date_ids: TextWidgetIds,
     pub text_time_ids: TextWidgetIds,
     pub text_timezone_ids: TextWidgetIds,
+
+    pub field_resistance_ids: FieldWidgetIds,
+    pub field_compliance_ids : FieldWidgetIds,
+    pub field_spontaneous_breath_rate_ids: FieldWidgetIds,
+    pub field_spontaneous_breath_effort_ids: FieldWidgetIds,
+    pub field_spontaneous_breath_duration_ids: FieldWidgetIds,
+    pub field_acceleration_factor_ids: FieldWidgetIds,
+
 }
 
 struct Field {
@@ -166,6 +174,7 @@ fn form<'a>(master: &mut ControlWidget<'a>, config: &Config, parent_size: (f64, 
     match config.advanced_settings.group {
         SettingsAdvancedGroupTab::Statistics => form_statistics(master, config),
         SettingsAdvancedGroupTab::Settings => form_settings(master, config),
+        SettingsAdvancedGroupTab::Simulator => form_simulator(master, config),
     }
 }
 
@@ -383,6 +392,75 @@ fn form_settings<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             label_text: APP_I18N.t("modal-advanced-timezone"),
             value_text: now.format("UTC%:z").to_string(),
             ids: config.text_timezone_ids,
+        },
+    );
+}
+
+fn form_simulator<'a>(master: &mut ControlWidget<'a>, config: &Config) {
+
+    draw_field(
+        0,
+        master,
+        config,
+        Field {
+            label_text: APP_I18N.t("modal-advanced-simulator-airway-resistance"),
+            value_text: config.advanced_settings.resistance.to_string(),
+            ids: config.field_resistance_ids,
+        },
+    );
+
+    draw_field(
+        1,
+        master,
+        config,
+        Field {
+            label_text: APP_I18N.t("modal-advanced-simulator-airway-compliance"),
+            value_text: config.advanced_settings.compliance.to_string(),
+            ids: config.field_compliance_ids,
+        },
+    );
+
+    draw_field(
+        2,
+        master,
+        config,
+        Field {
+            label_text: APP_I18N.t("modal-advanced-simulator-spontaneous-breath-rate"),
+            value_text: config.advanced_settings.spontaneous_breath_rate.to_string(),
+            ids: config.field_spontaneous_breath_rate_ids,
+        },
+    );
+
+    draw_field(
+        3,
+        master,
+        config,
+        Field {
+            label_text: APP_I18N.t("modal-advanced-simulator-spontaneous-breath-effort"),
+            value_text: config.advanced_settings.spontaneous_breath_effort.to_string(),
+            ids: config.field_spontaneous_breath_effort_ids,
+        },
+    );
+
+    draw_field(
+        4,
+        master,
+        config,
+        Field {
+            label_text: APP_I18N.t("modal-advanced-simulator-spontaneous-breath-duration"),
+            value_text: config.advanced_settings.spontaneous_breath_duration.to_string(),
+            ids: config.field_spontaneous_breath_duration_ids,
+        },
+    );
+
+    draw_field(
+        5,
+        master,
+        config,
+        Field {
+            label_text: APP_I18N.t("modal-advanced-simulator-acceleration-factor"),
+            value_text: config.advanced_settings.acceleration_factor.to_string(),
+            ids: config.field_acceleration_factor_ids,
         },
     );
 }

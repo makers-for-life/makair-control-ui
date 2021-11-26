@@ -972,18 +972,26 @@ impl<'a> Screen<'a> {
                 advanced_group_tab_buttons: [
                     self.ids.advanced_group_tab_statistics_button,
                     self.ids.advanced_group_tab_settings_button,
+                    self.ids.advanced_group_tab_simulator_button,
                 ],
 
                 advanced_group_tab_texts: [
                     self.ids.advanced_group_tab_statistics_text,
                     self.ids.advanced_group_tab_settings_text,
+                    self.ids.advanced_group_tab_simulator_text,
                 ],
 
                 field_locale_ids: gen_render_advanced_settings_field_ids!(self, locale),
-
                 text_date_ids: gen_render_advanced_settings_text_ids!(self, date),
                 text_time_ids: gen_render_advanced_settings_text_ids!(self, time),
                 text_timezone_ids: gen_render_advanced_settings_text_ids!(self, timezone),
+
+                field_resistance_ids: gen_render_advanced_settings_field_ids!(self, resistance),
+                field_compliance_ids: gen_render_advanced_settings_field_ids!(self, compliance),
+                field_spontaneous_breath_rate_ids: gen_render_advanced_settings_field_ids!(self, spontaneous_breath_rate),
+                field_spontaneous_breath_effort_ids: gen_render_advanced_settings_field_ids!(self, spontaneous_breath_effort),
+                field_spontaneous_breath_duration_ids: gen_render_advanced_settings_field_ids!(self, spontaneous_breath_duration),
+                field_acceleration_factor_ids: gen_render_advanced_settings_field_ids!(self, acceleration_factor),
             },
         ));
     }
