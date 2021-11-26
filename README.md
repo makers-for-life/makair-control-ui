@@ -121,18 +121,31 @@ _Make sure to replace the `version` script argument with the current release ver
 
 **⚠️ Important note: this is still a work in progress. We are near cross-compiling capabilities, though some work still needs to be done due to non-MUSL C-based dependencies. See issue [#38](https://github.com/makers-for-life/makair-control-ui/issues/38).**
 
-## Optional Features
+## Compilation Features
+
+### Default Features
+
+By default, the Control UI comes with the following features:
+
+* **Support for telemetry/control over serial:**
+  * Feature name: `serial`
+  * Purpose: allow to open a serial device (using `-p [device]` or `--port [device]`) in order to get telemetry data from it and send control messages to it.
+
+It is possible to disable all default features at once by using the `--no-default-features` when building with Cargo.
+If some default features need to stay enabled, it is possible to add `--features [feature1],[feature2],...` to re-enable them.
+
+### Optional Features
 
 The Control UI behavior can be tuned at compile time, by enabling some optional features while building the binary:
 
 * **Support for CJK languages (eg. Chinese):**
   * Feature name: `fonts-cjk`
-  * Build command: `cargo build --features=fonts-cjk`
+  * Build command: `cargo build --features fonts-cjk`
   * Purpose: enables font support for CJK languages. As the CJK font weights 10MB+, and given that all assets get bundled in the final release binary, this feature is disabled by default as an optimization on binary size. If you need to use CJK languages in your MakAir ventilator, please build the Control UI with this feature enabled. Note that with this feature disabled, you will still be able to run with a CJK font, though all its glyphs will render as squares.
 
 * **Radio broadcasting of metrics over [LoRa / LoRaWAN](https://en.wikipedia.org/wiki/LoRa):**
   * Feature name: `lora`
-  * Build command: `cargo build --features=lora`
+  * Build command: `cargo build --features lora`
   * Purpose: enables periodic radio broadcasts of metrics, using an attached LoRa transmitter chip. This is an experimental feature, that is turned off by default. It aims at helping us build a central monitoring dashboard for hospitals, nesting all running MakAir metrics together.
 
 ## Prepared System Images

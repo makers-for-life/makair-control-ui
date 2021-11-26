@@ -13,6 +13,7 @@ const LOG_LEVEL_DEFAULT: &str = "debug";
 const LOG_LEVEL_DEFAULT: &str = "warn";
 
 pub enum RunMode {
+    #[cfg(feature = "serial")]
     Port {
         port: String,
         output_dir: Option<String>,
@@ -107,13 +108,23 @@ impl ConfigArguments {
             matches.value_of("input"),
             matches.is_present("simulator"),
         ) {
+            #[cfg(feature = "serial")]
             (Some(p), _, _) => RunMode::Port {
                 port: p.to_string(),
                 output_dir: matches.value_of("output").map(|str| str.to_string()),
             },
+
+            #[cfg(not(feature = "serial"))]
+            (Some(_), _, _) => {
+                eprintln!("Program was not compiled with the 'serial' feature");
+                std::process::exit(1);
+            }
+
             (None, Some(i), _) => RunMode::Input(i.to_string()),
+
             #[cfg(feature = "simulator")]
             (None, None, true) => RunMode::Simulator,
+
             #[cfg(not(feature = "simulator"))]
             (None, None, true) => {
                 eprintln!("Program was not compiled with the 'simulator' feature");
@@ -149,6 +160,7 @@ impl ConfigArguments {
 
     pub fn is_recording(&self) -> bool {
         match &self.mode {
+            #[cfg(feature = "serial")]
             RunMode::Port { output_dir, .. } => output_dir.is_some(),
             _ => false,
         }

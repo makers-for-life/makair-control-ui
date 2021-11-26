@@ -257,6 +257,7 @@ impl DisplayDrawer {
             std::sync::mpsc::channel();
 
         match &APP_ARGS.mode {
+            #[cfg(feature = "serial")]
             RunMode::Port { port, output_dir } => {
                 let optional_file_buffer = output_dir.as_ref().map(|dir| {
                     let file_count = std::fs::read_dir(dir)

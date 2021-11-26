@@ -16,7 +16,6 @@ use std::time::Instant;
 
 use makair_telemetry::alarm::{AlarmCode, RMC_SW_16};
 use makair_telemetry::control::{ControlMessage, ControlSetting};
-use makair_telemetry::serial::core;
 use makair_telemetry::structures::{
     AlarmPriority, ControlAck, DataSnapshot, EolTestSnapshot, EolTestSnapshotContent, EolTestStep,
     FatalErrorDetails, HighLevelError, MachineStateSnapshot, PatientGender, StoppedMessage,
@@ -28,7 +27,7 @@ use settings::{
 };
 
 use crate::config::environment::*;
-use crate::utilities::parse::parse_text_lines_to_single;
+use crate::serial::poller::PollError;
 use crate::utilities::{
     battery::estimate_lead_acid_12v_2s_soc,
     units::{
@@ -61,6 +60,7 @@ pub enum ChipState {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ChipError {
+    #[cfg(feature = "serial")]
     NoDevice,
     TimedOut,
     BadProtocol,
@@ -322,20 +322,29 @@ impl Chip {
         channel.1
     }
 
-    pub fn new_core_error(&mut self, error: makair_telemetry::error::Error) {
-        use makair_telemetry::error::Error;
-
-        if let Error::SerialError(serial_error) = error {
-            match serial_error.kind() {
-                core::ErrorKind::NoDevice => self.state = ChipState::Error(ChipError::NoDevice),
-                err => {
-                    self.state = ChipState::Error(ChipError::Other(parse_text_lines_to_single(
-                        &format!("{:?}", err),
-                        "; ",
-                    )))
-                }
-            };
-        }
+    pub fn new_core_error(&mut self, error: PollError) {
+        #[allow(clippy::single_match)]
+        match error {
+            #[cfg(feature = "serial")]
+            PollError::TelemetryError(makair_telemetry::error::Error::SerialError(
+                serial_error,
+            )) => {
+                match serial_error.kind() {
+                    makair_telemetry::serial::core::ErrorKind::NoDevice => {
+                        self.state = ChipState::Error(ChipError::NoDevice)
+                    }
+                    err => {
+                        self.state = ChipState::Error(ChipError::Other(
+                            crate::utilities::parse::parse_text_lines_to_single(
+                                &format!("{:?}", err),
+                                "; ",
+                            ),
+                        ))
+                    }
+                };
+            }
+            _ => (),
+        };
     }
 
     pub fn new_telemetry_error(&mut self, error: HighLevelError) {
