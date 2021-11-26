@@ -1707,7 +1707,7 @@ checksum = "d88417318da0eaf0fdcdb51a0ee6c3bed624333bff8f946733049380be67ac1c"
 [[package]]
 name = "plotters-conrod"
 version = "0.3.11"
-source = "git+https://github.com/dsferruzza/plotters-conrod?branch=conrod0.71-glium0.28-winit0.23#00a9e017221865dac8cd0937b72202513b24db55"
+source = "git+https://github.com/dsferruzza/plotters-conrod?branch=conrod0.71-glium0.28-winit0.23#1e4da66691550584d9e1a2351d400513739269b9"
 dependencies = [
  "cc",
  "conrod_core",
@@ -2140,9 +2140,9 @@ checksum = "6446ced80d6c486436db5c078dde11a9f73d42b57fb273121e160b84f63d894c"
 
 [[package]]
 name = "syn"
-version = "1.0.81"
+version = "1.0.82"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f2afee18b8beb5a596ecb4a2dce128c719b4ba399d34126b9e4396e3f9860966"
+checksum = "8daf5dd0bb60cbd4137b1b587d2fc0ae729bc07cf01cd70b36a1ed5ade3b9d59"
 dependencies = [
  "proc-macro2 1.0.32",
  "quote 1.0.10",
