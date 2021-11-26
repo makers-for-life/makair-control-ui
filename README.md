@@ -81,6 +81,7 @@ The following options can be passed to the Control UI upon running it:
 * `--input={file}`: path to a telemetry record to play in the UI, where `{file}` is a record file (all UI controls will be inactive);
 * `--output={directory}`: path to directory in which telemetry records should be stored, where `{directory}` is a path (disabled by default);
 * `--fullscreen`: enables fullscreen mode (used on the final ventilator display only);
+* `--simulator`: use a [MakAir Simulator](https://github.com/makers-for-life/makair-simulator) instance as source of data (`simulator` build feature);
 * `--translation={locale}`: locale to use in the UI, where `{locale}` is a [supported locale code](#supported-translations) (defaults to `en`; overrides user settings);
 * `--disable-lora`: disables LoRa telemetry broadcasts (`lora` build feature);
 * `--lora-device={device}`: LoRa device path, where `{device}` is a path eg. `/dev/ttyAMA0` (`lora` build feature; defaults to `/dev/ttyAMA0`);
@@ -147,6 +148,11 @@ The Control UI behavior can be tuned at compile time, by enabling some optional 
   * Feature name: `lora`
   * Build command: `cargo build --features lora`
   * Purpose: enables periodic radio broadcasts of metrics, using an attached LoRa transmitter chip. This is an experimental feature, that is turned off by default. It aims at helping us build a central monitoring dashboard for hospitals, nesting all running MakAir metrics together.
+
+* **Embed [MakAir Simulator](https://github.com/makers-for-life/makair-simulator):**
+  * Feature name: `simulator`
+  * Build command: `cargo build --features simulator`
+  * Purpose: embed the MakAir Simulator projet, which means that using `-s` or `--simulator` will run the [MakAir Firmware](https://github.com/makers-for-life/makair-firmware) attached to a mathematical model that simulates sensors and actuators in a realistic way and allow to visualize/control it using Control UI.
 
 ## Prepared System Images
 
