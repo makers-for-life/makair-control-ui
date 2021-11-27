@@ -265,7 +265,8 @@ pub const ADVANCED_SETTINGS_LINES_COUNT: usize = 15;
 pub const ADVANCED_SETTINGS_LINE_MARGIN_TOP: f64 = 8.0;
 pub const ADVANCED_SETTINGS_LINE_FONT_SIZE: u32 = 14;
 pub const ADVANCED_SETTINGS_LINE_VALUE_PADDING_LEFT: f64 = 240.0;
-pub const ADVANCED_SETTINGS_GROUP_TABS_COUNT: usize = 3;
+pub const ADVANCED_SETTINGS_GROUP_TABS_COUNT: usize =
+    if cfg!(feature = "simulator") { 3 } else { 2 };
 pub const ADVANCED_SETTINGS_LINE_VALUE_EMPTY: &str = "--";
 
 pub const MODE_SETTINGS_MODAL_PADDING: f64 = 20.0;

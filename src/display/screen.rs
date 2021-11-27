@@ -972,12 +972,14 @@ impl<'a> Screen<'a> {
                 advanced_group_tab_buttons: [
                     self.ids.advanced_group_tab_statistics_button,
                     self.ids.advanced_group_tab_settings_button,
+                    #[cfg(feature = "simulator")]
                     self.ids.advanced_group_tab_simulator_button,
                 ],
 
                 advanced_group_tab_texts: [
                     self.ids.advanced_group_tab_statistics_text,
                     self.ids.advanced_group_tab_settings_text,
+                    #[cfg(feature = "simulator")]
                     self.ids.advanced_group_tab_simulator_text,
                 ],
 
