@@ -25,11 +25,11 @@ extern crate conrod_core;
 
 mod chip;
 mod config;
+mod data;
 mod display;
 mod locale;
 #[cfg(feature = "lora")]
 mod lora;
-mod data;
 mod utilities;
 mod widget;
 
