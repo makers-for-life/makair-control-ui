@@ -60,8 +60,8 @@ pub struct Config<'a> {
     pub advanced_group_wrapper: WidgetId,
     pub advanced_form_wrapper: WidgetId,
 
-    pub advanced_group_tab_buttons: [WidgetId; ADVANCED_SETTINGS_GROUP_TABS_COUNT],
-    pub advanced_group_tab_texts: [WidgetId; ADVANCED_SETTINGS_GROUP_TABS_COUNT],
+    pub advanced_group_tab_buttons: Vec<WidgetId>,
+    pub advanced_group_tab_texts: Vec<WidgetId>,
 
     pub field_locale_ids: FieldWidgetIds,
 
@@ -131,7 +131,7 @@ fn group<'a>(master: &mut ControlWidget<'a>, config: &Config, parent_size: (f64,
     );
 
     // Render all group tabs
-    for index in 0..ADVANCED_SETTINGS_GROUP_TABS_COUNT {
+    for index in 0..*ADVANCED_SETTINGS_GROUP_TABS_COUNT {
         group_tab(
             master,
             config,

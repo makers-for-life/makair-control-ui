@@ -12,6 +12,7 @@ const LOG_LEVEL_DEFAULT: &str = "debug";
 #[cfg(not(debug_assertions))]
 const LOG_LEVEL_DEFAULT: &str = "warn";
 
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RunMode {
     #[cfg(feature = "serial")]
     Port {

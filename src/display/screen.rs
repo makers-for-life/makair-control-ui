@@ -969,14 +969,14 @@ impl<'a> Screen<'a> {
                 advanced_group_wrapper: self.ids.advanced_group_wrapper,
                 advanced_form_wrapper: self.ids.advanced_form_wrapper,
 
-                advanced_group_tab_buttons: [
+                advanced_group_tab_buttons: vec![
                     self.ids.advanced_group_tab_statistics_button,
                     self.ids.advanced_group_tab_settings_button,
                     #[cfg(feature = "simulator")]
                     self.ids.advanced_group_tab_simulator_button,
                 ],
 
-                advanced_group_tab_texts: [
+                advanced_group_tab_texts: vec![
                     self.ids.advanced_group_tab_statistics_text,
                     self.ids.advanced_group_tab_settings_text,
                     #[cfg(feature = "simulator")]
