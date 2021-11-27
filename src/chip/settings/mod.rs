@@ -38,6 +38,12 @@ pub enum ChipSettingsIntent {
     Mode(SettingsModeIntent),
 }
 
+#[cfg(feature = "simulator")]
+#[derive(Debug)]
+pub enum ChipSettingsSimulatorEvent {
+    UpdateSetting(makair_simulator::SimulatorSettingKind),
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SettingActionState {
     Disabled = 0,
@@ -113,6 +119,23 @@ impl SettingActionRange {
     }
 }
 
+#[cfg(feature = "simulator")]
+#[derive(Debug)]
+pub enum SimulatorSettingActionRange {
+    More,
+    Less,
+}
+
+#[cfg(feature = "simulator")]
+impl SimulatorSettingActionRange {
+    fn to_new_value(&self, setting: &makair_simulator::SimulatorSetting) -> i32 {
+        match self {
+            Self::More => setting.increment().value,
+            Self::Less => setting.decrement().value,
+        }
+    }
+}
+
 #[derive(Debug)]
 pub struct ChipSettings {
     pub run: SettingsRun,
@@ -148,6 +171,16 @@ impl ChipSettings {
     pub fn new_settings_intent(&mut self, intent: ChipSettingsIntent) {
         match intent {
             ChipSettingsIntent::Mode(intent) => self.mode.new_intent(intent),
+        }
+    }
+
+    #[cfg(feature = "simulator")]
+    pub fn new_simulator_settings_event(
+        &mut self,
+        event: ChipSettingsSimulatorEvent,
+    ) -> Vec<makair_simulator::SimulatorSetting> {
+        match event {
+            ChipSettingsSimulatorEvent::UpdateSetting(event) => self.advanced.new_event(event),
         }
     }
 }

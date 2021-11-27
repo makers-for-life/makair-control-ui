@@ -18,12 +18,12 @@ use makair_telemetry::{self, TelemetryChannelType};
 use crate::chip::{Chip, ChipEventUpdate, ChipState};
 use crate::config::arguments::RunMode;
 use crate::config::environment::*;
-use crate::serial::poller::{PollEvent, SerialPoller, SerialPollerBuilder};
+use crate::data::poller::{PollEvent, SerialPoller, SerialPollerBuilder};
 use crate::APP_ARGS;
 
 use super::fonts::Fonts;
 use super::identifiers::{Ids, ImageIds};
-use super::renderer::DisplayRendererBuilder;
+use super::renderer::{DisplayRendererBuilder, DisplayRendererRunEventsResult};
 use super::support::GliumDisplayWinitWrapper;
 
 const FRAMERATE_SLEEP_THROTTLE_SMOOTH_HEAVY: Duration =
@@ -131,13 +131,19 @@ impl DisplayDrawer {
                         }
 
                         // Run events since the last render
-                        let (has_heartbeat, has_user_events, user_intents, user_events) = renderer
-                            .run_events(
-                                &mut interface,
-                                &mut chip,
-                                &last_heartbeat,
-                                &tick_start_time,
-                            );
+                        let DisplayRendererRunEventsResult {
+                            has_heartbeat,
+                            has_user_events,
+                            user_intents,
+                            user_events,
+                            #[cfg(feature = "simulator")]
+                            user_simulator_events,
+                        } = renderer.run_events(
+                            &mut interface,
+                            &mut chip,
+                            &last_heartbeat,
+                            &tick_start_time,
+                        );
 
                         // Dispatch heartbeat?
                         // Notice: heartbeats are critical, as they indicate the firmware that the Control UI \
@@ -176,6 +182,11 @@ impl DisplayDrawer {
 
                                 if !user_events.is_empty() {
                                     chip.dispatch_settings_events(user_events);
+                                }
+
+                                #[cfg(feature = "simulator")]
+                                if !user_simulator_events.is_empty() {
+                                    chip.dispatch_simulator_settings_events(user_simulator_events);
                                 }
                             }
 
@@ -299,15 +310,8 @@ impl DisplayDrawer {
 
             #[cfg(feature = "simulator")]
             RunMode::Simulator => {
-                let mut simulator = makair_simulator::MakAirSimulator::new(tx);
-                simulator.initialize(false);
-
-                let settings_receiver = chip.init_settings_receiver();
-                std::thread::spawn(move || {
-                    while let Ok(message) = settings_receiver.recv() {
-                        simulator.send_control_message(message);
-                    }
-                });
+                let simulator = crate::data::simulator::init(tx, chip.init_settings_receiver());
+                chip.set_simulator(simulator);
             }
         }
 

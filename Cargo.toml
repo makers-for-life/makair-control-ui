@@ -40,7 +40,7 @@ conrod_core = "0.71"
 sysfs_gpio = { version = "0.6", optional = true }
 rn2903 = { git = "https://github.com/waxzce/lora-rust-rn2903-rn2483.git", rev = "b086057ba096920abef3870ad0cefa2c80a343e2", optional = true }
 makair-telemetry = { git = "https://github.com/makers-for-life/makair-telemetry", rev = "184185d4301fa7343018cd6733e1fb23e2cb032e", default-features = false }
-makair-simulator = { git = "https://github.com/makers-for-life/makair-simulator", rev = "59bf7bce05ee26075e126753a74ebebf00c5bfb0", optional = true }
+makair-simulator = { git = "https://github.com/makers-for-life/makair-simulator", rev = "8060cf63e387ee0fc4ecbce34af057c3aa5ad987", optional = true }
 
 [features]
 default = ["serial"]

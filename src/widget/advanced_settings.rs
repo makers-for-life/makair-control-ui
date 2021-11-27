@@ -69,12 +69,18 @@ pub struct Config<'a> {
     pub text_time_ids: TextWidgetIds,
     pub text_timezone_ids: TextWidgetIds,
 
+    #[cfg(feature = "simulator")]
     pub field_resistance_ids: FieldWidgetIds,
+    #[cfg(feature = "simulator")]
     pub field_compliance_ids: FieldWidgetIds,
+    #[cfg(feature = "simulator")]
     pub field_spontaneous_breath_rate_ids: FieldWidgetIds,
+    #[cfg(feature = "simulator")]
     pub field_spontaneous_breath_effort_ids: FieldWidgetIds,
+    #[cfg(feature = "simulator")]
     pub field_spontaneous_breath_duration_ids: FieldWidgetIds,
-    pub field_acceleration_factor_ids: FieldWidgetIds,
+    #[cfg(feature = "simulator")]
+    pub field_acceleration_percent_ids: FieldWidgetIds,
 }
 
 struct Field {
@@ -173,6 +179,7 @@ fn form<'a>(master: &mut ControlWidget<'a>, config: &Config, parent_size: (f64, 
     match config.advanced_settings.group {
         SettingsAdvancedGroupTab::Statistics => form_statistics(master, config),
         SettingsAdvancedGroupTab::Settings => form_settings(master, config),
+        #[cfg(feature = "simulator")]
         SettingsAdvancedGroupTab::Simulator => form_simulator(master, config),
     }
 }
@@ -395,6 +402,7 @@ fn form_settings<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     );
 }
 
+#[cfg(feature = "simulator")]
 fn form_simulator<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     draw_field(
         0,
@@ -463,8 +471,8 @@ fn form_simulator<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         config,
         Field {
             label_text: APP_I18N.t("modal-advanced-simulator-acceleration-factor"),
-            value_text: config.advanced_settings.acceleration_factor.to_string(),
-            ids: config.field_acceleration_factor_ids,
+            value_text: config.advanced_settings.acceleration_percent.to_string(),
+            ids: config.field_acceleration_percent_ids,
         },
     );
 }

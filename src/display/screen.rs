@@ -988,23 +988,29 @@ impl<'a> Screen<'a> {
                 text_time_ids: gen_render_advanced_settings_text_ids!(self, time),
                 text_timezone_ids: gen_render_advanced_settings_text_ids!(self, timezone),
 
+                #[cfg(feature = "simulator")]
                 field_resistance_ids: gen_render_advanced_settings_field_ids!(self, resistance),
+                #[cfg(feature = "simulator")]
                 field_compliance_ids: gen_render_advanced_settings_field_ids!(self, compliance),
+                #[cfg(feature = "simulator")]
                 field_spontaneous_breath_rate_ids: gen_render_advanced_settings_field_ids!(
                     self,
                     spontaneous_breath_rate
                 ),
+                #[cfg(feature = "simulator")]
                 field_spontaneous_breath_effort_ids: gen_render_advanced_settings_field_ids!(
                     self,
                     spontaneous_breath_effort
                 ),
+                #[cfg(feature = "simulator")]
                 field_spontaneous_breath_duration_ids: gen_render_advanced_settings_field_ids!(
                     self,
                     spontaneous_breath_duration
                 ),
-                field_acceleration_factor_ids: gen_render_advanced_settings_field_ids!(
+                #[cfg(feature = "simulator")]
+                field_acceleration_percent_ids: gen_render_advanced_settings_field_ids!(
                     self,
-                    acceleration_factor
+                    acceleration_percent
                 ),
             },
         ));

@@ -111,7 +111,7 @@ modal-advanced-simulator-airway-compliance = Compliance
 modal-advanced-simulator-spontaneous-breath-rate = Breath rate
 modal-advanced-simulator-spontaneous-breath-effort = Breath effort
 modal-advanced-simulator-spontaneous-breath-duration = Breath duration
-modal-advanced-simulator-acceleration-factor = Acceleration factor
+modal-advanced-simulator-acceleration-factor = Acceleration percent
 
 initializing-connecting = Запуск...
 initializing-connected = Ініціалізація...

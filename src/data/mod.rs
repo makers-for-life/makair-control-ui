@@ -4,3 +4,5 @@
 // License: Public Domain License
 
 pub mod poller;
+#[cfg(feature = "simulator")]
+pub mod simulator;

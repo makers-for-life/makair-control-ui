@@ -20,10 +20,22 @@ use crate::chip::{
     Chip,
 };
 
+#[cfg(feature = "simulator")]
+use crate::chip::settings::SimulatorSettingActionRange;
+
 use super::identifiers::Ids;
 use super::renderer::{DisplayRendererSettingsStateVisibility, DisplayRendererStates};
 
 const FORCED_CLICKS_PRESET_SETTINGS_OPEN_DEBOUNCE_DELAY: Duration = Duration::from_secs(5);
+
+#[derive(Debug)]
+pub struct DisplayUiEventsRunResult {
+    pub has_events: bool,
+    pub intents: Vec<ChipSettingsIntent>,
+    pub events: Vec<ChipSettingsEvent>,
+    #[cfg(feature = "simulator")]
+    pub simulator_events: Vec<crate::chip::settings::ChipSettingsSimulatorEvent>,
+}
 
 pub struct DisplayUiEvents;
 
@@ -33,8 +45,11 @@ impl DisplayUiEvents {
         ids: &Ids,
         chip: &mut Chip,
         states: &mut DisplayRendererStates,
-    ) -> (bool, Vec<ChipSettingsIntent>, Vec<ChipSettingsEvent>) {
+    ) -> DisplayUiEventsRunResult {
         let (mut has_events, mut intents, mut events) = (false, Vec::new(), Vec::new());
+
+        #[cfg(feature = "simulator")]
+        let mut simulator_events = Vec::new();
 
         // Handle 'forced' clicks
         // Notice: those are non-user events, but rather interface clicks that are forced based \
@@ -55,7 +70,14 @@ impl DisplayUiEvents {
         }
 
         // Handle modal local clicks
-        if Self::run_modal_local_clicks(interface, ids, chip, states) {
+        if Self::run_modal_local_clicks(
+            interface,
+            ids,
+            chip,
+            states,
+            #[cfg(feature = "simulator")]
+            &mut simulator_events,
+        ) {
             has_events = true;
         }
 
@@ -64,7 +86,13 @@ impl DisplayUiEvents {
             has_events = true;
         }
 
-        (has_events, intents, events)
+        DisplayUiEventsRunResult {
+            has_events,
+            intents,
+            events,
+            #[cfg(feature = "simulator")]
+            simulator_events,
+        }
     }
 
     fn run_forced_clicks(chip: &mut Chip, states: &mut DisplayRendererStates) -> bool {
@@ -473,6 +501,9 @@ impl DisplayUiEvents {
         ids: &Ids,
         chip: &mut Chip,
         states: &mut DisplayRendererStates,
+        #[cfg(feature = "simulator")] simulator_events: &mut Vec<
+            crate::chip::settings::ChipSettingsSimulatorEvent,
+        >,
     ) -> bool {
         let mut has_events = false;
 
@@ -631,7 +662,10 @@ impl DisplayUiEvents {
                     ],
 
                     {
-                        chip.settings.advanced.group = SettingsAdvancedGroupTab::Simulator;
+                        #[cfg(feature = "simulator")]
+                        {
+                            chip.settings.advanced.group = SettingsAdvancedGroupTab::Simulator;
+                        }
                     }
                 },
 
@@ -671,7 +705,15 @@ impl DisplayUiEvents {
                     ],
 
                     {
-                        chip.settings.advanced.switch_resistance(SettingActionRange::Less);
+                        #[cfg(feature = "simulator")]
+                        {
+                            chip.settings.advanced.switch_resistance(SimulatorSettingActionRange::Less);
+                            simulator_events.push(
+                                crate::chip::settings::ChipSettingsSimulatorEvent::UpdateSetting(
+                                    makair_simulator::SimulatorSettingKind::Resistance
+                                )
+                            );
+                        }
                     }
                 },
 
@@ -684,7 +726,15 @@ impl DisplayUiEvents {
                     ],
 
                     {
-                        chip.settings.advanced.switch_resistance(SettingActionRange::More);
+                        #[cfg(feature = "simulator")]
+                        {
+                            chip.settings.advanced.switch_resistance(SimulatorSettingActionRange::More);
+                            simulator_events.push(
+                                crate::chip::settings::ChipSettingsSimulatorEvent::UpdateSetting(
+                                    makair_simulator::SimulatorSettingKind::Resistance
+                                )
+                            );
+                        }
                     }
                 },
 
@@ -697,7 +747,15 @@ impl DisplayUiEvents {
                     ],
 
                     {
-                        chip.settings.advanced.switch_compliance(SettingActionRange::Less);
+                        #[cfg(feature = "simulator")]
+                        {
+                            chip.settings.advanced.switch_compliance(SimulatorSettingActionRange::Less);
+                            simulator_events.push(
+                                crate::chip::settings::ChipSettingsSimulatorEvent::UpdateSetting(
+                                    makair_simulator::SimulatorSettingKind::Compliance
+                                )
+                            );
+                        }
                     }
                 },
 
@@ -710,7 +768,15 @@ impl DisplayUiEvents {
                     ],
 
                     {
-                        chip.settings.advanced.switch_compliance(SettingActionRange::More);
+                        #[cfg(feature = "simulator")]
+                        {
+                            chip.settings.advanced.switch_compliance(SimulatorSettingActionRange::More);
+                            simulator_events.push(
+                                crate::chip::settings::ChipSettingsSimulatorEvent::UpdateSetting(
+                                    makair_simulator::SimulatorSettingKind::Compliance
+                                )
+                            );
+                        }
                     }
                 },
 
@@ -723,7 +789,15 @@ impl DisplayUiEvents {
                     ],
 
                     {
-                        chip.settings.advanced.switch_spontaneous_breath_rate(SettingActionRange::Less);
+                        #[cfg(feature = "simulator")]
+                        {
+                            chip.settings.advanced.switch_spontaneous_breath_rate(SimulatorSettingActionRange::Less);
+                            simulator_events.push(
+                                crate::chip::settings::ChipSettingsSimulatorEvent::UpdateSetting(
+                                    makair_simulator::SimulatorSettingKind::SpontaneousBreathRate
+                                )
+                            );
+                        }
                     }
                 },
 
@@ -736,7 +810,15 @@ impl DisplayUiEvents {
                     ],
 
                     {
-                        chip.settings.advanced.switch_spontaneous_breath_rate(SettingActionRange::More);
+                        #[cfg(feature = "simulator")]
+                        {
+                            chip.settings.advanced.switch_spontaneous_breath_rate(SimulatorSettingActionRange::More);
+                            simulator_events.push(
+                                crate::chip::settings::ChipSettingsSimulatorEvent::UpdateSetting(
+                                    makair_simulator::SimulatorSettingKind::SpontaneousBreathRate
+                                )
+                            );
+                        }
                     }
                 },
 
@@ -749,7 +831,15 @@ impl DisplayUiEvents {
                     ],
 
                     {
-                        chip.settings.advanced.switch_spontaneous_breath_effort(SettingActionRange::Less);
+                        #[cfg(feature = "simulator")]
+                        {
+                            chip.settings.advanced.switch_spontaneous_breath_effort(SimulatorSettingActionRange::Less);
+                            simulator_events.push(
+                                crate::chip::settings::ChipSettingsSimulatorEvent::UpdateSetting(
+                                    makair_simulator::SimulatorSettingKind::SpontaneousBreathEffort
+                                )
+                            );
+                        }
                     }
                 },
 
@@ -762,7 +852,15 @@ impl DisplayUiEvents {
                     ],
 
                     {
-                        chip.settings.advanced.switch_spontaneous_breath_effort(SettingActionRange::More);
+                        #[cfg(feature = "simulator")]
+                        {
+                            chip.settings.advanced.switch_spontaneous_breath_effort(SimulatorSettingActionRange::More);
+                            simulator_events.push(
+                                crate::chip::settings::ChipSettingsSimulatorEvent::UpdateSetting(
+                                    makair_simulator::SimulatorSettingKind::SpontaneousBreathEffort
+                                )
+                            );
+                        }
                     }
                 },
 
@@ -775,7 +873,15 @@ impl DisplayUiEvents {
                     ],
 
                     {
-                        chip.settings.advanced.switch_spontaneous_breath_duration(SettingActionRange::Less);
+                        #[cfg(feature = "simulator")]
+                        {
+                            chip.settings.advanced.switch_spontaneous_breath_duration(SimulatorSettingActionRange::Less);
+                            simulator_events.push(
+                                crate::chip::settings::ChipSettingsSimulatorEvent::UpdateSetting(
+                                    makair_simulator::SimulatorSettingKind::SpontaneousBreathDuration
+                                )
+                            );
+                        }
                     }
                 },
 
@@ -788,33 +894,57 @@ impl DisplayUiEvents {
                     ],
 
                     {
-                        chip.settings.advanced.switch_spontaneous_breath_duration(SettingActionRange::More);
+                        #[cfg(feature = "simulator")]
+                        {
+                            chip.settings.advanced.switch_spontaneous_breath_duration(SimulatorSettingActionRange::More);
+                            simulator_events.push(
+                                crate::chip::settings::ChipSettingsSimulatorEvent::UpdateSetting(
+                                    makair_simulator::SimulatorSettingKind::SpontaneousBreathDuration
+                                )
+                            );
+                        }
                     }
                 },
 
                 {
-                    "settings acceleration_factor previous",
+                    "settings acceleration_percent previous",
 
                     [
-                        ids.advanced_field_acceleration_factor_less,
-                        ids.advanced_field_acceleration_factor_less_text,
+                        ids.advanced_field_acceleration_percent_less,
+                        ids.advanced_field_acceleration_percent_less_text,
                     ],
 
                     {
-                        chip.settings.advanced.switch_acceleration_factor(SettingActionRange::Less);
+                        #[cfg(feature = "simulator")]
+                        {
+                            chip.settings.advanced.switch_acceleration_percent(SimulatorSettingActionRange::Less);
+                            simulator_events.push(
+                                crate::chip::settings::ChipSettingsSimulatorEvent::UpdateSetting(
+                                    makair_simulator::SimulatorSettingKind::AccelerationPercent
+                                )
+                            );
+                        }
                     }
                 },
 
                 {
-                    "settings acceleration_factor next",
+                    "settings acceleration_percent next",
 
                     [
-                        ids.advanced_field_acceleration_factor_more,
-                        ids.advanced_field_acceleration_factor_more_text,
+                        ids.advanced_field_acceleration_percent_more,
+                        ids.advanced_field_acceleration_percent_more_text,
                     ],
 
                     {
-                        chip.settings.advanced.switch_acceleration_factor(SettingActionRange::More);
+                        #[cfg(feature = "simulator")]
+                        {
+                            chip.settings.advanced.switch_acceleration_percent(SimulatorSettingActionRange::More);
+                            simulator_events.push(
+                                crate::chip::settings::ChipSettingsSimulatorEvent::UpdateSetting(
+                                    makair_simulator::SimulatorSettingKind::AccelerationPercent
+                                )
+                            );
+                        }
                     }
                 }
 

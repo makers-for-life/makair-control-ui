@@ -11,6 +11,7 @@ pub fn group_tab_to_locale(group_tab: SettingsAdvancedGroupTab) -> String {
     let locale_key = match group_tab {
         SettingsAdvancedGroupTab::Statistics => "statistics",
         SettingsAdvancedGroupTab::Settings => "settings",
+        #[cfg(feature = "simulator")]
         SettingsAdvancedGroupTab::Simulator => "simulator",
     };
 

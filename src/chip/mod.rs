@@ -27,7 +27,7 @@ use settings::{
 };
 
 use crate::config::environment::*;
-use crate::serial::poller::PollError;
+use crate::data::poller::PollError;
 use crate::utilities::{
     battery::estimate_lead_acid_12v_2s_soc,
     units::{
@@ -164,6 +164,8 @@ pub struct Chip {
     pub state: ChipState,
     lora_tx: Option<Sender<TelemetryMessage>>,
     channel_for_settings: Option<Sender<ControlMessage>>,
+    #[cfg(feature = "simulator")]
+    simulator: Option<makair_simulator::MakAirSimulator>,
 }
 
 impl ChipData {
@@ -202,6 +204,8 @@ impl Chip {
             state: ChipState::WaitingData(Instant::now()),
             lora_tx: lora_sender,
             channel_for_settings: None,
+            #[cfg(feature = "simulator")]
+            simulator: None,
         }
     }
 
@@ -260,6 +264,31 @@ impl Chip {
                         );
                     } else {
                         debug!("setting event {:?} sent", message);
+                    }
+                }
+            }
+        }
+    }
+
+    #[cfg(feature = "simulator")]
+    pub fn dispatch_simulator_settings_events(
+        &mut self,
+        events: Vec<settings::ChipSettingsSimulatorEvent>,
+    ) {
+        for event in events {
+            let settings = self.settings.new_simulator_settings_event(event);
+
+            for setting in settings {
+                debug!("handled simulator setting event: {:?}", setting);
+
+                if let Some(simulator) = &self.simulator {
+                    if let Err(err) = simulator.simulator_setting_sender().send(setting.clone()) {
+                        error!(
+                            "error sending setting {:?} to the simulator: {:?}",
+                            setting, err
+                        );
+                    } else {
+                        debug!("simulator setting {:?} sent", setting);
                     }
                 }
             }
@@ -482,6 +511,11 @@ impl Chip {
                 }
             }
         }
+    }
+
+    #[cfg(feature = "simulator")]
+    pub fn set_simulator(&mut self, simulator: makair_simulator::MakAirSimulator) {
+        self.simulator = Some(simulator);
     }
 
     fn new_alarm(&mut self, code: AlarmCode, priority: AlarmPriority, triggered: bool) {

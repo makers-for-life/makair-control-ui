@@ -17,7 +17,7 @@ use crate::utilities::{
 };
 
 use super::data::*;
-use super::events::DisplayUiEvents;
+use super::events::{DisplayUiEvents, DisplayUiEventsRunResult};
 use super::fonts::Fonts;
 use super::identifiers::{Ids, ImageIds};
 use super::screen::{Screen, ScreenModalsOpen};
@@ -116,6 +116,15 @@ impl Default for DisplayRendererSettingsState {
     }
 }
 
+pub struct DisplayRendererRunEventsResult {
+    pub has_heartbeat: bool,
+    pub has_user_events: bool,
+    pub user_intents: Vec<ChipSettingsIntent>,
+    pub user_events: Vec<ChipSettingsEvent>,
+    #[cfg(feature = "simulator")]
+    pub user_simulator_events: Vec<crate::chip::settings::ChipSettingsSimulatorEvent>,
+}
+
 #[allow(clippy::new_ret_no_self)]
 impl DisplayRendererBuilder {
     pub fn new(fonts: Fonts, ids: Ids, images: ImageIds) -> DisplayRenderer {
@@ -163,10 +172,15 @@ impl DisplayRenderer {
         chip: &mut Chip,
         last_heartbeat: &Instant,
         tick_time: &Instant,
-    ) -> (bool, bool, Vec<ChipSettingsIntent>, Vec<ChipSettingsEvent>) {
+    ) -> DisplayRendererRunEventsResult {
         // Run all UI events (defer to sub-handler)
-        let (has_user_events, user_intents, user_events) =
-            DisplayUiEvents::run(interface, &self.ids, chip, &mut self.states);
+        let DisplayUiEventsRunResult {
+            has_events,
+            intents,
+            events,
+            #[cfg(feature = "simulator")]
+            simulator_events,
+        } = DisplayUiEvents::run(interface, &self.ids, chip, &mut self.states);
 
         // Check if should run heartbeat? (ie. if it should be sent to the firmware)
         let mut has_heartbeat = false;
@@ -175,7 +189,14 @@ impl DisplayRenderer {
             has_heartbeat = true;
         }
 
-        (has_heartbeat, has_user_events, user_intents, user_events)
+        DisplayRendererRunEventsResult {
+            has_heartbeat,
+            has_user_events: has_events,
+            user_intents: intents,
+            user_events: events,
+            #[cfg(feature = "simulator")]
+            user_simulator_events: simulator_events,
+        }
     }
 
     pub fn has_state_moderate_framerate(&self) -> bool {

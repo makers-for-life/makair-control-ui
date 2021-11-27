@@ -29,7 +29,7 @@ mod display;
 mod locale;
 #[cfg(feature = "lora")]
 mod lora;
-mod serial;
+mod data;
 mod utilities;
 mod widget;
 
