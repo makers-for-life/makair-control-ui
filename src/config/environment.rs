@@ -5,9 +5,6 @@
 
 use lazy_static::lazy_static;
 
-use crate::config::arguments::RunMode;
-use crate::APP_ARGS;
-
 pub const RUNTIME_NAME: &str = env!("CARGO_PKG_NAME");
 pub const RUNTIME_VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -17,11 +14,12 @@ lazy_static! {
         let enabled = false;
 
         #[cfg(feature = "simulator")]
-        let enabled = APP_ARGS.mode == RunMode::Simulator;
+        let enabled = crate::APP_ARGS.mode == crate::config::arguments::RunMode::Simulator;
 
         enabled
     };
-    pub static ref ADVANCED_SETTINGS_GROUP_TABS_COUNT: usize = if *SIMULATOR_ENABLED { 3 } else { 2 };
+    pub static ref ADVANCED_SETTINGS_GROUP_TABS_COUNT: usize =
+        if *SIMULATOR_ENABLED { 3 } else { 2 };
 }
 
 pub const WINDOW_ICON_WIDTH: u32 = 512;
