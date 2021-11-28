@@ -54,7 +54,7 @@ mode-group-alarms = Alarmes
 
 advanced-group-statistics = Statistiques
 advanced-group-settings = Paramètres
-advanced-group-simulator = Simulator
+advanced-group-simulator = Simulateur
 
 
 modal-close = Fermer
@@ -107,16 +107,16 @@ modal-advanced-date = Date
 modal-advanced-time = Heure
 modal-advanced-timezone = Fuseau horaire
 
-modal-advanced-simulator-airway-resistance = Resistance
+modal-advanced-simulator-airway-resistance = Résistance
 modal-advanced-simulator-airway-compliance = Compliance
-modal-advanced-simulator-spontaneous-breath-rate = Breath rate
-modal-advanced-simulator-spontaneous-breath-effort = Breath effort
-modal-advanced-simulator-spontaneous-breath-duration = Breath duration
-modal-advanced-simulator-acceleration-factor = Acceleration percent
+modal-advanced-simulator-spontaneous-breath-rate = Fréquence respiratoire
+modal-advanced-simulator-spontaneous-breath-effort = Effort spontané
+modal-advanced-simulator-spontaneous-breath-duration = Durée d'effort
+modal-advanced-simulator-acceleration-factor = Accélération du temps
 
 modal-advanced-simulator-airway-resistance-unit = cmH2O/L/s
 modal-advanced-simulator-airway-compliance-unit = mL/cmH2O
-modal-advanced-simulator-spontaneous-breath-rate-unit = cycle/min
+modal-advanced-simulator-spontaneous-breath-rate-unit = /min
 modal-advanced-simulator-spontaneous-breath-effort-unit = cmH2O
 modal-advanced-simulator-spontaneous-breath-duration-unit = ms
 modal-advanced-simulator-acceleration-factor-unit = %
