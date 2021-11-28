@@ -39,8 +39,8 @@ conrod_winit = { git = "https://github.com/dsferruzza/conrod", branch = "update-
 conrod_core = { git = "https://github.com/dsferruzza/conrod", branch = "update-glium-winit" }
 sysfs_gpio = { version = "0.6", optional = true }
 rn2903 = { git = "https://github.com/waxzce/lora-rust-rn2903-rn2483.git", rev = "b086057ba096920abef3870ad0cefa2c80a343e2", optional = true }
-makair-telemetry = { git = "https://github.com/makers-for-life/makair-telemetry", rev = "184185d4301fa7343018cd6733e1fb23e2cb032e", default-features = false }
-makair-simulator = { git = "https://github.com/makers-for-life/makair-simulator", rev = "c2c7e77c23c2025e552334ab1f69f91eeb51470f", optional = true }
+makair-telemetry = { git = "https://github.com/makers-for-life/makair-telemetry", rev = "72e9bf31a9baa5f2ef143bdc313bf5124a5223e2", default-features = false }
+makair-simulator = { git = "https://github.com/makers-for-life/makair-simulator", rev = "0b91e1b6fd5740ea3cb379cc16f71d701ce66166", optional = true }
 
 [build-dependencies]
 winres = { git = "https://github.com/Skirmisher/winres", rev = "7333e0ff201d25eaaa70352682cd1a37614f93f4" } # https://github.com/mxre/winres/pull/36 is required
