@@ -1152,7 +1152,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "makair-control"
+name = "makair-control-ui"
 version = "2.4.0"
 dependencies = [
  "chrono",
@@ -1179,6 +1179,7 @@ dependencies = [
  "sysfs_gpio",
  "unic-langid",
  "winit",
+ "winres",
 ]
 
 [[package]]
@@ -2644,6 +2645,14 @@ dependencies = [
  "wayland-client 0.28.6",
  "winapi",
  "x11-dl",
+]
+
+[[package]]
+name = "winres"
+version = "0.1.11"
+source = "git+https://github.com/Skirmisher/winres?rev=7333e0ff201d25eaaa70352682cd1a37614f93f4#7333e0ff201d25eaaa70352682cd1a37614f93f4"
+dependencies = [
+ "toml",
 ]
 
 [[package]]
