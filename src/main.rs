@@ -7,6 +7,9 @@
 #![recursion_limit = "512"]
 // Some Clippy rules should be ignored, as they go against code design choices that were made
 #![cfg_attr(feature = "cargo-clippy", allow(clippy::field_reassign_with_default))]
+// If compiling for Windows in release mode, do not open a console window when launching the app in graphical mode (i.e. not from a terminal)
+// This also has the effect to disable stdout and stderr when lauching from a terminal, which is why we do not enable this in debug mode
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 #[macro_use]
 extern crate log;

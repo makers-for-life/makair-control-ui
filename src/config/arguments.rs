@@ -132,6 +132,11 @@ impl ConfigArguments {
                 std::process::exit(1);
             }
 
+            // If the simulator feature is enabled, we use the simulator as the default mode
+            #[cfg(feature = "simulator")]
+            (None, None, false) => RunMode::Simulator,
+
+            #[cfg(not(feature = "simulator"))]
             (None, None, false) => {
                 eprintln!("You should provide either a serial port (-p), an input file (-i) or enable MakAir Simulator (-s)");
                 std::process::exit(1);
