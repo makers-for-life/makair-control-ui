@@ -49,18 +49,6 @@ lora = ["rn2903", "sysfs_gpio"]
 serial = ["makair-telemetry/serial"]
 simulator = ["makair-simulator"]
 
-[profile.dev]
-opt-level = 0
-debug = true
-debug-assertions = true
-
 [profile.release]
-opt-level = 3
 lto = true
-debug = false
-debug-assertions = false
-
-[profile.bench]
-opt-level = 3
-debug = false
-debug-assertions = false
+codegen-units = 1
