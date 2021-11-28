@@ -423,25 +423,25 @@ impl<'a> Screen<'a> {
         self.render_telemetry_mode_overview(mode);
 
         // Initialize the peak widget
-        self.render_telemetry_peak(&machine_snapshot, has_target_pressure);
+        self.render_telemetry_peak(machine_snapshot, has_target_pressure);
 
         // Initialize the plateau widget
-        self.render_telemetry_plateau(&machine_snapshot, mode, has_target_pressure);
+        self.render_telemetry_plateau(machine_snapshot, mode, has_target_pressure);
 
         // Initialize the PEEP widget
-        self.render_telemetry_peep(&machine_snapshot, has_target_pressure);
+        self.render_telemetry_peep(machine_snapshot, has_target_pressure);
 
         // Initialize the cycles widget
-        self.render_telemetry_cycles(&machine_snapshot);
+        self.render_telemetry_cycles(machine_snapshot);
 
         // Initialize the tidal widget
-        self.render_telemetry_tidal(&machine_snapshot, mode);
+        self.render_telemetry_tidal(machine_snapshot, mode);
 
         // Initialize the minute volume widget
-        self.render_telemetry_minute_volume(&machine_snapshot);
+        self.render_telemetry_minute_volume(machine_snapshot);
 
         // Initialize the ratio widget
-        self.render_telemetry_ratio(&machine_snapshot, mode);
+        self.render_telemetry_ratio(machine_snapshot, mode);
     }
 
     fn render_telemetry_graph(&mut self) {
@@ -957,7 +957,7 @@ impl<'a> Screen<'a> {
                 advanced_settings: settings,
 
                 last_tick: self.timers.1,
-                machine_snapshot: &self.machine_snapshot.unwrap(),
+                machine_snapshot: self.machine_snapshot.unwrap(),
                 data_snapshot: self.data_snapshot,
                 alarms: self.ongoing_alarms.unwrap(),
 
@@ -969,21 +969,49 @@ impl<'a> Screen<'a> {
                 advanced_group_wrapper: self.ids.advanced_group_wrapper,
                 advanced_form_wrapper: self.ids.advanced_form_wrapper,
 
-                advanced_group_tab_buttons: [
+                advanced_group_tab_buttons: vec![
                     self.ids.advanced_group_tab_statistics_button,
                     self.ids.advanced_group_tab_settings_button,
+                    #[cfg(feature = "simulator")]
+                    self.ids.advanced_group_tab_simulator_button,
                 ],
 
-                advanced_group_tab_texts: [
+                advanced_group_tab_texts: vec![
                     self.ids.advanced_group_tab_statistics_text,
                     self.ids.advanced_group_tab_settings_text,
+                    #[cfg(feature = "simulator")]
+                    self.ids.advanced_group_tab_simulator_text,
                 ],
 
                 field_locale_ids: gen_render_advanced_settings_field_ids!(self, locale),
-
                 text_date_ids: gen_render_advanced_settings_text_ids!(self, date),
                 text_time_ids: gen_render_advanced_settings_text_ids!(self, time),
                 text_timezone_ids: gen_render_advanced_settings_text_ids!(self, timezone),
+
+                #[cfg(feature = "simulator")]
+                field_resistance_ids: gen_render_advanced_settings_field_ids!(self, resistance),
+                #[cfg(feature = "simulator")]
+                field_compliance_ids: gen_render_advanced_settings_field_ids!(self, compliance),
+                #[cfg(feature = "simulator")]
+                field_spontaneous_breath_rate_ids: gen_render_advanced_settings_field_ids!(
+                    self,
+                    spontaneous_breath_rate
+                ),
+                #[cfg(feature = "simulator")]
+                field_spontaneous_breath_effort_ids: gen_render_advanced_settings_field_ids!(
+                    self,
+                    spontaneous_breath_effort
+                ),
+                #[cfg(feature = "simulator")]
+                field_spontaneous_breath_duration_ids: gen_render_advanced_settings_field_ids!(
+                    self,
+                    spontaneous_breath_duration
+                ),
+                #[cfg(feature = "simulator")]
+                field_acceleration_percent_ids: gen_render_advanced_settings_field_ids!(
+                    self,
+                    acceleration_percent
+                ),
             },
         ));
     }

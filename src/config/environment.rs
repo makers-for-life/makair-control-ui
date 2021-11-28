@@ -3,8 +3,24 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+use lazy_static::lazy_static;
+
 pub const RUNTIME_NAME: &str = env!("CARGO_PKG_NAME");
 pub const RUNTIME_VERSION: &str = env!("CARGO_PKG_VERSION");
+
+lazy_static! {
+    pub static ref SIMULATOR_ENABLED: bool = {
+        #[cfg(not(feature = "simulator"))]
+        let enabled = false;
+
+        #[cfg(feature = "simulator")]
+        let enabled = crate::APP_ARGS.mode == crate::config::arguments::RunMode::Simulator;
+
+        enabled
+    };
+    pub static ref ADVANCED_SETTINGS_GROUP_TABS_COUNT: usize =
+        if *SIMULATOR_ENABLED { 3 } else { 2 };
+}
 
 pub const WINDOW_ICON_WIDTH: u32 = 512;
 pub const WINDOW_ICON_HEIGHT: u32 = 512;
@@ -265,7 +281,6 @@ pub const ADVANCED_SETTINGS_LINES_COUNT: usize = 15;
 pub const ADVANCED_SETTINGS_LINE_MARGIN_TOP: f64 = 8.0;
 pub const ADVANCED_SETTINGS_LINE_FONT_SIZE: u32 = 14;
 pub const ADVANCED_SETTINGS_LINE_VALUE_PADDING_LEFT: f64 = 240.0;
-pub const ADVANCED_SETTINGS_GROUP_TABS_COUNT: usize = 2;
 pub const ADVANCED_SETTINGS_LINE_VALUE_EMPTY: &str = "--";
 
 pub const MODE_SETTINGS_MODAL_PADDING: f64 = 20.0;

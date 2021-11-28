@@ -6,7 +6,6 @@
 use std::sync::mpsc::{Receiver, TryRecvError};
 
 use makair_telemetry::error::Error;
-use makair_telemetry::serial::core::{Error as SerialError, ErrorKind};
 use makair_telemetry::structures::{HighLevelError, TelemetryMessage};
 use makair_telemetry::{self, TelemetryChannelType};
 
@@ -20,6 +19,14 @@ pub enum PollEvent {
     Pending,
 }
 
+#[derive(Debug)]
+pub enum PollError {
+    #[cfg(feature = "serial")]
+    TelemetryError(makair_telemetry::error::Error),
+    #[cfg(not(feature = "serial"))]
+    DisconnectedChannel,
+}
+
 #[allow(clippy::new_ret_no_self)]
 impl SerialPollerBuilder {
     pub fn new() -> SerialPoller {
@@ -28,7 +35,7 @@ impl SerialPollerBuilder {
 }
 
 impl SerialPoller {
-    pub fn poll(&mut self, rx: &Receiver<TelemetryChannelType>) -> Result<PollEvent, Error> {
+    pub fn poll(&mut self, rx: &Receiver<TelemetryChannelType>) -> Result<PollEvent, PollError> {
         match rx.try_recv() {
             // 1. Telemetry message can be handled and is valid
             Ok(Ok(message)) => Ok(PollEvent::Ready(message)),
@@ -37,13 +44,22 @@ impl SerialPoller {
                 Ok(PollEvent::Corrupted(message_error))
             }
             // 3. A serial error occurred
-            Ok(Err(error)) => Err(error),
+            #[cfg(feature = "serial")]
+            Ok(Err(error)) => Err(PollError::TelemetryError(error)),
             // 4. Empty data was received (this is expected)
             Err(TryRecvError::Empty) => Ok(PollEvent::Pending),
-            // 5. The serial device is disconnected
-            Err(TryRecvError::Disconnected) => {
-                Err(SerialError::new(ErrorKind::NoDevice, "device is disconnected").into())
-            }
+            // 6. The serial device is disconnected
+            #[cfg(feature = "serial")]
+            Err(TryRecvError::Disconnected) => Err(PollError::TelemetryError(
+                makair_telemetry::serial::core::Error::new(
+                    makair_telemetry::serial::core::ErrorKind::NoDevice,
+                    "device is disconnected",
+                )
+                .into(),
+            )),
+            // 5. channel is disconnected
+            #[cfg(not(feature = "serial"))]
+            Err(TryRecvError::Disconnected) => Err(PollError::DisconnectedChannel),
         }
     }
 }

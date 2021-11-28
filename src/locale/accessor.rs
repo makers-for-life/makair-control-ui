@@ -39,7 +39,7 @@ impl LocaleAccessor {
         if let Some(pattern) = message.value() {
             let mut errors = vec![];
 
-            let formatted = bundle.format_pattern(&pattern, arguments, &mut errors);
+            let formatted = bundle.format_pattern(pattern, arguments, &mut errors);
 
             // Any error? Panic
             if !errors.is_empty() {

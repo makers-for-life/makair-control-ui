@@ -10,6 +10,7 @@ use crate::APP_I18N;
 pub fn error_to_locales(error: &ChipError) -> (String, String) {
     // Acquire target locale attributes
     let (locale_key, error_details) = match error {
+        #[cfg(feature = "serial")]
         ChipError::NoDevice => ("no-device", None),
         ChipError::TimedOut => ("timed-out", None),
         ChipError::BadProtocol => ("bad-protocol", None),

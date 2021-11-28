@@ -6,37 +6,18 @@
 use conrod_winit::WinitWindow;
 
 pub struct GliumDisplayWinitWrapper(pub glium::Display);
-pub struct EventLoop;
 
 impl WinitWindow for GliumDisplayWinitWrapper {
     fn get_inner_size(&self) -> Option<(u32, u32)> {
-        self.0.gl_window().get_inner_size().map(Into::into)
+        let s = self.0.gl_window().window().inner_size();
+        Some((s.width, s.height))
     }
 
     fn hidpi_factor(&self) -> f32 {
-        self.0.gl_window().get_hidpi_factor() as _
-    }
-}
-
-impl EventLoop {
-    pub fn new() -> Self {
-        EventLoop {}
-    }
-
-    /// Produce an iterator yielding all available events.
-    pub fn next(
-        &mut self,
-        events_loop: &mut glium::glutin::EventsLoop,
-    ) -> Vec<glium::glutin::Event> {
-        // Collect all pending events.
-        let mut events = Vec::new();
-
-        events_loop.poll_events(|event| events.push(event));
-
-        events
+        self.0.gl_window().window().scale_factor() as f32
     }
 }
 
 // Conversion functions for converting between types from glium's version of `winit` and \
 //   `conrod_core`.
-conrod_winit::conversion_fns!();
+conrod_winit::v025_conversion_fns!();

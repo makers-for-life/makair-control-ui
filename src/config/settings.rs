@@ -54,7 +54,7 @@ impl ConfigSettings {
         // Ensure configuration is still valid
         // Notice: as the UI may be resumed from an old saved state, some saved configuration \
         //   values may not be valid anymore, hence this check to ensure their validity.
-        if LocaleCode::from_code(&configuration.locale.as_str()).is_none() {
+        if LocaleCode::from_code(configuration.locale.as_str()).is_none() {
             configuration.locale = LocaleCode::default().to_code().to_string();
         }
 

@@ -155,7 +155,7 @@ fn pressure<'a>(
             plot_id: config.pressure_id,
             precision_divide: TELEMETRY_POINTS_PRESSURE_PRECISION_DIVIDE,
             line_color: &GRAPH_PRESSURE_LINE_COLOR,
-            data_values: &config.data_pressure,
+            data_values: config.data_pressure,
         },
     );
 
@@ -176,7 +176,7 @@ fn pressure<'a>(
             time_range,
             config.pressure_id,
             config.pressure_saturate_ids,
-            &config.data_pressure,
+            config.data_pressure,
         );
     }
 }
@@ -211,7 +211,7 @@ fn flow<'a>(
             plot_id: config.flow_id,
             precision_divide: TELEMETRY_POINTS_FLOW_PRECISION_DIVIDE,
             line_color: &GRAPH_FLOW_LINE_COLOR,
-            data_values: &config.data_flow,
+            data_values: config.data_flow,
         },
     );
 
@@ -232,7 +232,7 @@ fn flow<'a>(
             time_range,
             config.flow_id,
             config.flow_saturate_ids,
-            &config.data_flow,
+            config.data_flow,
         );
     }
 }

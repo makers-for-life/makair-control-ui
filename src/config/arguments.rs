@@ -12,12 +12,16 @@ const LOG_LEVEL_DEFAULT: &str = "debug";
 #[cfg(not(debug_assertions))]
 const LOG_LEVEL_DEFAULT: &str = "warn";
 
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RunMode {
+    #[cfg(feature = "serial")]
     Port {
         port: String,
         output_dir: Option<String>,
     },
     Input(String),
+    #[cfg(feature = "simulator")]
+    Simulator,
 }
 
 pub struct ConfigArguments {
@@ -60,6 +64,12 @@ impl ConfigArguments {
                     .takes_value(true),
             )
             .arg(
+                Arg::with_name("simulator")
+                    .short("s")
+                    .long("simulator")
+                    .help("Run MakAir Simulator to get data"),
+            )
+            .arg(
                 Arg::with_name("output")
                     .short("o")
                     .long("output")
@@ -94,15 +104,41 @@ impl ConfigArguments {
             .get_matches();
 
         // Parse input mode
-        let mode = match (matches.value_of("port"), matches.value_of("input")) {
-            (Some(p), _) => RunMode::Port {
+        let mode = match (
+            matches.value_of("port"),
+            matches.value_of("input"),
+            matches.is_present("simulator"),
+        ) {
+            #[cfg(feature = "serial")]
+            (Some(p), _, _) => RunMode::Port {
                 port: p.to_string(),
                 output_dir: matches.value_of("output").map(|str| str.to_string()),
             },
-            (None, Some(i)) => RunMode::Input(i.to_string()),
-            (None, None) => {
-                eprintln!("You should provide either a serial port (-p) or an input file (-i)");
 
+            #[cfg(not(feature = "serial"))]
+            (Some(_), _, _) => {
+                eprintln!("Program was not compiled with the 'serial' feature");
+                std::process::exit(1);
+            }
+
+            (None, Some(i), _) => RunMode::Input(i.to_string()),
+
+            #[cfg(feature = "simulator")]
+            (None, None, true) => RunMode::Simulator,
+
+            #[cfg(not(feature = "simulator"))]
+            (None, None, true) => {
+                eprintln!("Program was not compiled with the 'simulator' feature");
+                std::process::exit(1);
+            }
+
+            // If the simulator feature is enabled, we use the simulator as the default mode
+            #[cfg(feature = "simulator")]
+            (None, None, false) => RunMode::Simulator,
+
+            #[cfg(not(feature = "simulator"))]
+            (None, None, false) => {
+                eprintln!("You should provide either a serial port (-p), an input file (-i) or enable MakAir Simulator (-s)");
                 std::process::exit(1);
             }
         };
@@ -130,6 +166,7 @@ impl ConfigArguments {
 
     pub fn is_recording(&self) -> bool {
         match &self.mode {
+            #[cfg(feature = "serial")]
             RunMode::Port { output_dir, .. } => output_dir.is_some(),
             _ => false,
         }

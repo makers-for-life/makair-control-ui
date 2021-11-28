@@ -53,8 +53,8 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
 fn status<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Append sub-contents
-    status_label(master, &config);
-    status_form(master, &config);
+    status_label(master, config);
+    status_form(master, config);
 }
 
 fn status_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {

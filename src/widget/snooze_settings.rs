@@ -54,8 +54,8 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
 fn alarms<'a>(master: &mut ControlWidget<'a>, config: &Config) {
     // Append sub-contents
-    alarms_label(master, &config);
-    alarms_form(master, &config);
+    alarms_label(master, config);
+    alarms_form(master, config);
 }
 
 fn alarms_label<'a>(master: &mut ControlWidget<'a>, config: &Config) {

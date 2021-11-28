@@ -16,7 +16,6 @@ use std::time::Instant;
 
 use makair_telemetry::alarm::{AlarmCode, RMC_SW_16};
 use makair_telemetry::control::{ControlMessage, ControlSetting};
-use makair_telemetry::serial::core;
 use makair_telemetry::structures::{
     AlarmPriority, ControlAck, DataSnapshot, EolTestSnapshot, EolTestSnapshotContent, EolTestStep,
     FatalErrorDetails, HighLevelError, MachineStateSnapshot, PatientGender, StoppedMessage,
@@ -28,7 +27,7 @@ use settings::{
 };
 
 use crate::config::environment::*;
-use crate::utilities::parse::parse_text_lines_to_single;
+use crate::data::poller::PollError;
 use crate::utilities::{
     battery::estimate_lead_acid_12v_2s_soc,
     units::{
@@ -61,6 +60,7 @@ pub enum ChipState {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ChipError {
+    #[cfg(feature = "serial")]
     NoDevice,
     TimedOut,
     BadProtocol,
@@ -164,6 +164,8 @@ pub struct Chip {
     pub state: ChipState,
     lora_tx: Option<Sender<TelemetryMessage>>,
     channel_for_settings: Option<Sender<ControlMessage>>,
+    #[cfg(feature = "simulator")]
+    simulator: Option<makair_simulator::MakAirSimulator>,
 }
 
 impl ChipData {
@@ -202,6 +204,8 @@ impl Chip {
             state: ChipState::WaitingData(Instant::now()),
             lora_tx: lora_sender,
             channel_for_settings: None,
+            #[cfg(feature = "simulator")]
+            simulator: None,
         }
     }
 
@@ -266,6 +270,31 @@ impl Chip {
         }
     }
 
+    #[cfg(feature = "simulator")]
+    pub fn dispatch_simulator_settings_events(
+        &mut self,
+        events: Vec<settings::ChipSettingsSimulatorEvent>,
+    ) {
+        for event in events {
+            let settings = self.settings.new_simulator_settings_event(event);
+
+            for setting in settings {
+                debug!("handled simulator setting event: {:?}", setting);
+
+                if let Some(simulator) = &self.simulator {
+                    if let Err(err) = simulator.simulator_setting_sender().send(setting.clone()) {
+                        error!(
+                            "error sending setting {:?} to the simulator: {:?}",
+                            setting, err
+                        );
+                    } else {
+                        debug!("simulator setting {:?} sent", setting);
+                    }
+                }
+            }
+        }
+    }
+
     pub fn ongoing_alarms_sorted(&self) -> Vec<(AlarmCode, AlarmPriority)> {
         // This acquires a sorted list of ongoing alarms. It also clears out related alarms. In \
         //   some cases, the list of alarms might contain the same alarm, at different priority \
@@ -301,8 +330,8 @@ impl Chip {
 
         // Sort final alarm list by code, then priority (ensures codes are ordered within their \
         //   priority group, which are themselves sorted by priority)
-        alarm_list.sort_by(|(code1, _), (code2, _)| code1.cmp(&code2));
-        alarm_list.sort_by(|(_, priority1), (_, priority2)| priority2.cmp(&priority1));
+        alarm_list.sort_by(|(code1, _), (code2, _)| code1.cmp(code2));
+        alarm_list.sort_by(|(_, priority1), (_, priority2)| priority2.cmp(priority1));
 
         alarm_list
     }
@@ -322,20 +351,29 @@ impl Chip {
         channel.1
     }
 
-    pub fn new_core_error(&mut self, error: makair_telemetry::error::Error) {
-        use makair_telemetry::error::Error;
-
-        if let Error::SerialError(serial_error) = error {
-            match serial_error.kind() {
-                core::ErrorKind::NoDevice => self.state = ChipState::Error(ChipError::NoDevice),
-                err => {
-                    self.state = ChipState::Error(ChipError::Other(parse_text_lines_to_single(
-                        &format!("{:?}", err),
-                        "; ",
-                    )))
-                }
-            };
-        }
+    pub fn new_core_error(&mut self, error: PollError) {
+        #[allow(clippy::single_match)]
+        match error {
+            #[cfg(feature = "serial")]
+            PollError::TelemetryError(makair_telemetry::error::Error::SerialError(
+                serial_error,
+            )) => {
+                match serial_error.kind() {
+                    makair_telemetry::serial::core::ErrorKind::NoDevice => {
+                        self.state = ChipState::Error(ChipError::NoDevice)
+                    }
+                    err => {
+                        self.state = ChipState::Error(ChipError::Other(
+                            crate::utilities::parse::parse_text_lines_to_single(
+                                &format!("{:?}", err),
+                                "; ",
+                            ),
+                        ))
+                    }
+                };
+            }
+            _ => (),
+        };
     }
 
     pub fn new_telemetry_error(&mut self, error: HighLevelError) {
@@ -473,6 +511,11 @@ impl Chip {
                 }
             }
         }
+    }
+
+    #[cfg(feature = "simulator")]
+    pub fn set_simulator(&mut self, simulator: makair_simulator::MakAirSimulator) {
+        self.simulator = Some(simulator);
     }
 
     fn new_alarm(&mut self, code: AlarmCode, priority: AlarmPriority, triggered: bool) {

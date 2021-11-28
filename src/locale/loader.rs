@@ -34,8 +34,8 @@ impl LocaleLoader {
         let locale_id: LanguageIdentifier = locale.parse().expect("locale code parsing failed");
         let locale_buffer = EmbeddedLocales::get(&format!("{}{}", locale, LOCALE_EXTENSION))
             .expect("locale not found");
-        let locale_string =
-            String::from_utf8(locale_buffer.into_owned()).expect("locale file is not a string");
+        let locale_string = String::from_utf8(locale_buffer.data.into_owned())
+            .expect("locale file is not a string");
 
         info!("loaded locale: [{}]", locale);
 
