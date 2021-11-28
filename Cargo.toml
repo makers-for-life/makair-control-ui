@@ -29,14 +29,14 @@ fluent = "0.16"
 intl-memoizer = "0.5"
 unic-langid = "0.9"
 inflate = "0.4"
-winit = "0.23"
+winit = "0.25"
 image = { version = "0.23", default-features = false, features = ["png"] }
-glium = "0.28"
+glium = "0.30"
 plotters = { version = "0.3", default_features = false, features = ["chrono", "area_series"] }
 plotters-conrod = { git = "https://github.com/dsferruzza/plotters-conrod", branch = "conrod0.71-glium0.28-winit0.23" }
-conrod_glium = "0.76"
-conrod_winit = "0.76"
-conrod_core = "0.76"
+conrod_glium = { git = "https://github.com/dsferruzza/conrod", branch = "update-glium-winit" }
+conrod_winit = { git = "https://github.com/dsferruzza/conrod", branch = "update-glium-winit" }
+conrod_core = { git = "https://github.com/dsferruzza/conrod", branch = "update-glium-winit" }
 sysfs_gpio = { version = "0.6", optional = true }
 rn2903 = { git = "https://github.com/waxzce/lora-rust-rn2903-rn2483.git", rev = "b086057ba096920abef3870ad0cefa2c80a343e2", optional = true }
 makair-telemetry = { git = "https://github.com/makers-for-life/makair-telemetry", rev = "184185d4301fa7343018cd6733e1fb23e2cb032e", default-features = false }
