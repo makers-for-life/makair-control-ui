@@ -111,7 +111,14 @@ modal-advanced-simulator-airway-compliance = Compliance
 modal-advanced-simulator-spontaneous-breath-rate = Breath rate
 modal-advanced-simulator-spontaneous-breath-effort = Breath effort
 modal-advanced-simulator-spontaneous-breath-duration = Breath duration
-modal-advanced-simulator-acceleration-factor = Acceleration percent
+modal-advanced-simulator-acceleration-factor = Acceleration
+
+modal-advanced-simulator-airway-resistance-unit = cmH2O/L/s
+modal-advanced-simulator-airway-compliance-unit = mL/cmH2O
+modal-advanced-simulator-spontaneous-breath-rate-unit = cycle/min
+modal-advanced-simulator-spontaneous-breath-effort-unit = cmH2O
+modal-advanced-simulator-spontaneous-breath-duration-unit = ms
+modal-advanced-simulator-acceleration-factor-unit = %
 
 
 initializing-connecting = Starting up...

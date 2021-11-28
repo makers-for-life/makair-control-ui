@@ -410,7 +410,12 @@ fn form_simulator<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         config,
         Field {
             label_text: APP_I18N.t("modal-advanced-simulator-airway-resistance"),
-            value_text: config.advanced_settings.resistance.to_string(),
+            value_text: format!(
+                "{} {}",
+                config.advanced_settings.resistance.to_string(),
+                APP_I18N.t("modal-advanced-simulator-airway-resistance-unit")
+            ),
+
             ids: config.field_resistance_ids,
         },
     );
@@ -421,7 +426,11 @@ fn form_simulator<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         config,
         Field {
             label_text: APP_I18N.t("modal-advanced-simulator-airway-compliance"),
-            value_text: config.advanced_settings.compliance.to_string(),
+            value_text: format!(
+                "{} {}",
+                config.advanced_settings.compliance.to_string(),
+                APP_I18N.t("modal-advanced-simulator-airway-compliance-unit")
+            ),
             ids: config.field_compliance_ids,
         },
     );
@@ -432,7 +441,11 @@ fn form_simulator<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         config,
         Field {
             label_text: APP_I18N.t("modal-advanced-simulator-spontaneous-breath-rate"),
-            value_text: config.advanced_settings.spontaneous_breath_rate.to_string(),
+            value_text: format!(
+                "{} {}",
+                config.advanced_settings.spontaneous_breath_rate.to_string(),
+                APP_I18N.t("modal-advanced-simulator-spontaneous-breath-rate-unit")
+            ),
             ids: config.field_spontaneous_breath_rate_ids,
         },
     );
@@ -443,10 +456,14 @@ fn form_simulator<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         config,
         Field {
             label_text: APP_I18N.t("modal-advanced-simulator-spontaneous-breath-effort"),
-            value_text: config
-                .advanced_settings
-                .spontaneous_breath_effort
-                .to_string(),
+            value_text: format!(
+                "{} {}",
+                config
+                    .advanced_settings
+                    .spontaneous_breath_effort
+                    .to_string(),
+                APP_I18N.t("modal-advanced-simulator-spontaneous-breath-effort-unit")
+            ),
             ids: config.field_spontaneous_breath_effort_ids,
         },
     );
@@ -457,10 +474,14 @@ fn form_simulator<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         config,
         Field {
             label_text: APP_I18N.t("modal-advanced-simulator-spontaneous-breath-duration"),
-            value_text: config
-                .advanced_settings
-                .spontaneous_breath_duration
-                .to_string(),
+            value_text: format!(
+                "{} {}",
+                config
+                    .advanced_settings
+                    .spontaneous_breath_duration
+                    .to_string(),
+                APP_I18N.t("modal-advanced-simulator-spontaneous-breath-duration-unit")
+            ),
             ids: config.field_spontaneous_breath_duration_ids,
         },
     );
@@ -471,7 +492,11 @@ fn form_simulator<'a>(master: &mut ControlWidget<'a>, config: &Config) {
         config,
         Field {
             label_text: APP_I18N.t("modal-advanced-simulator-acceleration-factor"),
-            value_text: config.advanced_settings.acceleration_percent.to_string(),
+            value_text: format!(
+                "{} {}",
+                config.advanced_settings.acceleration_percent.to_string(),
+                APP_I18N.t("modal-advanced-simulator-acceleration-factor-unit")
+            ),
             ids: config.field_acceleration_percent_ids,
         },
     );
