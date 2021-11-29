@@ -36,7 +36,7 @@ pub fn reverse_rgba(image: &[u8], width: u32, height: u32) -> Vec<u8> {
             Mitchell,
         )
         .unwrap();
-        resizer.resize(&src, &mut dst);
+        resizer.resize(src, &mut dst).ok();
 
         let export: Vec<u8> = dst.iter().flat_map(|rgba| rgba.iter()).collect();
         export

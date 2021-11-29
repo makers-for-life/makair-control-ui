@@ -22,7 +22,7 @@ lazy_static! {
         if *SIMULATOR_ENABLED { 3 } else { 2 };
 }
 
-pub const FACTOR: u32 = 1;
+pub const FACTOR: u32 = 2;
 pub const FACTORF64: f64 = FACTOR as f64;
 pub const WINDOW_ICON_WIDTH: u32 = 512;
 pub const WINDOW_ICON_HEIGHT: u32 = 512;
@@ -236,10 +236,10 @@ pub const GRAPH_DRAW_FLOW_RANGE_HIGH_PRECISION_DIVIDED_SMALL: i16 =
     GRAPH_DRAW_FLOW_RANGE_HIGH_PRECISION_DIVIDED as i16;
 pub const GRAPH_DRAW_MARGIN_TOP: u32 = 0;
 pub const GRAPH_DRAW_MARGIN_BOTTOM: u32 = 10 * FACTOR;
-pub const GRAPH_DRAW_MARGIN_LEFT: u32 = 0 * FACTOR;
-pub const GRAPH_DRAW_MARGIN_RIGHT: u32 = 0 * FACTOR;
+pub const GRAPH_DRAW_MARGIN_LEFT: u32 = 0;
+pub const GRAPH_DRAW_MARGIN_RIGHT: u32 = 0 ;
 pub const GRAPH_DRAW_LINE_SIZE: u32 = 2 * FACTOR;
-pub const GRAPH_DRAW_AXIS_SIZE: u32 = 1 * FACTOR;
+pub const GRAPH_DRAW_AXIS_SIZE: u32 = FACTOR;
 pub const GRAPH_DRAW_AXIS_FONT_SIZE: u32 = 14 * FACTOR;
 pub const GRAPH_DRAW_LABEL_WIDTH: u32 = 56 * FACTOR;
 pub const GRAPH_DRAW_LABEL_NUMBER_MAX: usize = 5;
