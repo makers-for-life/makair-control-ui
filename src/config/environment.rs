@@ -22,7 +22,7 @@ lazy_static! {
         if *SIMULATOR_ENABLED { 3 } else { 2 };
 }
 
-pub const FACTORF64: f64 = 1.5;
+pub const FACTORF64: f64 = 1.0;
 pub const WINDOW_ICON_WIDTH: u32 = 512;
 pub const WINDOW_ICON_HEIGHT: u32 = 512;
 
