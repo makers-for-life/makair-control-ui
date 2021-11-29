@@ -26,7 +26,7 @@ pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
     let mut title_style = widget::text::Style::default();
 
     title_style.color = Some(color::WHITE);
-    title_style.font_size = Some(19);
+    title_style.font_size = Some(DISPLAY_STOP_TITLE_FONT_SIZE);
     title_style.font_id = Some(Some(master.fonts.bold));
 
     // Create title text
@@ -39,7 +39,7 @@ pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
     let mut message_style = widget::text::Style::default();
 
     message_style.color = Some(MESSAGE_COLOR);
-    message_style.font_size = Some(14);
+    message_style.font_size = Some(DISPLAY_STOP_FONT_SIZE);
     message_style.font_id = Some(Some(master.fonts.regular));
 
     // Create message text

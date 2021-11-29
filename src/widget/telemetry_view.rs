@@ -65,7 +65,7 @@ pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
 
     value_text_style.font_id = Some(Some(master.fonts.bold));
     value_text_style.color = Some(color::WHITE);
-    value_text_style.font_size = Some(40);
+    value_text_style.font_size = Some(TELEMETRY_WIDGET_VALUE_FONT_SIZE);
 
     // Create value text
     // Notice: there are different drawing cases depending on values provided
@@ -76,7 +76,7 @@ pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
 
             target_text_style.font_id = Some(Some(master.fonts.regular));
             target_text_style.color = Some(color::WHITE);
-            target_text_style.font_size = Some(23);
+            target_text_style.font_size = Some(TELEMETRY_WIDGET_TARGET_VALUE_FONT_SIZE);
 
             // Draw measured value
             widget::Text::new(&value_measured)
