@@ -280,7 +280,7 @@ macro_rules! gen_widget_group_tab {
 
         text_style.font_id = Some(Some($master.fonts.bold));
         text_style.color = Some(color_text);
-        text_style.font_size = Some(14);
+        text_style.font_size = Some(MODAL_GROUP_FONT_SIZE);
 
         // Append text
         widget::Text::new(&$text_fn($tab_current))

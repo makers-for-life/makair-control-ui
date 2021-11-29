@@ -96,7 +96,7 @@ fn title_primary<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 
     text_style.font_id = Some(Some(master.fonts.bold));
     text_style.color = Some(color::WHITE);
-    text_style.font_size = Some(19);
+    text_style.font_size = Some(PRESET_SETTINGS_TITLE_FONT_SIZE);
 
     // Append text
     widget::Text::new(&APP_I18N.t("modal-preset-title"))
@@ -111,7 +111,7 @@ fn title_secondary<'a>(master: &mut ControlWidget<'a>, config: &Config) {
 
     text_style.font_id = Some(Some(master.fonts.regular));
     text_style.color = Some(color::WHITE.alpha(0.5));
-    text_style.font_size = Some(15);
+    text_style.font_size = Some(PRESET_SETTINGS_SECONDARY_TITLE_FONT_SIZE);
 
     // Append text
     widget::Text::new(&APP_I18N.t("modal-preset-subtitle"))

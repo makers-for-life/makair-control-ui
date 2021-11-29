@@ -181,7 +181,7 @@ fn selector<'a>(master: &mut ControlWidget<'a>, config: &Config) {
             } else {
                 color::WHITE
             });
-            text_style.font_size = Some(14);
+            text_style.font_size = Some(MODE_SETTINGS_FONT_SIZE);
 
             // Append text
             // Notice: the text Y alignment must be adjusted in a super-dirty way, using a \
