@@ -13,7 +13,7 @@ pub fn reverse_rgba(image: &[u8], width: u32, height: u32) -> Vec<u8> {
     // Reverses an image over the Y axis, so that it is displayed on screen correctly, as the \
     //   renderer works on an inverted Y axis.
 
-    if FACTOR == 1 {
+    if FACTORF64 == 1.0 {
         image
             .chunks((width as usize) * 4)
             .rev()
@@ -21,9 +21,13 @@ pub fn reverse_rgba(image: &[u8], width: u32, height: u32) -> Vec<u8> {
             .copied()
             .collect()
     } else {
-        let (w1, h1) = (width / FACTOR, height / FACTOR);
+        let (w1, h1) = (
+            (width as f64 / FACTORF64) as u32,
+            (height as f64 / FACTORF64) as u32,
+        );
         let (w2, h2) = (width, height);
         let src = (image).as_rgba();
+        println!("{} {} {} {}", w1,h1,w2,h2);
 
         let mut dst = vec![RGBA::new(0, 0, 0, 0); (w2 * h2).try_into().unwrap()];
         // Create resizer instance.
