@@ -21,8 +21,11 @@ lazy_static! {
         BOOTLOADER_LOGO_IMAGE_WIDTH,
         BOOTLOADER_LOGO_IMAGE_HEIGHT
     );
-    static ref IMAGE_ERROR_ICON_RGBA_RAW: Vec<u8> =
-        gen_load_image_reverse!("error-icon", ERROR_ICON_IMAGE_WIDTH, ERROR_ICON_IMAGE_HEIGHT);
+    static ref IMAGE_ERROR_ICON_RGBA_RAW: Vec<u8> = gen_load_image_reverse!(
+        "error-icon",
+        ERROR_ICON_IMAGE_WIDTH,
+        ERROR_ICON_IMAGE_HEIGHT
+    );
     static ref IMAGE_END_OF_LINE_ONGOING_ICON_RGBA_RAW: Vec<u8> = gen_load_image_reverse!(
         "end-of-line-ongoing-icon",
         END_OF_LINE_CONTENT_ICON_IMAGE_WIDTH,
