@@ -10,20 +10,22 @@ use resize::Type::Triangle;
 use rgb::FromSlice;
 
 pub fn reverse_resize_rgba(image: &[u8], width: u32, height: u32) -> Vec<u8> {
-    // Reverses an image over the Y axis, so that it is displayed on screen correctly, as the \
-    //   renderer works on an inverted Y axis.
+    /* Reverses an image over the Y axis, so that it is displayed on screen correctly, as the 
+    renderer works on an inverted Y axis.
+    And resize the image in case of upscaling/downscaling.
+    */
 
     if (FACTORF64 - 1.0).abs() < f64::EPSILON {
+
+        // Revert on the y axis. First create chunk by columns, then reverse it, that flatten it with flat_map
         image
             .chunks((width as usize) * 4)
             .rev()
-            .flat_map(|row| row.iter())
+            .flat_map(|row| row.iter()) 
             .copied()
             .collect()
     } else {
-        /*Some f64 to u32 cast in environments.rs can lead to an error,
-        because cast truncate instead of round, and rust doesnt allow the use of .round() for const.
-        The following code is used to compensate that.*/
+        
         let (w1, h1) = (width, height);
         let (w2, h2) = (
             (width as f64 * FACTORF64) as u32,
@@ -31,7 +33,7 @@ pub fn reverse_resize_rgba(image: &[u8], width: u32, height: u32) -> Vec<u8> {
         );
         let src = image.as_rgba();
 
-        let mut dst = vec![RGBA::new(0, 0, 0, 0);
+        let mut dst = vec![RGBA::new(0, 0, 0, 0)];
         // Create resizer instance.
         let mut resizer = resize::new(
             w1.try_into().unwrap(),
@@ -44,7 +46,10 @@ pub fn reverse_resize_rgba(image: &[u8], width: u32, height: u32) -> Vec<u8> {
         .unwrap();
         resizer.resize(src, &mut dst).unwrap();
 
+        // use flat_map to convert from [[r,g,b,a, ..., [r,g,b,a]] to [r,g,b,a,r,g,b,a]
         let export: Vec<u8> = dst.iter().flat_map(|rgba| rgba.iter()).collect();
+
+        // Revert on the y axis. First create chunk by columns, then reverse it, that flatten it with flat_map
         export
             .chunks((w2 as usize) * 4)
             .rev()

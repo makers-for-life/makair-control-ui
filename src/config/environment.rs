@@ -22,7 +22,7 @@ lazy_static! {
         if *SIMULATOR_ENABLED { 3 } else { 2 };
 }
 
-pub const FACTOR: f64 = option_env!("SCALE_FACTOR").and_then(|f| f64::from_str(&f).ok()).unwrap_or(1.0);
+pub const FACTORF64: f64 = 1.0; // TODO :use std::str::FromStr; option_env!("SCALE_FACTOR").and_then(|f| f64::from_str(&f).ok()).unwrap_or(1.0); 
 pub const WINDOW_ICON_WIDTH: u32 = 512;
 pub const WINDOW_ICON_HEIGHT: u32 = 512;
 
