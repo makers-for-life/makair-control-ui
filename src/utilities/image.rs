@@ -10,22 +10,20 @@ use resize::Type::Triangle;
 use rgb::FromSlice;
 
 pub fn reverse_resize_rgba(image: &[u8], width: u32, height: u32) -> Vec<u8> {
-    /* Reverses an image over the Y axis, so that it is displayed on screen correctly, as the 
+    /* Reverses an image over the Y axis, so that it is displayed on screen correctly, as the
     renderer works on an inverted Y axis.
     And resize the image in case of upscaling/downscaling.
     */
 
     if (FACTORF64 - 1.0).abs() < f64::EPSILON {
-
         // Revert on the y axis. First create chunk by columns, then reverse it, that flatten it with flat_map
         image
             .chunks((width as usize) * 4)
             .rev()
-            .flat_map(|row| row.iter()) 
+            .flat_map(|row| row.iter())
             .copied()
             .collect()
     } else {
-        
         let (w1, h1) = (width, height);
         let (w2, h2) = (
             (width as f64 * FACTORF64) as u32,

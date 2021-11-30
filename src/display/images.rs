@@ -8,8 +8,8 @@ use std::borrow::Cow;
 use image::load_from_memory;
 
 use crate::config::environment::*;
-use crate::EmbeddedImages;
 use crate::utilities::image::reverse_resize_rgba;
+use crate::EmbeddedImages;
 
 use super::support::GliumDisplayWinitWrapper;
 
