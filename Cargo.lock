@@ -1216,7 +1216,7 @@ dependencies = [
 [[package]]
 name = "makair-simulator"
 version = "0.1.0"
-source = "git+https://github.com/makers-for-life/makair-simulator?rev=60198b5604aebd89de9e14304b64577ea7c9b96a#60198b5604aebd89de9e14304b64577ea7c9b96a"
+source = "git+https://github.com/makers-for-life/makair-simulator?rev=9d1096d09c788613bd8fa5aa0fe6eec0197d8a87#9d1096d09c788613bd8fa5aa0fe6eec0197d8a87"
 dependencies = [
  "cc",
  "log",
