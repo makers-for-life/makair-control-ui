@@ -6,7 +6,7 @@
 use crate::config::environment::*;
 use resize::px::RGBA;
 use resize::Pixel::RGBA8;
-use resize::Type::Mitchell;
+use resize::Type::Triangle;
 use rgb::FromSlice;
 
 pub fn reverse_rgba(image: &[u8], width: u32, height: u32) -> Vec<u8> {
@@ -21,11 +21,14 @@ pub fn reverse_rgba(image: &[u8], width: u32, height: u32) -> Vec<u8> {
             .copied()
             .collect()
     } else {
-        let (w1, h1) = (
-            (width as f64 / FACTORF64) as u32,
-            (height as f64 / FACTORF64) as u32,
+        /*Some f64 to u32 cast in environments.rs can lead to an error,
+        because cast truncate instead of round, and rust doesnt allow the use of .round() for const.
+        The following code is used to compensate that.*/
+        let (w1, h1) = (width, height);
+        let (w2, h2) = (
+            (width as f64 * FACTORF64) as u32,
+            (height as f64 * FACTORF64) as u32,
         );
-        let (w2, h2) = (width, height);
         let src = (image).as_rgba();
 
         let mut dst = vec![RGBA::new(0, 0, 0, 0); (w2 * h2).try_into().unwrap()];
@@ -36,14 +39,14 @@ pub fn reverse_rgba(image: &[u8], width: u32, height: u32) -> Vec<u8> {
             w2.try_into().unwrap(),
             h2.try_into().unwrap(),
             RGBA8,
-            Mitchell,
+            Triangle,
         )
         .unwrap();
         resizer.resize(src, &mut dst).ok();
 
         let export: Vec<u8> = dst.iter().flat_map(|rgba| rgba.iter()).collect();
         export
-            .chunks((width as usize) * 4)
+            .chunks((w2 as usize) * 4)
             .rev()
             .flat_map(|row| row.iter())
             .copied()
