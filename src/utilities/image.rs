@@ -9,7 +9,7 @@ use resize::Pixel::RGBA8;
 use resize::Type::Triangle;
 use rgb::FromSlice;
 
-pub fn reverse_rgba(image: &[u8], width: u32, height: u32) -> Vec<u8> {
+pub fn reverse_resize_rgba(image: &[u8], width: u32, height: u32) -> Vec<u8> {
     // Reverses an image over the Y axis, so that it is displayed on screen correctly, as the \
     //   renderer works on an inverted Y axis.
 
