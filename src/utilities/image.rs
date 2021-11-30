@@ -29,7 +29,7 @@ pub fn reverse_resize_rgba(image: &[u8], width: u32, height: u32) -> Vec<u8> {
             (width as f64 * FACTORF64) as u32,
             (height as f64 * FACTORF64) as u32,
         );
-        let src = (image).as_rgba();
+        let src = image.as_rgba();
 
         let mut dst = vec![RGBA::new(0, 0, 0, 0);
         // Create resizer instance.
