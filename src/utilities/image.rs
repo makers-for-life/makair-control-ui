@@ -42,7 +42,7 @@ pub fn reverse_resize_rgba(image: &[u8], width: u32, height: u32) -> Vec<u8> {
             Triangle,
         )
         .unwrap();
-        resizer.resize(src, &mut dst).ok();
+        resizer.resize(src, &mut dst).unwrap();
 
         let export: Vec<u8> = dst.iter().flat_map(|rgba| rgba.iter()).collect();
         export
