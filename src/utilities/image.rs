@@ -33,7 +33,7 @@ pub fn reverse_resize_rgba(image: &[u8], width: u32, height: u32) -> Vec<u8> {
         );
         let src = image.as_rgba();
 
-        let mut dst = vec![RGBA::new(0, 0, 0, 0)];
+        let mut dst = vec![RGBA::new(0, 0, 0, 0); (w2 * h2).try_into().unwrap()];
         // Create resizer instance.
         let mut resizer = resize::new(
             w1.try_into().unwrap(),
