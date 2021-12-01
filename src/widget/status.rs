@@ -91,7 +91,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
     unit_text_style.font_id = Some(Some(master.fonts.bold));
     unit_text_style.color = Some(color::WHITE);
-    unit_text_style.font_size = Some(11);
+    unit_text_style.font_size = Some(STATUS_FONT_SIZE);
 
     let unit_text_value = if is_unit_stopped {
         APP_I18N.t("status-unit-stopped")
@@ -164,7 +164,7 @@ pub fn render<'a>(master: &mut ControlWidget<'a>, config: Config) -> f64 {
 
     power_text_style.font_id = Some(Some(master.fonts.bold));
     power_text_style.color = Some(color::WHITE);
-    power_text_style.font_size = Some(11);
+    power_text_style.font_size = Some(STATUS_FONT_SIZE);
 
     let power_text_value = if is_battery_powered {
         let mut value = APP_I18N.t("status-power-battery");

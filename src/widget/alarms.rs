@@ -119,7 +119,7 @@ pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
 
     title_text_style.font_id = Some(Some(master.fonts.bold));
     title_text_style.color = Some(color::WHITE);
-    title_text_style.font_size = Some(14);
+    title_text_style.font_size = Some(ALARM_TITLE_FONT_SIZE);
 
     // Insert text in canvas
     widget::text::Text::new(&APP_I18N.t("alarms-title"))
@@ -138,7 +138,7 @@ pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
     } else {
         widget::text::Text::new(&APP_I18N.t("alarms-empty"))
             .color(Color::Rgba(1.0, 1.0, 1.0, 0.5))
-            .font_size(12)
+            .font_size(ALARMS_EMPTY_FONT_SIZE)
             .right_from(
                 config.title_wrapper,
                 DISPLAY_ALARM_CONTAINER_TITLE_TO_ALARM_EMPTY_SPACING,

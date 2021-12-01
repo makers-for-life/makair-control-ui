@@ -42,8 +42,8 @@ macro_rules! gen_load_font {
 }
 
 macro_rules! gen_load_image_reverse {
-    ($name:expr, $width:ident) => {
-        reverse_rgba(
+    ($name:expr, $width:ident, $height:ident) => {
+        reverse_resize_rgba(
             &load_from_memory(
                 EmbeddedImages::get(&format!("{}.png", $name))
                     .unwrap()
@@ -54,6 +54,7 @@ macro_rules! gen_load_image_reverse {
             .into_rgba8()
             .into_raw(),
             $width,
+            $height,
         )
     };
 }

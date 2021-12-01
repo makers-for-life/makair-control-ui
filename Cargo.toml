@@ -23,6 +23,8 @@ confy = "0.4"
 lazy_static = "1.4"
 serde = { version = "1.0", features = ["derive"] }
 paste = "1.0"
+resize = "0.7"
+rgb = "0.8"
 rust-embed = { version = "6.2", default-features = false, features = ["compression", "debug-embed"] }
 chrono = { version = "0.4", default-features = false }
 fluent = "0.16"
@@ -40,7 +42,7 @@ conrod_core = { git = "https://github.com/dsferruzza/conrod", branch = "update-g
 sysfs_gpio = { version = "0.6", optional = true }
 rn2903 = { git = "https://github.com/waxzce/lora-rust-rn2903-rn2483.git", rev = "b086057ba096920abef3870ad0cefa2c80a343e2", optional = true }
 makair-telemetry = { git = "https://github.com/makers-for-life/makair-telemetry", rev = "72e9bf31a9baa5f2ef143bdc313bf5124a5223e2", default-features = false }
-makair-simulator = { git = "https://github.com/makers-for-life/makair-simulator", rev = "0b91e1b6fd5740ea3cb379cc16f71d701ce66166", optional = true }
+makair-simulator = { git = "https://github.com/makers-for-life/makair-simulator", rev = "338fdbf20235e014a6b5fca04cbbdb94d0bcba3b", optional = true }
 
 [build-dependencies]
 winres = { git = "https://github.com/Skirmisher/winres", rev = "7333e0ff201d25eaaa70352682cd1a37614f93f4" } # https://github.com/mxre/winres/pull/36 is required

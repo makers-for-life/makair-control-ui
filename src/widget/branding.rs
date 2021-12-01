@@ -44,7 +44,7 @@ pub fn render(master: &mut ControlWidget, config: Config) -> f64 {
             BRANDING_TEXT_MARGIN_TOP,
             BRANDING_TEXT_MARGIN_LEFT,
         )
-        .font_size(10)
+        .font_size(BRANDING_FONT_SIZE)
         .set(config.ids.1, &mut master.ui);
 
     config.width
